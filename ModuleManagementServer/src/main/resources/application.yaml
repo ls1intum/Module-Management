@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: ModuleManagement
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: myuser
+    password: secret
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+  liquibase:
+    change-log: classpath:db/changelog/master.yaml
+
+  ai:
+    openai:
+      api-key: nss
+
+  docker:
+    compose:
+      enabled: true
+      lifecycle-management: start-only
+      file: compose.yaml

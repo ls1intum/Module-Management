@@ -1,0 +1,26 @@
+<div>
+  @if (moduleDetails()) {
+    <h2>{{ moduleDetails().moduleId }}</h2>
+    <p><strong>Creation Date:</strong> {{ moduleDetails().creationDate }}</p>
+
+    <h3>Translations</h3>
+    <ul>
+      @for (translation of moduleDetails().translations; track translation.language) {
+        <li>
+          <strong>{{ translation.language }}</strong>
+          <ul>
+            <li><strong>Title:</strong> {{ translation.title }}</li>
+            <li><strong>Recommended Prerequisites:</strong> {{ translation.recommendedPrerequisites }}</li>
+            <li><strong>Assessment Method:</strong> {{ translation.assessmentMethod }}</li>
+            <li><strong>Learning Outcomes:</strong> {{ translation.learningOutcomes }}</li>
+            <li><strong>Media Used:</strong> {{ translation.mediaUsed }}</li>
+            <li><strong>Literature:</strong> {{ translation.literature }}</li>
+          </ul>
+        </li>
+      }
+    </ul>
+  }
+  @else {
+    <p>Loading module details...</p>
+  }
+</div>

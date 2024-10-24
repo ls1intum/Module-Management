@@ -1,0 +1,49 @@
+
+<div>
+  <header>
+    <h1>Module Management</h1>
+    <button class="create-module-button" [routerLink]="['/modules/create']">Create New Module</button>
+  </header>
+<table>
+  <thead>
+    <tr>
+      <th>Module ID</th>
+      <th>English Title</th>
+      <th>German Title</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @if (loading) {
+      <tr>
+        <td colspan="4">Loading modules...</td>
+      </tr>
+    }
+    @if (error) {
+      <tr>
+        <td colspan="4">{{ error }}</td>
+      </tr>
+    }
+    @if (!loading && !error) {
+      @for (citModule of citModules; track citModule.id) {
+        <tr>
+          <td>{{ citModule.moduleId }}</td>
+          <td>{{ citModule.englishTranslation?.title || 'N/A' }}</td>
+          <td>{{ citModule.germanTranslation?.title || 'N/A' }}</td>
+          <td>
+            <button [routerLink]="['/modules/id', citModule.id]">View</button>
+            <button [routerLink]="['/modules/edit', citModule.id]">Edit</button>
+            <button (click)="deleteModule(citModule.id)">Delete</button>
+          </td>
+        </tr>
+      }
+      @empty {
+        <tr>
+          <td colspan="4">No contents</td>
+        </tr>
+      }
+    }
+  </tbody>
+</table>
+
+</div>

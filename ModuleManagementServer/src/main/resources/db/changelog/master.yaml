@@ -1,0 +1,70 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: DaKili
+      changes:
+        - createTable:
+            tableName: cit_module
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: module_id
+                  type: VARCHAR(255)
+                  constraints:
+                    unique: true
+              - column:
+                  name: creation_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 2
+      author: DaKili
+      changes:
+        - createTable:
+            tableName: module_translation
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: cit_module_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_cit_module
+                    references: cit_module(id)
+              - column:
+                  name: language
+                  type: VARCHAR(2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: recommended_prerequisites
+                  type: TEXT
+              - column:
+                  name: assessment_method
+                  type: TEXT
+              - column:
+                  name: learning_outcomes
+                  type: TEXT
+              - column:
+                  name: media_used
+                  type: TEXT
+              - column:
+                  name: literature
+                  type: TEXT
