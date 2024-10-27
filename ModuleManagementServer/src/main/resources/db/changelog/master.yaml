@@ -68,3 +68,231 @@ databaseChangeLog:
               - column:
                   name: literature
                   type: TEXT
+
+  - changeSet:
+      id: 3
+      author: DaKili
+      changes:
+        - createTable:
+            tableName: app_user
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: 4
+      author: DaKili
+      changes:
+      - createTable:
+            tableName: proposal
+            columns:
+              - column:
+                  name: proposal_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: created_by
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: creation_date
+                  type: TIMESTAMP
+
+  - changeSet:
+      id: 5
+      author: DaKili
+      changes:
+        - createTable:
+            tableName: module_version
+            columns:
+              - column:
+                  name: module_version_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: version
+                  type: INT
+              - column:
+                  name: module_id
+                  type: VARCHAR(255)
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+              - column:
+                  name: title_eng
+                  type: VARCHAR(50)
+              - column:
+                  name: level_eng
+                  type: VARCHAR(50)
+              - column:
+                  name: language_eng
+                  type: VARCHAR(10)
+              - column:
+                  name: frequency_eng
+                  type: VARCHAR(50)
+              - column:
+                  name: credits
+                  type: INTEGER
+              - column:
+                  name: hours_total
+                  type: INTEGER
+              - column:
+                  name: hours_self_study
+                  type: INTEGER
+              - column:
+                  name: hours_presence
+                  type: INTEGER
+              - column:
+                  name: examination_achievements_eng
+                  type: CLOB
+              - column:
+                  name: repetition_eng
+                  type: VARCHAR (255)
+              - column:
+                  name: recommended_prerequisites_eng
+                  type: CLOB
+              - column:
+                  name: content_eng
+                  type: CLOB
+              - column:
+                  name: learning_outcomes_eng
+                  type: CLOB
+              - column:
+                  name: teaching_methods_eng
+                  type: CLOB
+              - column:
+                  name: media_eng
+                  type: CLOB
+              - column:
+                  name: literature_eng
+                  type: CLOB
+              - column:
+                  name: responsibles_eng
+                  type: CLOB
+              - column:
+                  name: lv_sws_lecturer_eng
+                  type: CLOB
+              - column:
+                  name: proposal_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: module_version
+            baseColumnNames: proposal_id
+            referencedTableName: proposal
+            referencedColumnNames: proposal_id
+            constraintName: proposal_to_module_version_constraint
+
+        - createTable:
+            tableName: feedback
+            columns:
+              - column:
+                  name: feedback_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: feedback_from
+                  type: BIGINT
+              - column:
+                  name: comment
+                  type: VARCHAR(255)
+              - column:
+                  name: feedback_status
+                  type: VARCHAR(50)
+              - column:
+                  name: submission_date
+                  type: TIMESTAMP
+              - column:
+                  name: module_version_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: feedback
+            baseColumnNames: feedback_from
+            referencedTableName: app_user
+            referencedColumnNames: user_id
+            constraintName: feedback_from_user_constraint
+        - addForeignKeyConstraint:
+            baseTableName: feedback
+            baseColumnNames: module_version_id
+            referencedTableName: module_version
+            referencedColumnNames: module_version_id
+            constraintName: feedback_for_module_version_constraint
+        - addForeignKeyConstraint:
+            baseTableName: proposal
+            baseColumnNames: created_by
+            referencedTableName: app_user
+            referencedColumnNames: user_id
+            constraintName: proposal_created_by_constraint
+
+  - changeSet:
+      id: 6
+      author: DaKili
+      changes:
+        - insert:
+            tableName: app_user
+            columns:
+              - column:
+                  name: name
+                  value: 'Professor1'
+              - column:
+                  name: email
+                  value: '1@prof.de'
+        - insert:
+            tableName: app_user
+            columns:
+            - column:
+                name: name
+                value: 'Professor2'
+            - column:
+                name: email
+                value: '2@prof.de'
+        - insert:
+            tableName: app_user
+            columns:
+              - column:
+                  name: name
+                  value: 'QM User'
+              - column:
+                  name: email
+                  value: 'qm@tum.de'
+        - insert:
+            tableName: app_user
+            columns:
+              - column:
+                  name: name
+                  value: 'ASA User'
+              - column:
+                  name: email
+                  value: 'asa@tum.de'
+        - insert:
+            tableName: app_user
+            columns:
+              - column:
+                  name: name
+                  value: 'EB User'
+              - column:
+                  name: email
+                  value: 'eb@tum.de'

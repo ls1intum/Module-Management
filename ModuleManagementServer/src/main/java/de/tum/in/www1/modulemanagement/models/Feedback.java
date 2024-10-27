@@ -1,5 +1,6 @@
 package de.tum.in.www1.modulemanagement.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.tum.in.www1.modulemanagement.enums.FeedbackStatus;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -17,7 +18,7 @@ public class Feedback {
     private long feedbackId;
 
     @ManyToOne
-    @JoinColumn(name = "feedback_from", nullable = false)
+    @JoinColumn(name = "feedback_from")
     private User feedbackFrom;
 
     @Column(name = "comment")
@@ -27,9 +28,11 @@ public class Feedback {
     @Column(name = "feedback_status")
     private FeedbackStatus status;
 
-    @Column(name = "submission_date", nullable = false)
+    @Column(name = "submission_date")
     private LocalDateTime submissionDate;
 
-
-
+    @ManyToOne
+    @JoinColumn(name = "module_version_id", nullable = false)
+    @JsonIgnore
+    private ModuleVersion moduleVersion;
 }

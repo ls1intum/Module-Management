@@ -40,7 +40,7 @@ public class ModuleService {
     public List<CitModule> getAllModules() {
         return moduleRepository.findAll()
                 .stream()
-                .sorted(Comparator.comparing(CitModule::getId)) // Adjust this method name if necessary
+                .sorted(Comparator.comparing(CitModule::getId))
                 .collect(Collectors.toList());
     }
 
@@ -69,7 +69,7 @@ public class ModuleService {
                     existingTranslation.setMediaUsed(updatedTranslation.getMediaUsed());
                     existingTranslation.setLiterature(updatedTranslation.getLiterature());
                 } else {
-                    updatedTranslation.setCitModule(existingModule); // Link to the module
+                    updatedTranslation.setCitModule(existingModule);
                     existingModule.getTranslations().add(updatedTranslation);
                 }
             }
