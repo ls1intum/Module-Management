@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: 6
+      author: DaKili
+      changes:
+        - insert:
+            tableName: app_user
+            columns:
+              - column:
+                  name: name
+                  value: 'Professor1'
+              - column:
+                  name: email
+                  value: '1@prof.de'
+        - insert:
+            tableName: app_user
+            columns:
+              - column:
+                  name: name
+                  value: 'Professor2'
+              - column:
+                  name: email
+                  value: '2@prof.de'
+        - insert:
+            tableName: app_user
+            columns:
+              - column:
+                  name: name
+                  value: 'QM User'
+              - column:
+                  name: email
+                  value: 'qm@tum.de'
+        - insert:
+            tableName: app_user
+            columns:
+              - column:
+                  name: name
+                  value: 'ASA User'
+              - column:
+                  name: email
+                  value: 'asa@tum.de'
+        - insert:
+            tableName: app_user
+            columns:
+              - column:
+                  name: name
+                  value: 'EB User'
+              - column:
+                  name: email
+                  value: 'eb@tum.de'

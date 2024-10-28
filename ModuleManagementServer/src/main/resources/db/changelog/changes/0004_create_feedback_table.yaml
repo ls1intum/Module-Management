@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4
+      author: DaKili
+      changes:
+        - createTable:
+            tableName: feedback
+            columns:
+              - column:
+                  name: feedback_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: feedback_from
+                  type: BIGINT
+              - column:
+                  name: comment
+                  type: VARCHAR(255)
+              - column:
+                  name: feedback_status
+                  type: VARCHAR(50)
+              - column:
+                  name: submission_date
+                  type: TIMESTAMP
+              - column:
+                  name: module_version_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: feedback
+            baseColumnNames: feedback_from
+            referencedTableName: app_user
+            referencedColumnNames: user_id
+            constraintName: feedback_from_user_constraint
+        - addForeignKeyConstraint:
+            baseTableName: feedback
+            baseColumnNames: module_version_id
+            referencedTableName: module_version
+            referencedColumnNames: module_version_id
+            constraintName: feedback_for_module_version_constraint
