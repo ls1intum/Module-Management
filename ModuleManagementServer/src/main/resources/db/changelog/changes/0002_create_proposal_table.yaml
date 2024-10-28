@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 2
+      id: 0002
       author: DaKili
       changes:
         - createTable:

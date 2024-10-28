@@ -13,4 +13,4 @@ databaseChangeLog:
       file: changes/0004_create_feedback_table.yaml
   - include:
       relativeToChangelogFile: true
-      file: initialize/users.yaml
+      file: initialize/0005_initialize_users.yaml
