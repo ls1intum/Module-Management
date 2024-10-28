@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class ProposalRequestDTO {
+public class ModuleVersionUpdateRequestDTO {
     @NotNull private Long userId;
     @NotNull private String titleEng;
     @NotNull private String levelEng;

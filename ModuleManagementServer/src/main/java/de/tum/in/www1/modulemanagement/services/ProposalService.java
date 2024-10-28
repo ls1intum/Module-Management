@@ -11,7 +11,9 @@ import de.tum.in.www1.modulemanagement.repositories.ModuleVersionRepository;
 import de.tum.in.www1.modulemanagement.repositories.ProposalRepository;
 import de.tum.in.www1.modulemanagement.repositories.UserRepository;
 import de.tum.in.www1.modulemanagement.shared.ResourceNotFoundException;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -25,11 +27,8 @@ import java.util.stream.Collectors;
 public class ProposalService {
 
     private final ProposalRepository proposalRepository;
-
     private final ModuleVersionRepository moduleVersionRepository;
-
     private final FeedbackRepository feedbackRepository;
-
     private final UserRepository userRepository;
 
     public ProposalService(ProposalRepository proposalRepository, ModuleVersionRepository moduleVersionRepository, FeedbackRepository feedbackRepository, UserRepository userRepository) {
@@ -50,7 +49,7 @@ public class ProposalService {
         mv.setVersion(1);
         mv.setModuleId(null);
         mv.setProposal(p);
-        mv.setStatus(request.isSubmitImmediately() ? "PENDING_FEEDBACK" : "PENDING_SUBMISSION");
+        mv.setStatus("PENDING_SUBMISSION");
         mv.setTitleEng(request.getTitleEng());
         mv.setLevelEng(request.getLevelEng());
         mv.setLanguageEng(request.getLanguageEng());
@@ -61,7 +60,7 @@ public class ProposalService {
         mv.setHoursPresence(request.getHoursPresence());
         mv.setExaminationAchievementsEng(request.getExaminationAchievementsEng());
         mv.setRepetitionEng(request.getRepetitionEng());
-        mv.setRecommendedPrerequisitesEng(request.getRecommendedPrerequisiteEng());
+        mv.setRecommendedPrerequisitesEng(request.getRecommendedPrerequisitesEng());
         mv.setContentEng(request.getContentEng());
         mv.setLearningOutcomesEng(request.getLearningOutcomesEng());
         mv.setTeachingMethodsEng(request.getTeachingMethodsEng());
@@ -120,6 +119,21 @@ public class ProposalService {
         }
 
         mv.setStatus("PENDING_FEEDBACK");
+        List<Feedback> feedbacks = mv.getRequiredFeedbacks();
+        for (Feedback feedback : feedbacks) {
+            feedback.setStatus(FeedbackStatus.PENDING_FEEDBACK);
+        }
+        feedbackRepository.saveAll(feedbacks);
+        moduleVersionRepository.save(mv);
         proposalRepository.save(proposal);
+    }
+
+    public void deleteProposalById(long proposalId, long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
+        Proposal p = proposalRepository.findById(proposalId).orElseThrow(() -> new ResourceNotFoundException("Proposal with id " + proposalId + " not found."));
+        if (!p.getCreatedBy().getUserId().equals(user.getUserId())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
+        }
+        proposalRepository.delete(p);
     }
 }

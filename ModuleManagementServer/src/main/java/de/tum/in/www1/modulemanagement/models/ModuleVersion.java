@@ -15,10 +15,10 @@ public class ModuleVersion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long moduleVersionId;
+    private Long moduleVersionId;
 
     @Column(name = "version")
-    private int version;
+    private Integer version;
 
     @Column(name = "module_id")
     private String moduleId;
@@ -57,7 +57,6 @@ public class ModuleVersion {
     @Column(name = "repetition_eng")
     private String repetitionEng;
 
-    @Basic(fetch = FetchType.EAGER)
     @Column(name = "recommended_prerequisites_eng", columnDefinition = "CLOB")
     private String recommendedPrerequisitesEng;
 

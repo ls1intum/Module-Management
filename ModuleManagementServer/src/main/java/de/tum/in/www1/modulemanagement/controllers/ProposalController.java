@@ -1,11 +1,11 @@
 package de.tum.in.www1.modulemanagement.controllers;
 
+import de.tum.in.www1.modulemanagement.dtos.DeleteProposalDTO;
 import de.tum.in.www1.modulemanagement.dtos.ProposalRequestDTO;
 import de.tum.in.www1.modulemanagement.dtos.SimpleSubmitDTO;
 import de.tum.in.www1.modulemanagement.models.Proposal;
 import de.tum.in.www1.modulemanagement.services.ProposalService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("/api/proposals")
 public class ProposalController {
 
-    @Autowired
     private final ProposalService proposalService;
 
     public ProposalController(ProposalService proposalService) {
@@ -28,7 +27,6 @@ public class ProposalController {
         proposalService.submitProposal(proposalId, request.getUserId());
         return ResponseEntity.ok("Proposal submitted successfully.");
     }
-
 
     @PostMapping
     public ResponseEntity<Proposal> createProposal(@Valid @RequestBody ProposalRequestDTO request) {
@@ -46,6 +44,12 @@ public class ProposalController {
     public ResponseEntity<Proposal> getProposalById(@PathVariable long id) {
         Proposal proposal = proposalService.getProposalById(id);
         return proposal != null ? new ResponseEntity<>(proposal, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/{proposalId}")
+    public ResponseEntity<String> deleteProposal(@PathVariable long proposalId, @RequestBody DeleteProposalDTO request) {
+        proposalService.deleteProposalById(proposalId, request.getUserId());
+        return ResponseEntity.ok("Proposal deleted successfully.");
     }
 }
 
