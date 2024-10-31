@@ -30,7 +30,7 @@ public class FeedbackController {
     }
 
     @PutMapping("/{feedbackId}/reject")
-    public ResponseEntity<Feedback> rejectFeedback(@PathVariable Long feedbackId, @Validated @RequestBody RejectFeedbackDTO request) {
+    public ResponseEntity<Feedback> rejectFeedback(@PathVariable Long feedbackId, @Valid @RequestBody RejectFeedbackDTO request) {
         Feedback updatedFeedback = feedbackService.Reject(feedbackId, request.getUserId(), request.getComment());
         moduleVersionService.updateStatus(updatedFeedback.getModuleVersion().getModuleVersionId());
 
