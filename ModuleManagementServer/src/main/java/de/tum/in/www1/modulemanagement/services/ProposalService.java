@@ -1,7 +1,11 @@
 package de.tum.in.www1.modulemanagement.services;
 
 import de.tum.in.www1.modulemanagement.dtos.ProposalRequestDTO;
+import de.tum.in.www1.modulemanagement.dtos.ProposalsCompactDTO;
+import de.tum.in.www1.modulemanagement.enums.ProposalStatus;
+import de.tum.in.www1.modulemanagement.enums.UserRole;
 import de.tum.in.www1.modulemanagement.enums.FeedbackStatus;
+import de.tum.in.www1.modulemanagement.enums.ModuleVersionStatus;
 import de.tum.in.www1.modulemanagement.models.Feedback;
 import de.tum.in.www1.modulemanagement.models.ModuleVersion;
 import de.tum.in.www1.modulemanagement.models.Proposal;
@@ -11,9 +15,7 @@ import de.tum.in.www1.modulemanagement.repositories.ModuleVersionRepository;
 import de.tum.in.www1.modulemanagement.repositories.ProposalRepository;
 import de.tum.in.www1.modulemanagement.repositories.UserRepository;
 import de.tum.in.www1.modulemanagement.shared.ResourceNotFoundException;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -40,16 +42,19 @@ public class ProposalService {
 
     public Proposal createProposalFromRequest(ProposalRequestDTO request) {
         User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (!user.getRole().equals(UserRole.PROFESSOR))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You must be a professor in order to propose a module.");
         Proposal p = new Proposal();
         p.setCreatedBy(user);
         p.setCreationDate(LocalDateTime.now());
+        p.setStatus(ProposalStatus.PENDING_SUBMISSION);
         p = proposalRepository.save(p);
 
         ModuleVersion mv = new ModuleVersion();
         mv.setVersion(1);
         mv.setModuleId(null);
         mv.setProposal(p);
-        mv.setStatus("PENDING_SUBMISSION");
+        mv.setStatus(ModuleVersionStatus.PENDING_SUBMISSION);
         mv.setTitleEng(request.getTitleEng());
         mv.setLevelEng(request.getLevelEng());
         mv.setLanguageEng(request.getLanguageEng());
@@ -71,9 +76,12 @@ public class ProposalService {
         mv = moduleVersionRepository.save(mv);
 
         List<Feedback> feedbacks = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (UserRole ad : UserRole.values()) {
+            if (ad.equals(UserRole.PROFESSOR))
+                continue;
             Feedback feedback = new Feedback();
             feedback.setStatus(FeedbackStatus.PENDING_SUBMISSION);
+            feedback.setRequiredRole(ad);
             feedback.setModuleVersion(mv);
             feedbacks.add(feedback);
         }
@@ -90,6 +98,44 @@ public class ProposalService {
                 .stream()
                 .sorted(Comparator.comparing(Proposal::getProposalId))
                 .collect(Collectors.toList());
+    }
+
+    public List<ProposalsCompactDTO> getAllProposalsCompact() {
+        return proposalRepository.findAll()
+                .stream()
+                .map(p -> new ProposalsCompactDTO(
+                        p.getProposalId(),
+                        p.getCreatedBy().getUserId(),
+                        p.getStatus(),
+                        p.getLatestModuleVersion() != null ? p.getLatestModuleVersion().getModuleVersionId() : null,
+                        p.getLatestModuleVersion() != null ? p.getLatestModuleVersion().getTitleEng() : null
+                ))
+                .sorted(Comparator.comparing(ProposalsCompactDTO::getProposalId))
+                .collect(Collectors.toList());
+    }
+
+    public List<Proposal> getProposalsOfUser(Long userId) {
+        return proposalRepository.findAll()
+                .stream()
+                .filter(proposal -> proposal.getCreatedBy().getUserId().equals(userId))
+                .sorted(Comparator.comparing(Proposal::getProposalId))
+                .collect(Collectors.toList());
+    }
+
+    public List<ProposalsCompactDTO> getCompactProposalsOfUser(Long userId) {
+        return proposalRepository.findAll()
+                .stream()
+                .filter(proposal -> proposal.getCreatedBy().getUserId().equals(userId))
+                .map(p -> new ProposalsCompactDTO(
+                        p.getProposalId(),
+                        p.getCreatedBy().getUserId(),
+                        p.getStatus(),
+                        p.getLatestModuleVersion() != null ? p.getLatestModuleVersion().getModuleVersionId() : null,
+                        p.getLatestModuleVersion() != null ? p.getLatestModuleVersion().getTitleEng() : null
+                ))
+                .sorted(Comparator.comparing(ProposalsCompactDTO::getProposalId))
+                .collect(Collectors.toList());
+
     }
 
     public Proposal getProposalById(long id) {
@@ -110,7 +156,7 @@ public class ProposalService {
 
         ModuleVersion mv = proposal.getLatestModuleVersion();
 
-        if (!mv.getStatus().equals("PENDING_SUBMISSION")) {
+        if (!mv.getStatus().equals(ModuleVersionStatus.PENDING_SUBMISSION)) {
             throw new IllegalStateException("Proposal is not pending submission. It is " + mv.getStatus() + ".");
         }
 
@@ -118,7 +164,8 @@ public class ProposalService {
             throw new IllegalStateException("All required fields in ModuleVersion must be filled.");
         }
 
-        mv.setStatus("PENDING_FEEDBACK");
+        mv.setStatus(ModuleVersionStatus.PENDING_FEEDBACK);
+        proposal.setStatus(ProposalStatus.PENDING_FEEDBACK);
         List<Feedback> feedbacks = mv.getRequiredFeedbacks();
         for (Feedback feedback : feedbacks) {
             feedback.setStatus(FeedbackStatus.PENDING_FEEDBACK);

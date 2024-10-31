@@ -1,6 +1,7 @@
 package de.tum.in.www1.modulemanagement.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.tum.in.www1.modulemanagement.enums.UserRole;
 import de.tum.in.www1.modulemanagement.enums.FeedbackStatus;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -23,6 +24,10 @@ public class Feedback {
 
     @Column(name = "comment")
     private String Comment;
+
+    @Column(name = "required_role")
+    @Enumerated(EnumType.STRING)
+    private UserRole requiredRole;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "feedback_status")

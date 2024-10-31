@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/feedbacks")
 public class FeedbackController {
@@ -19,6 +21,12 @@ public class FeedbackController {
     public FeedbackController(FeedbackService feedbackService, ModuleVersionService moduleVersionService) {
         this.feedbackService = feedbackService;
         this.moduleVersionService = moduleVersionService;
+    }
+
+    @GetMapping("/for-user/{id}")
+    public ResponseEntity<List<Feedback>> getFeedbacksForUser(@PathVariable Long id) {
+        List<Feedback> feedbacks = feedbackService.getAllFeedbacksForUser(id);
+        return ResponseEntity.ok(feedbacks);
     }
 
     @PutMapping("/{feedbackId}/accept")

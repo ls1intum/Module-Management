@@ -2,9 +2,13 @@ package de.tum.in.www1.modulemanagement.services;
 
 import de.tum.in.www1.modulemanagement.dtos.ModuleVersionUpdateRequestDTO;
 import de.tum.in.www1.modulemanagement.enums.FeedbackStatus;
+import de.tum.in.www1.modulemanagement.enums.ModuleVersionStatus;
+import de.tum.in.www1.modulemanagement.enums.ProposalStatus;
 import de.tum.in.www1.modulemanagement.models.Feedback;
 import de.tum.in.www1.modulemanagement.models.ModuleVersion;
+import de.tum.in.www1.modulemanagement.models.Proposal;
 import de.tum.in.www1.modulemanagement.repositories.ModuleVersionRepository;
+import de.tum.in.www1.modulemanagement.repositories.ProposalRepository;
 import de.tum.in.www1.modulemanagement.shared.ResourceNotFoundException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
@@ -14,13 +18,11 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class ModuleVersionService {
     private final ModuleVersionRepository moduleVersionRepository;
+    private final ProposalRepository proposalRepository;
 
-    public ModuleVersionService(ModuleVersionRepository moduleVersionRepository) {
+    public ModuleVersionService(ModuleVersionRepository moduleVersionRepository, ProposalRepository proposalRepository) {
         this.moduleVersionRepository = moduleVersionRepository;
-    }
-
-    public ModuleVersion createNewModuleVersion() {
-        return null;
+        this.proposalRepository = proposalRepository;
     }
 
     public ModuleVersion updateModuleVersionFromRequest(Long moduleVersionId, ModuleVersionUpdateRequestDTO request) {
@@ -32,7 +34,7 @@ public class ModuleVersionService {
             throw new OptimisticLockingFailureException("Cannot update an outdated ModuleVersion");
         }
 
-        if (!mv.getStatus().equals("PENDING_SUBMISSION")) {
+        if (!mv.getStatus().equals(ModuleVersionStatus.PENDING_SUBMISSION)) {
             throw new IllegalStateException("Cannot update a submitted ModuleVersion");
         }
 
@@ -60,23 +62,30 @@ public class ModuleVersionService {
     }
 
     public void updateStatus(Long moduleVersionId) {
-        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("Could not update corresponding module version status"));
-        boolean isModuleVersionApproved = true;
-        boolean isModuleVersionRejected = false;
+        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).
+                orElseThrow(() -> new ResourceNotFoundException("Could not update corresponding module version status"));
+
+        boolean allFeedbackPositive = true;
+        boolean oneFeedbackNegative = false;
         for (Feedback feedback: mv.getRequiredFeedbacks()) {
             if (!feedback.getStatus().equals(FeedbackStatus.APPROVED)) {
-                isModuleVersionApproved = false;
+                allFeedbackPositive = false;
             }
             if (feedback.getStatus().equals(FeedbackStatus.REJECTED)) {
-                isModuleVersionRejected = true;
+                oneFeedbackNegative = true;
             }
         }
-        if (isModuleVersionApproved) {
-            mv.setStatus("APPROVED");
+        Proposal p = mv.getProposal();
+        if (allFeedbackPositive) {
+            mv.setStatus(ModuleVersionStatus.ACCEPTED);
+            p.setStatus(ProposalStatus.ACCEPTED);
+            mv.getProposal().setStatus(ProposalStatus.ACCEPTED);
         }
-        if (isModuleVersionRejected) {
-            mv.setStatus("REJECTED");
+        if (oneFeedbackNegative) {
+            mv.setStatus(ModuleVersionStatus.REJECTED);
+            p.setStatus(ProposalStatus.REQUIRES_REVIEW);
         }
+        proposalRepository.save(p);
         moduleVersionRepository.save(mv);
     }
 }

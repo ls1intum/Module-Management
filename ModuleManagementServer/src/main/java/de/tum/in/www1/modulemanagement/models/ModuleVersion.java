@@ -1,6 +1,8 @@
 package de.tum.in.www1.modulemanagement.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.tum.in.www1.modulemanagement.enums.Language;
+import de.tum.in.www1.modulemanagement.enums.ModuleVersionStatus;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -24,7 +26,7 @@ public class ModuleVersion {
     private String moduleId;
 
     @Column(name = "status")
-    private String status;
+    private ModuleVersionStatus status;
 
     // --------MODULE_FIELDS----------
     @Column(name = "title_eng")
@@ -34,7 +36,8 @@ public class ModuleVersion {
     private String levelEng;
 
     @Column(name = "language_eng")
-    private String languageEng;
+    @Enumerated(EnumType.STRING)
+    private Language languageEng;
 
     @Column(name = "frequency_eng")
     private String frequencyEng;
@@ -95,7 +98,7 @@ public class ModuleVersion {
     public boolean isCompleted() {
         return !StringUtils.isEmpty(titleEng)
                 && !StringUtils.isEmpty(levelEng)
-                && !StringUtils.isEmpty(languageEng)
+                && languageEng != Language.undefined
                 && !StringUtils.isEmpty(frequencyEng)
                 && !(credits == null)
                 && !(hoursTotal == null)

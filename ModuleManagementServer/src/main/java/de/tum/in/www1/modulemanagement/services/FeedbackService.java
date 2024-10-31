@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 public class FeedbackService {
@@ -23,9 +25,11 @@ public class FeedbackService {
         this.userRepository = userRepository;
     }
 
-    public Feedback Accept(@NotNull Long feedbackId, @NotNull Long userId) {
+    public Feedback Accept(Long feedbackId,Long userId) {
         User user = getAuthorizedUser(userId);
         Feedback feedback = getPendingFeedback(feedbackId);
+        if (!user.getRole().equals(feedback.getRequiredRole()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You do not have permission to accept this feedback");
         feedback.setFeedbackFrom(user);
         feedback.setSubmissionDate(LocalDateTime.now());
         feedback.setStatus(FeedbackStatus.APPROVED);
@@ -33,15 +37,26 @@ public class FeedbackService {
         return feedback;
     }
 
-    public Feedback Reject(@NotNull Long feedbackId, @NotNull Long userId, @NotNull String comment) {
+    public Feedback Reject(Long feedbackId, Long userId, String comment) {
         User user = getAuthorizedUser(userId);
         Feedback feedback = getPendingFeedback(feedbackId);
+        if (!user.getRole().equals(feedback.getRequiredRole()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You do not have permission to accept this feedback");
         feedback.setFeedbackFrom(user);
         feedback.setSubmissionDate(LocalDateTime.now());
         feedback.setStatus(FeedbackStatus.REJECTED);
         feedback.setComment(comment);
         feedback = feedbackRepository.save(feedback);
         return feedback;
+    }
+
+    public List<Feedback> getAllFeedbacksForUser(Long userId) {
+        User user = getAuthorizedUser(userId);
+        return feedbackRepository.findAll()
+                .stream()
+                .filter(feedback -> feedback.getRequiredRole().equals(user.getRole()))
+                .sorted(Comparator.comparing(Feedback::getFeedbackId))
+                .toList();
     }
 
     private User getAuthorizedUser(Long userId) {

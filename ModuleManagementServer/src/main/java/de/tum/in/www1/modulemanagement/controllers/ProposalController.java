@@ -2,6 +2,7 @@ package de.tum.in.www1.modulemanagement.controllers;
 
 import de.tum.in.www1.modulemanagement.dtos.DeleteProposalDTO;
 import de.tum.in.www1.modulemanagement.dtos.ProposalRequestDTO;
+import de.tum.in.www1.modulemanagement.dtos.ProposalsCompactDTO;
 import de.tum.in.www1.modulemanagement.dtos.SimpleSubmitDTO;
 import de.tum.in.www1.modulemanagement.models.Proposal;
 import de.tum.in.www1.modulemanagement.services.ProposalService;
@@ -40,10 +41,28 @@ public class ProposalController {
         return ResponseEntity.ok(proposals);
     }
 
+    @GetMapping("/compact")
+    public ResponseEntity<List<ProposalsCompactDTO>> getAllProposalsCompact() {
+        List<ProposalsCompactDTO> proposals = proposalService.getAllProposalsCompact();
+        return ResponseEntity.ok(proposals);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Proposal> getProposalById(@PathVariable long id) {
         Proposal proposal = proposalService.getProposalById(id);
         return proposal != null ? new ResponseEntity<>(proposal, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/from-user/{id}")
+    public ResponseEntity<List<Proposal>> getProposalsByUserId(@PathVariable Long id) {
+        List<Proposal> proposals = proposalService.getProposalsOfUser(id);
+        return ResponseEntity.ok(proposals);
+    }
+
+    @GetMapping("/compact/from-user/{id}")
+    public ResponseEntity<List<ProposalsCompactDTO>> getProposalsByUserIdFromCompact(@PathVariable Long id) {
+        List<ProposalsCompactDTO> proposals = proposalService.getCompactProposalsOfUser(id);
+        return ResponseEntity.ok(proposals);
     }
 
     @DeleteMapping("/{proposalId}")

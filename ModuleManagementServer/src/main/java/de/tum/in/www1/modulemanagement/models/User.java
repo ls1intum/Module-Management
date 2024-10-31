@@ -1,5 +1,6 @@
 package de.tum.in.www1.modulemanagement.models;
 
+import de.tum.in.www1.modulemanagement.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,4 +21,8 @@ public class User {
 
     @Column(name = "email", nullable = false)
     private String email;
+
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 }

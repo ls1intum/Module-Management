@@ -12,6 +12,9 @@ databaseChangeLog:
               - column:
                   name: email
                   value: '1@prof.de'
+              - column:
+                  name: role
+                  value: 'PROFESSOR'
         - insert:
             tableName: app_user
             columns:
@@ -21,6 +24,9 @@ databaseChangeLog:
               - column:
                   name: email
                   value: '2@prof.de'
+              - column:
+                  name: role
+                  value: 'PROFESSOR'
         - insert:
             tableName: app_user
             columns:
@@ -30,6 +36,9 @@ databaseChangeLog:
               - column:
                   name: email
                   value: 'qm@tum.de'
+              - column:
+                  name: role
+                  value: 'QUALITY_MANAGEMENT'
         - insert:
             tableName: app_user
             columns:
@@ -39,6 +48,9 @@ databaseChangeLog:
               - column:
                   name: email
                   value: 'asa@tum.de'
+              - column:
+                  name: role
+                  value: 'ACADEMIC_PROGRAM_ADVISOR'
         - insert:
             tableName: app_user
             columns:
@@ -48,3 +60,6 @@ databaseChangeLog:
               - column:
                   name: email
                   value: 'eb@tum.de'
+              - column:
+                  name: role
+                  value: 'EXAMINATION_BOARD'

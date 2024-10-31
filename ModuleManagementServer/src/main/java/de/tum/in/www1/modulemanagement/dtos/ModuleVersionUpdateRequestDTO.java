@@ -1,5 +1,6 @@
 package de.tum.in.www1.modulemanagement.dtos;
 
+import de.tum.in.www1.modulemanagement.enums.Language;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -8,7 +9,7 @@ public class ModuleVersionUpdateRequestDTO {
     @NotNull private Long userId;
     @NotNull private String titleEng;
     @NotNull private String levelEng;
-    @NotNull private String languageEng;
+    @NotNull private Language languageEng;
     @NotNull private String frequencyEng;
     @NotNull private Integer credits;
     @NotNull private Integer hoursTotal;
