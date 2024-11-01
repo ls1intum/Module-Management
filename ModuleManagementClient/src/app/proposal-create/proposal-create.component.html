@@ -1,0 +1,105 @@
+<form [formGroup]="proposalForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="userId">Professor:</label>
+    <select id="userId" formControlName="userId">
+      <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="titleEng">Title (English):</label>
+    <input id="titleEng" formControlName="titleEng" type="text" required />
+  </div>
+
+  <div>
+    <label for="levelEng">Level (English):</label>
+    <input id="levelEng" formControlName="levelEng" type="text" required />
+  </div>
+
+  <div>
+    <label for="languageEng">Language:</label>
+    <select id="languageEng" formControlName="languageEng" required>
+      <option value="English">English</option>
+      <option value="German">German</option>
+      <option value="undefined">Undefined</option>
+    </select>
+  </div>
+
+  <div>
+    <label for="repetitionEng">Repetition:</label>
+    <input id="repetitionEng" formControlName="repetitionEng" type="text" required />
+  </div>
+
+  <div>
+    <label for="frequencyEng">Frequency:</label>
+    <input id="frequencyEng" formControlName="frequencyEng" type="text" required />
+  </div>
+
+  <div>
+    <label for="credits">Credits:</label>
+    <input id="credits" formControlName="credits" type="number" required />
+  </div>
+
+  <div>
+    <label for="hoursTotal">Total Hours:</label>
+    <input id="hoursTotal" formControlName="hoursTotal" type="number" required />
+  </div>
+
+  <div>
+    <label for="hoursSelfStudy">Self-Study Hours:</label>
+    <input id="hoursSelfStudy" formControlName="hoursSelfStudy" type="number" required />
+  </div>
+
+  <div>
+    <label for="hoursPresence">Presence Hours:</label>
+    <input id="hoursPresence" formControlName="hoursPresence" type="number" required />
+  </div>
+
+  <div>
+    <label for="examinationAchievementsEng">Examination Achievements:</label>
+    <input id="examinationAchievementsEng" formControlName="examinationAchievementsEng" type="text" required />
+  </div>
+
+  <div>
+    <label for="recommendedPrerequisitesEng">Recommended Prerequisites:</label>
+    <input id="recommendedPrerequisitesEng" formControlName="recommendedPrerequisitesEng" type="text" />
+  </div>
+
+  <div>
+    <label for="contentEng">Content:</label>
+    <textarea id="contentEng" formControlName="contentEng"></textarea>
+  </div>
+
+  <div>
+    <label for="learningOutcomesEng">Learning Outcomes:</label>
+    <input id="learningOutcomesEng" formControlName="learningOutcomesEng" type="text" required />
+  </div>
+
+  <div>
+    <label for="teachingMethodsEng">Teaching Methods:</label>
+    <input id="teachingMethodsEng" formControlName="teachingMethodsEng" type="text" required />
+  </div>
+
+  <div>
+    <label for="mediaEng">Media:</label>
+    <input id="mediaEng" formControlName="mediaEng" type="text" />
+  </div>
+
+  <div>
+    <label for="literatureEng">Literature:</label>
+    <input id="literatureEng" formControlName="literatureEng" type="text" />
+  </div>
+
+  <div>
+    <label for="responsiblesEng">Responsibles:</label>
+    <input id="responsiblesEng" formControlName="responsiblesEng" type="text" required />
+  </div>
+
+  <div>
+    <label for="lvSwsLecturerEng">Lecturer:</label>
+    <input id="lvSwsLecturerEng" formControlName="lvSwsLecturerEng" type="text" required />
+  </div>
+
+  <button type="submit" [disabled]="proposalForm.invalid">Create Proposal</button>
+</form>
+

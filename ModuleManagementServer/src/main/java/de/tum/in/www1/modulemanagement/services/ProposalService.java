@@ -105,7 +105,7 @@ public class ProposalService {
                 .stream()
                 .map(p -> new ProposalsCompactDTO(
                         p.getProposalId(),
-                        p.getCreatedBy().getUserId(),
+                        p.getCreatedBy().getName(),
                         p.getStatus(),
                         p.getLatestModuleVersion() != null ? p.getLatestModuleVersion().getModuleVersionId() : null,
                         p.getLatestModuleVersion() != null ? p.getLatestModuleVersion().getTitleEng() : null
@@ -128,7 +128,7 @@ public class ProposalService {
                 .filter(proposal -> proposal.getCreatedBy().getUserId().equals(userId))
                 .map(p -> new ProposalsCompactDTO(
                         p.getProposalId(),
-                        p.getCreatedBy().getUserId(),
+                        p.getCreatedBy().getName(),
                         p.getStatus(),
                         p.getLatestModuleVersion() != null ? p.getLatestModuleVersion().getModuleVersionId() : null,
                         p.getLatestModuleVersion() != null ? p.getLatestModuleVersion().getTitleEng() : null

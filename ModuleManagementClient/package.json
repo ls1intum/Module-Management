@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "generate:api-client": "npx openapi-generator-cli generate -i ../openapi.yaml -g typescript-angular -o src/app/core/modules/openapi --additional-properties fileNaming=kebab-case,withInterfaces=true --generate-alias-as-model",
+    "generate:api-client": "npx openapi-generator-cli generate -i ../ModuleManagementServer/src/main/resources/openapi.yaml -g typescript-angular -o src/app/core/modules/openapi --additional-properties fileNaming=kebab-case,withInterfaces=true --generate-alias-as-model",
     "clean:api": "rimraf src/app/core/modules/openapi"
   },
   "private": true,

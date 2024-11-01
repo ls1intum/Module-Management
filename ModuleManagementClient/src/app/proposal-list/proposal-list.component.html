@@ -1,0 +1,52 @@
+<div>
+    <header>
+        <h1>Module Management</h1>
+        <select (change)="onUserChange($event)" [disabled]="loading">
+            <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+        </select>
+        <button class="create-proposal-button" [routerLink]="['/proposals/create']">Create new Module Proposal</button>
+    </header>
+    <table>
+        <thead>
+            <tr>
+                <th>Proposal ID</th>
+                <th>Created By</th>
+                <th>Status</th>
+                <th>Latest Module Version</th>
+                <th>Latest Title</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (loading) {
+                <tr>
+                    <td colspan="4">Loading proposals...</td>
+                </tr>
+            }
+            @if (error) {
+                <tr>
+                    <td colspan="4">{{ error }}</td>
+                </tr>
+            }
+            @if (!loading && !error) {
+                @for (proposal of proposals; track proposal.proposalId) {
+                    <tr>
+                        <td>{{ proposal.latestVersion }}</td>
+                        <td>{{ proposal.latestTitle }}</td>
+                        <td>{{ proposal.status }}</td>
+                        <td>{{ proposal.createdBy }}</td>
+                        <td>
+                            <button [routerLink]="['/proposals/id', proposal.proposalId]">View</button>
+                            <button [routerLink]="['/proposals/edit', proposal.proposalId]">Edit</button>
+                            <!-- <button (click)="deleteProposal(proposal.proposalId)">Delete</button> -->
+                        </td>
+                    </tr>
+                }
+                @empty {
+                    <tr>
+                        <td colspan="4">No contents</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
