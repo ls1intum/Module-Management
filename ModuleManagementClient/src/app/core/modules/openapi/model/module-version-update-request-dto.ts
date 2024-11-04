@@ -11,26 +11,40 @@
 
 export interface ModuleVersionUpdateRequestDTO { 
     userId: number;
-    titleEng: string;
-    levelEng: string;
-    languageEng: ModuleVersionUpdateRequestDTO.LanguageEngEnum;
-    frequencyEng: string;
-    credits: number;
-    hoursTotal: number;
-    hoursSelfStudy: number;
-    hoursPresence: number;
-    examinationAchievementsEng: string;
-    repetitionEng: string;
-    recommendedPrerequisitesEng: string;
-    contentEng: string;
-    learningOutcomesEng: string;
-    teachingMethodsEng: string;
-    mediaEng: string;
-    literatureEng: string;
-    responsiblesEng: string;
-    lvSwsLecturerEng: string;
+    moduleVersionId: number;
+    version?: number;
+    moduleId?: string;
+    status?: ModuleVersionUpdateRequestDTO.StatusEnum;
+    isComplete?: boolean;
+    titleEng?: string;
+    levelEng?: string;
+    languageEng?: ModuleVersionUpdateRequestDTO.LanguageEngEnum;
+    frequencyEng?: string;
+    credits?: number;
+    hoursTotal?: number;
+    hoursSelfStudy?: number;
+    hoursPresence?: number;
+    examinationAchievementsEng?: string;
+    repetitionEng?: string;
+    recommendedPrerequisitesEng?: string;
+    contentEng?: string;
+    learningOutcomesEng?: string;
+    teachingMethodsEng?: string;
+    mediaEng?: string;
+    literatureEng?: string;
+    responsiblesEng?: string;
+    lvSwsLecturerEng?: string;
 }
 export namespace ModuleVersionUpdateRequestDTO {
+    export type StatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'ACCEPTED' | 'REJECTED' | 'OBSOLETE' | 'CANCELLED';
+    export const StatusEnum = {
+        PendingSubmission: 'PENDING_SUBMISSION' as StatusEnum,
+        PendingFeedback: 'PENDING_FEEDBACK' as StatusEnum,
+        Accepted: 'ACCEPTED' as StatusEnum,
+        Rejected: 'REJECTED' as StatusEnum,
+        Obsolete: 'OBSOLETE' as StatusEnum,
+        Cancelled: 'CANCELLED' as StatusEnum
+    };
     export type LanguageEngEnum = 'English' | 'German' | 'undefined';
     export const LanguageEngEnum = {
         English: 'English' as LanguageEngEnum,

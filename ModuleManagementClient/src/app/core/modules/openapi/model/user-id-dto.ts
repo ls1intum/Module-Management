@@ -9,7 +9,7 @@
  */
 
 
-export interface DeleteProposalDTO { 
+export interface UserIdDTO { 
     userId: number;
 }
 

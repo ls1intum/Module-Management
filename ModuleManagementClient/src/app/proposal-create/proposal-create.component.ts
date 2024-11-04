@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProposalControllerService } from '../core/modules/openapi';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-proposal-create',
@@ -10,50 +11,51 @@ import { CommonModule } from '@angular/common';
   templateUrl: './proposal-create.component.html',
   styleUrl: './proposal-create.component.css'
 })
-export class ProposalsCreateComponent implements OnInit {
+export class ProposalsCreateComponent {
   proposalForm: FormGroup;
+  loading: boolean = false;
+  error: string | null = null;
   users = [
     { id: 1, name: 'Professor1' },
     { id: 2, name: 'Professor2' }
   ];
 
-  constructor(private formBuilder: FormBuilder, private proposalService: ProposalControllerService) {
+  constructor(private formBuilder: FormBuilder, private proposalService: ProposalControllerService, private router: Router) {
     this.proposalForm = this.formBuilder.group({
       userId: [null, Validators.required],
-      titleEng: ['', Validators.required],
-      levelEng: ['', Validators.required],
-      languageEng: ['', Validators.required],
-      repetitionEng: ['', Validators.required],
-      frequencyEng: ['', Validators.required],
-      credits: [null, [Validators.required, Validators.min(0)]],
-      hoursTotal: [null, [Validators.required, Validators.min(0)]],
-      hoursSelfStudy: [null, [Validators.required, Validators.min(0)]],
-      hoursPresence: [null, [Validators.required, Validators.min(0)]],
-      examinationAchievementsEng: ['', Validators.required],
-      recommendedPrerequisitesEng: ['', Validators.required],
+      titleEng: [''],
+      levelEng: [''],
+      languageEng: ['undefined'],
+      repetitionEng: [''],
+      frequencyEng: [''],
+      credits: [null],
+      hoursTotal: [null],
+      hoursSelfStudy: [null],
+      hoursPresence: [null],
+      examinationAchievementsEng: [''],
+      recommendedPrerequisitesEng: [''],
       contentEng: [''],
-      learningOutcomesEng: ['', Validators.required],
-      teachingMethodsEng: ['', Validators.required],
-      mediaEng: ['', Validators.required],
-      literatureEng: ['', Validators.required],
-      responsiblesEng: ['', Validators.required],
-      lvSwsLecturerEng: ['', Validators.required]
+      learningOutcomesEng: [''],
+      teachingMethodsEng: [''],
+      mediaEng: [''],
+      literatureEng: [''],
+      responsiblesEng: [''],
+      lvSwsLecturerEng: ['']
     });
   }
 
-  ngOnInit(): void {}
-
   async onSubmit() {
+    this.loading = true;
     if (this.proposalForm.valid) {
       const proposalData = this.proposalForm.value;
-      try {
-        console.log("HAHAHAHAH")
-        await this.proposalService.createProposal(proposalData);
-        // todo: hanle positve
-      } catch (error) {
-        console.log("ERROR")
-        console.error('Error creating proposal:', error);
-      }
+      this.proposalService.createProposal(proposalData).subscribe({
+        next: (response) => {
+          this.proposalForm.reset();
+          this.router.navigate(['/proposal/view', response.proposalId], { queryParams: { created: true } });
+        },
+        error: (err) => this.error = err,
+        complete: () => this.loading = false,
+      });
     }
   }
 }

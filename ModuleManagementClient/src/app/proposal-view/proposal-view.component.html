@@ -1,0 +1,39 @@
+@if(loading) {
+    <div>Loading...</div>
+}
+@if(error) {
+    <div class="error">{{error}}</div>
+}
+@if(proposal) {
+    <div>
+        <h2>Proposal ID: {{ proposal.proposalId }}</h2>
+        <p>Creation Date: {{ proposal.creationDate }}</p>
+        <p>Status: {{ proposal.status }}</p>
+
+        <h3>Module Versions</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Version</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            @for (moduleVersion of proposal.moduleVersionsCompact; track moduleVersion.moduleVersionId) {
+                <tr>
+                    <td>{{ moduleVersion.version }}</td>
+                    <td>{{ moduleVersion.status }}</td>
+                    <td>
+                    <button (click)="viewModuleVersion(moduleVersion.moduleVersionId)">View</button>
+                    <button (click)="editModuleVersion(moduleVersion.moduleVersionId)">Edit</button>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+
+        <button (click)="editLatestModuleVersion()">Edit Latest Module Version</button>
+        <button (click)="addNewModuleVersion()">Add New Module Version</button>
+    </div>
+}

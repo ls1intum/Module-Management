@@ -1,11 +1,10 @@
 package de.tum.in.www1.modulemanagement.services;
 
+import de.tum.in.www1.modulemanagement.dtos.ModuleVersionUpdateRequestDTO;
 import de.tum.in.www1.modulemanagement.dtos.ProposalRequestDTO;
+import de.tum.in.www1.modulemanagement.dtos.ProposalViewDTO;
 import de.tum.in.www1.modulemanagement.dtos.ProposalsCompactDTO;
-import de.tum.in.www1.modulemanagement.enums.ProposalStatus;
-import de.tum.in.www1.modulemanagement.enums.UserRole;
-import de.tum.in.www1.modulemanagement.enums.FeedbackStatus;
-import de.tum.in.www1.modulemanagement.enums.ModuleVersionStatus;
+import de.tum.in.www1.modulemanagement.enums.*;
 import de.tum.in.www1.modulemanagement.models.Feedback;
 import de.tum.in.www1.modulemanagement.models.ModuleVersion;
 import de.tum.in.www1.modulemanagement.models.Proposal;
@@ -15,6 +14,7 @@ import de.tum.in.www1.modulemanagement.repositories.ModuleVersionRepository;
 import de.tum.in.www1.modulemanagement.repositories.ProposalRepository;
 import de.tum.in.www1.modulemanagement.repositories.UserRepository;
 import de.tum.in.www1.modulemanagement.shared.ResourceNotFoundException;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -53,6 +53,7 @@ public class ProposalService {
         ModuleVersion mv = new ModuleVersion();
         mv.setVersion(1);
         mv.setModuleId(null);
+        mv.setCreationDate(LocalDateTime.now());
         mv.setProposal(p);
         mv.setStatus(ModuleVersionStatus.PENDING_SUBMISSION);
         mv.setTitleEng(request.getTitleEng());
@@ -107,8 +108,8 @@ public class ProposalService {
                         p.getProposalId(),
                         p.getCreatedBy().getName(),
                         p.getStatus(),
-                        p.getLatestModuleVersion() != null ? p.getLatestModuleVersion().getModuleVersionId() : null,
-                        p.getLatestModuleVersion() != null ? p.getLatestModuleVersion().getTitleEng() : null
+                        p.getLatestModuleVersionWithContent() != null ? p.getLatestModuleVersionWithContent().getModuleVersionId() : null,
+                        p.getLatestModuleVersionWithContent() != null ? p.getLatestModuleVersionWithContent().getTitleEng() : null
                 ))
                 .sorted(Comparator.comparing(ProposalsCompactDTO::getProposalId))
                 .collect(Collectors.toList());
@@ -130,8 +131,8 @@ public class ProposalService {
                         p.getProposalId(),
                         p.getCreatedBy().getName(),
                         p.getStatus(),
-                        p.getLatestModuleVersion() != null ? p.getLatestModuleVersion().getModuleVersionId() : null,
-                        p.getLatestModuleVersion() != null ? p.getLatestModuleVersion().getTitleEng() : null
+                        p.getLatestModuleVersionWithContent() != null ? p.getLatestModuleVersionWithContent().getModuleVersionId() : null,
+                        p.getLatestModuleVersionWithContent() != null ? p.getLatestModuleVersionWithContent().getTitleEng() : null
                 ))
                 .sorted(Comparator.comparing(ProposalsCompactDTO::getProposalId))
                 .collect(Collectors.toList());
@@ -140,6 +141,13 @@ public class ProposalService {
 
     public Proposal getProposalById(long id) {
         return proposalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Proposal not found"));
+    }
+
+    public ProposalViewDTO getProposalViewDtoById(long id) {
+        var p = proposalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Proposal not found"));
+        // TODO: AUTH
+        return p.toProposalViewDTO();
+
     }
 
     public void submitProposal(Long proposalId, Long userId) {
@@ -154,7 +162,7 @@ public class ProposalService {
             throw new IllegalStateException("Proposal must have at least one ModuleVersion.");
         }
 
-        ModuleVersion mv = proposal.getLatestModuleVersion();
+        ModuleVersion mv = proposal.getLatestModuleVersionWithContent();
 
         if (!mv.getStatus().equals(ModuleVersionStatus.PENDING_SUBMISSION)) {
             throw new IllegalStateException("Proposal is not pending submission. It is " + mv.getStatus() + ".");
@@ -181,6 +189,10 @@ public class ProposalService {
         if (!p.getCreatedBy().getUserId().equals(user.getUserId())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
         }
+        if (p.getStatus() != ProposalStatus.PENDING_SUBMISSION) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can only delete a proposal that is not already submit. This module proposal is " + p.getStatus() + ".");
+        }
         proposalRepository.delete(p);
     }
+
 }

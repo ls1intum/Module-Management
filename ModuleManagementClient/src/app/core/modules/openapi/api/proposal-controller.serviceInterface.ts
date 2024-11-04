@@ -11,11 +11,11 @@ import { HttpHeaders }                                       from '@angular/comm
 
 import { Observable }                                        from 'rxjs';
 
-import { DeleteProposalDTO } from '../model/models';
 import { Proposal } from '../model/models';
 import { ProposalRequestDTO } from '../model/models';
+import { ProposalViewDTO } from '../model/models';
 import { ProposalsCompactDTO } from '../model/models';
-import { SimpleSubmitDTO } from '../model/models';
+import { UserIdDTO } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -37,9 +37,9 @@ export interface ProposalControllerServiceInterface {
      * 
      * 
      * @param proposalId 
-     * @param deleteProposalDTO 
+     * @param userIdDTO 
      */
-    deleteProposal(proposalId: number, deleteProposalDTO: DeleteProposalDTO, extraHttpRequestParams?: any): Observable<string>;
+    deleteProposal(proposalId: number, userIdDTO: UserIdDTO, extraHttpRequestParams?: any): Observable<string>;
 
     /**
      * 
@@ -65,6 +65,13 @@ export interface ProposalControllerServiceInterface {
      * 
      * @param id 
      */
+    getProposalView(id: number, extraHttpRequestParams?: any): Observable<ProposalViewDTO>;
+
+    /**
+     * 
+     * 
+     * @param id 
+     */
     getProposalsByUserId(id: number, extraHttpRequestParams?: any): Observable<Array<Proposal>>;
 
     /**
@@ -78,8 +85,8 @@ export interface ProposalControllerServiceInterface {
      * 
      * 
      * @param proposalId 
-     * @param simpleSubmitDTO 
+     * @param userIdDTO 
      */
-    submitProposal(proposalId: number, simpleSubmitDTO: SimpleSubmitDTO, extraHttpRequestParams?: any): Observable<string>;
+    submitProposal(proposalId: number, userIdDTO: UserIdDTO, extraHttpRequestParams?: any): Observable<string>;
 
 }

@@ -20,6 +20,8 @@ import { Observable }                                        from 'rxjs';
 import { ModuleVersion } from '../model/module-version';
 // @ts-ignore
 import { ModuleVersionUpdateRequestDTO } from '../model/module-version-update-request-dto';
+// @ts-ignore
+import { UserIdDTO } from '../model/user-id-dto';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -97,14 +99,88 @@ export class ModuleVersionControllerService implements ModuleVersionControllerSe
 
     /**
      * @param moduleVersionId 
+     * @param request 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getModuleVersionUpdateDtoFromId(moduleVersionId: number, request: UserIdDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ModuleVersionUpdateRequestDTO>;
+    public getModuleVersionUpdateDtoFromId(moduleVersionId: number, request: UserIdDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ModuleVersionUpdateRequestDTO>>;
+    public getModuleVersionUpdateDtoFromId(moduleVersionId: number, request: UserIdDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ModuleVersionUpdateRequestDTO>>;
+    public getModuleVersionUpdateDtoFromId(moduleVersionId: number, request: UserIdDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (moduleVersionId === null || moduleVersionId === undefined) {
+            throw new Error('Required parameter moduleVersionId was null or undefined when calling getModuleVersionUpdateDtoFromId.');
+        }
+        if (request === null || request === undefined) {
+            throw new Error('Required parameter request was null or undefined when calling getModuleVersionUpdateDtoFromId.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (request !== undefined && request !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>request, 'request');
+        }
+
+        let localVarHeaders = this.defaultHeaders;
+
+        let localVarHttpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (localVarHttpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (localVarHttpHeaderAcceptSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Accept', localVarHttpHeaderAcceptSelected);
+        }
+
+        let localVarHttpContext: HttpContext | undefined = options && options.context;
+        if (localVarHttpContext === undefined) {
+            localVarHttpContext = new HttpContext();
+        }
+
+        let localVarTransferCache: boolean | undefined = options && options.transferCache;
+        if (localVarTransferCache === undefined) {
+            localVarTransferCache = true;
+        }
+
+
+        let responseType_: 'text' | 'json' | 'blob' = 'json';
+        if (localVarHttpHeaderAcceptSelected) {
+            if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
+                responseType_ = 'text';
+            } else if (this.configuration.isJsonMime(localVarHttpHeaderAcceptSelected)) {
+                responseType_ = 'json';
+            } else {
+                responseType_ = 'blob';
+            }
+        }
+
+        let localVarPath = `/api/module-versions/${this.configuration.encodeParam({name: "moduleVersionId", value: moduleVersionId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
+        return this.httpClient.request<ModuleVersionUpdateRequestDTO>('get', `${this.configuration.basePath}${localVarPath}`,
+            {
+                context: localVarHttpContext,
+                params: localVarQueryParameters,
+                responseType: <any>responseType_,
+                withCredentials: this.configuration.withCredentials,
+                headers: localVarHeaders,
+                observe: observe,
+                transferCache: localVarTransferCache,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param moduleVersionId 
      * @param moduleVersionUpdateRequestDTO 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateModuleVersion(moduleVersionId: number, moduleVersionUpdateRequestDTO: ModuleVersionUpdateRequestDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<ModuleVersion>;
-    public updateModuleVersion(moduleVersionId: number, moduleVersionUpdateRequestDTO: ModuleVersionUpdateRequestDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ModuleVersion>>;
-    public updateModuleVersion(moduleVersionId: number, moduleVersionUpdateRequestDTO: ModuleVersionUpdateRequestDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ModuleVersion>>;
-    public updateModuleVersion(moduleVersionId: number, moduleVersionUpdateRequestDTO: ModuleVersionUpdateRequestDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public updateModuleVersion(moduleVersionId: number, moduleVersionUpdateRequestDTO: ModuleVersionUpdateRequestDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ModuleVersion>;
+    public updateModuleVersion(moduleVersionId: number, moduleVersionUpdateRequestDTO: ModuleVersionUpdateRequestDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ModuleVersion>>;
+    public updateModuleVersion(moduleVersionId: number, moduleVersionUpdateRequestDTO: ModuleVersionUpdateRequestDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ModuleVersion>>;
+    public updateModuleVersion(moduleVersionId: number, moduleVersionUpdateRequestDTO: ModuleVersionUpdateRequestDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (moduleVersionId === null || moduleVersionId === undefined) {
             throw new Error('Required parameter moduleVersionId was null or undefined when calling updateModuleVersion.');
         }
@@ -118,7 +194,7 @@ export class ModuleVersionControllerService implements ModuleVersionControllerSe
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                '*/*'
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }

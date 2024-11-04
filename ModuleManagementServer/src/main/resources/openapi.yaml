@@ -28,7 +28,7 @@ paths:
         "200":
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: "#/components/schemas/CitModule"
     delete:
@@ -46,6 +46,29 @@ paths:
         "200":
           description: OK
   /api/module-versions/{moduleVersionId}:
+    get:
+      tags:
+      - module-version-controller
+      operationId: getModuleVersionUpdateDtoFromId
+      parameters:
+      - name: moduleVersionId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: request
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/UserIdDTO"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ModuleVersionUpdateRequestDTO"
     put:
       tags:
       - module-version-controller
@@ -67,7 +90,7 @@ paths:
         "200":
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: "#/components/schemas/ModuleVersion"
   /api/feedbacks/{feedbackId}/reject:
@@ -92,7 +115,7 @@ paths:
         "200":
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: "#/components/schemas/Feedback"
   /api/feedbacks/{feedbackId}/accept:
@@ -111,13 +134,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/AcceptFeedbackDTO"
+              $ref: "#/components/schemas/UserIdDTO"
         required: true
       responses:
         "200":
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: "#/components/schemas/Feedback"
   /api/proposals:
@@ -129,7 +152,7 @@ paths:
         "200":
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -148,7 +171,7 @@ paths:
         "200":
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: "#/components/schemas/Proposal"
   /api/proposals/submit/{proposalId}:
@@ -167,13 +190,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SimpleSubmitDTO"
+              $ref: "#/components/schemas/UserIdDTO"
         required: true
       responses:
         "200":
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: string
   /api/modules/create:
@@ -191,7 +214,7 @@ paths:
         "200":
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: "#/components/schemas/CitModule"
   /api/proposals/{id}:
@@ -210,9 +233,28 @@ paths:
         "200":
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: "#/components/schemas/Proposal"
+  /api/proposals/{id}/view:
+    get:
+      tags:
+      - proposal-controller
+      operationId: getProposalView
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProposalViewDTO"
   /api/proposals/from-user/{id}:
     get:
       tags:
@@ -229,7 +271,7 @@ paths:
         "200":
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -243,7 +285,7 @@ paths:
         "200":
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -264,7 +306,7 @@ paths:
         "200":
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -278,7 +320,7 @@ paths:
         "200":
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -298,7 +340,7 @@ paths:
         "200":
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: "#/components/schemas/CitModule"
   /api/modules/id/{id}:
@@ -317,7 +359,7 @@ paths:
         "200":
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: "#/components/schemas/CitModule"
   /api/feedbacks/for-user/{id}:
@@ -336,7 +378,7 @@ paths:
         "200":
           description: OK
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
@@ -357,13 +399,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/DeleteProposalDTO"
+              $ref: "#/components/schemas/UserIdDTO"
         required: true
       responses:
         "200":
           description: OK
           content:
-            '*/*':
+            text/plain:
               schema:
                 type: string
 components:
@@ -408,30 +450,32 @@ components:
           type: string
     ModuleVersionUpdateRequestDTO:
       required:
-      - contentEng
-      - credits
-      - examinationAchievementsEng
-      - frequencyEng
-      - hoursPresence
-      - hoursSelfStudy
-      - hoursTotal
-      - languageEng
-      - learningOutcomesEng
-      - levelEng
-      - literatureEng
-      - lvSwsLecturerEng
-      - mediaEng
-      - recommendedPrerequisitesEng
-      - repetitionEng
-      - responsiblesEng
-      - teachingMethodsEng
-      - titleEng
+      - moduleVersionId
       - userId
       type: object
       properties:
         userId:
           type: integer
           format: int64
+        moduleVersionId:
+          type: integer
+          format: int64
+        version:
+          type: integer
+          format: int32
+        moduleId:
+          type: string
+        status:
+          type: string
+          enum:
+          - PENDING_SUBMISSION
+          - PENDING_FEEDBACK
+          - ACCEPTED
+          - REJECTED
+          - OBSOLETE
+          - CANCELLED
+        isComplete:
+          type: boolean
         titleEng:
           type: string
         levelEng:
@@ -516,6 +560,9 @@ components:
           format: int32
         moduleId:
           type: string
+        creationDate:
+          type: string
+          format: date-time
         status:
           type: string
           enum:
@@ -601,7 +648,7 @@ components:
           format: int64
         comment:
           type: string
-    AcceptFeedbackDTO:
+    UserIdDTO:
       required:
       - userId
       type: object
@@ -684,12 +731,48 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ModuleVersion"
-    SimpleSubmitDTO:
+    ModuleVersionCompactDTO:
       type: object
       properties:
-        userId:
+        moduleVersionId:
           type: integer
           format: int64
+        version:
+          type: integer
+          format: int32
+        status:
+          type: string
+          enum:
+          - PENDING_SUBMISSION
+          - PENDING_FEEDBACK
+          - ACCEPTED
+          - REJECTED
+          - OBSOLETE
+          - CANCELLED
+    ProposalViewDTO:
+      type: object
+      properties:
+        proposalId:
+          type: integer
+          format: int64
+        creationDate:
+          type: string
+          format: date-time
+        latestVersion:
+          type: integer
+          format: int32
+        status:
+          type: string
+          enum:
+          - PENDING_SUBMISSION
+          - PENDING_FEEDBACK
+          - ACCEPTED
+          - REQUIRES_REVIEW
+          - CANCELED
+        moduleVersionsCompact:
+          type: array
+          items:
+            $ref: "#/components/schemas/ModuleVersionCompactDTO"
     ProposalsCompactDTO:
       type: object
       properties:
@@ -711,11 +794,3 @@ components:
           format: int64
         latestTitle:
           type: string
-    DeleteProposalDTO:
-      required:
-      - userId
-      type: object
-      properties:
-        userId:
-          type: integer
-          format: int64

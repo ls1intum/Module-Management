@@ -1,13 +1,11 @@
 package de.tum.in.www1.modulemanagement.controllers;
 
-import de.tum.in.www1.modulemanagement.dtos.DeleteProposalDTO;
-import de.tum.in.www1.modulemanagement.dtos.ProposalRequestDTO;
-import de.tum.in.www1.modulemanagement.dtos.ProposalsCompactDTO;
-import de.tum.in.www1.modulemanagement.dtos.SimpleSubmitDTO;
+import de.tum.in.www1.modulemanagement.dtos.*;
 import de.tum.in.www1.modulemanagement.models.Proposal;
 import de.tum.in.www1.modulemanagement.services.ProposalService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +22,7 @@ public class ProposalController {
     }
 
     @PostMapping("/submit/{proposalId}")
-    public ResponseEntity<String> submitProposal(@PathVariable Long proposalId, @RequestBody SimpleSubmitDTO request) {
+    public ResponseEntity<String> submitProposal(@PathVariable Long proposalId, @RequestBody UserIdDTO request) {
         proposalService.submitProposal(proposalId, request.getUserId());
         return ResponseEntity.ok("Proposal submitted successfully.");
     }
@@ -53,6 +51,12 @@ public class ProposalController {
         return proposal != null ? new ResponseEntity<>(proposal, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @GetMapping("/{id}/view")
+    public ResponseEntity<ProposalViewDTO> getProposalView (@PathVariable long id) {
+        ProposalViewDTO p = proposalService.getProposalViewDtoById(id);
+        return ResponseEntity.ok(p);
+    }
+
     @GetMapping("/from-user/{id}")
     public ResponseEntity<List<Proposal>> getProposalsByUserId(@PathVariable Long id) {
         List<Proposal> proposals = proposalService.getProposalsOfUser(id);
@@ -65,8 +69,8 @@ public class ProposalController {
         return ResponseEntity.ok(proposals);
     }
 
-    @DeleteMapping("/{proposalId}")
-    public ResponseEntity<String> deleteProposal(@PathVariable long proposalId, @RequestBody DeleteProposalDTO request) {
+    @DeleteMapping(value = "/{proposalId}", produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> deleteProposal(@PathVariable long proposalId, @Valid @RequestBody UserIdDTO request) {
         proposalService.deleteProposalById(proposalId, request.getUserId());
         return ResponseEntity.ok("Proposal deleted successfully.");
     }

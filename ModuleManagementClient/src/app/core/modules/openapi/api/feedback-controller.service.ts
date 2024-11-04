@@ -17,11 +17,11 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { AcceptFeedbackDTO } from '../model/accept-feedback-dto';
-// @ts-ignore
 import { Feedback } from '../model/feedback';
 // @ts-ignore
 import { RejectFeedbackDTO } from '../model/reject-feedback-dto';
+// @ts-ignore
+import { UserIdDTO } from '../model/user-id-dto';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -99,19 +99,19 @@ export class FeedbackControllerService implements FeedbackControllerServiceInter
 
     /**
      * @param feedbackId 
-     * @param acceptFeedbackDTO 
+     * @param userIdDTO 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public approveFeedback(feedbackId: number, acceptFeedbackDTO: AcceptFeedbackDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<Feedback>;
-    public approveFeedback(feedbackId: number, acceptFeedbackDTO: AcceptFeedbackDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Feedback>>;
-    public approveFeedback(feedbackId: number, acceptFeedbackDTO: AcceptFeedbackDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Feedback>>;
-    public approveFeedback(feedbackId: number, acceptFeedbackDTO: AcceptFeedbackDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public approveFeedback(feedbackId: number, userIdDTO: UserIdDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Feedback>;
+    public approveFeedback(feedbackId: number, userIdDTO: UserIdDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Feedback>>;
+    public approveFeedback(feedbackId: number, userIdDTO: UserIdDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Feedback>>;
+    public approveFeedback(feedbackId: number, userIdDTO: UserIdDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (feedbackId === null || feedbackId === undefined) {
             throw new Error('Required parameter feedbackId was null or undefined when calling approveFeedback.');
         }
-        if (acceptFeedbackDTO === null || acceptFeedbackDTO === undefined) {
-            throw new Error('Required parameter acceptFeedbackDTO was null or undefined when calling approveFeedback.');
+        if (userIdDTO === null || userIdDTO === undefined) {
+            throw new Error('Required parameter userIdDTO was null or undefined when calling approveFeedback.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -120,7 +120,7 @@ export class FeedbackControllerService implements FeedbackControllerServiceInter
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                '*/*'
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -163,7 +163,7 @@ export class FeedbackControllerService implements FeedbackControllerServiceInter
         return this.httpClient.request<Feedback>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: acceptFeedbackDTO,
+                body: userIdDTO,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -179,10 +179,10 @@ export class FeedbackControllerService implements FeedbackControllerServiceInter
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getFeedbacksForUser(id: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<Array<Feedback>>;
-    public getFeedbacksForUser(id: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<Feedback>>>;
-    public getFeedbacksForUser(id: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<Feedback>>>;
-    public getFeedbacksForUser(id: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getFeedbacksForUser(id: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<Feedback>>;
+    public getFeedbacksForUser(id: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<Feedback>>>;
+    public getFeedbacksForUser(id: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<Feedback>>>;
+    public getFeedbacksForUser(id: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling getFeedbacksForUser.');
         }
@@ -193,7 +193,7 @@ export class FeedbackControllerService implements FeedbackControllerServiceInter
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                '*/*'
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -243,10 +243,10 @@ export class FeedbackControllerService implements FeedbackControllerServiceInter
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public rejectFeedback(feedbackId: number, rejectFeedbackDTO: RejectFeedbackDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<Feedback>;
-    public rejectFeedback(feedbackId: number, rejectFeedbackDTO: RejectFeedbackDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Feedback>>;
-    public rejectFeedback(feedbackId: number, rejectFeedbackDTO: RejectFeedbackDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Feedback>>;
-    public rejectFeedback(feedbackId: number, rejectFeedbackDTO: RejectFeedbackDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: '*/*', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public rejectFeedback(feedbackId: number, rejectFeedbackDTO: RejectFeedbackDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Feedback>;
+    public rejectFeedback(feedbackId: number, rejectFeedbackDTO: RejectFeedbackDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Feedback>>;
+    public rejectFeedback(feedbackId: number, rejectFeedbackDTO: RejectFeedbackDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Feedback>>;
+    public rejectFeedback(feedbackId: number, rejectFeedbackDTO: RejectFeedbackDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (feedbackId === null || feedbackId === undefined) {
             throw new Error('Required parameter feedbackId was null or undefined when calling rejectFeedback.');
         }
@@ -260,7 +260,7 @@ export class FeedbackControllerService implements FeedbackControllerServiceInter
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                '*/*'
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }

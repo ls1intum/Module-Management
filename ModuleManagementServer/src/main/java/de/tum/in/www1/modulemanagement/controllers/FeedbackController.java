@@ -1,13 +1,12 @@
 package de.tum.in.www1.modulemanagement.controllers;
 
-import de.tum.in.www1.modulemanagement.dtos.AcceptFeedbackDTO;
+import de.tum.in.www1.modulemanagement.dtos.UserIdDTO;
 import de.tum.in.www1.modulemanagement.dtos.RejectFeedbackDTO;
 import de.tum.in.www1.modulemanagement.models.Feedback;
 import de.tum.in.www1.modulemanagement.services.FeedbackService;
 import de.tum.in.www1.modulemanagement.services.ModuleVersionService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,7 +29,7 @@ public class FeedbackController {
     }
 
     @PutMapping("/{feedbackId}/accept")
-    public ResponseEntity<Feedback> approveFeedback(@PathVariable Long feedbackId, @Valid @RequestBody AcceptFeedbackDTO request) {
+    public ResponseEntity<Feedback> approveFeedback(@PathVariable Long feedbackId, @Valid @RequestBody UserIdDTO request) {
         Feedback updatedFeedback = feedbackService.Accept(feedbackId, request.getUserId());
         moduleVersionService.updateStatus(updatedFeedback.getModuleVersion().getModuleVersionId());
 

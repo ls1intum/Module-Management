@@ -1,6 +1,8 @@
 package de.tum.in.www1.modulemanagement.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.tum.in.www1.modulemanagement.dtos.ModuleVersionCompactDTO;
+import de.tum.in.www1.modulemanagement.dtos.ProposalViewDTO;
 import de.tum.in.www1.modulemanagement.enums.ProposalStatus;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -40,7 +42,26 @@ public class Proposal {
     }
 
     @JsonIgnore
-    public ModuleVersion getLatestModuleVersion() {
+    public ModuleVersion getLatestModuleVersionWithContent() {
         return moduleVersions.stream().max(Comparator.comparing(ModuleVersion::getVersion)).orElse(null);
+    }
+
+    @JsonIgnore
+    public Integer getLatestModuleVersion() {
+        return getLatestModuleVersionWithContent().getVersion();
+    }
+
+    @JsonIgnore
+    public ProposalViewDTO toProposalViewDTO() {
+        var v = new ProposalViewDTO();
+        v.setProposalId(proposalId);
+        v.setCreationDate(creationDate);
+        v.setLatestVersion(getLatestModuleVersion());
+        v.setStatus(status);
+        v.setModuleVersionsCompact(new ArrayList<>());
+        for (ModuleVersion moduleVersion : moduleVersions) {
+            v.getModuleVersionsCompact().add(moduleVersion.toCompactDTO());
+        }
+        return v;
     }
 }

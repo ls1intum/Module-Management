@@ -1,6 +1,7 @@
 package de.tum.in.www1.modulemanagement.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.tum.in.www1.modulemanagement.dtos.ModuleVersionCompactDTO;
 import de.tum.in.www1.modulemanagement.enums.Language;
 import de.tum.in.www1.modulemanagement.enums.ModuleVersionStatus;
 import io.micrometer.common.util.StringUtils;
@@ -8,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -24,6 +26,9 @@ public class ModuleVersion {
 
     @Column(name = "module_id")
     private String moduleId;
+
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
 
     @Column(name = "status")
     private ModuleVersionStatus status;
@@ -114,5 +119,14 @@ public class ModuleVersion {
                 && !StringUtils.isEmpty(literatureEng)
                 && !StringUtils.isEmpty(responsiblesEng)
                 && !StringUtils.isEmpty(lvSwsLecturerEng);
+    }
+
+    @JsonIgnore
+    public ModuleVersionCompactDTO toCompactDTO() {
+        var dto = new ModuleVersionCompactDTO();
+        dto.setModuleVersionId(this.moduleVersionId);
+        dto.setVersion(this.version);
+        dto.setStatus(this.status);
+        return dto;
     }
 }

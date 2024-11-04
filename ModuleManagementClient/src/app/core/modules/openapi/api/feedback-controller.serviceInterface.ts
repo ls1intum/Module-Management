@@ -11,9 +11,9 @@ import { HttpHeaders }                                       from '@angular/comm
 
 import { Observable }                                        from 'rxjs';
 
-import { AcceptFeedbackDTO } from '../model/models';
 import { Feedback } from '../model/models';
 import { RejectFeedbackDTO } from '../model/models';
+import { UserIdDTO } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -28,9 +28,9 @@ export interface FeedbackControllerServiceInterface {
      * 
      * 
      * @param feedbackId 
-     * @param acceptFeedbackDTO 
+     * @param userIdDTO 
      */
-    approveFeedback(feedbackId: number, acceptFeedbackDTO: AcceptFeedbackDTO, extraHttpRequestParams?: any): Observable<Feedback>;
+    approveFeedback(feedbackId: number, userIdDTO: UserIdDTO, extraHttpRequestParams?: any): Observable<Feedback>;
 
     /**
      * 

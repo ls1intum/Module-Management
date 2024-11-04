@@ -1,11 +1,4 @@
-<form [formGroup]="proposalForm" (ngSubmit)="onSubmit()">
-  <div>
-    <label for="userId">Professor:</label>
-    <select id="userId" formControlName="userId" required>
-      <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
-    </select>
-  </div>
-
+<form [formGroup]="moduleVersionForm" (ngSubmit)="onSubmit()">
   <div>
     <label for="titleEng">Title (English):</label>
     <input id="titleEng" formControlName="titleEng" type="text" />
@@ -21,7 +14,7 @@
     <select id="languageEng" formControlName="languageEng" >
       <option value="English">English</option>
       <option value="German">German</option>
-          <option value="undefined" [selected]="(proposalForm.get('languageEng')?.value || '') === 'undefined'">Undefined</option>
+          <option value="undefined" [selected]="(moduleVersionForm.get('languageEng')?.value || '') === 'undefined'">Undefined</option>
     </select>
   </div>
 
@@ -100,6 +93,6 @@
     <input id="lvSwsLecturerEng" formControlName="lvSwsLecturerEng" type="text"  />
   </div>
 
-  <button type="submit" [disabled]="proposalForm.invalid">Create Proposal</button>
+  <button type="submit" [disabled]="moduleVersionForm.invalid">Update Proposal</button>
 </form>
 
