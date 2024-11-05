@@ -21,7 +21,7 @@ public class ProposalController {
         this.proposalService = proposalService;
     }
 
-    @PostMapping("/submit/{proposalId}")
+    @PostMapping(value = "/submit/{proposalId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> submitProposal(@PathVariable Long proposalId, @RequestBody UserIdDTO request) {
         proposalService.submitProposal(proposalId, request.getUserId());
         return ResponseEntity.ok("Proposal submitted successfully.");

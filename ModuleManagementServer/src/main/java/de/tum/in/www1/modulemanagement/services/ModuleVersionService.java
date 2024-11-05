@@ -38,32 +38,27 @@ public class ModuleVersionService {
             throw new IllegalStateException("Cannot update a submitted ModuleVersion");
         }
 
-        ModuleVersionUpdateRequestDTO mdto = new ModuleVersionUpdateRequestDTO();
-
-        mdto.setUserId(mv.getProposal().getCreatedBy().getUserId());
-        mdto.setModuleVersionId(mv.getModuleVersionId());
-        mdto.setVersion(mv.getVersion());
-        mdto.setTitleEng(request.getTitleEng());
-        mdto.setLevelEng(request.getLevelEng());
-        mdto.setLanguageEng(request.getLanguageEng());
-        mdto.setFrequencyEng(request.getFrequencyEng());
-        mdto.setCredits(request.getCredits());
-        mdto.setHoursTotal(request.getHoursTotal());
-        mdto.setHoursSelfStudy(request.getHoursSelfStudy());
-        mdto.setHoursPresence(request.getHoursPresence());
-        mdto.setExaminationAchievementsEng(request.getExaminationAchievementsEng());
-        mdto.setRepetitionEng(request.getRepetitionEng());
-        mdto.setRecommendedPrerequisitesEng(request.getRecommendedPrerequisitesEng());
-        mdto.setContentEng(request.getContentEng());
-        mdto.setLearningOutcomesEng(request.getLearningOutcomesEng());
-        mdto.setTeachingMethodsEng(request.getTeachingMethodsEng());
-        mdto.setMediaEng(request.getMediaEng());
-        mdto.setLiteratureEng(request.getLiteratureEng());
-        mdto.setResponsiblesEng(request.getResponsiblesEng());
-        mdto.setLvSwsLecturerEng(request.getLvSwsLecturerEng());
+        mv.setTitleEng(request.getTitleEng());
+        mv.setLevelEng(request.getLevelEng());
+        mv.setLanguageEng(request.getLanguageEng());
+        mv.setFrequencyEng(request.getFrequencyEng());
+        mv.setCredits(request.getCredits());
+        mv.setHoursTotal(request.getHoursTotal());
+        mv.setHoursSelfStudy(request.getHoursSelfStudy());
+        mv.setHoursPresence(request.getHoursPresence());
+        mv.setExaminationAchievementsEng(request.getExaminationAchievementsEng());
+        mv.setRepetitionEng(request.getRepetitionEng());
+        mv.setRecommendedPrerequisitesEng(request.getRecommendedPrerequisitesEng());
+        mv.setContentEng(request.getContentEng());
+        mv.setLearningOutcomesEng(request.getLearningOutcomesEng());
+        mv.setTeachingMethodsEng(request.getTeachingMethodsEng());
+        mv.setMediaEng(request.getMediaEng());
+        mv.setLiteratureEng(request.getLiteratureEng());
+        mv.setResponsiblesEng(request.getResponsiblesEng());
+        mv.setLvSwsLecturerEng(request.getLvSwsLecturerEng());
 
         mv = moduleVersionRepository.save(mv);
-        return mv;
+        return mv.toModuleUpdateRequestDTO();
     }
 
     public void updateStatus(Long moduleVersionId) {

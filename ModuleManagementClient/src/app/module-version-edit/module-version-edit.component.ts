@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ModuleVersionControllerService, ModuleVersionUpdateRequestDTO, UserIdDTO } from '../core/modules/openapi';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-module-version-edit',
@@ -16,7 +16,7 @@ export class ModuleVersionEditComponent {
   loading: boolean = false;
   error: string | null = null;
 
-  constructor(private formBuilder: FormBuilder, private moduleVersionService: ModuleVersionControllerService,     private route: ActivatedRoute) {
+  constructor(private formBuilder: FormBuilder, private moduleVersionService: ModuleVersionControllerService, private route: ActivatedRoute, private router: Router) {
     this.moduleVersionForm = this.formBuilder.group({
       userId: [null],
       moduleVersionId: [null],
@@ -51,8 +51,7 @@ export class ModuleVersionEditComponent {
     this.loading = true;
     // TODO REMOVE AND DO PROPERLY
     const userId = 1;
-    const userIdDto: UserIdDTO = { userId: userId };
-    this.moduleVersionService.getModuleVersionUpdateDtoFromId(moduleVersionId, userIdDto).subscribe({
+    this.moduleVersionService.getModuleVersionUpdateDtoFromId(moduleVersionId, userId).subscribe({
       next: (response: ModuleVersionUpdateRequestDTO) => this.moduleVersionForm.patchValue(response),
       error: (err) => this.error = err,
       complete: () => this.loading = false
@@ -64,7 +63,10 @@ export class ModuleVersionEditComponent {
     if (this.moduleVersionForm.valid && this.moduleVersionId) {
       const moduleVersionData = this.moduleVersionForm.value;
       this.moduleVersionService.updateModuleVersion(this.moduleVersionId ,moduleVersionData).subscribe({
-        next: (response) => this.moduleVersionForm.patchValue(response),
+        next: (response) => {
+          this.moduleVersionForm.patchValue(response);
+          this.router.navigate(['']);
+        },
         error: (err) => this.error = err,
         complete: () => this.loading = false
       })

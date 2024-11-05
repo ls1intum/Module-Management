@@ -26,7 +26,7 @@ export class ProposalViewComponent implements OnInit {
       this.loading = true;
       this.proposalService.getProposalView(+proposalId).subscribe({
         next: (data: ProposalViewDTO) => this.proposal = data,
-        error: (err) => this.error = 'Failed to load proposal data' ,
+        error: (err) => this.error = err,
         complete: () => this.loading = false
       });
     }

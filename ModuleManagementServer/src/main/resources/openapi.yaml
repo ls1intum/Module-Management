@@ -57,11 +57,12 @@ paths:
         schema:
           type: integer
           format: int64
-      - name: request
+      - name: userId
         in: query
         required: true
         schema:
-          $ref: "#/components/schemas/UserIdDTO"
+          type: integer
+          format: int64
       responses:
         "200":
           description: OK
@@ -92,7 +93,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ModuleVersion"
+                $ref: "#/components/schemas/ModuleVersionUpdateRequestDTO"
   /api/feedbacks/{feedbackId}/reject:
     put:
       tags:
@@ -362,6 +363,25 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/CitModule"
+  /api/feedbacks/module-version-of-feedback/{feedbackId}:
+    get:
+      tags:
+      - feedback-controller
+      operationId: getModuleVersionOfFeedback
+      parameters:
+      - name: feedbackId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ModuleVersionUpdateRequestDTO"
   /api/feedbacks/for-user/{id}:
     get:
       tags:
@@ -520,6 +540,17 @@ components:
           type: string
         lvSwsLecturerEng:
           type: string
+    RejectFeedbackDTO:
+      required:
+      - comment
+      - userId
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        comment:
+          type: string
     Feedback:
       type: object
       properties:
@@ -548,6 +579,83 @@ components:
           type: string
           format: date-time
         comment:
+          type: string
+    User:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum:
+          - QUALITY_MANAGEMENT
+          - ACADEMIC_PROGRAM_ADVISOR
+          - EXAMINATION_BOARD
+          - PROFESSOR
+    UserIdDTO:
+      required:
+      - userId
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+    ProposalRequestDTO:
+      required:
+      - userId
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        titleEng:
+          type: string
+        levelEng:
+          type: string
+        languageEng:
+          type: string
+          enum:
+          - English
+          - German
+          - undefined
+        frequencyEng:
+          type: string
+        credits:
+          type: integer
+          format: int32
+        hoursTotal:
+          type: integer
+          format: int32
+        hoursSelfStudy:
+          type: integer
+          format: int32
+        hoursPresence:
+          type: integer
+          format: int32
+        examinationAchievementsEng:
+          type: string
+        repetitionEng:
+          type: string
+        recommendedPrerequisitesEng:
+          type: string
+        contentEng:
+          type: string
+        learningOutcomesEng:
+          type: string
+        teachingMethodsEng:
+          type: string
+        mediaEng:
+          type: string
+        literatureEng:
+          type: string
+        responsiblesEng:
+          type: string
+        lvSwsLecturerEng:
           type: string
     ModuleVersion:
       type: object
@@ -620,94 +728,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Feedback"
-    User:
-      type: object
-      properties:
-        userId:
-          type: integer
-          format: int64
-        name:
-          type: string
-        email:
-          type: string
-        role:
-          type: string
-          enum:
-          - QUALITY_MANAGEMENT
-          - ACADEMIC_PROGRAM_ADVISOR
-          - EXAMINATION_BOARD
-          - PROFESSOR
-    RejectFeedbackDTO:
-      required:
-      - comment
-      - userId
-      type: object
-      properties:
-        userId:
-          type: integer
-          format: int64
-        comment:
-          type: string
-    UserIdDTO:
-      required:
-      - userId
-      type: object
-      properties:
-        userId:
-          type: integer
-          format: int64
-    ProposalRequestDTO:
-      required:
-      - userId
-      type: object
-      properties:
-        userId:
-          type: integer
-          format: int64
-        titleEng:
-          type: string
-        levelEng:
-          type: string
-        languageEng:
-          type: string
-          enum:
-          - English
-          - German
-          - undefined
-        frequencyEng:
-          type: string
-        credits:
-          type: integer
-          format: int32
-        hoursTotal:
-          type: integer
-          format: int32
-        hoursSelfStudy:
-          type: integer
-          format: int32
-        hoursPresence:
-          type: integer
-          format: int32
-        examinationAchievementsEng:
-          type: string
-        repetitionEng:
-          type: string
-        recommendedPrerequisitesEng:
-          type: string
-        contentEng:
-          type: string
-        learningOutcomesEng:
-          type: string
-        teachingMethodsEng:
-          type: string
-        mediaEng:
-          type: string
-        literatureEng:
-          type: string
-        responsiblesEng:
-          type: string
-        lvSwsLecturerEng:
-          type: string
     Proposal:
       type: object
       properties:

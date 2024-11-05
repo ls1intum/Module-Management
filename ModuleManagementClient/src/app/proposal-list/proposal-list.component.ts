@@ -26,7 +26,7 @@ export class ProposalListComponent {
   ];
   loading: boolean = true;
   error: string | null = null;
-  selectedUserId: number | null = null;
+  selectedUserId: number | null = 1;
 
   constructor() {
     this.fetchProposals();

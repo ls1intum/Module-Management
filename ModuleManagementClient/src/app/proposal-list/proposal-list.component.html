@@ -10,10 +10,10 @@
         <thead>
             <tr>
                 <th>Proposal ID</th>
-                <th>Created By</th>
+                <th>Latest Title</th>
                 <th>Status</th>
                 <th>Latest Module Version</th>
-                <th>Latest Title</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -30,13 +30,12 @@
             @if (!loading && !error) {
                 @for (proposal of proposals; track proposal.proposalId) {
                     <tr>
-                        <td>{{ proposal.latestVersion }}</td>
+                        <td>{{ proposal.proposalId }}</td>
                         <td>{{ proposal.latestTitle }}</td>
                         <td>{{ proposal.status }}</td>
                         <td>{{ proposal.createdBy }}</td>
                         <td>
                             <button [routerLink]="['/proposals/view', proposal.proposalId]">View</button>
-                            <button [routerLink]="['/proposals/edit', proposal.proposalId]">Edit</button>
                             <button (click)="submitProposal(proposal.proposalId)" [disabled]="(proposal.status != proposalEnum.PendingSubmission)">Submit</button>
                             <button (click)="deleteProposal(proposal.proposalId)" [disabled]="(proposal.status != proposalEnum.PendingFeedback && proposal.status != proposalEnum.PendingSubmission)">Delete</button>
                         </td>

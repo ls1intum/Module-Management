@@ -1,5 +1,6 @@
 package de.tum.in.www1.modulemanagement.controllers;
 
+import de.tum.in.www1.modulemanagement.dtos.ModuleVersionUpdateRequestDTO;
 import de.tum.in.www1.modulemanagement.dtos.UserIdDTO;
 import de.tum.in.www1.modulemanagement.dtos.RejectFeedbackDTO;
 import de.tum.in.www1.modulemanagement.models.Feedback;
@@ -34,6 +35,12 @@ public class FeedbackController {
         moduleVersionService.updateStatus(updatedFeedback.getModuleVersion().getModuleVersionId());
 
         return ResponseEntity.ok(updatedFeedback);
+    }
+
+    @GetMapping("/module-version-of-feedback/{feedbackId}")
+    public ResponseEntity<ModuleVersionUpdateRequestDTO> getModuleVersionOfFeedback(@PathVariable Long feedbackId) {
+        ModuleVersionUpdateRequestDTO dto = feedbackService.getModuleVersionOfFeedback(feedbackId);
+        return ResponseEntity.ok(dto);
     }
 
     @PutMapping("/{feedbackId}/reject")

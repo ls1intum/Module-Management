@@ -1,0 +1,42 @@
+@if(loading) {
+    <div>Loading...</div>
+}
+@if (!loading && moduleVersion) {
+  <div>
+    <h2>Module Version Details</h2>
+    <p><strong>Module ID:</strong> {{ moduleVersion.moduleId }}</p>
+    <p><strong>Version:</strong> {{ moduleVersion.version }}</p>
+    <p><strong>Status:</strong> {{ moduleVersion.status }}</p>
+    <p><strong>Complete:</strong> {{ moduleVersion.isComplete ? 'Yes' : 'No' }}</p>
+    <p><strong>Title (EN):</strong> {{ moduleVersion.titleEng }}</p>
+    <p><strong>Level (EN):</strong> {{ moduleVersion.levelEng }}</p>
+    <p><strong>Language (EN):</strong> {{ moduleVersion.languageEng }}</p>
+    <p><strong>Frequency (EN):</strong> {{ moduleVersion.frequencyEng }}</p>
+    <p><strong>Credits:</strong> {{ moduleVersion.credits }}</p>
+    <p><strong>Total Hours:</strong> {{ moduleVersion.hoursTotal }}</p>
+    <p><strong>Self-Study Hours:</strong> {{ moduleVersion.hoursSelfStudy }}</p>
+    <p><strong>Presence Hours:</strong> {{ moduleVersion.hoursPresence }}</p>
+    <p><strong>Examination Achievements (EN):</strong> {{ moduleVersion.examinationAchievementsEng }}</p>
+    <p><strong>Repetition (EN):</strong> {{ moduleVersion.repetitionEng }}</p>
+    <p><strong>Recommended Prerequisites (EN):</strong> {{ moduleVersion.recommendedPrerequisitesEng }}</p>
+    <p><strong>Content (EN):</strong> {{ moduleVersion.contentEng }}</p>
+    <p><strong>Learning Outcomes (EN):</strong> {{ moduleVersion.learningOutcomesEng }}</p>
+    <p><strong>Teaching Methods (EN):</strong> {{ moduleVersion.teachingMethodsEng }}</p>
+    <p><strong>Media (EN):</strong> {{ moduleVersion.mediaEng }}</p>
+    <p><strong>Literature (EN):</strong> {{ moduleVersion.literatureEng }}</p>
+    <p><strong>Responsibles (EN):</strong> {{ moduleVersion.responsiblesEng }}</p>
+    <p><strong>Lecturer SWs (EN):</strong> {{ moduleVersion.lvSwsLecturerEng }}</p>
+  </div>
+
+  <div>
+    <label for="reason">Reason (for Rejection):</label>
+    <input type="text" id="reason" [(ngModel)]="reason" required/>
+  </div>
+
+  <button (click)="approveFeedback()">Approve</button>
+  <button [disabled]="!reason" (click)="rejectFeedback()">Reject</button>
+}
+
+@if (error) {
+  <div class="error">Error: {{ error }}</div>
+}

@@ -1,5 +1,6 @@
 package de.tum.in.www1.modulemanagement.services;
 
+import de.tum.in.www1.modulemanagement.dtos.ModuleVersionUpdateRequestDTO;
 import de.tum.in.www1.modulemanagement.enums.FeedbackStatus;
 import de.tum.in.www1.modulemanagement.models.Feedback;
 import de.tum.in.www1.modulemanagement.models.User;
@@ -73,5 +74,10 @@ public class FeedbackService {
             throw new IllegalStateException("This module is not " + FeedbackStatus.PENDING_FEEDBACK);
         }
         return feedback;
+    }
+
+    public ModuleVersionUpdateRequestDTO getModuleVersionOfFeedback(Long feedbackId) {
+        Feedback feedback = feedbackRepository.findById(feedbackId).orElseThrow(() -> new ResourceNotFoundException("Feedback not found"));
+        return feedback.getModuleVersion().toModuleUpdateRequestDTO();
     }
 }

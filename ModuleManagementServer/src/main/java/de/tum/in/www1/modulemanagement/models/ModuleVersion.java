@@ -2,6 +2,7 @@ package de.tum.in.www1.modulemanagement.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.tum.in.www1.modulemanagement.dtos.ModuleVersionCompactDTO;
+import de.tum.in.www1.modulemanagement.dtos.ModuleVersionUpdateRequestDTO;
 import de.tum.in.www1.modulemanagement.enums.Language;
 import de.tum.in.www1.modulemanagement.enums.ModuleVersionStatus;
 import io.micrometer.common.util.StringUtils;
@@ -128,5 +129,34 @@ public class ModuleVersion {
         dto.setVersion(this.version);
         dto.setStatus(this.status);
         return dto;
+    }
+
+    public ModuleVersionUpdateRequestDTO toModuleUpdateRequestDTO() {
+        ModuleVersionUpdateRequestDTO mdto = new ModuleVersionUpdateRequestDTO();
+        mdto.setUserId(proposal.getCreatedBy().getUserId());
+        mdto.setModuleVersionId(this.moduleVersionId);
+        mdto.setVersion(this.version);
+        mdto.setModuleId(this.moduleId);
+        mdto.setStatus(this.status);
+        mdto.setIsComplete(this.isCompleted());
+        mdto.setTitleEng(this.titleEng);
+        mdto.setLevelEng(this.levelEng);
+        mdto.setLanguageEng(this.languageEng);
+        mdto.setFrequencyEng(this.frequencyEng);
+        mdto.setCredits(this.credits);
+        mdto.setHoursTotal(this.hoursTotal);
+        mdto.setHoursSelfStudy(this.hoursSelfStudy);
+        mdto.setHoursPresence(this.hoursPresence);
+        mdto.setExaminationAchievementsEng(this.examinationAchievementsEng);
+        mdto.setRepetitionEng(this.repetitionEng);
+        mdto.setRecommendedPrerequisitesEng(this.recommendedPrerequisitesEng);
+        mdto.setContentEng(this.contentEng);
+        mdto.setLearningOutcomesEng(this.learningOutcomesEng);
+        mdto.setTeachingMethodsEng(this.teachingMethodsEng);
+        mdto.setMediaEng(this.mediaEng);
+        mdto.setLiteratureEng(this.literatureEng);
+        mdto.setResponsiblesEng(this.responsiblesEng);
+        mdto.setLvSwsLecturerEng(this.lvSwsLecturerEng);
+        return mdto;
     }
 }

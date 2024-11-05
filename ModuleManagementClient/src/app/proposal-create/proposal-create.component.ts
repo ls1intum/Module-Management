@@ -51,7 +51,7 @@ export class ProposalsCreateComponent {
       this.proposalService.createProposal(proposalData).subscribe({
         next: (response) => {
           this.proposalForm.reset();
-          this.router.navigate(['/proposal/view', response.proposalId], { queryParams: { created: true } });
+          this.router.navigate(['/proposals/view', response.proposalId], { queryParams: { created: true } });
         },
         error: (err) => this.error = err,
         complete: () => this.loading = false,
