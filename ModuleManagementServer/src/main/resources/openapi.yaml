@@ -760,6 +760,8 @@ components:
         version:
           type: integer
           format: int32
+        titleEng:
+          type: string
         status:
           type: string
           enum:
@@ -769,6 +771,10 @@ components:
           - REJECTED
           - OBSOLETE
           - CANCELLED
+        feedbackList:
+          type: array
+          items:
+            $ref: "#/components/schemas/Feedback"
     ProposalViewDTO:
       type: object
       properties:
@@ -789,7 +795,9 @@ components:
           - ACCEPTED
           - REQUIRES_REVIEW
           - CANCELED
-        moduleVersionsCompact:
+        latestModuleVersion:
+          $ref: "#/components/schemas/ModuleVersionCompactDTO"
+        oldModuleVersions:
           type: array
           items:
             $ref: "#/components/schemas/ModuleVersionCompactDTO"

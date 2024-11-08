@@ -1,12 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, RejectFeedbackDTO, UserIdDTO } from '../core/modules/openapi';
-import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-feedback-view',
   standalone: true,
-  imports: [RouterModule, FormsModule],
+  imports: [ CommonModule, RouterModule, FormsModule],
   templateUrl: './feedback-view.component.html',
   styleUrl: './feedback-view.component.css'
 })
@@ -16,15 +17,24 @@ export class FeedbackViewComponent {
   moduleVersion: ModuleVersionUpdateRequestDTO | null = null;
   loading: boolean = true;
   error: string | null = null;
-
-  reason: string = ''; // For storing the rejection reason
-  reasonRequired: boolean = false; // To control error message display for reason
+  reason: string = '';
+  reasonRequired: boolean = false;
+  users = [
+    { id: 3, name: 'QM User' },
+    { id: 4, name: 'ASA User' },
+    { id: 5, name: 'EB User' }
+  ]
+  selectedUserId: number = 3;
 
   constructor(private route: ActivatedRoute, private router: Router) {
     this.feedbackId = Number(route.snapshot.paramMap.get('id'));
     this.fetchModuleVersion(this.feedbackId);
   }
 
+  public async onUserChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    this.selectedUserId = parseInt(selectElement.value, 10);
+  }
   private async fetchModuleVersion(feedbackId: number | null){
     this.loading = true;
     if (feedbackId) {
@@ -41,8 +51,7 @@ export class FeedbackViewComponent {
 
   approveFeedback() {
     if (this.feedbackId) {
-
-      const userIdDto: UserIdDTO = { userId: 3 };
+      const userIdDto: UserIdDTO = { userId: this.selectedUserId };
       this.feedbackService.approveFeedback(this.feedbackId, userIdDto).subscribe({
         next: () => {
           alert('Feedback approved successfully');

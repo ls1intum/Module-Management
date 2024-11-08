@@ -1,6 +1,9 @@
 @if(loading) {
     <div>Loading...</div>
 }
+<select (change)="onUserChange($event)" [disabled]="loading">
+    <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+</select>
 @if (!loading && moduleVersion) {
   <div>
     <h2>Module Version Details</h2>

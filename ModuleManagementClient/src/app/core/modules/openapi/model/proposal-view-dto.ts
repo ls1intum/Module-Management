@@ -15,7 +15,8 @@ export interface ProposalViewDTO {
     creationDate?: string;
     latestVersion?: number;
     status?: ProposalViewDTO.StatusEnum;
-    moduleVersionsCompact?: Array<ModuleVersionCompactDTO>;
+    latestModuleVersion?: ModuleVersionCompactDTO;
+    oldModuleVersions?: Array<ModuleVersionCompactDTO>;
 }
 export namespace ProposalViewDTO {
     export type StatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'ACCEPTED' | 'REQUIRES_REVIEW' | 'CANCELED';

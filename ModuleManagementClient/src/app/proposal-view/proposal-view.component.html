@@ -8,32 +8,69 @@
     <div>
         <h2>Proposal ID: {{ proposal.proposalId }}</h2>
         <p>Creation Date: {{ proposal.creationDate }}</p>
+        <p>Latest Version: {{ proposal.latestVersion }}</p>
         <p>Status: {{ proposal.status }}</p>
 
-        <h3>Module Versions</h3>
-        <table>
-            <thead>
-            <tr>
-                <th>Version</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            @for (moduleVersion of proposal.moduleVersionsCompact; track moduleVersion.moduleVersionId) {
-                <tr>
-                    <td>{{ moduleVersion.version }}</td>
-                    <td>{{ moduleVersion.status }}</td>
-                    <td>
-                    <button (click)="viewModuleVersion(moduleVersion.moduleVersionId)">View</button>
-                    <button (click)="editModuleVersion(moduleVersion.moduleVersionId)">Edit</button>
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table>
+        <h3>
+            <table>
+                <thead>
+                    <th>ID</th>
+                    <th>Version</th>
+                    <th>Title</th>
+                    <th>Overall Status</th>
 
-        <button (click)="editLatestModuleVersion()">Edit Latest Module Version</button>
+                    @for (feedback of proposal.latestModuleVersion?.feedbackList; track proposal.latestModuleVersion?.feedbackList){
+                        <th>Status {{ feedback.requiredRole }}</th>
+                    }
+                    <th>Actions</th>
+                </thead>
+                <tbody>
+                    <td>{{proposal.latestModuleVersion?.moduleVersionId}}</td>
+                    <td>{{proposal.latestModuleVersion?.version}}</td>
+                    <td>{{proposal.latestModuleVersion?.titleEng}}</td>
+                    <td>{{proposal.latestModuleVersion?.status}}</td>
+                    @for (feedback of proposal.latestModuleVersion?.feedbackList; track proposal.latestModuleVersion?.feedbackList){
+                        <td>{{ feedback.status }}</td>
+                    }
+                    <td>
+                        <button>View</button>
+                        <button>Submit</button>
+                        <button>Cancel</button>
+                        <button [disabled]="(proposal.latestModuleVersion?.status !== proposalStatusEnum.PendingSubmission)"
+                                [routerLink]="['/module-version/edit/', proposal.latestModuleVersion?.moduleVersionId]">Update</button>
+                    </td>
+                </tbody>
+            </table>
+        </h3>
+
+        @if(proposal.oldModuleVersions?.length !== 0) {
+            <h3>Module Versions</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Version</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @for (moduleVersion of proposal.oldModuleVersions; track moduleVersion.moduleVersionId) {
+                    <tr>
+                        <td>{{ moduleVersion.moduleVersionId }}</td>
+                        <td>{{ moduleVersion.version }}</td>
+                        <td>{{ moduleVersion.status }}</td>
+                        <td>
+                            <button (click)="viewModuleVersion(moduleVersion.moduleVersionId)">View</button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+
+        }
+
+        <button (click)="editLatestModuleVersion()" [disabled]="(proposal.latestModuleVersion?.status !== proposalStatusEnum.PendingSubmission && proposal.latestModuleVersion?.status !== proposalStatusEnum.PendingFeedback)">Edit Latest Module Version</button>
         <button (click)="addNewModuleVersion()">Add New Module Version</button>
     </div>
 }

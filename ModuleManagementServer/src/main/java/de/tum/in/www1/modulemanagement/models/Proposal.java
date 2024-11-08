@@ -10,8 +10,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -55,13 +57,29 @@ public class Proposal {
     public ProposalViewDTO toProposalViewDTO() {
         var v = new ProposalViewDTO();
         v.setProposalId(proposalId);
-        v.setCreationDate(creationDate);
         v.setLatestVersion(getLatestModuleVersion());
+        v.setCreationDate(creationDate);
         v.setStatus(status);
-        v.setModuleVersionsCompact(new ArrayList<>());
-        for (ModuleVersion moduleVersion : moduleVersions) {
-            v.getModuleVersionsCompact().add(moduleVersion.toCompactDTO());
+
+        var sortedModuleVersions = moduleVersions.stream()
+                .sorted(Comparator.comparing(ModuleVersion::getVersion).reversed())
+                .toList();
+
+        if (!sortedModuleVersions.isEmpty()) {
+            v.setLatestModuleVersion(sortedModuleVersions.getFirst().toCompactDTO());
+
+            var oldVersions = sortedModuleVersions.subList(1, sortedModuleVersions.size())
+                    .stream()
+                    .map(ModuleVersion::toCompactDTO)
+                    .collect(Collectors.toList());
+
+            v.setOldModuleVersions(oldVersions);
+        } else {
+            v.setLatestModuleVersion(null);
+            v.setOldModuleVersions(Collections.emptyList());
         }
+
         return v;
     }
+
 }

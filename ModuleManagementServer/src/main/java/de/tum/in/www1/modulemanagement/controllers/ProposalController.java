@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -23,8 +24,14 @@ public class ProposalController {
 
     @PostMapping(value = "/submit/{proposalId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> submitProposal(@PathVariable Long proposalId, @RequestBody UserIdDTO request) {
-        proposalService.submitProposal(proposalId, request.getUserId());
-        return ResponseEntity.ok("Proposal submitted successfully.");
+        try {
+            proposalService.submitProposal(proposalId, request.getUserId());
+            return ResponseEntity.ok("Proposal submitted successfully.");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.badRequest().body(e.getReason());
+        }
     }
 
     @PostMapping
@@ -71,8 +78,12 @@ public class ProposalController {
 
     @DeleteMapping(value = "/{proposalId}", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> deleteProposal(@PathVariable long proposalId, @Valid @RequestBody UserIdDTO request) {
-        proposalService.deleteProposalById(proposalId, request.getUserId());
-        return ResponseEntity.ok("Proposal deleted successfully.");
+        try{
+            proposalService.deleteProposalById(proposalId, request.getUserId());
+            return ResponseEntity.ok("Proposal deleted successfully.");
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.badRequest().body(e.getReason());
+        }
     }
 }
 

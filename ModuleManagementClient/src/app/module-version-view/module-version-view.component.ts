@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './module-version-view.component.css'
 })
 export class ModuleVersionViewComponent {
-
+  
 }

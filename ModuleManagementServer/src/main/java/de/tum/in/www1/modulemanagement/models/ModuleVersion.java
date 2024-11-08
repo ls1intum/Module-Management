@@ -127,7 +127,9 @@ public class ModuleVersion {
         var dto = new ModuleVersionCompactDTO();
         dto.setModuleVersionId(this.moduleVersionId);
         dto.setVersion(this.version);
+        dto.setTitleEng(this.titleEng);
         dto.setStatus(this.status);
+        dto.setFeedbackList(this.requiredFeedbacks);
         return dto;
     }
 

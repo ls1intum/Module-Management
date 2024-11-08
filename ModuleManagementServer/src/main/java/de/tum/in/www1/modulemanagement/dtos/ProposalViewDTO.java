@@ -12,5 +12,6 @@ public class ProposalViewDTO {
     private LocalDateTime creationDate;
     private Integer latestVersion;
     private ProposalStatus status;
-    private List<ModuleVersionCompactDTO> moduleVersionsCompact;
+    private ModuleVersionCompactDTO latestModuleVersion;
+    private List<ModuleVersionCompactDTO> oldModuleVersions;
 }

@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ModuleVersion, Proposal, ProposalControllerService, ProposalViewDTO } from '../core/modules/openapi';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-proposal-view',
+  standalone: true,
   templateUrl: './proposal-view.component.html',
+  imports: [RouterModule],
   styleUrls: ['./proposal-view.component.css']
 })
 export class ProposalViewComponent implements OnInit {
@@ -36,12 +38,9 @@ export class ProposalViewComponent implements OnInit {
     this.router.navigate(['/module-version/view', versionId]);
   }
 
-  editModuleVersion(versionId: number | undefined) {
-    this.router.navigate(['/module-version/edit', versionId]);
-  }
-
   editLatestModuleVersion() {
     if (this.proposal) {
+      console.log(this.proposal)
       this.router.navigate(['/module-version/edit', this.proposal.latestVersion]);
     }
   }

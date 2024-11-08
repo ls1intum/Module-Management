@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ProposalsCompactDTO, UserIdDTO } from '../core/modules/openapi';
 import { ProposalControllerService } from '../core/modules/openapi';
 import { Proposal } from '../core/modules/openapi'
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-proposal-list',
@@ -58,7 +59,7 @@ export class ProposalListComponent {
     this.loading = true;
     this.proposalService.getAllProposalsCompact().subscribe({
       next: (proposals) => this.proposals = proposals,
-      error: (err) => this.error = err,
+      error: (err: HttpErrorResponse) => this.error = err.error,
       complete: () => this.loading = false
     })
   }
@@ -67,7 +68,7 @@ export class ProposalListComponent {
     this.loading = true;
     this.proposalService.getProposalsByUserIdFromCompact(userId).subscribe({
       next: (proposals) => this.proposals = proposals,
-      error: (err) => this.error = err,
+      error: (err: HttpErrorResponse) => this.error = err.error,
       complete: () => this.loading = false
     })
   }
@@ -78,18 +79,23 @@ export class ProposalListComponent {
       this.proposalService.submitProposal(proposalId, userIdDto).subscribe({
         next: (response) => {
           console.log(response);
-        }
+          this.proposals.map((proposal) => proposal.status = (proposal.proposalId === proposalId) ? this.proposalEnum.PendingFeedback : proposal.status);
+        },
+        error: (err: HttpErrorResponse) => this.error = err.error,
       })
     }
   }
 
   public async deleteProposal(proposalId: number | undefined) {
-    
     if (proposalId !== undefined && this.selectedUserId) {
       const userIdDto: UserIdDTO = { userId: this.selectedUserId };
       this.proposalService.deleteProposal(proposalId, userIdDto).subscribe({
-        next: () => this.proposals = this.proposals.filter(proposal => proposalId !== proposal.proposalId),
-        error: (err) => this.error = err,
+        next: () => {
+          const props = this.proposals.filter((proposal) => proposalId !== proposal.proposalId);
+          console.log(props);
+          this.proposals = props;
+        },
+        error: (err: HttpErrorResponse) => this.error = err.error,
       })
     }
   }

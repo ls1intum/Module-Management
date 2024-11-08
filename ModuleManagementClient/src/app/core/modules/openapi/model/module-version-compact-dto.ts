@@ -7,12 +7,15 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Feedback } from './feedback';
 
 
 export interface ModuleVersionCompactDTO { 
     moduleVersionId?: number;
     version?: number;
+    titleEng?: string;
     status?: ModuleVersionCompactDTO.StatusEnum;
+    feedbackList?: Array<Feedback>;
 }
 export namespace ModuleVersionCompactDTO {
     export type StatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'ACCEPTED' | 'REJECTED' | 'OBSOLETE' | 'CANCELLED';
