@@ -11,12 +11,12 @@ import { HttpErrorResponse } from '@angular/common/http';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './proposal-list.component.html',
-  styleUrl: './proposal-list.component.css'
 })
 export class ProposalListComponent {
   proposalService = inject(ProposalControllerService);
   proposals: ProposalsCompactDTO[] = [];
   proposalEnum = Proposal.StatusEnum;
+  selectedUserId: number | null = 1;
   users = [
     { id: 1, name: 'Professor1' },
     { id: 2, name: 'Professor2' },
@@ -27,7 +27,6 @@ export class ProposalListComponent {
   ];
   loading: boolean = true;
   error: string | null = null;
-  selectedUserId: number | null = 1;
 
   constructor() {
     this.fetchProposals();

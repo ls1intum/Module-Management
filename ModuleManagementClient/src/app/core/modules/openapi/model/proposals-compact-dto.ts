@@ -12,7 +12,7 @@
 export interface ProposalsCompactDTO { 
     proposalId?: number;
     createdBy?: string;
-    status?: ProposalsCompactDTO.StatusEnum;
+    status: ProposalsCompactDTO.StatusEnum;
     latestVersion?: number;
     latestTitle?: string;
 }

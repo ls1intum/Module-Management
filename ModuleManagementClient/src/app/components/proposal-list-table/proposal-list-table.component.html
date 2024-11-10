@@ -1,0 +1,31 @@
+<hlm-table class="w-full min-w-[400px]">
+  <hlm-caption>All Proposals created by {{ selectedUserId }}</hlm-caption>
+  <hlm-trow>
+    <hlm-th class="w-40">Proposal ID</hlm-th>
+    <hlm-th class="flex-1">Latest Title</hlm-th>
+    <hlm-th class="w-50">Status</hlm-th>
+    <hlm-th class="justify-end w-40">Created By</hlm-th>
+  </hlm-trow>
+  @for (proposal of proposals; track proposal.proposalId) {
+  <hlm-trow>
+    <hlm-td truncate class="font-medium w-40 text-center">{{ proposal.proposalId }}</hlm-td>
+    <hlm-td class="flex-1">
+      <button hlmBtn variant="link" class="text-left px-0" [routerLink]="['/proposals/view', proposal.proposalId]">
+        {{ proposal.latestTitle }}
+      </button>
+    </hlm-td>
+    <hlm-td class="w-50">
+      <div hlmBadge [class]="(proposal.status | statusDisplay).colorClass">
+        {{ (proposal.status | statusDisplay).text }}
+      </div>
+    </hlm-td>
+    <hlm-td class="justify-end w-40">{{ proposal.createdBy }}</hlm-td>
+  </hlm-trow>
+  } @empty {
+  <hlm-trow>
+    <hlm-td class="text-center flex-1 block mt-4 text-sm text-muted-foreground"
+      >You do not have any created module proposals. <a class="text-blue-600" [routerLink]="['/proposals/create']">Create one here.</a></hlm-td
+    >
+  </hlm-trow>
+  }
+</hlm-table>
