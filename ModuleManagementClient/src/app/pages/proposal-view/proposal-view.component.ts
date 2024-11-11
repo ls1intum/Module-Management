@@ -37,7 +37,7 @@ export class ProposalViewComponent {
   proposal: ProposalViewDTO | null = null;
   proposalStatusEnum = Proposal.StatusEnum;
   moduleStatusEnum = ModuleVersion.StatusEnum;
-  selectedUserId: number = 1; // You might want to inject this or get it from a service
+  selectedUserId: number = 1;
 
   constructor() {
     this.fetchProposal();
