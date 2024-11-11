@@ -22,16 +22,10 @@ public class ProposalController {
         this.proposalService = proposalService;
     }
 
-    @PostMapping(value = "/submit/{proposalId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> submitProposal(@PathVariable Long proposalId, @RequestBody UserIdDTO request) {
-        try {
-            proposalService.submitProposal(proposalId, request.getUserId());
-            return ResponseEntity.ok("Proposal submitted successfully.");
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (ResponseStatusException e) {
-            return ResponseEntity.badRequest().body(e.getReason());
-        }
+    @PostMapping(value = "/submit/{proposalId}")
+    public ResponseEntity<ProposalViewDTO> submitProposal(@PathVariable Long proposalId, @RequestBody UserIdDTO request) {
+        var proposalDto = proposalService.submitProposal(proposalId, request.getUserId());
+        return ResponseEntity.ok(proposalDto);
     }
 
     @PostMapping

@@ -7,7 +7,7 @@ import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LayoutComponent } from '../components/layout.component';
-import { StatusDisplayPipe } from '../pipes/proposalstatus.pipe';
+import { StatusDisplayPipe } from '../pipes/proposalStatus.pipe';
 
 @Component({
   selector: 'app-proposal-view',
@@ -59,10 +59,8 @@ export class ProposalViewComponent {
     if (this.proposal) {
       const userIdDto: UserIdDTO = { userId: this.selectedUserId };
       this.proposalService.submitProposal(this.proposal.proposalId!, userIdDto).subscribe({
-        next: () => {
-          if (this.proposal) {
-            this.proposal.status = this.proposalStatusEnum.PendingFeedback;
-          }
+        next: (response: ProposalViewDTO) => {
+          this.proposal = response;
         },
         error: (err: HttpErrorResponse) => (this.error = err.error)
       });

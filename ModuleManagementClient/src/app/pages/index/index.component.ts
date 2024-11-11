@@ -12,7 +12,9 @@ import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
       <p class="mb-6 text-lg">This is a placeholder page, please select a role:</p>
       <div class="flex gap-6">
         <button hlmBtn [routerLink]="['/proposals']">Professor View</button>
-        <button hlmBtn [routerLink]="['/feedbacks']">Approval Staff View</button>
+        <button hlmBtn [routerLink]="['/feedbacks/for-user/3']">QM Approval Staff View</button>
+        <button hlmBtn [routerLink]="['/feedbacks/for-user/4']">ASA Approval Staff View</button>
+        <button hlmBtn [routerLink]="['/feedbacks/for-user/5']">EB Approval Staff View</button>
       </div>
     </div>
   `

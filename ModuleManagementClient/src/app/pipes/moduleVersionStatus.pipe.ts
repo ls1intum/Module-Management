@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ModuleVersionCompactDTO } from '../core/modules/openapi';
 
 @Pipe({
-  name: 'moduleVersionStatus'
+  name: 'moduleVersionStatus',
+  standalone: true
 })
 export class ModuleVersionStatusPipe implements PipeTransform {
   transform(status: ModuleVersionCompactDTO.StatusEnum) {

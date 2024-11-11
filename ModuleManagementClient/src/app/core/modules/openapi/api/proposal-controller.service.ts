@@ -627,9 +627,9 @@ export class ProposalControllerService implements ProposalControllerServiceInter
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public submitProposal(proposalId: number, userIdDTO: UserIdDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<string>;
-    public submitProposal(proposalId: number, userIdDTO: UserIdDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<string>>;
-    public submitProposal(proposalId: number, userIdDTO: UserIdDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<string>>;
+    public submitProposal(proposalId: number, userIdDTO: UserIdDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProposalViewDTO>;
+    public submitProposal(proposalId: number, userIdDTO: UserIdDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProposalViewDTO>>;
+    public submitProposal(proposalId: number, userIdDTO: UserIdDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProposalViewDTO>>;
     public submitProposal(proposalId: number, userIdDTO: UserIdDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (proposalId === null || proposalId === undefined) {
             throw new Error('Required parameter proposalId was null or undefined when calling submitProposal.');
@@ -684,7 +684,7 @@ export class ProposalControllerService implements ProposalControllerServiceInter
         }
 
         let localVarPath = `/api/proposals/submit/${this.configuration.encodeParam({name: "proposalId", value: proposalId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
-        return this.httpClient.request<string>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ProposalViewDTO>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: userIdDTO,

@@ -34,7 +34,7 @@ export class ProposalListTableComponent {
   error: string | null = null;
   proposals: ProposalsCompactDTO[] = [];
   proposalEnum = Proposal.StatusEnum;
-  @Input() selectedUserId: number = 1;
+  selectedUserId: number = 1;
 
   constructor() {
     this.fetchProposalsForUser();

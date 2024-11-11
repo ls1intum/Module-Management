@@ -87,6 +87,6 @@ export interface ProposalControllerServiceInterface {
      * @param proposalId 
      * @param userIdDTO 
      */
-    submitProposal(proposalId: number, userIdDTO: UserIdDTO, extraHttpRequestParams?: any): Observable<string>;
+    submitProposal(proposalId: number, userIdDTO: UserIdDTO, extraHttpRequestParams?: any): Observable<ProposalViewDTO>;
 
 }

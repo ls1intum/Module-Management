@@ -84,6 +84,7 @@ export class ProposalsEditComponent {
           });
         },
         error: (err: HttpErrorResponse) => {
+          console.log(err);
           this.error = err.error;
           this.loading = false;
         },

@@ -36,7 +36,11 @@
   <div class="flex justify-between mb-10 mt-20">
     <button hlmBtn variant="outline" (click)="addNewModuleVersion()">Create New Version</button>
     <!-- <button hlmBtn variant="destructive" (click)="deleteProposal()">Delete Proposal</button> -->
-    @if (proposal.status === proposalStatusEnum.PendingSubmission) { <button hlmBtn variant="default" (click)="submitProposal()">Submit</button> }
+    @if (proposal.status === proposalStatusEnum.PendingSubmission) { @if (proposal.latestModuleVersion?.isComplete) {
+    <button hlmBtn variant="default" class="bg-green-600" (click)="submitProposal()">Submit</button>
+    } @else {
+    <button hlmBtn variant="default" class="mr-2" (click)="editLatestModuleVersion()">Complete Proposal</button>
+    } }
   </div>
   <!-- Latest Version Table -->
   <hlm-table class="w-full min-w-[400px] mb-8">
@@ -58,8 +62,8 @@
       </hlm-td>
       <hlm-td class="w-80">
         <!-- <button hlmBtn variant="ghost" class="mr-2" (click)="viewModuleVersion(proposal.latestVersion)">View</button> -->
-        <button hlmBtn variant="ghost" class="mr-2" (click)="editLatestModuleVersion()">Edit</button>
-        <button hlmBtn variant="ghost" (click)="addNewModuleVersion()">Add Version</button>
+        <button hlmBtn variant="outline" class="mr-2" (click)="editLatestModuleVersion()">Edit</button>
+        <!-- <button hlmBtn variant="outline" (click)="addNewModuleVersion()">Add Version</button> -->
       </hlm-td>
     </hlm-trow>
   </hlm-table>

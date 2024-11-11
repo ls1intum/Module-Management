@@ -12,5 +12,6 @@ public class ModuleVersionCompactDTO {
     private Integer version;
     private String titleEng;
     private ModuleVersionStatus status;
+    private Boolean isComplete;
     private List<Feedback> feedbackList;
 }

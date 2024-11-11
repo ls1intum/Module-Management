@@ -3,21 +3,21 @@ info:
   title: OpenAPI definition
   version: v0
 servers:
-- url: http://localhost:8080
-  description: Generated server url
+  - url: http://localhost:8080
+    description: Generated server url
 paths:
   /api/modules/{id}:
     put:
       tags:
-      - module-controller
+        - module-controller
       operationId: updateModule
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         content:
           application/json:
@@ -33,36 +33,36 @@ paths:
                 $ref: "#/components/schemas/CitModule"
     delete:
       tags:
-      - module-controller
+        - module-controller
       operationId: deleteModule
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK
   /api/module-versions/{moduleVersionId}:
     get:
       tags:
-      - module-version-controller
+        - module-version-controller
       operationId: getModuleVersionUpdateDtoFromId
       parameters:
-      - name: moduleVersionId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
-      - name: userId
-        in: query
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: moduleVersionId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: userId
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK
@@ -72,15 +72,15 @@ paths:
                 $ref: "#/components/schemas/ModuleVersionUpdateRequestDTO"
     put:
       tags:
-      - module-version-controller
+        - module-version-controller
       operationId: updateModuleVersion
       parameters:
-      - name: moduleVersionId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: moduleVersionId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         content:
           application/json:
@@ -97,15 +97,15 @@ paths:
   /api/feedbacks/{feedbackId}/reject:
     put:
       tags:
-      - feedback-controller
+        - feedback-controller
       operationId: rejectFeedback
       parameters:
-      - name: feedbackId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: feedbackId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         content:
           application/json:
@@ -122,15 +122,15 @@ paths:
   /api/feedbacks/{feedbackId}/accept:
     put:
       tags:
-      - feedback-controller
+        - feedback-controller
       operationId: approveFeedback
       parameters:
-      - name: feedbackId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: feedbackId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         content:
           application/json:
@@ -147,7 +147,7 @@ paths:
   /api/proposals:
     get:
       tags:
-      - proposal-controller
+        - proposal-controller
       operationId: getAllProposals
       responses:
         "200":
@@ -160,7 +160,7 @@ paths:
                   $ref: "#/components/schemas/Proposal"
     post:
       tags:
-      - proposal-controller
+        - proposal-controller
       operationId: createProposal
       requestBody:
         content:
@@ -178,15 +178,15 @@ paths:
   /api/proposals/submit/{proposalId}:
     post:
       tags:
-      - proposal-controller
+        - proposal-controller
       operationId: submitProposal
       parameters:
-      - name: proposalId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: proposalId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         content:
           application/json:
@@ -199,11 +199,11 @@ paths:
           content:
             application/json:
               schema:
-                type: string
+                $ref: "#/components/schemas/ProposalViewDTO"
   /api/modules/create:
     post:
       tags:
-      - module-controller
+        - module-controller
       operationId: createModule
       requestBody:
         content:
@@ -221,15 +221,15 @@ paths:
   /api/proposals/{id}:
     get:
       tags:
-      - proposal-controller
+        - proposal-controller
       operationId: getProposalById
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK
@@ -240,15 +240,15 @@ paths:
   /api/proposals/{id}/view:
     get:
       tags:
-      - proposal-controller
+        - proposal-controller
       operationId: getProposalView
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK
@@ -259,15 +259,15 @@ paths:
   /api/proposals/from-user/{id}:
     get:
       tags:
-      - proposal-controller
+        - proposal-controller
       operationId: getProposalsByUserId
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK
@@ -280,7 +280,7 @@ paths:
   /api/proposals/compact:
     get:
       tags:
-      - proposal-controller
+        - proposal-controller
       operationId: getAllProposalsCompact
       responses:
         "200":
@@ -294,15 +294,15 @@ paths:
   /api/proposals/compact/from-user/{id}:
     get:
       tags:
-      - proposal-controller
+        - proposal-controller
       operationId: getProposalsByUserIdFromCompact
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK
@@ -315,7 +315,7 @@ paths:
   /api/modules:
     get:
       tags:
-      - module-controller
+        - module-controller
       operationId: getAllModules
       responses:
         "200":
@@ -329,14 +329,14 @@ paths:
   /api/modules/moduleId/{id}:
     get:
       tags:
-      - module-controller
+        - module-controller
       operationId: getModuleByModuleId
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           description: OK
@@ -347,15 +347,15 @@ paths:
   /api/modules/id/{id}:
     get:
       tags:
-      - module-controller
+        - module-controller
       operationId: getModuleById
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK
@@ -366,15 +366,15 @@ paths:
   /api/feedbacks/module-version-of-feedback/{feedbackId}:
     get:
       tags:
-      - feedback-controller
+        - feedback-controller
       operationId: getModuleVersionOfFeedback
       parameters:
-      - name: feedbackId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: feedbackId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK
@@ -385,15 +385,15 @@ paths:
   /api/feedbacks/for-user/{id}:
     get:
       tags:
-      - feedback-controller
+        - feedback-controller
       operationId: getFeedbacksForUser
       parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
         "200":
           description: OK
@@ -406,15 +406,15 @@ paths:
   /api/proposals/{proposalId}:
     delete:
       tags:
-      - proposal-controller
+        - proposal-controller
       operationId: deleteProposal
       parameters:
-      - name: proposalId
-        in: path
-        required: true
-        schema:
-          type: integer
-          format: int64
+        - name: proposalId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         content:
           application/json:
@@ -454,8 +454,8 @@ components:
         language:
           type: string
           enum:
-          - en
-          - de
+            - en
+            - de
         title:
           type: string
         recommendedPrerequisites:
@@ -470,8 +470,8 @@ components:
           type: string
     ModuleVersionUpdateRequestDTO:
       required:
-      - moduleVersionId
-      - userId
+        - moduleVersionId
+        - userId
       type: object
       properties:
         userId:
@@ -488,12 +488,12 @@ components:
         status:
           type: string
           enum:
-          - PENDING_SUBMISSION
-          - PENDING_FEEDBACK
-          - ACCEPTED
-          - REJECTED
-          - OBSOLETE
-          - CANCELLED
+            - PENDING_SUBMISSION
+            - PENDING_FEEDBACK
+            - ACCEPTED
+            - REJECTED
+            - OBSOLETE
+            - CANCELLED
         isComplete:
           type: boolean
         titleEng:
@@ -503,9 +503,9 @@ components:
         languageEng:
           type: string
           enum:
-          - English
-          - German
-          - undefined
+            - English
+            - German
+            - undefined
         frequencyEng:
           type: string
         credits:
@@ -542,8 +542,8 @@ components:
           type: string
     RejectFeedbackDTO:
       required:
-      - comment
-      - userId
+        - comment
+        - userId
       type: object
       properties:
         userId:
@@ -562,19 +562,19 @@ components:
         requiredRole:
           type: string
           enum:
-          - QUALITY_MANAGEMENT
-          - ACADEMIC_PROGRAM_ADVISOR
-          - EXAMINATION_BOARD
-          - PROFESSOR
+            - QUALITY_MANAGEMENT
+            - ACADEMIC_PROGRAM_ADVISOR
+            - EXAMINATION_BOARD
+            - PROFESSOR
         status:
           type: string
           enum:
-          - PENDING_SUBMISSION
-          - PENDING_FEEDBACK
-          - APPROVED
-          - REJECTED
-          - OBSOLETE
-          - CANCELLED
+            - PENDING_SUBMISSION
+            - PENDING_FEEDBACK
+            - APPROVED
+            - REJECTED
+            - OBSOLETE
+            - CANCELLED
         submissionDate:
           type: string
           format: date-time
@@ -593,13 +593,13 @@ components:
         role:
           type: string
           enum:
-          - QUALITY_MANAGEMENT
-          - ACADEMIC_PROGRAM_ADVISOR
-          - EXAMINATION_BOARD
-          - PROFESSOR
+            - QUALITY_MANAGEMENT
+            - ACADEMIC_PROGRAM_ADVISOR
+            - EXAMINATION_BOARD
+            - PROFESSOR
     UserIdDTO:
       required:
-      - userId
+        - userId
       type: object
       properties:
         userId:
@@ -607,7 +607,7 @@ components:
           format: int64
     ProposalRequestDTO:
       required:
-      - userId
+        - userId
       type: object
       properties:
         userId:
@@ -620,9 +620,9 @@ components:
         languageEng:
           type: string
           enum:
-          - English
-          - German
-          - undefined
+            - English
+            - German
+            - undefined
         frequencyEng:
           type: string
         credits:
@@ -674,12 +674,12 @@ components:
         status:
           type: string
           enum:
-          - PENDING_SUBMISSION
-          - PENDING_FEEDBACK
-          - ACCEPTED
-          - REJECTED
-          - OBSOLETE
-          - CANCELLED
+            - PENDING_SUBMISSION
+            - PENDING_FEEDBACK
+            - ACCEPTED
+            - REJECTED
+            - OBSOLETE
+            - CANCELLED
         titleEng:
           type: string
         levelEng:
@@ -687,9 +687,9 @@ components:
         languageEng:
           type: string
           enum:
-          - English
-          - German
-          - undefined
+            - English
+            - German
+            - undefined
         frequencyEng:
           type: string
         credits:
@@ -742,11 +742,11 @@ components:
         status:
           type: string
           enum:
-          - PENDING_SUBMISSION
-          - PENDING_FEEDBACK
-          - ACCEPTED
-          - REQUIRES_REVIEW
-          - CANCELED
+            - PENDING_SUBMISSION
+            - PENDING_FEEDBACK
+            - ACCEPTED
+            - REQUIRES_REVIEW
+            - CANCELED
         moduleVersions:
           type: array
           items:
@@ -765,12 +765,14 @@ components:
         status:
           type: string
           enum:
-          - PENDING_SUBMISSION
-          - PENDING_FEEDBACK
-          - ACCEPTED
-          - REJECTED
-          - OBSOLETE
-          - CANCELLED
+            - PENDING_SUBMISSION
+            - PENDING_FEEDBACK
+            - ACCEPTED
+            - REJECTED
+            - OBSOLETE
+            - CANCELLED
+        isComplete:
+          type: boolean
         feedbackList:
           type: array
           items:
@@ -790,11 +792,11 @@ components:
         status:
           type: string
           enum:
-          - PENDING_SUBMISSION
-          - PENDING_FEEDBACK
-          - ACCEPTED
-          - REQUIRES_REVIEW
-          - CANCELED
+            - PENDING_SUBMISSION
+            - PENDING_FEEDBACK
+            - ACCEPTED
+            - REQUIRES_REVIEW
+            - CANCELED
         latestModuleVersion:
           $ref: "#/components/schemas/ModuleVersionCompactDTO"
         oldModuleVersions:
@@ -812,11 +814,11 @@ components:
         status:
           type: string
           enum:
-          - PENDING_SUBMISSION
-          - PENDING_FEEDBACK
-          - ACCEPTED
-          - REQUIRES_REVIEW
-          - CANCELED
+            - PENDING_SUBMISSION
+            - PENDING_FEEDBACK
+            - ACCEPTED
+            - REQUIRES_REVIEW
+            - CANCELED
         latestVersion:
           type: integer
           format: int64

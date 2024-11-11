@@ -129,6 +129,7 @@ public class ModuleVersion {
         dto.setVersion(this.version);
         dto.setTitleEng(this.titleEng);
         dto.setStatus(this.status);
+        dto.setIsComplete(this.isCompleted());
         dto.setFeedbackList(this.requiredFeedbacks);
         return dto;
     }

@@ -150,7 +150,7 @@ public class ProposalService {
 
     }
 
-    public void submitProposal(Long proposalId, Long userId) {
+    public ProposalViewDTO submitProposal(Long proposalId, Long userId) {
         Proposal proposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> new IllegalArgumentException("No proposal with id " + proposalId +" found"));
 
@@ -181,6 +181,7 @@ public class ProposalService {
         feedbackRepository.saveAll(feedbacks);
         moduleVersionRepository.save(mv);
         proposalRepository.save(proposal);
+        return proposal.toProposalViewDTO();
     }
 
     public void deleteProposalById(long proposalId, long userId) {

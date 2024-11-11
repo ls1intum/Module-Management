@@ -15,6 +15,7 @@ export interface ModuleVersionCompactDTO {
     version?: number;
     titleEng?: string;
     status?: ModuleVersionCompactDTO.StatusEnum;
+    isComplete?: boolean;
     feedbackList?: Array<Feedback>;
 }
 export namespace ModuleVersionCompactDTO {
