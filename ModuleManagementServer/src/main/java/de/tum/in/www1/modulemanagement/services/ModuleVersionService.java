@@ -100,9 +100,9 @@ public class ModuleVersionService {
             throw new IllegalStateException("Proposal must have at least one ModuleVersion.");
         }
 
-        if (!mv.getStatus().equals(ModuleVersionStatus.PENDING_SUBMISSION) && !mv.getStatus().equals(ModuleVersionStatus.PENDING_FEEDBACK)) {
-            throw new IllegalStateException("Only proposals pending submission or feedback can be updated.");
-        }
+//        if (!mv.getStatus().equals(ModuleVersionStatus.PENDING_SUBMISSION) && !mv.getStatus().equals(ModuleVersionStatus.PENDING_FEEDBACK)) {
+//            throw new IllegalStateException("Only proposals pending submission or feedback can be updated.");
+//        }
 
         ModuleVersionUpdateRequestDTO dto = new ModuleVersionUpdateRequestDTO();
         dto.setUserId(userId);
