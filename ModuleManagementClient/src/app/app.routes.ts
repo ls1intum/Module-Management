@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { ProposalsCreateComponent } from './pages/proposal-create/proposal-create.component';
-import { ProposalViewComponent } from './proposal-view/proposal-view.component';
+import { ProposalViewComponent } from './pages/proposal-view/proposal-view.component';
 import { FeedbackViewComponent } from './feedback-view/feedback-view.component';
 import { IndexComponent } from './pages/index/index.component';
 import { ProfessorHomePageComponent } from './pages/professor-home/professor-home-page.component';

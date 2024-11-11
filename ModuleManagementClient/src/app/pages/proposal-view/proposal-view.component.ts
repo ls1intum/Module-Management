@@ -1,13 +1,13 @@
 import { Component, inject } from '@angular/core';
 import { HlmTableComponent, HlmTrowComponent, HlmThComponent, HlmTdComponent, HlmCaptionComponent } from '@spartan-ng/ui-table-helm';
-import { ModuleVersion, Proposal, ProposalControllerService, ProposalViewDTO, UserIdDTO } from '../core/modules/openapi';
+import { ModuleVersion, Proposal, ProposalControllerService, ProposalViewDTO, UserIdDTO } from '../../core/modules/openapi';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
 import { HttpErrorResponse } from '@angular/common/http';
-import { LayoutComponent } from '../components/layout.component';
-import { StatusDisplayPipe } from '../pipes/proposalStatus.pipe';
+import { LayoutComponent } from '../../components/layout.component';
+import { StatusDisplayPipe } from '../../pipes/proposalStatus.pipe';
 
 @Component({
   selector: 'app-proposal-view',
