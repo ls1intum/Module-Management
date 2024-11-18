@@ -1,4 +1,4 @@
-package modulemanagement.ls1.modulemanagementserver;
+package modulemanagement.ls1;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

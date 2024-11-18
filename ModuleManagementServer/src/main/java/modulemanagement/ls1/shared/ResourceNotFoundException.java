@@ -1,4 +1,4 @@
-package modulemanagement.ls1.modulemanagementserver.shared;
+package modulemanagement.ls1.shared;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {

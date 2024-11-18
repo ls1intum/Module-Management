@@ -1,15 +1,15 @@
-package modulemanagement.ls1.modulemanagementserver.services;
+package modulemanagement.ls1.services;
 
-import de.tum.in.www1.modulemanagement.dtos.ModuleVersionUpdateRequestDTO;
-import de.tum.in.www1.modulemanagement.enums.FeedbackStatus;
-import de.tum.in.www1.modulemanagement.enums.ModuleVersionStatus;
-import de.tum.in.www1.modulemanagement.enums.ProposalStatus;
-import de.tum.in.www1.modulemanagement.models.Feedback;
-import de.tum.in.www1.modulemanagement.models.ModuleVersion;
-import de.tum.in.www1.modulemanagement.models.Proposal;
-import de.tum.in.www1.modulemanagement.repositories.ModuleVersionRepository;
-import de.tum.in.www1.modulemanagement.repositories.ProposalRepository;
-import de.tum.in.www1.modulemanagement.shared.ResourceNotFoundException;
+import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
+import modulemanagement.ls1.enums.FeedbackStatus;
+import modulemanagement.ls1.enums.ModuleVersionStatus;
+import modulemanagement.ls1.enums.ProposalStatus;
+import modulemanagement.ls1.models.Feedback;
+import modulemanagement.ls1.models.ModuleVersion;
+import modulemanagement.ls1.models.Proposal;
+import modulemanagement.ls1.repositories.ModuleVersionRepository;
+import modulemanagement.ls1.repositories.ProposalRepository;
+import modulemanagement.ls1.shared.ResourceNotFoundException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

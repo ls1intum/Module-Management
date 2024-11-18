@@ -1,7 +1,7 @@
-package modulemanagement.ls1.modulemanagementserver.controllers;
+package modulemanagement.ls1.controllers;
 
-import modulemanagement.dtos.ModuleVersionUpdateRequestDTO;
-import modulemanagement.services.ModuleVersionService;
+import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
+import modulemanagement.ls1.services.ModuleVersionService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

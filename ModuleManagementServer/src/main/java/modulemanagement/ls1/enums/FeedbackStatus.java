@@ -1,4 +1,4 @@
-package modulemanagement.ls1.modulemanagementserver.enums;
+package modulemanagement.ls1.enums;
 
 public enum FeedbackStatus {
     PENDING_SUBMISSION,     // Corresponding ModuleVersion only created, but nothing to review yet.

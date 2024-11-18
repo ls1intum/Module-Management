@@ -1,10 +1,10 @@
-package modulemanagement.ls1.modulemanagementserver.models;
+package modulemanagement.ls1.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.tum.in.www1.modulemanagement.dtos.ModuleVersionCompactDTO;
-import de.tum.in.www1.modulemanagement.dtos.ModuleVersionUpdateRequestDTO;
-import de.tum.in.www1.modulemanagement.enums.Language;
-import de.tum.in.www1.modulemanagement.enums.ModuleVersionStatus;
+import modulemanagement.ls1.dtos.ModuleVersionCompactDTO;
+import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
+import modulemanagement.ls1.enums.Language;
+import modulemanagement.ls1.enums.ModuleVersionStatus;
 import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.*;
 import lombok.Data;

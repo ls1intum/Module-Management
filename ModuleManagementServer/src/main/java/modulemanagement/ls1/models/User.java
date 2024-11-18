@@ -1,6 +1,6 @@
-package modulemanagement.ls1.modulemanagementserver.models;
+package modulemanagement.ls1.models;
 
-import de.tum.in.www1.modulemanagement.enums.UserRole;
+import modulemanagement.ls1.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

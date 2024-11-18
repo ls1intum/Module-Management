@@ -1,7 +1,7 @@
-package modulemanagement.ls1.modulemanagementserver.services;
+package modulemanagement.ls1.services;
 
-import de.tum.in.www1.modulemanagement.models.User;
-import de.tum.in.www1.modulemanagement.repositories.UserRepository;
+import modulemanagement.ls1.models.User;
+import modulemanagement.ls1.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service

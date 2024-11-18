@@ -1,7 +1,7 @@
-package modulemanagement.ls1.modulemanagementserver.dtos;
+package modulemanagement.ls1.dtos;
 
-import modulemanagement.enums.ModuleVersionStatus;
-import modulemanagement.models.Feedback;
+import modulemanagement.ls1.enums.ModuleVersionStatus;
+import modulemanagement.ls1.models.Feedback;
 import lombok.Data;
 
 import java.util.List;

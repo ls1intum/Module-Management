@@ -1,8 +1,8 @@
-package modulemanagement.ls1.modulemanagementserver.controllers;
+package modulemanagement.ls1.controllers;
 
-import modulemanagement.dtos.*;
-import modulemanagement.models.Proposal;
-import modulemanagement.services.ProposalService;
+import modulemanagement.ls1.dtos.*;
+import modulemanagement.ls1.models.Proposal;
+import modulemanagement.ls1.services.ProposalService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

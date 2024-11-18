@@ -1,12 +1,12 @@
-package modulemanagement.ls1.modulemanagementserver.services;
+package modulemanagement.ls1.services;
 
-import de.tum.in.www1.modulemanagement.dtos.ModuleVersionUpdateRequestDTO;
-import de.tum.in.www1.modulemanagement.enums.FeedbackStatus;
-import de.tum.in.www1.modulemanagement.models.Feedback;
-import de.tum.in.www1.modulemanagement.models.User;
-import de.tum.in.www1.modulemanagement.repositories.FeedbackRepository;
-import de.tum.in.www1.modulemanagement.repositories.UserRepository;
-import de.tum.in.www1.modulemanagement.shared.ResourceNotFoundException;
+import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
+import modulemanagement.ls1.enums.FeedbackStatus;
+import modulemanagement.ls1.models.Feedback;
+import modulemanagement.ls1.models.User;
+import modulemanagement.ls1.repositories.FeedbackRepository;
+import modulemanagement.ls1.repositories.UserRepository;
+import modulemanagement.ls1.shared.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

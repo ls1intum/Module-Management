@@ -1,6 +1,6 @@
-package modulemanagement.ls1.modulemanagementserver.dtos;
+package modulemanagement.ls1.dtos;
 
-import modulemanagement.enums.ProposalStatus;
+import modulemanagement.ls1.enums.ProposalStatus;
 import lombok.Data;
 
 @Data

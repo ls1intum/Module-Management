@@ -1,4 +1,4 @@
-package modulemanagement.ls1.modulemanagementserver.dtos;
+package modulemanagement.ls1.dtos;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;

@@ -1,8 +1,8 @@
-package modulemanagement.ls1.modulemanagementserver.models;
+package modulemanagement.ls1.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.tum.in.www1.modulemanagement.dtos.ProposalViewDTO;
-import de.tum.in.www1.modulemanagement.enums.ProposalStatus;
+import modulemanagement.ls1.dtos.ProposalViewDTO;
+import modulemanagement.ls1.enums.ProposalStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

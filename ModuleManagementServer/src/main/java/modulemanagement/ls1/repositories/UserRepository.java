@@ -1,6 +1,6 @@
-package modulemanagement.ls1.modulemanagementserver.repositories;
+package modulemanagement.ls1.repositories;
 
-import de.tum.in.www1.modulemanagement.models.User;
+import modulemanagement.ls1.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

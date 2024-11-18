@@ -1,7 +1,7 @@
-package modulemanagement.ls1.modulemanagementserver.dtos;
+package modulemanagement.ls1.dtos;
 
-import modulemanagement.enums.Language;
-import modulemanagement.enums.ModuleVersionStatus;
+import modulemanagement.ls1.enums.Language;
+import modulemanagement.ls1.enums.ModuleVersionStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 

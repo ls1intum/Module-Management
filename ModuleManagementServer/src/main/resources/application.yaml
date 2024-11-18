@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ModuleManagement-Gradle
+    name: ModuleManagement
 
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres

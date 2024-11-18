@@ -1,10 +1,10 @@
-package de.tum.in.www1.modulemanagement;
+package modulemanagement.ls1;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ModuleManagementApplicationTests {
+class ModuleManagementServerApplicationTests {
 
     @Test
     void contextLoads() {
