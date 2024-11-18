@@ -1,6 +1,5 @@
 package de.tum.in.www1.modulemanagement.services;
 
-import de.tum.in.www1.modulemanagement.dtos.ModuleVersionUpdateRequestDTO;
 import de.tum.in.www1.modulemanagement.dtos.ProposalRequestDTO;
 import de.tum.in.www1.modulemanagement.dtos.ProposalViewDTO;
 import de.tum.in.www1.modulemanagement.dtos.ProposalsCompactDTO;
@@ -14,7 +13,6 @@ import de.tum.in.www1.modulemanagement.repositories.ModuleVersionRepository;
 import de.tum.in.www1.modulemanagement.repositories.ProposalRepository;
 import de.tum.in.www1.modulemanagement.repositories.UserRepository;
 import de.tum.in.www1.modulemanagement.shared.ResourceNotFoundException;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

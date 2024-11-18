@@ -1,8 +1,8 @@
 package de.tum.in.www1.modulemanagement.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.tum.in.www1.modulemanagement.enums.UserRole;
 import de.tum.in.www1.modulemanagement.enums.FeedbackStatus;
+import de.tum.in.www1.modulemanagement.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;

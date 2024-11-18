@@ -1,8 +1,8 @@
 package de.tum.in.www1.modulemanagement.controllers;
 
 import de.tum.in.www1.modulemanagement.dtos.ModuleVersionUpdateRequestDTO;
-import de.tum.in.www1.modulemanagement.dtos.UserIdDTO;
 import de.tum.in.www1.modulemanagement.dtos.RejectFeedbackDTO;
+import de.tum.in.www1.modulemanagement.dtos.UserIdDTO;
 import de.tum.in.www1.modulemanagement.models.Feedback;
 import de.tum.in.www1.modulemanagement.services.FeedbackService;
 import de.tum.in.www1.modulemanagement.services.ModuleVersionService;

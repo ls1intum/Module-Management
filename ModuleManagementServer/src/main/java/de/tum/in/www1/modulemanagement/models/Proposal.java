@@ -1,7 +1,6 @@
 package de.tum.in.www1.modulemanagement.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.tum.in.www1.modulemanagement.dtos.ModuleVersionCompactDTO;
 import de.tum.in.www1.modulemanagement.dtos.ProposalViewDTO;
 import de.tum.in.www1.modulemanagement.enums.ProposalStatus;
 import jakarta.persistence.*;

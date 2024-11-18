@@ -1,8 +1,6 @@
 package de.tum.in.www1.modulemanagement.controllers;
 
 import de.tum.in.www1.modulemanagement.dtos.ModuleVersionUpdateRequestDTO;
-import de.tum.in.www1.modulemanagement.dtos.UserIdDTO;
-import de.tum.in.www1.modulemanagement.models.ModuleVersion;
 import de.tum.in.www1.modulemanagement.services.ModuleVersionService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

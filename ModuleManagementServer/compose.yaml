@@ -1,9 +1,10 @@
 services:
   postgres:
     image: 'postgres:latest'
+    container_name: module-management-db
     environment:
-      - POSTGRES_DB=ModuleManagement
-      - POSTGRES_PASSWORD=secret
-      - POSTGRES_USER=myuser
+      - 'POSTGRES_DB=ModuleManagement'
+      - 'POSTGRES_PASSWORD=secret'
+      - 'POSTGRES_USER=myuser'
     ports:
-      - '5432:5432'
+      - '5432'
