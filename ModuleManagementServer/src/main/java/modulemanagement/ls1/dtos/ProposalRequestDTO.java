@@ -1,0 +1,28 @@
+package modulemanagement.ls1.modulemanagementserver.dtos;
+
+import modulemanagement.enums.Language;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+@Data
+public class ProposalRequestDTO {
+    @NotNull private Long userId;
+    private String titleEng;
+    private String levelEng;
+    private Language languageEng;
+    private String frequencyEng;
+    private Integer credits;
+    private Integer hoursTotal;
+    private Integer hoursSelfStudy;
+    private Integer hoursPresence;
+    private String examinationAchievementsEng;
+    private String repetitionEng;
+    private String recommendedPrerequisitesEng;
+    private String contentEng;
+    private String learningOutcomesEng;
+    private String teachingMethodsEng;
+    private String mediaEng;
+    private String literatureEng;
+    private String responsiblesEng;
+    private String lvSwsLecturerEng;
+}
