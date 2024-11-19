@@ -2,10 +2,12 @@ package modulemanagement.ls1.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import modulemanagement.ls1.dtos.ProposalViewDTO;
+import modulemanagement.ls1.enums.ModuleVersionStatus;
 import modulemanagement.ls1.enums.ProposalStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import modulemanagement.ls1.services.ProposalService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -81,4 +83,37 @@ public class Proposal {
         return v;
     }
 
+    @JsonIgnore
+    public void addNewModuleVersion() {
+        ModuleVersion latestMv = getLatestModuleVersionWithContent();
+        ModuleVersion newMv = new ModuleVersion();
+        newMv.setProposal(this);
+        newMv.setVersion(latestMv.getVersion() + 1);
+        newMv.setCreationDate(LocalDateTime.now());
+        newMv.setStatus(ModuleVersionStatus.PENDING_SUBMISSION);
+        newMv.setTitleEng(latestMv.getTitleEng());
+        newMv.setLevelEng(latestMv.getLevelEng());
+        newMv.setLanguageEng(latestMv.getLanguageEng());
+        newMv.setFrequencyEng(latestMv.getFrequencyEng());
+        newMv.setCredits(latestMv.getCredits());
+        newMv.setHoursTotal(latestMv.getHoursTotal());
+        newMv.setHoursSelfStudy(latestMv.getHoursSelfStudy());
+        newMv.setHoursPresence(latestMv.getHoursPresence());
+        newMv.setExaminationAchievementsEng(latestMv.getExaminationAchievementsEng());
+        newMv.setRepetitionEng(latestMv.getRepetitionEng());
+        newMv.setRecommendedPrerequisitesEng(latestMv.getRecommendedPrerequisitesEng());
+        newMv.setContentEng(latestMv.getContentEng());
+        newMv.setLearningOutcomesEng(latestMv.getLearningOutcomesEng());
+        newMv.setTeachingMethodsEng(latestMv.getTeachingMethodsEng());
+        newMv.setMediaEng(latestMv.getMediaEng());
+        newMv.setLiteratureEng(latestMv.getLiteratureEng());
+        newMv.setResponsiblesEng(latestMv.getResponsiblesEng());
+        newMv.setLvSwsLecturerEng(latestMv.getLvSwsLecturerEng());
+
+        List<Feedback> requiredFeedbacks = new ArrayList<Feedback>();
+        ProposalService.createNewFeedbacks(newMv, requiredFeedbacks);
+        newMv.setRequiredFeedbacks(requiredFeedbacks);
+        addModuleVersion(newMv);
+        this.setStatus(ProposalStatus.PENDING_SUBMISSION);
+    }
 }

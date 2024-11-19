@@ -1,5 +1,7 @@
 package modulemanagement.ls1.services;
 
+import jakarta.validation.Valid;
+import modulemanagement.ls1.dtos.AddModuleVersionDTO;
 import modulemanagement.ls1.dtos.ProposalRequestDTO;
 import modulemanagement.ls1.dtos.ProposalViewDTO;
 import modulemanagement.ls1.dtos.ProposalsCompactDTO;
@@ -75,6 +77,16 @@ public class ProposalService {
         mv = moduleVersionRepository.save(mv);
 
         List<Feedback> feedbacks = new ArrayList<>();
+        createNewFeedbacks(mv, feedbacks);
+        feedbacks = feedbackRepository.saveAll(feedbacks);
+        mv.setRequiredFeedbacks(feedbacks);
+        moduleVersionRepository.save(mv);
+        p.addModuleVersion(mv);
+        proposalRepository.save(p);
+        return p;
+    }
+
+    public static void createNewFeedbacks(ModuleVersion mv, List<Feedback> feedbacks) {
         for (UserRole ad : UserRole.values()) {
             if (ad.equals(UserRole.PROFESSOR))
                 continue;
@@ -84,10 +96,17 @@ public class ProposalService {
             feedback.setModuleVersion(mv);
             feedbacks.add(feedback);
         }
-        feedbacks = feedbackRepository.saveAll(feedbacks);
-        mv.setRequiredFeedbacks(feedbacks);
-        moduleVersionRepository.save(mv);
-        p.addModuleVersion(mv);
+    }
+
+    public Proposal addModuleVersion(@Valid AddModuleVersionDTO request) {
+        Proposal p = proposalRepository.findById(request.getProposalId()).orElseThrow(() -> new ResourceNotFoundException("Proposal not found"));
+        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (!user.getUserId().equals(p.getCreatedBy().getUserId()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You cannot add a module version to a module you did not create.");
+        if (!p.getStatus().equals(ProposalStatus.REQUIRES_REVIEW))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can only add a new module version, if the proposal requires a review.");
+
+        p.addNewModuleVersion();
         proposalRepository.save(p);
         return p;
     }

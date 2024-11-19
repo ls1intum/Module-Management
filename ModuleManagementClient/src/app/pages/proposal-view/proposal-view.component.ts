@@ -8,6 +8,7 @@ import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LayoutComponent } from '../../components/layout.component';
 import { StatusDisplayPipe } from '../../pipes/proposalStatus.pipe';
+import { FadedModuleVersionStatusPipe, ModuleVersionStatusPipe } from '../../pipes/moduleVersionStatus.pipe';
 
 @Component({
   selector: 'app-proposal-view',
@@ -23,7 +24,9 @@ import { StatusDisplayPipe } from '../../pipes/proposalStatus.pipe';
     CommonModule,
     HlmBadgeDirective,
     LayoutComponent,
-    StatusDisplayPipe
+    StatusDisplayPipe,
+    ModuleVersionStatusPipe,
+    FadedModuleVersionStatusPipe
   ],
   host: {
     class: 'w-full overflow-x-auto'
