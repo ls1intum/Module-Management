@@ -35,8 +35,8 @@ public class ProposalController {
     }
 
     @PostMapping("/add-module-version")
-    public ResponseEntity<Proposal> addModuleVersion(@Valid @RequestBody AddModuleVersionDTO request) {
-        Proposal proposal = proposalService.addModuleVersion(request);
+    public ResponseEntity<ProposalViewDTO> addModuleVersion(@Valid @RequestBody AddModuleVersionDTO request) {
+        ProposalViewDTO proposal = proposalService.addModuleVersion(request);
         return ResponseEntity.ok(proposal);
     }
 

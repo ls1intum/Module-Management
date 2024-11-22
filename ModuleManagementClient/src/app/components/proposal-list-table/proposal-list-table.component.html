@@ -15,8 +15,8 @@
       </button>
     </hlm-td>
     <hlm-td class="w-50">
-      <div hlmBadge [class]="(proposal.status | statusDisplay).colorClass">
-        {{ (proposal.status | statusDisplay).text }}
+      <div hlmBadge [class]="(proposal.status! | statusDisplay).colorClass">
+        {{ (proposal.status! | statusDisplay).text }}
       </div>
     </hlm-td>
     <hlm-td class="justify-end w-40">{{ proposal.createdBy }}</hlm-td>

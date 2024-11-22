@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ModuleVersionControllerService, ModuleVersionUpdateRequestDTO, ProposalControllerService } from '../../core/modules/openapi';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ModuleVersionControllerService, ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO, ProposalControllerService } from '../../core/modules/openapi';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
@@ -30,9 +30,8 @@ export class ProposalsEditComponent {
   ];
 
   constructor(private formBuilder: FormBuilder, private moduleVersionService: ModuleVersionControllerService, private route: ActivatedRoute, private router: Router) {
+    this.moduleVersionId = Number(route.snapshot.paramMap.get('id'));
     this.proposalForm = this.formBuilder.group({
-      userId: [null],
-      moduleVersionId: [null],
       titleEng: [''],
       levelEng: [''],
       languageEng: ['undefined'],
@@ -52,7 +51,6 @@ export class ProposalsEditComponent {
       responsiblesEng: [''],
       lvSwsLecturerEng: ['']
     });
-    this.moduleVersionId = Number(route.snapshot.paramMap.get('id'));
     this.fetchModuleVersion(this.moduleVersionId);
   }
 
@@ -75,11 +73,18 @@ export class ProposalsEditComponent {
       this.loading = true;
       this.error = null;
 
-      const proposalData = this.proposalForm.value;
+      // Carry over unchanged values
+      const proposalData: ModuleVersionUpdateRequestDTO = {
+        ...this.proposalForm.value,
+        moduleVersionId: this.moduleVersionId,
+        // TODO: remove hard-coded variant
+        userId: 1
+      };
+      console.log(proposalData);
       this.moduleVersionService.updateModuleVersion(this.moduleVersionId!, proposalData).subscribe({
-        next: (response) => {
+        next: (response: ModuleVersionUpdateResponseDTO) => {
           this.proposalForm.reset();
-          this.router.navigate(['/proposals/view', response.moduleVersionId], {
+          this.router.navigate(['/proposals/view', response.proposalId], {
             queryParams: { created: true }
           });
         },

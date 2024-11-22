@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { HlmTableComponent, HlmTrowComponent, HlmThComponent, HlmTdComponent, HlmCaptionComponent } from '@spartan-ng/ui-table-helm';
-import { ModuleVersion, Proposal, ProposalControllerService, ProposalViewDTO, UserIdDTO } from '../../core/modules/openapi';
+import { AddModuleVersionDTO, ModuleVersion, Proposal, ProposalControllerService, ProposalViewDTO, UserIdDTO } from '../../core/modules/openapi';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
@@ -74,9 +74,7 @@ export class ProposalViewComponent {
     if (this.proposal) {
       const userIdDto: UserIdDTO = { userId: this.selectedUserId };
       this.proposalService.deleteProposal(this.proposal.proposalId!, userIdDto).subscribe({
-        next: () => {
-          window.location.href = '/proposals';
-        },
+        next: () => (window.location.href = '/proposals'),
         error: (err: HttpErrorResponse) => (this.error = err.error)
       });
     }
@@ -102,7 +100,11 @@ export class ProposalViewComponent {
 
   addNewModuleVersion() {
     if (this.proposal) {
-      window.location.href = `/module-version/add?proposalId=${this.proposal.proposalId}`;
+      const addModuleVersionDto: AddModuleVersionDTO = { userId: this.selectedUserId, proposalId: this.proposal.proposalId! };
+      this.proposalService.addModuleVersion(addModuleVersionDto).subscribe({
+        next: (response: ProposalViewDTO) => (this.proposal = response),
+        error: (err: HttpErrorResponse) => (this.error = err.error)
+      });
     }
   }
 }

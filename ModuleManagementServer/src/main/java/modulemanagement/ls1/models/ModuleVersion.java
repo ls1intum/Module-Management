@@ -1,8 +1,10 @@
 package modulemanagement.ls1.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.NotNull;
 import modulemanagement.ls1.dtos.ModuleVersionCompactDTO;
 import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
+import modulemanagement.ls1.dtos.ModuleVersionUpdateResponseDTO;
 import modulemanagement.ls1.enums.Language;
 import modulemanagement.ls1.enums.ModuleVersionStatus;
 import io.micrometer.common.util.StringUtils;
@@ -32,7 +34,7 @@ public class ModuleVersion {
     private LocalDateTime creationDate;
 
     @Column(name = "status")
-    private ModuleVersionStatus status;
+    @NotNull private ModuleVersionStatus status;
 
     // --------MODULE_FIELDS----------
     @Column(name = "title_eng")
@@ -134,10 +136,22 @@ public class ModuleVersion {
         return dto;
     }
 
+    @JsonIgnore
     public ModuleVersionUpdateRequestDTO toModuleUpdateRequestDTO() {
         ModuleVersionUpdateRequestDTO mdto = new ModuleVersionUpdateRequestDTO();
         mdto.setUserId(proposal.getCreatedBy().getUserId());
-        mdto.setModuleVersionId(this.moduleVersionId);
+        toModuleVersionDto(mdto);
+        return mdto;
+    }
+
+    public ModuleVersionUpdateResponseDTO toModuleUpdateResponseDTO() {
+        ModuleVersionUpdateResponseDTO mdto = new ModuleVersionUpdateResponseDTO();
+        toModuleVersionDto(mdto);
+        mdto.setProposalId(this.proposal.getProposalId());
+        return mdto;
+    }
+
+    private void toModuleVersionDto(ModuleVersionUpdateRequestDTO mdto) {
         mdto.setVersion(this.version);
         mdto.setModuleId(this.moduleId);
         mdto.setStatus(this.status);
@@ -160,6 +174,5 @@ public class ModuleVersion {
         mdto.setLiteratureEng(this.literatureEng);
         mdto.setResponsiblesEng(this.responsiblesEng);
         mdto.setLvSwsLecturerEng(this.lvSwsLecturerEng);
-        return mdto;
     }
 }

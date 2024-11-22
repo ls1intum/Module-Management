@@ -98,7 +98,7 @@ public class ProposalService {
         }
     }
 
-    public Proposal addModuleVersion(@Valid AddModuleVersionDTO request) {
+    public ProposalViewDTO addModuleVersion(@Valid AddModuleVersionDTO request) {
         Proposal p = proposalRepository.findById(request.getProposalId()).orElseThrow(() -> new ResourceNotFoundException("Proposal not found"));
         User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         if (!user.getUserId().equals(p.getCreatedBy().getUserId()))
@@ -108,7 +108,7 @@ public class ProposalService {
 
         p.addNewModuleVersion();
         proposalRepository.save(p);
-        return p;
+        return p.toProposalViewDTO();
     }
 
     public List<Proposal> getAllProposals() {

@@ -7,13 +7,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ModuleTranslation } from './module-translation';
 
 
-export interface CitModule { 
-    id?: number;
-    moduleId?: string;
-    translations?: Array<ModuleTranslation>;
-    creationDate?: string;
+export interface AddModuleVersionDTO { 
+    userId: number;
+    proposalId: number;
 }
 

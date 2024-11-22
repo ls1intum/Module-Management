@@ -34,7 +34,10 @@
 
   <!-- Action Buttons -->
   <div class="flex justify-between mb-10 mt-20">
+    @if(proposal.status === proposalStatusEnum.RequiresReview) {
     <button hlmBtn variant="outline" (click)="addNewModuleVersion()">Create New Version</button>
+
+    }
     <!-- <button hlmBtn variant="destructive" (click)="deleteProposal()">Delete Proposal</button> -->
     @if (proposal.status === proposalStatusEnum.PendingSubmission) { @if (proposal.latestModuleVersion?.isComplete) {
     <button hlmBtn variant="default" class="bg-green-600" (click)="submitProposal()">Submit</button>

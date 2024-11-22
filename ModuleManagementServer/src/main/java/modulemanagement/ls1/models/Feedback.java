@@ -1,6 +1,7 @@
 package modulemanagement.ls1.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.NotNull;
 import modulemanagement.ls1.enums.FeedbackStatus;
 import modulemanagement.ls1.enums.UserRole;
 import jakarta.persistence.*;
@@ -31,7 +32,7 @@ public class Feedback {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "feedback_status")
-    private FeedbackStatus status;
+    @NotNull private FeedbackStatus status;
 
     @Column(name = "submission_date")
     private LocalDateTime submissionDate;

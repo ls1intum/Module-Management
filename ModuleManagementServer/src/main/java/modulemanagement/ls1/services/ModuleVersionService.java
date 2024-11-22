@@ -1,6 +1,7 @@
 package modulemanagement.ls1.services;
 
 import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
+import modulemanagement.ls1.dtos.ModuleVersionUpdateResponseDTO;
 import modulemanagement.ls1.enums.FeedbackStatus;
 import modulemanagement.ls1.enums.ModuleVersionStatus;
 import modulemanagement.ls1.enums.ProposalStatus;
@@ -25,7 +26,7 @@ public class ModuleVersionService {
         this.proposalRepository = proposalRepository;
     }
 
-    public ModuleVersionUpdateRequestDTO updateModuleVersionFromRequest(Long moduleVersionId, ModuleVersionUpdateRequestDTO request) {
+    public ModuleVersionUpdateResponseDTO updateModuleVersionFromRequest(Long moduleVersionId, ModuleVersionUpdateRequestDTO request) {
         ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("ModuleVersion not found"));
         if (!mv.getProposal().getCreatedBy().getUserId().equals(request.getUserId()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
@@ -58,7 +59,7 @@ public class ModuleVersionService {
         mv.setLvSwsLecturerEng(request.getLvSwsLecturerEng());
 
         mv = moduleVersionRepository.save(mv);
-        return mv.toModuleUpdateRequestDTO();
+        return mv.toModuleUpdateResponseDTO();
     }
 
     public void updateStatus(Long moduleVersionId) {
@@ -89,7 +90,7 @@ public class ModuleVersionService {
         moduleVersionRepository.save(mv);
     }
 
-    public ModuleVersionUpdateRequestDTO getModuleVersionUpdateDtoFromId(Long moduleVersionId, Long userId) {
+    public ModuleVersionUpdateResponseDTO getModuleVersionUpdateDtoFromId(Long moduleVersionId, Long userId) {
         var mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("Module Version not found"));
         Proposal p = mv.getProposal();
         if (!p.getCreatedBy().getUserId().equals(userId)){
@@ -104,31 +105,6 @@ public class ModuleVersionService {
 //            throw new IllegalStateException("Only proposals pending submission or feedback can be updated.");
 //        }
 
-        ModuleVersionUpdateRequestDTO dto = new ModuleVersionUpdateRequestDTO();
-        dto.setUserId(userId);
-        dto.setModuleVersionId(mv.getModuleVersionId());
-        dto.setVersion(mv.getVersion());
-        dto.setModuleId(mv.getModuleId());
-        dto.setStatus(mv.getStatus());
-        dto.setIsComplete(mv.isCompleted());
-        dto.setTitleEng(mv.getTitleEng());
-        dto.setLevelEng(mv.getLevelEng());
-        dto.setLanguageEng(mv.getLanguageEng());
-        dto.setFrequencyEng(mv.getFrequencyEng());
-        dto.setCredits(mv.getCredits());
-        dto.setHoursTotal(mv.getHoursTotal());
-        dto.setHoursSelfStudy(mv.getHoursSelfStudy());
-        dto.setHoursPresence(mv.getHoursPresence());
-        dto.setExaminationAchievementsEng(mv.getExaminationAchievementsEng());
-        dto.setRepetitionEng(mv.getRepetitionEng());
-        dto.setRecommendedPrerequisitesEng(mv.getRecommendedPrerequisitesEng());
-        dto.setContentEng(mv.getContentEng());
-        dto.setLearningOutcomesEng(mv.getLearningOutcomesEng());
-        dto.setTeachingMethodsEng(mv.getTeachingMethodsEng());
-        dto.setMediaEng(mv.getMediaEng());
-        dto.setLiteratureEng(mv.getLiteratureEng());
-        dto.setResponsiblesEng(mv.getResponsiblesEng());
-        dto.setLvSwsLecturerEng(mv.getLvSwsLecturerEng());
-        return dto;
+        return mv.toModuleUpdateResponseDTO();
     }
 }

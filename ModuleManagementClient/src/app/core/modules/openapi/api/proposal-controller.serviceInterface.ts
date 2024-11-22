@@ -11,6 +11,7 @@ import { HttpHeaders }                                       from '@angular/comm
 
 import { Observable }                                        from 'rxjs';
 
+import { AddModuleVersionDTO } from '../model/models';
 import { Proposal } from '../model/models';
 import { ProposalRequestDTO } from '../model/models';
 import { ProposalViewDTO } from '../model/models';
@@ -25,6 +26,13 @@ import { Configuration }                                     from '../configurat
 export interface ProposalControllerServiceInterface {
     defaultHeaders: HttpHeaders;
     configuration: Configuration;
+
+    /**
+     * 
+     * 
+     * @param addModuleVersionDTO 
+     */
+    addModuleVersion(addModuleVersionDTO: AddModuleVersionDTO, extraHttpRequestParams?: any): Observable<ProposalViewDTO>;
 
     /**
      * 

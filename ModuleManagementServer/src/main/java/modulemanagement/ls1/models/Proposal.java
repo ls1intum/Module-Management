@@ -1,6 +1,7 @@
 package modulemanagement.ls1.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.NotNull;
 import modulemanagement.ls1.dtos.ProposalViewDTO;
 import modulemanagement.ls1.enums.ModuleVersionStatus;
 import modulemanagement.ls1.enums.ProposalStatus;
@@ -34,7 +35,7 @@ public class Proposal {
     private LocalDateTime creationDate;
 
     @Column(name = "status")
-    private ProposalStatus status;
+    @NotNull private ProposalStatus status;
 
     @OneToMany(mappedBy = "proposal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ModuleVersion> moduleVersions = new ArrayList<>();

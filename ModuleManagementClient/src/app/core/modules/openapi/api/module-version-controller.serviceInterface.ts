@@ -12,6 +12,7 @@ import { HttpHeaders }                                       from '@angular/comm
 import { Observable }                                        from 'rxjs';
 
 import { ModuleVersionUpdateRequestDTO } from '../model/models';
+import { ModuleVersionUpdateResponseDTO } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -28,7 +29,7 @@ export interface ModuleVersionControllerServiceInterface {
      * @param moduleVersionId 
      * @param userId 
      */
-    getModuleVersionUpdateDtoFromId(moduleVersionId: number, userId: number, extraHttpRequestParams?: any): Observable<ModuleVersionUpdateRequestDTO>;
+    getModuleVersionUpdateDtoFromId(moduleVersionId: number, userId: number, extraHttpRequestParams?: any): Observable<ModuleVersionUpdateResponseDTO>;
 
     /**
      * 
@@ -36,6 +37,6 @@ export interface ModuleVersionControllerServiceInterface {
      * @param moduleVersionId 
      * @param moduleVersionUpdateRequestDTO 
      */
-    updateModuleVersion(moduleVersionId: number, moduleVersionUpdateRequestDTO: ModuleVersionUpdateRequestDTO, extraHttpRequestParams?: any): Observable<ModuleVersionUpdateRequestDTO>;
+    updateModuleVersion(moduleVersionId: number, moduleVersionUpdateRequestDTO: ModuleVersionUpdateRequestDTO, extraHttpRequestParams?: any): Observable<ModuleVersionUpdateResponseDTO>;
 
 }
