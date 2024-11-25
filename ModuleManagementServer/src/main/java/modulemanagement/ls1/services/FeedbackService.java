@@ -1,5 +1,6 @@
 package modulemanagement.ls1.services;
 
+import modulemanagement.ls1.dtos.FeedbackListItemDto;
 import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
 import modulemanagement.ls1.enums.FeedbackStatus;
 import modulemanagement.ls1.models.Feedback;
@@ -50,12 +51,13 @@ public class FeedbackService {
         return feedback;
     }
 
-    public List<Feedback> getAllFeedbacksForUser(Long userId) {
+    public List<FeedbackListItemDto> getAllFeedbacksForUser(Long userId) {
         User user = getAuthorizedUser(userId);
-        return feedbackRepository.findAll()
+        return feedbackRepository.findByRequiredRoleAndStatus(user.getRole(), FeedbackStatus.PENDING_FEEDBACK)
                 .stream()
                 .filter(feedback -> feedback.getRequiredRole().equals(user.getRole()))
                 .sorted(Comparator.comparing(Feedback::getFeedbackId))
+                .map(FeedbackListItemDto::fromFeedback)
                 .toList();
     }
 

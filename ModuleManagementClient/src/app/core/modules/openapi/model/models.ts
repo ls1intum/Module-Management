@@ -1,5 +1,6 @@
 export * from './add-module-version-dto';
 export * from './feedback';
+export * from './feedback-list-item-dto';
 export * from './module-version';
 export * from './module-version-compact-dto';
 export * from './module-version-update-request-dto';

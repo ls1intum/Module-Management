@@ -12,6 +12,7 @@ import { HttpHeaders }                                       from '@angular/comm
 import { Observable }                                        from 'rxjs';
 
 import { Feedback } from '../model/models';
+import { FeedbackListItemDto } from '../model/models';
 import { ModuleVersionUpdateRequestDTO } from '../model/models';
 import { RejectFeedbackDTO } from '../model/models';
 import { UserIdDTO } from '../model/models';
@@ -38,7 +39,7 @@ export interface FeedbackControllerServiceInterface {
      * 
      * @param id 
      */
-    getFeedbacksForUser(id: number, extraHttpRequestParams?: any): Observable<Array<Feedback>>;
+    getFeedbacksForUser(id: number, extraHttpRequestParams?: any): Observable<Array<FeedbackListItemDto>>;
 
     /**
      * 

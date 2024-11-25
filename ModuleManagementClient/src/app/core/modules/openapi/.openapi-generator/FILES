@@ -14,6 +14,7 @@ encoder.ts
 git_push.sh
 index.ts
 model/add-module-version-dto.ts
+model/feedback-list-item-dto.ts
 model/feedback.ts
 model/models.ts
 model/module-version-compact-dto.ts

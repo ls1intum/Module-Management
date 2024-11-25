@@ -6,17 +6,18 @@
     <hlm-caption>Feedback List for {{ userId }}</hlm-caption>
     <hlm-trow>
       <hlm-th class="w-40">Feedback ID</hlm-th>
-      <hlm-th class="flex-1">Feedback From</hlm-th>
-      <hlm-th class="w-50">Status</hlm-th>
+      <hlm-th class="flex-1">Proposal Title</hlm-th>
+      <hlm-th class="w-48">Created By</hlm-th>
+      <hlm-th class="w-48">Status</hlm-th>
       <hlm-th class="justify-end w-40">Actions</hlm-th>
     </hlm-trow>
     @if (loading) {
     <hlm-trow>
-      <hlm-td colspan="4" class="text-center flex-1 block mt-4 text-sm text-muted-foreground"> Loading feedbacks... </hlm-td>
+      <hlm-td colspan="5" class="text-center flex-1 block mt-4 text-sm text-muted-foreground"> Loading feedbacks... </hlm-td>
     </hlm-trow>
     } @if (error) {
     <hlm-trow>
-      <hlm-td colspan="4" class="text-center flex-1 block mt-4 text-sm text-muted-foreground">
+      <hlm-td colspan="5" class="text-center flex-1 block mt-4 text-sm text-muted-foreground">
         {{ error }}
       </hlm-td>
     </hlm-trow>
@@ -24,9 +25,12 @@
     <hlm-trow>
       <hlm-td truncate class="font-medium w-40 text-center">{{ feedback.feedbackId }}</hlm-td>
       <hlm-td class="flex-1">
-        <div>{{ feedback.feedbackFrom?.name || 'Pending' }}</div>
+        <div>{{ feedback.moduleVersionTitleEng || 'Untitled Proposal' }}</div>
       </hlm-td>
-      <hlm-td class="w-50">
+      <hlm-td class="w-48">
+        <div>{{ feedback.proposalCreatedByName || 'Unknown' }}</div>
+      </hlm-td>
+      <hlm-td class="w-48">
         <div hlmBadge [class]="(feedback.status | feedbackStatus).colorClass">
           {{ (feedback.status | feedbackStatus).text }}
         </div>
@@ -36,7 +40,7 @@
       </hlm-td>
     </hlm-trow>
     } @empty {
-    <hlm-td colspan="4" class="text-center flex-1 block mt-4 text-sm text-muted-foreground"> No feedbacks available. </hlm-td>
+    <hlm-td colspan="5" class="text-center flex-1 block mt-4 text-sm text-muted-foreground"> No feedbacks available. </hlm-td>
     }
     <hlm-trow> </hlm-trow>
   </hlm-table>

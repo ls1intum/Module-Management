@@ -1,5 +1,6 @@
 package modulemanagement.ls1.controllers;
 
+import modulemanagement.ls1.dtos.FeedbackListItemDto;
 import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
 import modulemanagement.ls1.dtos.RejectFeedbackDTO;
 import modulemanagement.ls1.dtos.UserIdDTO;
@@ -24,8 +25,8 @@ public class FeedbackController {
     }
 
     @GetMapping("/for-user/{id}")
-    public ResponseEntity<List<Feedback>> getFeedbacksForUser(@PathVariable Long id) {
-        List<Feedback> feedbacks = feedbackService.getAllFeedbacksForUser(id);
+    public ResponseEntity<List<FeedbackListItemDto>> getFeedbacksForUser(@PathVariable Long id) {
+        List<FeedbackListItemDto> feedbacks = feedbackService.getAllFeedbacksForUser(id);
         return ResponseEntity.ok(feedbacks);
     }
 

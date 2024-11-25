@@ -1,45 +1,71 @@
-@if(loading) {
-    <div>Loading...</div>
-}
-<select (change)="onUserChange($event)" [disabled]="loading">
-    <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
-</select>
-@if (!loading && moduleVersion) {
-  <div>
-    <h2>Module Version Details</h2>
-    <p><strong>Module ID:</strong> {{ moduleVersion.moduleId }}</p>
-    <p><strong>Version:</strong> {{ moduleVersion.version }}</p>
-    <p><strong>Status:</strong> {{ moduleVersion.status }}</p>
-    <p><strong>Complete:</strong> {{ moduleVersion.isComplete ? 'Yes' : 'No' }}</p>
-    <p><strong>Title (EN):</strong> {{ moduleVersion.titleEng }}</p>
-    <p><strong>Level (EN):</strong> {{ moduleVersion.levelEng }}</p>
-    <p><strong>Language (EN):</strong> {{ moduleVersion.languageEng }}</p>
-    <p><strong>Frequency (EN):</strong> {{ moduleVersion.frequencyEng }}</p>
-    <p><strong>Credits:</strong> {{ moduleVersion.credits }}</p>
-    <p><strong>Total Hours:</strong> {{ moduleVersion.hoursTotal }}</p>
-    <p><strong>Self-Study Hours:</strong> {{ moduleVersion.hoursSelfStudy }}</p>
-    <p><strong>Presence Hours:</strong> {{ moduleVersion.hoursPresence }}</p>
-    <p><strong>Examination Achievements (EN):</strong> {{ moduleVersion.examinationAchievementsEng }}</p>
-    <p><strong>Repetition (EN):</strong> {{ moduleVersion.repetitionEng }}</p>
-    <p><strong>Recommended Prerequisites (EN):</strong> {{ moduleVersion.recommendedPrerequisitesEng }}</p>
-    <p><strong>Content (EN):</strong> {{ moduleVersion.contentEng }}</p>
-    <p><strong>Learning Outcomes (EN):</strong> {{ moduleVersion.learningOutcomesEng }}</p>
-    <p><strong>Teaching Methods (EN):</strong> {{ moduleVersion.teachingMethodsEng }}</p>
-    <p><strong>Media (EN):</strong> {{ moduleVersion.mediaEng }}</p>
-    <p><strong>Literature (EN):</strong> {{ moduleVersion.literatureEng }}</p>
-    <p><strong>Responsibles (EN):</strong> {{ moduleVersion.responsiblesEng }}</p>
-    <p><strong>Lecturer SWs (EN):</strong> {{ moduleVersion.lvSwsLecturerEng }}</p>
+<app-layout>
+  <div class="grid grid-cols-[2fr_1fr] gap-4 p-4">
+    <!-- Left Column: Module Version Details -->
+    <hlm-scroll-area class="border rounded-md border-none h-[calc(100vh-180px)]">
+      <div class="p-4">
+        @if(loading) {
+        <div class="text-center text-muted-foreground">Loading...</div>
+        }
+
+        <div class="space-y-2 mb-4">
+          <brn-select (selectionChange)="onUserChange($event)" [disabled]="loading">
+            <hlm-select-trigger class="w-full">
+              <hlm-select-value placeholder="Select User" />
+            </hlm-select-trigger>
+            <hlm-select-content>
+              @for (user of users; track user.id) {
+              <hlm-option [value]="user.id">{{ user.name }}</hlm-option>
+              }
+            </hlm-select-content>
+          </brn-select>
+        </div>
+
+        @if (!loading && moduleVersion) {
+        <div class="space-y-4">
+          <h2 class="text-xl font-semibold mb-4">Module Version Details</h2>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div class="font-medium">Version:</div>
+            <div>{{ moduleVersion.version }}</div>
+
+            <div class="font-medium">Complete:</div>
+            <div>{{ moduleVersion.isComplete ? 'Yes' : 'No' }}</div>
+          </div>
+
+          <brn-separator hlmSeparator class="my-4" />
+
+          @for (field of moduleFields; track field.key) {
+          <div>
+            <strong>{{ field.label }}:</strong>
+            <div style="white-space: pre-wrap">
+              {{ getModuleVersionProperty(field.key) || 'N/A' }}
+            </div>
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </hlm-scroll-area>
+
+    <!-- Right Column: Textarea and Actions -->
+    <div class="space-y-4">
+      <div class="flex space-x-2">
+        <button hlmBtn (click)="approveFeedback()" class="flex-1">Approve</button>
+        <button hlmBtn variant="destructive" (click)="rejectFeedback()" [disabled]="!reason" class="flex-1">Reject</button>
+      </div>
+      <div class="space-y-2">
+        <label class="text-sm font-medium" for="reason">Reason (for Rejection):</label>
+        <textarea id="reason" hlmInput class="min-h-[120px] w-full" [(ngModel)]="reason" placeholder="Enter reason for rejection" required></textarea>
+      </div>
+
+      @if (error) {
+      <div hlmAlert variant="destructive" class="mt-4">
+        <!-- <hlm-alert-title>Error</hlm-alert-title>
+      <hlm-alert-description>
+        {{ error }}
+      </hlm-alert-description> -->
+      </div>
+      }
+    </div>
   </div>
-
-  <div>
-    <label for="reason">Reason (for Rejection):</label>
-    <input type="text" id="reason" [(ngModel)]="reason" required/>
-  </div>
-
-  <button (click)="approveFeedback()">Approve</button>
-  <button [disabled]="!reason" (click)="rejectFeedback()">Reject</button>
-}
-
-@if (error) {
-  <div class="error">Error: {{ error }}</div>
-}
+</app-layout>

@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FeedbackControllerService, Feedback } from '../../core/modules/openapi';
+import { FeedbackControllerService, Feedback, FeedbackListItemDto } from '../../core/modules/openapi';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
@@ -32,7 +32,7 @@ export class ApprovalStaffHomePageComponent {
   feedbackService = inject(FeedbackControllerService);
   loading: boolean = true;
   error: string | null = null;
-  feedbacks: Feedback[] = [];
+  feedbacks: FeedbackListItemDto[] = [];
   feedbackStatusEnum = Feedback.StatusEnum;
   userId: number | null = 3;
 
@@ -50,7 +50,7 @@ export class ApprovalStaffHomePageComponent {
   private async fetchFeedbacksForUser(userId: number) {
     this.loading = true;
     this.feedbackService.getFeedbacksForUser(userId).subscribe({
-      next: (feedbacks) => (this.feedbacks = feedbacks),
+      next: (feedbacks: FeedbackListItemDto[]) => (this.feedbacks = feedbacks),
       error: (err: HttpErrorResponse) => (this.error = err.error),
       complete: () => (this.loading = false)
     });
