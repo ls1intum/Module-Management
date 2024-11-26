@@ -8,6 +8,8 @@ import modulemanagement.ls1.models.ModuleVersion;
 import modulemanagement.ls1.models.Proposal;
 import modulemanagement.ls1.models.User;
 
+import java.util.UUID;
+
 @Data
 public class FeedbackListItemDto {
     @NotNull private Long feedbackId;
@@ -15,7 +17,7 @@ public class FeedbackListItemDto {
     @NotNull private Long proposalId;
     @NotNull private FeedbackStatus status;
     @NotNull private String proposalCreatedByName;
-    @NotNull private Long proposalCreatedById;
+    @NotNull private UUID proposalCreatedById;
     private String moduleVersionTitleEng;
 
     public static FeedbackListItemDto fromFeedback(Feedback feedback) {
@@ -29,7 +31,7 @@ public class FeedbackListItemDto {
         dto.setProposalId(p.getProposalId());
         dto.setStatus(feedback.getStatus());
         dto.setModuleVersionTitleEng(mv.getTitleEng());
-        dto.setProposalCreatedByName(createdBy.getName());
+        dto.setProposalCreatedByName(createdBy.getFirstName());
         dto.setProposalCreatedById(createdBy.getUserId());
 
         return dto;

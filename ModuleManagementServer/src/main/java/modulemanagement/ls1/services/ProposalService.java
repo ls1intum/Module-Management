@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -123,7 +124,7 @@ public class ProposalService {
                 .stream()
                 .map(p -> new ProposalsCompactDTO(
                         p.getProposalId(),
-                        p.getCreatedBy().getName(),
+                        p.getCreatedBy().getFirstName(),
                         p.getStatus(),
                         p.getLatestModuleVersionWithContent() != null ? p.getLatestModuleVersionWithContent().getModuleVersionId() : null,
                         p.getLatestModuleVersionWithContent() != null ? p.getLatestModuleVersionWithContent().getTitleEng() : null
@@ -132,7 +133,7 @@ public class ProposalService {
                 .collect(Collectors.toList());
     }
 
-    public List<Proposal> getProposalsOfUser(Long userId) {
+    public List<Proposal> getProposalsOfUser(UUID userId) {
         return proposalRepository.findAll()
                 .stream()
                 .filter(proposal -> proposal.getCreatedBy().getUserId().equals(userId))
@@ -140,13 +141,13 @@ public class ProposalService {
                 .collect(Collectors.toList());
     }
 
-    public List<ProposalsCompactDTO> getCompactProposalsOfUser(Long userId) {
+    public List<ProposalsCompactDTO> getCompactProposalsOfUser(UUID userId) {
         return proposalRepository.findAll()
                 .stream()
                 .filter(proposal -> proposal.getCreatedBy().getUserId().equals(userId))
                 .map(p -> new ProposalsCompactDTO(
                         p.getProposalId(),
-                        p.getCreatedBy().getName(),
+                        p.getCreatedBy().getFirstName(),
                         p.getStatus(),
                         p.getLatestModuleVersionWithContent() != null ? p.getLatestModuleVersionWithContent().getModuleVersionId() : null,
                         p.getLatestModuleVersionWithContent() != null ? p.getLatestModuleVersionWithContent().getTitleEng() : null
@@ -167,7 +168,7 @@ public class ProposalService {
 
     }
 
-    public ProposalViewDTO submitProposal(Long proposalId, Long userId) {
+    public ProposalViewDTO submitProposal(Long proposalId, UUID userId) {
         Proposal proposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> new IllegalArgumentException("No proposal with id " + proposalId +" found"));
 
@@ -201,7 +202,7 @@ public class ProposalService {
         return proposal.toProposalViewDTO();
     }
 
-    public void deleteProposalById(long proposalId, long userId) {
+    public void deleteProposalById(long proposalId, UUID userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
         Proposal p = proposalRepository.findById(proposalId).orElseThrow(() -> new ResourceNotFoundException("Proposal with id " + proposalId + " not found."));
         if (!p.getCreatedBy().getUserId().equals(user.getUserId())) {

@@ -7,11 +7,20 @@ databaseChangeLog:
             tableName: app_user
             columns:
               - column:
-                  name: name
-                  value: 'Professor1'
+                  name: user_id
+                  value: 546b69f2-918b-4969-9c6e-16f2744abc4a
+              - column:
+                  name: user_name
+                  value: professor1
+              - column:
+                  name: first_name
+                  value: 'Peter'
+              - column:
+                  name: last_name
+                  value: "Rofessor"
               - column:
                   name: email
-                  value: '1@prof.de'
+                  value: 'p1@tum.de'
               - column:
                   name: role
                   value: 'PROFESSOR'
@@ -19,11 +28,20 @@ databaseChangeLog:
             tableName: app_user
             columns:
               - column:
-                  name: name
-                  value: 'Professor2'
+                  name: user_id
+                  value: b256fb43-3641-4e57-ab1c-93ec7096220a
+              - column:
+                  name: user_name
+                  value: professor2
+              - column:
+                  name: first_name
+                  value: 'Agate'
+              - column:
+                  name: last_name
+                  value: "Miker"
               - column:
                   name: email
-                  value: '2@prof.de'
+                  value: 'p2@tum.de'
               - column:
                   name: role
                   value: 'PROFESSOR'
@@ -31,23 +49,20 @@ databaseChangeLog:
             tableName: app_user
             columns:
               - column:
-                  name: name
-                  value: 'QM User'
+                  name: user_id
+                  value: f230aeeb-2c1d-4f76-bddb-4bcd8660f8b6
+              - column:
+                  name: user_name
+                  value: 'asa1'
+              - column:
+                  name: first_name
+                  value: 'Academic'
+              - column:
+                  name: last_name
+                  value: 'Program Advisor'
               - column:
                   name: email
-                  value: 'qm@tum.de'
-              - column:
-                  name: role
-                  value: 'QUALITY_MANAGEMENT'
-        - insert:
-            tableName: app_user
-            columns:
-              - column:
-                  name: name
-                  value: 'ASA User'
-              - column:
-                  name: email
-                  value: 'asa@tum.de'
+                  value: 'asa1@tum.de'
               - column:
                   name: role
                   value: 'ACADEMIC_PROGRAM_ADVISOR'
@@ -55,11 +70,41 @@ databaseChangeLog:
             tableName: app_user
             columns:
               - column:
-                  name: name
-                  value: 'EB User'
+                  name: user_id
+                  value: 565cf992-cfe8-4f28-9f2c-d74eca826403
+              - column:
+                  name: user_name
+                  value: 'qm1'
+              - column:
+                  name: first_name
+                  value: 'Quirin'
+              - column:
+                  name: last_name
+                  value: 'Moos'
               - column:
                   name: email
-                  value: 'eb@tum.de'
+                  value: 'qm1@tum.de'
+              - column:
+                  name: role
+                  value: 'QUALITY_MANAGEMENT'
+        - insert:
+            tableName: app_user
+            columns:
+              - column:
+                  name: user_id
+                  value: b16e32f9-693a-449b-bd26-147b0f095133
+              - column:
+                  name: user_name
+                  value: 'eb1'
+              - column:
+                  name: first_name
+                  value: 'Erik'
+              - column:
+                  name: last_name
+                  value: 'Bert'
+              - column:
+                  name: email
+                  value: 'eb1@tum.de'
               - column:
                   name: role
                   value: 'EXAMINATION_BOARD'

@@ -3,19 +3,26 @@ spring:
     name: ModuleManagement
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5432/ModuleManagement
     username: myuser
     password: secret
     driver-class-name: org.postgresql.Driver
-
-
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/master.yaml
   jpa:
     hibernate:
       ddl-auto: none
     show-sql: true
-
-  liquibase:
-    change-log: classpath:db/changelog/master.yaml
+    properties:
+      hibernate:
+        format_sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8081/realms/module-management/protocol/openid-connect/certs
+          issuer-uri: http://localhost:8081/realms/module-management
 
   ai:
     openai:
@@ -26,6 +33,11 @@ spring:
       enabled: true
       lifecycle-management: start-only
       file: compose.yaml
+
+
+module-management:
+  keycloak:
+    client-id: module-management-client
 
 springdoc:
   default-produces-media-type: application/json

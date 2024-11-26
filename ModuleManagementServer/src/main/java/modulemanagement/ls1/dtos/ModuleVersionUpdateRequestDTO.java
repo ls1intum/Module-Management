@@ -5,9 +5,11 @@ import modulemanagement.ls1.enums.ModuleVersionStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 public class ModuleVersionUpdateRequestDTO {
-    @NotNull private Long userId;
+    @NotNull private UUID userId;
     @NotNull private Long moduleVersionId;
     private Integer version;
     private String moduleId;

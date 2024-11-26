@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/feedbacks")
@@ -25,7 +26,7 @@ public class FeedbackController {
     }
 
     @GetMapping("/for-user/{id}")
-    public ResponseEntity<List<FeedbackListItemDto>> getFeedbacksForUser(@PathVariable Long id) {
+    public ResponseEntity<List<FeedbackListItemDto>> getFeedbacksForUser(@PathVariable UUID id) {
         List<FeedbackListItemDto> feedbacks = feedbackService.getAllFeedbacksForUser(id);
         return ResponseEntity.ok(feedbacks);
     }

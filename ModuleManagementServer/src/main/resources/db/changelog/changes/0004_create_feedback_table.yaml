@@ -14,7 +14,7 @@ databaseChangeLog:
                     primaryKey: true
               - column:
                   name: feedback_from
-                  type: BIGINT
+                  type: UUID
               - column:
                   name: comment
                   type: VARCHAR(255)

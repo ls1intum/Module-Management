@@ -14,7 +14,7 @@ databaseChangeLog:
                     primaryKey: true
               - column:
                   name: created_by
-                  type: BIGINT
+                  type: UUID
                   constraints:
                     nullable: false
               - column:

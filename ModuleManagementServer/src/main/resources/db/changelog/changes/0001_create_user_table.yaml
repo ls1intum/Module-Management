@@ -8,12 +8,22 @@ databaseChangeLog:
             columns:
               - column:
                   name: user_id
-                  type: BIGINT
-                  autoIncrement: true
+                  type: UUID
                   constraints:
                     primaryKey: true
+                    nullable: false
               - column:
-                  name: name
+                  name: user_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
                   type: VARCHAR(255)
                   constraints:
                     nullable: false

@@ -4,9 +4,11 @@ import modulemanagement.ls1.enums.Language;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
 public class ProposalRequestDTO {
-    @NotNull private Long userId;
+    @NotNull private UUID userId;
     private String titleEng;
     private String levelEng;
     private Language languageEng;

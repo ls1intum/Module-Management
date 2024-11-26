@@ -15,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class FeedbackService {
@@ -26,7 +27,7 @@ public class FeedbackService {
         this.userRepository = userRepository;
     }
 
-    public Feedback Accept(Long feedbackId,Long userId) {
+    public Feedback Accept(Long feedbackId,UUID userId) {
         User user = getAuthorizedUser(userId);
         Feedback feedback = getPendingFeedback(feedbackId);
         if (!user.getRole().equals(feedback.getRequiredRole()))
@@ -38,7 +39,7 @@ public class FeedbackService {
         return feedback;
     }
 
-    public Feedback Reject(Long feedbackId, Long userId, String comment) {
+    public Feedback Reject(Long feedbackId, UUID userId, String comment) {
         User user = getAuthorizedUser(userId);
         Feedback feedback = getPendingFeedback(feedbackId);
         if (!user.getRole().equals(feedback.getRequiredRole()))
@@ -51,7 +52,7 @@ public class FeedbackService {
         return feedback;
     }
 
-    public List<FeedbackListItemDto> getAllFeedbacksForUser(Long userId) {
+    public List<FeedbackListItemDto> getAllFeedbacksForUser(UUID userId) {
         User user = getAuthorizedUser(userId);
         return feedbackRepository.findByRequiredRoleAndStatus(user.getRole(), FeedbackStatus.PENDING_FEEDBACK)
                 .stream()
@@ -61,9 +62,9 @@ public class FeedbackService {
                 .toList();
     }
 
-    private User getAuthorizedUser(Long userId) {
+    private User getAuthorizedUser(UUID userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found."));
-        if (!user.getName().contains("User")) {
+        if (!user.getFirstName().contains("User")) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
         }
         return user;
