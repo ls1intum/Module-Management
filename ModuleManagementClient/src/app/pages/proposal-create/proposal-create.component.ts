@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ProposalControllerService } from '../../core/modules/openapi';
+import { ProposalControllerService, ProposalRequestDTO } from '../../core/modules/openapi';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
@@ -10,6 +10,7 @@ import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
 import { HlmSelectImports } from '@spartan-ng/ui-select-helm';
 import { LayoutComponent } from '../../components/layout.component';
 import { RouterModule } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-proposal-create',
@@ -18,15 +19,16 @@ import { RouterModule } from '@angular/router';
   templateUrl: './proposal-create.component.html'
 })
 export class ProposalsCreateComponent {
+  proposalService = inject(ProposalControllerService);
   proposalForm: FormGroup;
   loading: boolean = false;
   error: string | null = null;
   users = [
-    { id: 1, name: 'Professor1' },
-    { id: 2, name: 'Professor2' }
+    { id: '546b69f2-918b-4969-9c6e-16f2744abc4a', name: 'Professor1' },
+    { id: 'b256fb43-3641-4e57-ab1c-93ec7096220a', name: 'Professor2' }
   ];
 
-  constructor(private formBuilder: FormBuilder, private proposalService: ProposalControllerService, private router: Router) {
+  constructor(private formBuilder: FormBuilder, private router: Router) {
     this.proposalForm = this.formBuilder.group({
       userId: [null, Validators.required],
       titleEng: [''],
@@ -63,8 +65,8 @@ export class ProposalsCreateComponent {
             queryParams: { created: true }
           });
         },
-        error: (err) => {
-          this.error = err;
+        error: (err: HttpErrorResponse) => {
+          this.error = err.error;
           this.loading = false;
         },
         complete: () => {

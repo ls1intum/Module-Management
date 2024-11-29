@@ -16,6 +16,7 @@ import { Proposal } from '../model/models';
 import { ProposalRequestDTO } from '../model/models';
 import { ProposalViewDTO } from '../model/models';
 import { ProposalsCompactDTO } from '../model/models';
+import { User } from '../model/models';
 import { UserIdDTO } from '../model/models';
 
 
@@ -78,16 +79,20 @@ export interface ProposalControllerServiceInterface {
     /**
      * 
      * 
-     * @param id 
      */
-    getProposalsByUserId(id: number, extraHttpRequestParams?: any): Observable<Array<Proposal>>;
+    getProposalsByUserId(extraHttpRequestParams?: any): Observable<Array<Proposal>>;
 
     /**
      * 
      * 
-     * @param id 
      */
-    getProposalsByUserIdFromCompact(id: number, extraHttpRequestParams?: any): Observable<Array<ProposalsCompactDTO>>;
+    getProposalsByUserIdFromCompact(extraHttpRequestParams?: any): Observable<Array<ProposalsCompactDTO>>;
+
+    /**
+     * 
+     * 
+     */
+    getUser(extraHttpRequestParams?: any): Observable<User>;
 
     /**
      * 

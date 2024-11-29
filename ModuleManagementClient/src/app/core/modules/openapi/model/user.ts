@@ -10,8 +10,10 @@
 
 
 export interface User { 
-    userId?: number;
-    name?: string;
+    userId?: string;
+    userName?: string;
+    firstName?: string;
+    lastName?: string;
     email?: string;
     role?: User.RoleEnum;
 }

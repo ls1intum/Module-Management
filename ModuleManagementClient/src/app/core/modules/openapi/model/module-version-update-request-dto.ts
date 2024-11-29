@@ -10,7 +10,7 @@
 
 
 export interface ModuleVersionUpdateRequestDTO { 
-    userId: number;
+    userId: string;
     moduleVersionId: number;
     version?: number;
     moduleId?: string;

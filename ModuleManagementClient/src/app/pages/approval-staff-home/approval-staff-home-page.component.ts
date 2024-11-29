@@ -34,20 +34,20 @@ export class ApprovalStaffHomePageComponent {
   error: string | null = null;
   feedbacks: FeedbackListItemDto[] = [];
   feedbackStatusEnum = Feedback.StatusEnum;
-  userId: number | null = 3;
+  userId: string | null = '565cf992-cfe8-4f28-9f2c-d74eca826403';
 
   constructor(private route: ActivatedRoute) {
-    this.userId = Number(route.snapshot.paramMap.get('id'));
+    this.userId = route.snapshot.paramMap.get('id')!;
     this.fetchFeedbacksForUser(this.userId);
   }
 
   public async onUserChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
-    const userId = parseInt(selectElement.value, 10);
+    const userId = selectElement.value;
     await this.fetchFeedbacksForUser(userId);
   }
 
-  private async fetchFeedbacksForUser(userId: number) {
+  private async fetchFeedbacksForUser(userId: string) {
     this.loading = true;
     this.feedbackService.getFeedbacksForUser(userId).subscribe({
       next: (feedbacks: FeedbackListItemDto[]) => (this.feedbacks = feedbacks),

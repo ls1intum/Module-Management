@@ -10,7 +10,7 @@
 
 
 export interface RejectFeedbackDTO { 
-    userId: number;
+    userId: string;
     comment: string;
 }
 

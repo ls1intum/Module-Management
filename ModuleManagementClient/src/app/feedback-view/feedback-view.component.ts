@@ -29,7 +29,6 @@ import { HlmFormFieldComponent } from '@spartan-ng/ui-formfield-helm';
     HlmButtonDirective,
     BrnSeparatorModule,
     HlmSeparatorDirective,
-    HlmFormFieldComponent,
     LayoutComponent
   ],
   templateUrl: './feedback-view.component.html',
@@ -48,7 +47,7 @@ export class FeedbackViewComponent {
     { id: 4, name: 'ASA User' },
     { id: 5, name: 'EB User' }
   ];
-  selectedUserId: number = 3;
+  selectedUserId: string = 'TODO ';
 
   getModuleVersionProperty(key: keyof ModuleVersionUpdateRequestDTO): string | undefined {
     return this.moduleVersion ? this.moduleVersion[key]?.toString() : undefined;
@@ -82,7 +81,7 @@ export class FeedbackViewComponent {
 
   public async onUserChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
-    this.selectedUserId = parseInt(selectElement.value, 10);
+    this.selectedUserId = selectElement.value;
     console.log(this.selectedUserId);
   }
   private async fetchModuleVersion(feedbackId: number | null) {
@@ -118,7 +117,7 @@ export class FeedbackViewComponent {
       return;
     }
     if (this.feedbackId) {
-      const rejectDto: RejectFeedbackDTO = { userId: 3, comment: this.reason };
+      const rejectDto: RejectFeedbackDTO = { userId: 'TODO CHANGE', comment: this.reason };
       this.feedbackService.rejectFeedback(this.feedbackId, rejectDto).subscribe({
         next: () => {
           alert('Feedback rejected with reason: ' + this.reason);

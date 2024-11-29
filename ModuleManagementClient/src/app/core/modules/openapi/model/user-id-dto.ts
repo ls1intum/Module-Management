@@ -10,6 +10,6 @@
 
 
 export interface UserIdDTO { 
-    userId: number;
+    userId: string;
 }
 

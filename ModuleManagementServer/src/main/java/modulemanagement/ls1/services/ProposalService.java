@@ -41,8 +41,8 @@ public class ProposalService {
         this.userRepository = userRepository;
     }
 
-    public Proposal createProposalFromRequest(ProposalRequestDTO request) {
-        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    public Proposal createProposalFromRequest(User user, ProposalRequestDTO request) {
+//        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         if (!user.getRole().equals(UserRole.PROFESSOR))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You must be a professor in order to propose a module.");
         Proposal p = new Proposal();

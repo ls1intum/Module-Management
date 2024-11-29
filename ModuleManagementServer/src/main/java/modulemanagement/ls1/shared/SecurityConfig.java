@@ -34,6 +34,9 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
+                        // Allow unauthenticated access to Swagger endpoints
+                        .requestMatchers("/v3/api-docs.yaml", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        // Protect API endpoints with roles
                         .requestMatchers("/api/**").hasAnyRole("proposal-reviewer", "proposal-submitter")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -41,6 +44,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
     @Bean
     public WebMvcConfigurer corsConfigurer() {

@@ -6,10 +6,11 @@ import { IndexComponent } from './pages/index/index.component';
 import { ProfessorHomePageComponent } from './pages/professor-home/professor-home-page.component';
 import { ProposalsEditComponent } from './pages/proposal-edit/proposal-edit.component';
 import { ApprovalStaffHomePageComponent } from './pages/approval-staff-home/approval-staff-home-page.component';
+import { AuthGuard } from './core/security/auth.guard';
 
 export const routes: Routes = [
   { path: '', component: IndexComponent },
-  { path: 'proposals', component: ProfessorHomePageComponent },
+  { path: 'proposals', component: ProfessorHomePageComponent, canActivate: [AuthGuard] },
   { path: 'proposals/create', component: ProposalsCreateComponent },
   { path: 'proposals/view/:id', component: ProposalViewComponent },
   { path: 'module-version/edit/:id', component: ProposalsEditComponent },

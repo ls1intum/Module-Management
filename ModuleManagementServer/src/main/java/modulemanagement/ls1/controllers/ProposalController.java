@@ -11,11 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -36,6 +33,7 @@ public class ProposalController {
         this.authenticationService = authenticationService;
     }
 
+    // TODO: Remove from here.
     @GetMapping("/user")
     @PreAuthorize("hasAnyRole('admin', 'proposal-submitter', 'proposal-reviewer')")
     public ResponseEntity<User> getUser(@AuthenticationPrincipal Jwt jwt) {
@@ -50,8 +48,9 @@ public class ProposalController {
     }
 
     @PostMapping
-    public ResponseEntity<Proposal> createProposal(@Valid @RequestBody ProposalRequestDTO request) {
-        Proposal proposal = proposalService.createProposalFromRequest(request);
+    public ResponseEntity<Proposal> createProposal(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody ProposalRequestDTO request) {
+        User user = authenticationService.getAuthenticatedUser(jwt);
+        Proposal proposal = proposalService.createProposalFromRequest(user, request);
         return ResponseEntity.ok(proposal);
     }
 
@@ -85,15 +84,18 @@ public class ProposalController {
         return ResponseEntity.ok(p);
     }
 
-    @GetMapping("/from-user/{id}")
-    public ResponseEntity<List<Proposal>> getProposalsByUserId(@PathVariable UUID id) {
-        List<Proposal> proposals = proposalService.getProposalsOfUser(id);
+    @GetMapping("/from-authenticated-user")
+    public ResponseEntity<List<Proposal>> getProposalsByUserId(@AuthenticationPrincipal Jwt jwt) {
+        User user = authenticationService.getAuthenticatedUser(jwt);
+        List<Proposal> proposals = proposalService.getProposalsOfUser(user.getUserId());
         return ResponseEntity.ok(proposals);
     }
 
-    @GetMapping("/compact/from-user/{id}")
-    public ResponseEntity<List<ProposalsCompactDTO>> getProposalsByUserIdFromCompact(@PathVariable UUID id) {
-        List<ProposalsCompactDTO> proposals = proposalService.getCompactProposalsOfUser(id);
+    @GetMapping("/compact/from-authenticated-user")
+    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    public ResponseEntity<List<ProposalsCompactDTO>> getProposalsByUserIdFromCompact(@AuthenticationPrincipal Jwt jwt) {
+        User user = authenticationService.getAuthenticatedUser(jwt);
+        List<ProposalsCompactDTO> proposals = proposalService.getCompactProposalsOfUser(user.getUserId());
         return ResponseEntity.ok(proposals);
     }
 

@@ -39,7 +39,7 @@ export interface FeedbackControllerServiceInterface {
      * 
      * @param id 
      */
-    getFeedbacksForUser(id: number, extraHttpRequestParams?: any): Observable<Array<FeedbackListItemDto>>;
+    getFeedbacksForUser(id: string, extraHttpRequestParams?: any): Observable<Array<FeedbackListItemDto>>;
 
     /**
      * 

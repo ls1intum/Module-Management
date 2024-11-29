@@ -15,7 +15,7 @@ export interface FeedbackListItemDto {
     proposalId: number;
     status: FeedbackListItemDto.StatusEnum;
     proposalCreatedByName: string;
-    proposalCreatedById: number;
+    proposalCreatedById: string;
     moduleVersionTitleEng?: string;
 }
 export namespace FeedbackListItemDto {

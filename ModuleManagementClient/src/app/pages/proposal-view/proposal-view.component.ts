@@ -40,7 +40,7 @@ export class ProposalViewComponent {
   proposal: ProposalViewDTO | null = null;
   proposalStatusEnum = Proposal.StatusEnum;
   moduleStatusEnum = ModuleVersion.StatusEnum;
-  selectedUserId: number = 1;
+  selectedUserId: string = '546b69f2-918b-4969-9c6e-16f2744abc4a';
 
   constructor() {
     this.fetchProposal();
