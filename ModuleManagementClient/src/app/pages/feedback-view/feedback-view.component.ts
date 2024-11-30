@@ -101,7 +101,7 @@ export class FeedbackViewComponent {
   approveFeedback() {
     if (this.feedbackId) {
       const userIdDto: UserIdDTO = { userId: this.selectedUserId };
-      this.feedbackService.approveFeedback(this.feedbackId, userIdDto).subscribe({
+      this.feedbackService.approveFeedback(this.feedbackId).subscribe({
         next: () => {
           alert('Feedback approved successfully');
           this.router.navigate(['/feedbacks/for-user'], { queryParams: { created: true } });
@@ -117,7 +117,7 @@ export class FeedbackViewComponent {
       return;
     }
     if (this.feedbackId) {
-      const rejectDto: RejectFeedbackDTO = { userId: 'TODO CHANGE', comment: this.reason };
+      const rejectDto: RejectFeedbackDTO = { comment: this.reason };
       this.feedbackService.rejectFeedback(this.feedbackId, rejectDto).subscribe({
         next: () => {
           alert('Feedback rejected with reason: ' + this.reason);

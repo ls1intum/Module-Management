@@ -15,7 +15,6 @@ import { Feedback } from '../model/models';
 import { FeedbackListItemDto } from '../model/models';
 import { ModuleVersionUpdateRequestDTO } from '../model/models';
 import { RejectFeedbackDTO } from '../model/models';
-import { UserIdDTO } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -30,16 +29,14 @@ export interface FeedbackControllerServiceInterface {
      * 
      * 
      * @param feedbackId 
-     * @param userIdDTO 
      */
-    approveFeedback(feedbackId: number, userIdDTO: UserIdDTO, extraHttpRequestParams?: any): Observable<Feedback>;
+    approveFeedback(feedbackId: number, extraHttpRequestParams?: any): Observable<Feedback>;
 
     /**
      * 
      * 
-     * @param id 
      */
-    getFeedbacksForUser(id: string, extraHttpRequestParams?: any): Observable<Array<FeedbackListItemDto>>;
+    getFeedbacksForAuthenticatedUser(extraHttpRequestParams?: any): Observable<Array<FeedbackListItemDto>>;
 
     /**
      * 

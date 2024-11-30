@@ -58,8 +58,7 @@ export class ProposalViewComponent {
 
   submitProposal() {
     if (this.proposal) {
-      const userIdDto: UserIdDTO = { userId: this.selectedUserId };
-      this.proposalService.submitProposal(this.proposal.proposalId!, userIdDto).subscribe({
+      this.proposalService.submitProposal(this.proposal.proposalId!).subscribe({
         next: (response: ProposalViewDTO) => {
           this.proposal = response;
         },
@@ -98,7 +97,7 @@ export class ProposalViewComponent {
 
   addNewModuleVersion() {
     if (this.proposal) {
-      const addModuleVersionDto: AddModuleVersionDTO = { userId: this.selectedUserId, proposalId: this.proposal.proposalId! };
+      const addModuleVersionDto: AddModuleVersionDTO = { proposalId: this.proposal.proposalId! };
       this.proposalService.addModuleVersion(addModuleVersionDto).subscribe({
         next: (response: ProposalViewDTO) => (this.proposal = response),
         error: (err: HttpErrorResponse) => (this.error = err.error)

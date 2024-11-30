@@ -149,7 +149,7 @@ public class ModuleVersion {
         mdto.setProposalId(this.proposal.getProposalId());
         return mdto;
     }
-
+    
     private void toModuleVersionDto(ModuleVersionUpdateRequestDTO mdto) {
         mdto.setVersion(this.version);
         mdto.setModuleId(this.moduleId);

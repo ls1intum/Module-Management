@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
 import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
+import { SecurityStore } from '../../core/security/security-store.service';
 
 @Component({
   selector: 'feedback-list-table',
@@ -30,19 +31,24 @@ import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
 })
 export class FeedbackListTableComponent {
   feedbackService = inject(FeedbackControllerService);
+  securityStore = inject(SecurityStore);
+  user = this.securityStore.loadedUser;
   loading: boolean = true;
   error: string | null = null;
   feedbacks: Feedback[] = [];
   feedbackStatusEnum = Feedback.StatusEnum;
-  selectedUserId?: number;
 
   constructor() {
-    this.fetchFeedbacksForUser();
+    if (this.securityStore.signedIn()) {
+      this.fetchFeedbacksForUser();
+    } else {
+      this.securityStore.signIn();
+    }
   }
 
   private async fetchFeedbacksForUser() {
     this.loading = true;
-    this.feedbackService.getFeedbacksForUser(this.selectedUserId!).subscribe({
+    this.feedbackService.getFeedbacksForAuthenticatedUser().subscribe({
       next: (feedbacks) => (this.feedbacks = feedbacks),
       error: (err: HttpErrorResponse) => (this.error = err.error),
       complete: () => (this.loading = false)

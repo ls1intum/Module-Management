@@ -54,20 +54,7 @@ export interface ProposalControllerServiceInterface {
      * 
      * 
      */
-    getAllProposals(extraHttpRequestParams?: any): Observable<Array<Proposal>>;
-
-    /**
-     * 
-     * 
-     */
-    getAllProposalsCompact(extraHttpRequestParams?: any): Observable<Array<ProposalsCompactDTO>>;
-
-    /**
-     * 
-     * 
-     * @param id 
-     */
-    getProposalById(id: number, extraHttpRequestParams?: any): Observable<Proposal>;
+    getCompactProposalsFromUser(extraHttpRequestParams?: any): Observable<Array<ProposalsCompactDTO>>;
 
     /**
      * 
@@ -80,26 +67,13 @@ export interface ProposalControllerServiceInterface {
      * 
      * 
      */
-    getProposalsByUserId(extraHttpRequestParams?: any): Observable<Array<Proposal>>;
-
-    /**
-     * 
-     * 
-     */
-    getProposalsByUserIdFromCompact(extraHttpRequestParams?: any): Observable<Array<ProposalsCompactDTO>>;
-
-    /**
-     * 
-     * 
-     */
     getUser(extraHttpRequestParams?: any): Observable<User>;
 
     /**
      * 
      * 
      * @param proposalId 
-     * @param userIdDTO 
      */
-    submitProposal(proposalId: number, userIdDTO: UserIdDTO, extraHttpRequestParams?: any): Observable<ProposalViewDTO>;
+    submitProposal(proposalId: number, extraHttpRequestParams?: any): Observable<ProposalViewDTO>;
 
 }

@@ -10,7 +10,6 @@
 
 
 export interface AddModuleVersionDTO { 
-    userId: string;
     proposalId: number;
 }
 

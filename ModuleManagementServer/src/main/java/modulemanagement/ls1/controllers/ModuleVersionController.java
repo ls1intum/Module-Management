@@ -7,6 +7,7 @@ import modulemanagement.ls1.services.AuthenticationService;
 import modulemanagement.ls1.services.ModuleVersionService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +24,7 @@ public class ModuleVersionController {
     }
 
     @GetMapping("/{moduleVersionId}")
+    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
     public ResponseEntity<ModuleVersionUpdateResponseDTO> getModuleVersionUpdateDtoFromId(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId) {
         User user = authenticationService.getAuthenticatedUser(jwt);
         ModuleVersionUpdateResponseDTO dto = moduleVersionService.getModuleVersionUpdateDtoFromId(moduleVersionId, user.getUserId());
@@ -30,6 +32,7 @@ public class ModuleVersionController {
     }
 
     @PutMapping("/{moduleVersionId}")
+    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
     public ResponseEntity<ModuleVersionUpdateResponseDTO> updateModuleVersion(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId, @Valid @RequestBody ModuleVersionUpdateRequestDTO moduleVersion) {
         User user = authenticationService.getAuthenticatedUser(jwt);
         ModuleVersionUpdateResponseDTO updatedModuleVersion = moduleVersionService.updateModuleVersionFromRequest(user.getUserId(), moduleVersionId, moduleVersion);

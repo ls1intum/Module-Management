@@ -24,8 +24,6 @@ import { FeedbackListItemDto } from '../model/feedback-list-item-dto';
 import { ModuleVersionUpdateRequestDTO } from '../model/module-version-update-request-dto';
 // @ts-ignore
 import { RejectFeedbackDTO } from '../model/reject-feedback-dto';
-// @ts-ignore
-import { UserIdDTO } from '../model/user-id-dto';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -103,19 +101,15 @@ export class FeedbackControllerService implements FeedbackControllerServiceInter
 
     /**
      * @param feedbackId 
-     * @param userIdDTO 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public approveFeedback(feedbackId: number, userIdDTO: UserIdDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Feedback>;
-    public approveFeedback(feedbackId: number, userIdDTO: UserIdDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Feedback>>;
-    public approveFeedback(feedbackId: number, userIdDTO: UserIdDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Feedback>>;
-    public approveFeedback(feedbackId: number, userIdDTO: UserIdDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public approveFeedback(feedbackId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Feedback>;
+    public approveFeedback(feedbackId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Feedback>>;
+    public approveFeedback(feedbackId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Feedback>>;
+    public approveFeedback(feedbackId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (feedbackId === null || feedbackId === undefined) {
             throw new Error('Required parameter feedbackId was null or undefined when calling approveFeedback.');
-        }
-        if (userIdDTO === null || userIdDTO === undefined) {
-            throw new Error('Required parameter userIdDTO was null or undefined when calling approveFeedback.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -142,15 +136,6 @@ export class FeedbackControllerService implements FeedbackControllerServiceInter
             localVarTransferCache = true;
         }
 
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
-        }
 
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
@@ -167,7 +152,6 @@ export class FeedbackControllerService implements FeedbackControllerServiceInter
         return this.httpClient.request<Feedback>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: userIdDTO,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -179,17 +163,13 @@ export class FeedbackControllerService implements FeedbackControllerServiceInter
     }
 
     /**
-     * @param id 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getFeedbacksForUser(id: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<FeedbackListItemDto>>;
-    public getFeedbacksForUser(id: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<FeedbackListItemDto>>>;
-    public getFeedbacksForUser(id: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<FeedbackListItemDto>>>;
-    public getFeedbacksForUser(id: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling getFeedbacksForUser.');
-        }
+    public getFeedbacksForAuthenticatedUser(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<FeedbackListItemDto>>;
+    public getFeedbacksForAuthenticatedUser(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<FeedbackListItemDto>>>;
+    public getFeedbacksForAuthenticatedUser(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<FeedbackListItemDto>>>;
+    public getFeedbacksForAuthenticatedUser(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -227,7 +207,7 @@ export class FeedbackControllerService implements FeedbackControllerServiceInter
             }
         }
 
-        let localVarPath = `/api/feedbacks/for-user/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "string", dataFormat: "uuid"})}`;
+        let localVarPath = `/api/feedbacks/for-authenticated-user`;
         return this.httpClient.request<Array<FeedbackListItemDto>>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,

@@ -6,7 +6,6 @@ import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.services.AuthenticationService;
 import modulemanagement.ls1.services.ProposalService;
 import jakarta.validation.Valid;
-import modulemanagement.ls1.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,19 +16,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/proposals")
 public class ProposalController {
 
     private final ProposalService proposalService;
-    private final UserService userService;
     private final AuthenticationService authenticationService;
 
-    public ProposalController(ProposalService proposalService, UserService userService, AuthenticationService authenticationService) {
+    public ProposalController(ProposalService proposalService, AuthenticationService authenticationService) {
         this.proposalService = proposalService;
-        this.userService = userService;
         this.authenticationService = authenticationService;
     }
 
@@ -42,8 +38,10 @@ public class ProposalController {
     }
 
     @PostMapping(value = "/submit/{proposalId}")
-    public ResponseEntity<ProposalViewDTO> submitProposal(@PathVariable Long proposalId, @RequestBody UserIdDTO request) {
-        var proposalDto = proposalService.submitProposal(proposalId, request.getUserId());
+    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    public ResponseEntity<ProposalViewDTO> submitProposal(@AuthenticationPrincipal Jwt jwt, @PathVariable Long proposalId) {
+        User user = authenticationService.getAuthenticatedUser(jwt);
+        var proposalDto = proposalService.submitProposal(proposalId, user.getUserId());
         return ResponseEntity.ok(proposalDto);
     }
 
@@ -55,45 +53,24 @@ public class ProposalController {
     }
 
     @PostMapping("/add-module-version")
-    public ResponseEntity<ProposalViewDTO> addModuleVersion(@Valid @RequestBody AddModuleVersionDTO request) {
-        ProposalViewDTO proposal = proposalService.addModuleVersion(request);
+    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    public ResponseEntity<ProposalViewDTO> addModuleVersion(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody AddModuleVersionDTO request) {
+        User user = authenticationService.getAuthenticatedUser(jwt);
+        ProposalViewDTO proposal = proposalService.addModuleVersion(user.getUserId(), request);
         return ResponseEntity.ok(proposal);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Proposal>> getAllProposals() {
-        List<Proposal> proposals = proposalService.getAllProposals();
-        return ResponseEntity.ok(proposals);
-    }
-
-    @GetMapping("/compact")
-    public ResponseEntity<List<ProposalsCompactDTO>> getAllProposalsCompact() {
-        List<ProposalsCompactDTO> proposals = proposalService.getAllProposalsCompact();
-        return ResponseEntity.ok(proposals);
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Proposal> getProposalById(@PathVariable long id) {
-        Proposal proposal = proposalService.getProposalById(id);
-        return proposal != null ? new ResponseEntity<>(proposal, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    }
-
     @GetMapping("/{id}/view")
-    public ResponseEntity<ProposalViewDTO> getProposalView (@PathVariable Long id) {
-        ProposalViewDTO p = proposalService.getProposalViewDtoById(id);
+    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    public ResponseEntity<ProposalViewDTO> getProposalView (@AuthenticationPrincipal Jwt jwt, @PathVariable Long id) {
+        User requester = authenticationService.getAuthenticatedUser(jwt);
+        ProposalViewDTO p = proposalService.getProposalViewDtoById(requester.getUserId(), id);
         return ResponseEntity.ok(p);
-    }
-
-    @GetMapping("/from-authenticated-user")
-    public ResponseEntity<List<Proposal>> getProposalsByUserId(@AuthenticationPrincipal Jwt jwt) {
-        User user = authenticationService.getAuthenticatedUser(jwt);
-        List<Proposal> proposals = proposalService.getProposalsOfUser(user.getUserId());
-        return ResponseEntity.ok(proposals);
     }
 
     @GetMapping("/compact/from-authenticated-user")
     @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
-    public ResponseEntity<List<ProposalsCompactDTO>> getProposalsByUserIdFromCompact(@AuthenticationPrincipal Jwt jwt) {
+    public ResponseEntity<List<ProposalsCompactDTO>> getCompactProposalsFromUser(@AuthenticationPrincipal Jwt jwt) {
         User user = authenticationService.getAuthenticatedUser(jwt);
         List<ProposalsCompactDTO> proposals = proposalService.getCompactProposalsOfUser(user.getUserId());
         return ResponseEntity.ok(proposals);

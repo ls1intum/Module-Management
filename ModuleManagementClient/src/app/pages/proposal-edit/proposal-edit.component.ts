@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModuleVersionControllerService, ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO, ProposalControllerService } from '../../core/modules/openapi';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -24,15 +24,12 @@ export class ProposalsEditComponent {
   error: string | null = null;
   moduleVersionId: number | null = null;
   moduleVersionDto: ModuleVersionUpdateRequestDTO | null = null;
-  users = [
-    { id: 1, name: 'Professor1' },
-    { id: 2, name: 'Professor2' }
-  ];
+  moduleVersionService: ModuleVersionControllerService = inject(ModuleVersionControllerService);
 
-  constructor(private formBuilder: FormBuilder, private moduleVersionService: ModuleVersionControllerService, private route: ActivatedRoute, private router: Router) {
+  constructor(private formBuilder: FormBuilder, route: ActivatedRoute, private router: Router) {
     this.moduleVersionId = Number(route.snapshot.paramMap.get('id'));
     this.proposalForm = this.formBuilder.group({
-      titleEng: [''],
+      titleEng: ['', Validators.required],
       levelEng: [''],
       languageEng: ['undefined'],
       repetitionEng: [''],
@@ -56,8 +53,6 @@ export class ProposalsEditComponent {
 
   async fetchModuleVersion(moduleVersionId: number) {
     this.loading = true;
-    // TODO REMOVE AND DO PROPERLY
-    const userId = 1;
     this.moduleVersionService.getModuleVersionUpdateDtoFromId(moduleVersionId).subscribe({
       next: (response: ModuleVersionUpdateRequestDTO) => {
         this.proposalForm.patchValue(response);
@@ -75,11 +70,8 @@ export class ProposalsEditComponent {
 
       const proposalData: ModuleVersionUpdateRequestDTO = {
         ...this.proposalForm.value,
-        moduleVersionId: this.moduleVersionId,
-        // TODO: remove hard-coded variant
-        userId: 1
+        moduleVersionId: this.moduleVersionId
       };
-      console.log(proposalData);
       this.moduleVersionService.updateModuleVersion(this.moduleVersionId!, proposalData).subscribe({
         next: (response: ModuleVersionUpdateResponseDTO) => {
           this.proposalForm.reset();

@@ -49,7 +49,7 @@ export class ProposalListTableComponent {
   private async fetchProposalsForUser() {
     this.loading = true;
 
-    this.proposalService.getAllProposalsCompact().subscribe({
+    this.proposalService.getCompactProposalsFromUser().subscribe({
       next: (proposals) => (this.proposals = proposals),
       error: (err: HttpErrorResponse) => (this.error = err.error),
       complete: () => (this.loading = false)

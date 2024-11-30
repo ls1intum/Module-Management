@@ -49,7 +49,7 @@ export class ApprovalStaffHomePageComponent {
 
   private async fetchFeedbacksForUser(userId: string) {
     this.loading = true;
-    this.feedbackService.getFeedbacksForUser(userId).subscribe({
+    this.feedbackService.getFeedbacksForAuthenticatedUser().subscribe({
       next: (feedbacks: FeedbackListItemDto[]) => (this.feedbacks = feedbacks),
       error: (err: HttpErrorResponse) => (this.error = err.error),
       complete: () => (this.loading = false)

@@ -99,9 +99,9 @@ public class ProposalService {
         }
     }
 
-    public ProposalViewDTO addModuleVersion(@Valid AddModuleVersionDTO request) {
+    public ProposalViewDTO addModuleVersion(UUID userId, @Valid AddModuleVersionDTO request) {
         Proposal p = proposalRepository.findById(request.getProposalId()).orElseThrow(() -> new ResourceNotFoundException("Proposal not found"));
-        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         if (!user.getUserId().equals(p.getCreatedBy().getUserId()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You cannot add a module version to a module you did not create.");
         if (!p.getStatus().equals(ProposalStatus.REQUIRES_REVIEW))
@@ -161,9 +161,11 @@ public class ProposalService {
         return proposalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Proposal not found"));
     }
 
-    public ProposalViewDTO getProposalViewDtoById(long id) {
+    public ProposalViewDTO getProposalViewDtoById(UUID userId, long id) {
         var p = proposalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Proposal not found"));
-        // TODO: AUTH
+        if (!p.getCreatedBy().getUserId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
+        }
         return p.toProposalViewDTO();
 
     }

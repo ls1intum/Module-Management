@@ -27,8 +27,7 @@ public class FeedbackService {
         this.userRepository = userRepository;
     }
 
-    public Feedback Accept(Long feedbackId,UUID userId) {
-        User user = getAuthorizedUser(userId);
+    public Feedback Accept(Long feedbackId, User user) {
         Feedback feedback = getPendingFeedback(feedbackId);
         if (!user.getRole().equals(feedback.getRequiredRole()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You do not have permission to accept this feedback");
@@ -39,8 +38,7 @@ public class FeedbackService {
         return feedback;
     }
 
-    public Feedback Reject(Long feedbackId, UUID userId, String comment) {
-        User user = getAuthorizedUser(userId);
+    public Feedback Reject(Long feedbackId, User user, String comment) {
         Feedback feedback = getPendingFeedback(feedbackId);
         if (!user.getRole().equals(feedback.getRequiredRole()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You do not have permission to accept this feedback");
@@ -52,22 +50,13 @@ public class FeedbackService {
         return feedback;
     }
 
-    public List<FeedbackListItemDto> getAllFeedbacksForUser(UUID userId) {
-        User user = getAuthorizedUser(userId);
+    public List<FeedbackListItemDto> getAllFeedbacksForUser(User user) {
         return feedbackRepository.findByRequiredRoleAndStatus(user.getRole(), FeedbackStatus.PENDING_FEEDBACK)
                 .stream()
                 .filter(feedback -> feedback.getRequiredRole().equals(user.getRole()))
                 .sorted(Comparator.comparing(Feedback::getFeedbackId))
                 .map(FeedbackListItemDto::fromFeedback)
                 .toList();
-    }
-
-    private User getAuthorizedUser(UUID userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found."));
-        if (!user.getFirstName().contains("User")) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
-        }
-        return user;
     }
 
     private Feedback getPendingFeedback(Long feedbackId) {
