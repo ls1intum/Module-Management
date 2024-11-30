@@ -10,8 +10,7 @@
 
 
 export interface ProposalRequestDTO { 
-    userId: string;
-    titleEng?: string;
+    titleEng: string;
     levelEng?: string;
     languageEng?: ProposalRequestDTO.LanguageEngEnum;
     frequencyEng?: string;

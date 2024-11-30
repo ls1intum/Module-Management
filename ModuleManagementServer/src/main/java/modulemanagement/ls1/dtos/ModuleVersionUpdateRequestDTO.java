@@ -9,8 +9,6 @@ import java.util.UUID;
 
 @Data
 public class ModuleVersionUpdateRequestDTO {
-    @NotNull private UUID userId;
-    @NotNull private Long moduleVersionId;
     private Integer version;
     private String moduleId;
     private ModuleVersionStatus status;

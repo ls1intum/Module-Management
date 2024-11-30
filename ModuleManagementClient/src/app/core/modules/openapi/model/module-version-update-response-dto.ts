@@ -10,8 +10,6 @@
 
 
 export interface ModuleVersionUpdateResponseDTO { 
-    userId: string;
-    moduleVersionId: number;
     version?: number;
     moduleId?: string;
     status?: ModuleVersionUpdateResponseDTO.StatusEnum;

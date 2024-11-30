@@ -23,15 +23,10 @@ export class ProposalsCreateComponent {
   proposalForm: FormGroup;
   loading: boolean = false;
   error: string | null = null;
-  users = [
-    { id: '546b69f2-918b-4969-9c6e-16f2744abc4a', name: 'Professor1' },
-    { id: 'b256fb43-3641-4e57-ab1c-93ec7096220a', name: 'Professor2' }
-  ];
 
   constructor(private formBuilder: FormBuilder, private router: Router) {
     this.proposalForm = this.formBuilder.group({
-      userId: [null, Validators.required],
-      titleEng: [''],
+      titleEng: ['', Validators.required],
       levelEng: [''],
       languageEng: ['undefined'],
       repetitionEng: [''],

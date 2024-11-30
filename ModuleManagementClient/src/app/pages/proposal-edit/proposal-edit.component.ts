@@ -58,7 +58,7 @@ export class ProposalsEditComponent {
     this.loading = true;
     // TODO REMOVE AND DO PROPERLY
     const userId = 1;
-    this.moduleVersionService.getModuleVersionUpdateDtoFromId(moduleVersionId, userId).subscribe({
+    this.moduleVersionService.getModuleVersionUpdateDtoFromId(moduleVersionId).subscribe({
       next: (response: ModuleVersionUpdateRequestDTO) => {
         this.proposalForm.patchValue(response);
         this.moduleVersionDto = response;
@@ -73,7 +73,6 @@ export class ProposalsEditComponent {
       this.loading = true;
       this.error = null;
 
-      // Carry over unchanged values
       const proposalData: ModuleVersionUpdateRequestDTO = {
         ...this.proposalForm.value,
         moduleVersionId: this.moduleVersionId,

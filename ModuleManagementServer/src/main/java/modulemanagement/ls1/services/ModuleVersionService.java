@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.UUID;
+
 @Service
 public class ModuleVersionService {
     private final ModuleVersionRepository moduleVersionRepository;
@@ -26,9 +28,9 @@ public class ModuleVersionService {
         this.proposalRepository = proposalRepository;
     }
 
-    public ModuleVersionUpdateResponseDTO updateModuleVersionFromRequest(Long moduleVersionId, ModuleVersionUpdateRequestDTO request) {
+    public ModuleVersionUpdateResponseDTO updateModuleVersionFromRequest(UUID userId, Long moduleVersionId, ModuleVersionUpdateRequestDTO request) {
         ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("ModuleVersion not found"));
-        if (!mv.getProposal().getCreatedBy().getUserId().equals(request.getUserId()))
+        if (!mv.getProposal().getCreatedBy().getUserId().equals(userId))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
 
         if (!mv.getVersion().equals(mv.getProposal().getLatestModuleVersionWithContent().getVersion())) {
@@ -90,7 +92,7 @@ public class ModuleVersionService {
         moduleVersionRepository.save(mv);
     }
 
-    public ModuleVersionUpdateResponseDTO getModuleVersionUpdateDtoFromId(Long moduleVersionId, Long userId) {
+    public ModuleVersionUpdateResponseDTO getModuleVersionUpdateDtoFromId(Long moduleVersionId, UUID userId) {
         var mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("Module Version not found"));
         Proposal p = mv.getProposal();
         if (!p.getCreatedBy().getUserId().equals(userId)){

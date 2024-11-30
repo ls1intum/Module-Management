@@ -27,9 +27,8 @@ export interface ModuleVersionControllerServiceInterface {
      * 
      * 
      * @param moduleVersionId 
-     * @param userId 
      */
-    getModuleVersionUpdateDtoFromId(moduleVersionId: number, userId: number, extraHttpRequestParams?: any): Observable<ModuleVersionUpdateResponseDTO>;
+    getModuleVersionUpdateDtoFromId(moduleVersionId: number, extraHttpRequestParams?: any): Observable<ModuleVersionUpdateResponseDTO>;
 
     /**
      * 

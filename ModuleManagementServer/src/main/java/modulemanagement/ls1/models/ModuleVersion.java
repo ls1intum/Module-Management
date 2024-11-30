@@ -139,7 +139,6 @@ public class ModuleVersion {
     @JsonIgnore
     public ModuleVersionUpdateRequestDTO toModuleUpdateRequestDTO() {
         ModuleVersionUpdateRequestDTO mdto = new ModuleVersionUpdateRequestDTO();
-        mdto.setUserId(proposal.getCreatedBy().getUserId());
         toModuleVersionDto(mdto);
         return mdto;
     }

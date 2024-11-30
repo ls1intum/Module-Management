@@ -36,7 +36,7 @@ export class ProposalListTableComponent {
   error: string | null = null;
   proposals: ProposalsCompactDTO[] = [];
   proposalEnum = Proposal.StatusEnum;
-  selectedUserId: string = '546b69f2-918b-4969-9c6e-16f2744abc4a';
+  user = this.securityStore.loadedUser;
 
   constructor() {
     if (this.securityStore.signedIn()) {
@@ -54,31 +54,5 @@ export class ProposalListTableComponent {
       error: (err: HttpErrorResponse) => (this.error = err.error),
       complete: () => (this.loading = false)
     });
-  }
-
-  public async submitProposal(proposalId: number | undefined) {
-    if (proposalId !== undefined) {
-      const userIdDto: UserIdDTO = { userId: this.selectedUserId };
-      this.proposalService.submitProposal(proposalId, userIdDto).subscribe({
-        next: (response) => {
-          this.proposals.map((proposal) => (proposal.status = proposal.proposalId === proposalId ? this.proposalEnum.PendingFeedback : proposal.status));
-        },
-        error: (err: HttpErrorResponse) => (this.error = err.error)
-      });
-    }
-  }
-
-  public async deleteProposal(proposalId: number | undefined) {
-    if (proposalId !== undefined) {
-      const userIdDto: UserIdDTO = { userId: this.selectedUserId };
-      this.proposalService.deleteProposal(proposalId, userIdDto).subscribe({
-        next: () => {
-          const props = this.proposals.filter((proposal) => proposalId !== proposal.proposalId);
-          console.log(props);
-          this.proposals = props;
-        },
-        error: (err: HttpErrorResponse) => (this.error = err.error)
-      });
-    }
   }
 }

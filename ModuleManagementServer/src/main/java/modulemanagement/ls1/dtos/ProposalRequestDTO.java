@@ -8,8 +8,7 @@ import java.util.UUID;
 
 @Data
 public class ProposalRequestDTO {
-    @NotNull private UUID userId;
-    private String titleEng;
+    @NotNull private String titleEng;
     private String levelEng;
     private Language languageEng;
     private String frequencyEng;
