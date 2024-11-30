@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
 import { HttpErrorResponse } from '@angular/common/http';
-import { LayoutComponent } from '../../components/layout.component';
 import { StatusDisplayPipe } from '../../pipes/proposalStatus.pipe';
 import { FadedModuleVersionStatusPipe, ModuleVersionStatusPipe } from '../../pipes/moduleVersionStatus.pipe';
 
@@ -23,7 +22,6 @@ import { FadedModuleVersionStatusPipe, ModuleVersionStatusPipe } from '../../pip
     RouterModule,
     CommonModule,
     HlmBadgeDirective,
-    LayoutComponent,
     StatusDisplayPipe,
     ModuleVersionStatusPipe,
     FadedModuleVersionStatusPipe

@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, RejectFeedbackDTO, UserIdDTO } from '../core/modules/openapi';
+import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, RejectFeedbackDTO, UserIdDTO } from '../../core/modules/openapi';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HlmScrollAreaComponent } from '@spartan-ng/ui-scrollarea-helm';
@@ -12,7 +12,7 @@ import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmAlertDescriptionDirective, HlmAlertTitleDirective } from '@spartan-ng/ui-alert-helm';
 import { BrnSeparatorModule } from '@spartan-ng/ui-separator-brain';
 import { HlmSeparatorDirective } from '@spartan-ng/ui-separator-helm';
-import { LayoutComponent } from '../components/layout.component';
+import { LayoutComponent } from '../../components/layout.component';
 import { HlmFormFieldComponent } from '@spartan-ng/ui-formfield-helm';
 
 @Component({

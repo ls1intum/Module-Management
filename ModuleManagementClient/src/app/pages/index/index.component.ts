@@ -1,22 +1,39 @@
-import { Component } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
+import { ProfessorHomePageComponent } from '../professor-home/professor-home-page.component';
+import { ApprovalStaffHomePageComponent } from '../approval-staff-home/approval-staff-home-page.component';
+import { SecurityStore } from '../../core/security/security-store.service';
 
 @Component({
   selector: 'index-component',
   standalone: true,
-  imports: [RouterModule, HlmButtonDirective],
+  imports: [RouterModule, ProfessorHomePageComponent, ApprovalStaffHomePageComponent],
   template: `
-    <div class="flex flex-col items-center justify-center min-h-screen text-center">
-      <h1 class="text-3xl font-bold mb-4">CIT Module Management</h1>
-      <p class="mb-6 text-lg">This is a placeholder page, please select a role:</p>
-      <div class="flex gap-6">
-        <button hlmBtn [routerLink]="['/proposals']">Professor View</button>
-        <button hlmBtn [routerLink]="['/feedbacks/for-user/3']">QM Approval Staff View</button>
-        <button hlmBtn [routerLink]="['/feedbacks/for-user/4']">ASA Approval Staff View</button>
-        <button hlmBtn [routerLink]="['/feedbacks/for-user/5']">EB Approval Staff View</button>
-      </div>
-    </div>
+    @if (userLoaded()) { @if (isProposalSubmitter()) {
+    <ng-container>
+      <professor-home-page />
+    </ng-container>
+    } @else if (isProposalReviewer()) {
+    <ng-container>
+      <approval-staff-home-page />
+    </ng-container>
+    } @else {
+    <p class="text-center mt-8">You do not have access to this application.</p>
+    } } @else {loading}
   `
 })
-export class IndexComponent {}
+export class IndexComponent {
+  securityStore = inject(SecurityStore);
+  user = this.securityStore.user;
+  userLoaded = this.securityStore.loaded;
+
+  isProposalSubmitter = computed(() => {
+    const user = this.user();
+    return user && user.roles.includes('proposal-submitter');
+  });
+
+  isProposalReviewer = computed(() => {
+    const user = this.user();
+    return user && user.roles.includes('proposal-reviewer');
+  });
+}

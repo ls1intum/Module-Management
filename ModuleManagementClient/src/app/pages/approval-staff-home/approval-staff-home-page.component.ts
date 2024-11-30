@@ -12,7 +12,7 @@ import { HlmTdComponent, HlmThComponent } from '@spartan-ng/ui-table-helm';
 import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
 
 @Component({
-  selector: 'app-approval-staff-home-page',
+  selector: 'approval-staff-home-page',
   standalone: true,
   imports: [
     FeedbackStatusPipe,
