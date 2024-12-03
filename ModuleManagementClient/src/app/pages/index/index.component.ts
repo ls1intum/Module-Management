@@ -3,24 +3,13 @@ import { RouterModule } from '@angular/router';
 import { ProfessorHomePageComponent } from '../professor-home/professor-home-page.component';
 import { ApprovalStaffHomePageComponent } from '../approval-staff-home/approval-staff-home-page.component';
 import { SecurityStore } from '../../core/security/security-store.service';
+import { LoginRequiredComponent } from '../../components/login-required/login-required.component';
 
 @Component({
   selector: 'index-component',
   standalone: true,
-  imports: [RouterModule, ProfessorHomePageComponent, ApprovalStaffHomePageComponent],
-  template: `
-    @if (userLoaded()) { @if (isProposalSubmitter()) {
-    <ng-container>
-      <professor-home-page />
-    </ng-container>
-    } @else if (isProposalReviewer()) {
-    <ng-container>
-      <approval-staff-home-page />
-    </ng-container>
-    } @else {
-    <p class="text-center mt-8">You do not have access to this application.</p>
-    } } @else {loading}
-  `
+  imports: [RouterModule, ProfessorHomePageComponent, ApprovalStaffHomePageComponent, LoginRequiredComponent],
+  templateUrl: './index.component.html'
 })
 export class IndexComponent {
   securityStore = inject(SecurityStore);

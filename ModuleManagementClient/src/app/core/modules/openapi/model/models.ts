@@ -11,4 +11,3 @@ export * from './proposal-view-dto';
 export * from './proposals-compact-dto';
 export * from './reject-feedback-dto';
 export * from './user';
-export * from './user-id-dto';

@@ -1,7 +1,7 @@
 import { Component, inject, Input } from '@angular/core';
 import { HlmCaptionComponent, HlmTableComponent, HlmTdComponent, HlmThComponent, HlmTrowComponent } from '@spartan-ng/ui-table-helm';
-import { Proposal, ProposalControllerService, ProposalsCompactDTO, UserIdDTO } from '../../core/modules/openapi';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Proposal, ProposalControllerService, ProposalsCompactDTO } from '../../core/modules/openapi';
+import { HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';

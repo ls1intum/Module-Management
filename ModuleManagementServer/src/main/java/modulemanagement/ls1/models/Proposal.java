@@ -2,6 +2,7 @@ package modulemanagement.ls1.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
+import modulemanagement.ls1.dtos.ModuleVersionCompactDTO;
 import modulemanagement.ls1.dtos.ProposalViewDTO;
 import modulemanagement.ls1.enums.ModuleVersionStatus;
 import modulemanagement.ls1.enums.ProposalStatus;
@@ -40,9 +41,8 @@ public class Proposal {
     @OneToMany(mappedBy = "proposal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ModuleVersion> moduleVersions = new ArrayList<>();
 
-    public List<ModuleVersion> addModuleVersion(ModuleVersion moduleVersion) {
+    public void addModuleVersion(ModuleVersion moduleVersion) {
         moduleVersions.add(moduleVersion);
-        return moduleVersions;
     }
 
     @JsonIgnore
@@ -68,11 +68,11 @@ public class Proposal {
                 .toList();
 
         if (!sortedModuleVersions.isEmpty()) {
-            v.setLatestModuleVersion(sortedModuleVersions.getFirst().toCompactDTO());
+            v.setLatestModuleVersion(ModuleVersionCompactDTO.fromModuleVersion(sortedModuleVersions.getFirst()));
 
             var oldVersions = sortedModuleVersions.subList(1, sortedModuleVersions.size())
                     .stream()
-                    .map(ModuleVersion::toCompactDTO)
+                    .map(ModuleVersionCompactDTO::fromModuleVersion)
                     .collect(Collectors.toList());
 
             v.setOldModuleVersions(oldVersions);

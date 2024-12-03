@@ -35,42 +35,55 @@
 <div class="flex justify-between mb-10 mt-20">
   @if(proposal.status === proposalStatusEnum.RequiresReview) {
   <button hlmBtn variant="outline" (click)="addNewModuleVersion()">Create New Version</button>
-
-  }
-  <!-- <button hlmBtn variant="destructive" (click)="deleteProposal()">Delete Proposal</button> -->
-  @if (proposal.status === proposalStatusEnum.PendingSubmission) { @if (proposal.latestModuleVersion?.isComplete) {
+  } @if (proposal.status === proposalStatusEnum.PendingSubmission) { @if (proposal.latestModuleVersion?.isComplete) {
   <button hlmBtn variant="default" class="bg-green-600" (click)="submitProposal()">Submit</button>
   } @else {
   <button hlmBtn variant="default" class="mr-2" (click)="editLatestModuleVersion()">Complete Proposal</button>
   } }
 </div>
+
 <!-- Latest Version Table -->
 <h2 class="text-xl mb-8">Current Module Versions</h2>
 <hlm-table class="w-full min-w-[400px] mb-8">
-  <hlm-caption>Latest Module Version</hlm-caption>
   <hlm-trow>
-    <hlm-th class="w-40">Version</hlm-th>
+    <hlm-th class="w-24">Version</hlm-th>
     <hlm-th class="flex-1">Title</hlm-th>
-    <hlm-th class="w-50">Status</hlm-th>
-    <hlm-th class="w-80">Actions</hlm-th>
+    <hlm-th class="w-44">Status</hlm-th>
+    <hlm-th class="w-48">Feedback</hlm-th>
+    <hlm-th class="w-48">Actions</hlm-th>
   </hlm-trow>
 
   <hlm-trow>
-    <hlm-td truncate class="font-medium w-40">{{ proposal.latestVersion }}</hlm-td>
+    <hlm-td truncate class="font-medium w-24">{{ proposal.latestVersion }}</hlm-td>
     <hlm-td class="flex-1">
       <button hlmBtn variant="link" class="text-left px-0" [routerLink]="['/proposals/edit', proposal.proposalId]">
         {{ proposal.latestModuleVersion!.titleEng }}
       </button>
     </hlm-td>
-    <hlm-td class="w-50">
+    <hlm-td class="w-44">
       <div hlmBadge [class]="(proposal.latestModuleVersion!.status! | moduleVersionStatus).colorClass">
         {{ (proposal.latestModuleVersion!.status! | moduleVersionStatus).text }}
       </div>
     </hlm-td>
-    <hlm-td class="w-80">
-      <!-- <button hlmBtn variant="ghost" class="mr-2" (click)="viewModuleVersion(proposal.latestVersion)">View</button> -->
+    <hlm-td class="w-48">
+      @if(proposal.latestModuleVersion!.feedbackList!.length) { @for (feedback of proposal.latestModuleVersion!.feedbackList; track feedback.requiredRole) {
+      <brn-hover-card>
+        <div brnHoverCardTrigger class="flex mr-1">
+          <div hlmBadge [class]="(feedback.status | feedbackStatus).colorClass" class="h-5"></div>
+        </div>
+        <hlm-hover-card-content *brnHoverCardContent class="w-60">
+          <div class="grid grid-flow-row auto-rows-min">
+            <span class="text-sm font-bold mb-2">{{ (feedback.requiredRole! | feedbackDepartment).text }}</span>
+            <div>
+              <span class="text-sm text-center">{{ (feedback.status | fadedFeedbackStatus).text }}</span>
+            </div>
+          </div>
+        </hlm-hover-card-content>
+      </brn-hover-card>
+      } }
+    </hlm-td>
+    <hlm-td class="w-48">
       <button hlmBtn variant="outline" class="mr-2" (click)="editLatestModuleVersion()">Edit</button>
-      <!-- <button hlmBtn variant="outline" (click)="addNewModuleVersion()">Add Version</button> -->
     </hlm-td>
   </hlm-trow>
 </hlm-table>
@@ -79,29 +92,45 @@
 <h2 class="text-xl mb-8 text-muted-foreground">Previous Module Versions</h2>
 @if (proposal.oldModuleVersions && proposal.oldModuleVersions.length > 0) {
 <hlm-table class="w-full min-w-[400px] text-muted-foreground">
-  <hlm-caption>Historical Module Versions</hlm-caption>
   <hlm-trow>
-    <hlm-th class="w-40">Version</hlm-th>
+    <hlm-th class="w-24">Version</hlm-th>
     <hlm-th class="flex-1">Title</hlm-th>
-    <hlm-th class="w-50">Status</hlm-th>
-    <hlm-th class="w-80">Actions</hlm-th>
+    <hlm-th class="w-44">Status</hlm-th>
+    <hlm-th class="w-48">Feedback</hlm-th>
+    <hlm-th class="w-48">Actions</hlm-th>
   </hlm-trow>
 
   @for (version of proposal.oldModuleVersions; track version.moduleVersionId) {
   <hlm-trow>
-    <hlm-td truncate class="font-medium w-40">{{ version.moduleVersionId }}</hlm-td>
+    <hlm-td truncate class="font-medium w-24">{{ version.moduleVersionId }}</hlm-td>
     <hlm-td class="flex-1">
       <button hlmBtn variant="link" class="text-left text-muted-foreground px-0" [routerLink]="['/proposals/view', proposal.proposalId]">
         {{ version.titleEng }}
       </button>
     </hlm-td>
-    <hlm-td class="w-50">
-      <!-- Todo: Make faded status -->
+    <hlm-td class="w-44">
       <div hlmBadge [class]="(version.status! | fadedModuleVersionStatus).colorClass">
         {{ (version.status! | fadedModuleVersionStatus).text }}
       </div>
     </hlm-td>
-    <hlm-td class="w-80">
+    <hlm-td class="w-48">
+      @if(version.feedbackList?.length) { @for (feedback of version.feedbackList; track feedback.requiredRole) {
+      <brn-hover-card>
+        <div brnHoverCardTrigger class="flex mr-1">
+          <div hlmBadge [class]="(feedback.status | fadedFeedbackStatus).colorClass" class="h-5"></div>
+        </div>
+        <hlm-hover-card-content *brnHoverCardContent class="w-60">
+          <div class="grid grid-flow-row auto-rows-min">
+            <span class="text-sm font-bold mb-2">{{ (feedback.requiredRole! | feedbackDepartment).text }}</span>
+            <div>
+              <span class="text-sm text-center">{{ (feedback.status | fadedFeedbackStatus).text }}</span>
+            </div>
+          </div>
+        </hlm-hover-card-content>
+      </brn-hover-card>
+      } }
+    </hlm-td>
+    <hlm-td class="w-48">
       <button hlmBtn variant="ghost" (click)="viewModuleVersion(version.moduleVersionId)">View</button>
     </hlm-td>
   </hlm-trow>

@@ -16,8 +16,6 @@ import { Proposal } from '../model/models';
 import { ProposalRequestDTO } from '../model/models';
 import { ProposalViewDTO } from '../model/models';
 import { ProposalsCompactDTO } from '../model/models';
-import { User } from '../model/models';
-import { UserIdDTO } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -46,9 +44,8 @@ export interface ProposalControllerServiceInterface {
      * 
      * 
      * @param proposalId 
-     * @param userIdDTO 
      */
-    deleteProposal(proposalId: number, userIdDTO: UserIdDTO, extraHttpRequestParams?: any): Observable<string>;
+    deleteProposal(proposalId: number, extraHttpRequestParams?: any): Observable<string>;
 
     /**
      * 
@@ -62,12 +59,6 @@ export interface ProposalControllerServiceInterface {
      * @param id 
      */
     getProposalView(id: number, extraHttpRequestParams?: any): Observable<ProposalViewDTO>;
-
-    /**
-     * 
-     * 
-     */
-    getUser(extraHttpRequestParams?: any): Observable<User>;
 
     /**
      * 

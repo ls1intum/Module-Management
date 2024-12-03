@@ -13,7 +13,6 @@ import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.repositories.FeedbackRepository;
 import modulemanagement.ls1.repositories.ModuleVersionRepository;
 import modulemanagement.ls1.repositories.ProposalRepository;
-import modulemanagement.ls1.repositories.UserRepository;
 import modulemanagement.ls1.shared.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -32,17 +31,14 @@ public class ProposalService {
     private final ProposalRepository proposalRepository;
     private final ModuleVersionRepository moduleVersionRepository;
     private final FeedbackRepository feedbackRepository;
-    private final UserRepository userRepository;
 
-    public ProposalService(ProposalRepository proposalRepository, ModuleVersionRepository moduleVersionRepository, FeedbackRepository feedbackRepository, UserRepository userRepository) {
+    public ProposalService(ProposalRepository proposalRepository, ModuleVersionRepository moduleVersionRepository, FeedbackRepository feedbackRepository) {
         this.proposalRepository = proposalRepository;
         this.moduleVersionRepository = moduleVersionRepository;
         this.feedbackRepository = feedbackRepository;
-        this.userRepository = userRepository;
     }
 
     public Proposal createProposalFromRequest(User user, ProposalRequestDTO request) {
-//        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         if (!user.getRole().equals(UserRole.PROFESSOR))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You must be a professor in order to propose a module.");
         Proposal p = new Proposal();
@@ -101,11 +97,16 @@ public class ProposalService {
 
     public ProposalViewDTO addModuleVersion(UUID userId, @Valid AddModuleVersionDTO request) {
         Proposal p = proposalRepository.findById(request.getProposalId()).orElseThrow(() -> new ResourceNotFoundException("Proposal not found"));
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        if (!user.getUserId().equals(p.getCreatedBy().getUserId()))
+        if (!userId.equals(p.getCreatedBy().getUserId()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You cannot add a module version to a module you did not create.");
         if (!p.getStatus().equals(ProposalStatus.REQUIRES_REVIEW))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can only add a new module version, if the proposal requires a review.");
+
+        for (Feedback f : p.getLatestModuleVersionWithContent().getRequiredFeedbacks()) {
+            if (f.getStatus().equals(FeedbackStatus.PENDING_FEEDBACK)) {
+                f.setStatus(FeedbackStatus.OBSOLETE);
+            }
+        }
 
         p.addNewModuleVersion();
         proposalRepository.save(p);
@@ -133,14 +134,6 @@ public class ProposalService {
                 .collect(Collectors.toList());
     }
 
-    public List<Proposal> getProposalsOfUser(UUID userId) {
-        return proposalRepository.findAll()
-                .stream()
-                .filter(proposal -> proposal.getCreatedBy().getUserId().equals(userId))
-                .sorted(Comparator.comparing(Proposal::getProposalId))
-                .collect(Collectors.toList());
-    }
-
     public List<ProposalsCompactDTO> getCompactProposalsOfUser(UUID userId) {
         return proposalRepository.findAll()
                 .stream()
@@ -157,10 +150,6 @@ public class ProposalService {
 
     }
 
-    public Proposal getProposalById(long id) {
-        return proposalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Proposal not found"));
-    }
-
     public ProposalViewDTO getProposalViewDtoById(UUID userId, long id) {
         var p = proposalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Proposal not found"));
         if (!p.getCreatedBy().getUserId().equals(userId)) {
@@ -173,11 +162,9 @@ public class ProposalService {
     public ProposalViewDTO submitProposal(Long proposalId, UUID userId) {
         Proposal proposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> new IllegalArgumentException("No proposal with id " + proposalId +" found"));
-
         if (!proposal.getCreatedBy().getUserId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
         }
-
         if (proposal.getModuleVersions() == null || proposal.getModuleVersions().isEmpty()) {
             throw new IllegalStateException("Proposal must have at least one ModuleVersion.");
         }
@@ -205,9 +192,8 @@ public class ProposalService {
     }
 
     public void deleteProposalById(long proposalId, UUID userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
         Proposal p = proposalRepository.findById(proposalId).orElseThrow(() -> new ResourceNotFoundException("Proposal with id " + proposalId + " not found."));
-        if (!p.getCreatedBy().getUserId().equals(user.getUserId())) {
+        if (!p.getCreatedBy().getUserId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
         }
         if (p.getStatus() != ProposalStatus.PENDING_SUBMISSION) {

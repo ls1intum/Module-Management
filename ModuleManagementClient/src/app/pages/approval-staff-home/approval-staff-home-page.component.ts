@@ -3,7 +3,6 @@ import { FeedbackControllerService, Feedback, FeedbackListItemDto } from '../../
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { LayoutComponent } from '../../components/layout.component';
 import { HlmTableComponent } from '../../../spartan-components/ui-table-helm/src/lib/hlm-table.component';
 import { HlmCaptionComponent } from '../../../spartan-components/ui-table-helm/src/lib/hlm-caption.component';
 import { HlmTrowComponent } from '../../../spartan-components/ui-table-helm/src/lib/hlm-trow.component';
@@ -14,18 +13,7 @@ import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
 @Component({
   selector: 'approval-staff-home-page',
   standalone: true,
-  imports: [
-    FeedbackStatusPipe,
-    HlmButtonDirective,
-    HlmCaptionComponent,
-    HlmTableComponent,
-    HlmTdComponent,
-    HlmThComponent,
-    HlmBadgeDirective,
-    HlmTrowComponent,
-    LayoutComponent,
-    RouterModule
-  ],
+  imports: [FeedbackStatusPipe, HlmButtonDirective, HlmCaptionComponent, HlmTableComponent, HlmTdComponent, HlmThComponent, HlmBadgeDirective, HlmTrowComponent, RouterModule],
   templateUrl: './approval-staff-home-page.component.html'
 })
 export class ApprovalStaffHomePageComponent {

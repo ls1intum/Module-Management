@@ -1,0 +1,13 @@
+@if (userLoaded()) { @if (isProposalSubmitter()) {
+<ng-container>
+  <professor-home-page />
+</ng-container>
+} @else if (isProposalReviewer()) {
+<ng-container>
+  <approval-staff-home-page />
+</ng-container>
+} @else {
+<login-required />
+} } @else {
+<login-required />
+}

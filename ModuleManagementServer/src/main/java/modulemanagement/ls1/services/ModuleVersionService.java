@@ -61,12 +61,16 @@ public class ModuleVersionService {
         mv.setLvSwsLecturerEng(request.getLvSwsLecturerEng());
 
         mv = moduleVersionRepository.save(mv);
-        return mv.toModuleUpdateResponseDTO();
+        return ModuleVersionUpdateResponseDTO.fromModuleVersion(mv);
     }
 
     public void updateStatus(Long moduleVersionId) {
         ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).
                 orElseThrow(() -> new ResourceNotFoundException("Could not update corresponding module version status"));
+        Proposal p = mv.getProposal();
+        if (!mv.equals(p.getLatestModuleVersionWithContent())) {
+            return;
+        }
 
         boolean allFeedbackPositive = true;
         boolean oneFeedbackNegative = false;
@@ -78,7 +82,7 @@ public class ModuleVersionService {
                 oneFeedbackNegative = true;
             }
         }
-        Proposal p = mv.getProposal();
+
         if (allFeedbackPositive) {
             mv.setStatus(ModuleVersionStatus.ACCEPTED);
             p.setStatus(ProposalStatus.ACCEPTED);
@@ -103,10 +107,6 @@ public class ModuleVersionService {
             throw new IllegalStateException("Proposal must have at least one ModuleVersion.");
         }
 
-//        if (!mv.getStatus().equals(ModuleVersionStatus.PENDING_SUBMISSION) && !mv.getStatus().equals(ModuleVersionStatus.PENDING_FEEDBACK)) {
-//            throw new IllegalStateException("Only proposals pending submission or feedback can be updated.");
-//        }
-
-        return mv.toModuleUpdateResponseDTO();
+        return ModuleVersionUpdateResponseDTO.fromModuleVersion(mv);
     }
 }

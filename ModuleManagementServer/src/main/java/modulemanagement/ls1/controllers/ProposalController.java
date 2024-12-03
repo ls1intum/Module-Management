@@ -29,14 +29,6 @@ public class ProposalController {
         this.authenticationService = authenticationService;
     }
 
-    // TODO: Remove from here.
-    @GetMapping("/user")
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter', 'proposal-reviewer')")
-    public ResponseEntity<User> getUser(@AuthenticationPrincipal Jwt jwt) {
-        User authenticatedUser = authenticationService.getAuthenticatedUser(jwt);
-        return ResponseEntity.ok(authenticatedUser);
-    }
-
     @PostMapping(value = "/submit/{proposalId}")
     @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
     public ResponseEntity<ProposalViewDTO> submitProposal(@AuthenticationPrincipal Jwt jwt, @PathVariable Long proposalId) {
@@ -77,9 +69,11 @@ public class ProposalController {
     }
 
     @DeleteMapping(value = "/{proposalId}", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> deleteProposal(@PathVariable Long proposalId, @Valid @RequestBody UserIdDTO request) {
+    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    public ResponseEntity<String> deleteProposal(@AuthenticationPrincipal Jwt jwt, @PathVariable Long proposalId) {
         try{
-            proposalService.deleteProposalById(proposalId, request.getUserId());
+            User user = authenticationService.getAuthenticatedUser(jwt);
+            proposalService.deleteProposalById(proposalId, user.getUserId());
             return ResponseEntity.ok("Proposal deleted successfully.");
         } catch (ResponseStatusException e) {
             return ResponseEntity.badRequest().body(e.getReason());

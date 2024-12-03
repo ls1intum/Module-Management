@@ -1,24 +1,34 @@
 import { Component, inject } from '@angular/core';
 import { HlmTableComponent, HlmTrowComponent, HlmThComponent, HlmTdComponent, HlmCaptionComponent } from '@spartan-ng/ui-table-helm';
-import { AddModuleVersionDTO, ModuleVersion, Proposal, ProposalControllerService, ProposalViewDTO, UserIdDTO } from '../../core/modules/openapi';
+import { AddModuleVersionDTO, ModuleVersion, Proposal, ProposalControllerService, ProposalViewDTO } from '../../core/modules/openapi';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
+import { BrnHoverCardComponent, BrnHoverCardContentDirective, BrnHoverCardTriggerDirective } from '@spartan-ng/ui-hovercard-brain';
 import { HttpErrorResponse } from '@angular/common/http';
 import { StatusDisplayPipe } from '../../pipes/proposalStatus.pipe';
 import { FadedModuleVersionStatusPipe, ModuleVersionStatusPipe } from '../../pipes/moduleVersionStatus.pipe';
+import { HlmHoverCardModule } from '@spartan-ng/ui-hovercard-helm';
+import { FadedFeedbackStatusPipe, FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
+import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
 
 @Component({
   selector: 'app-proposal-view',
   standalone: true,
   imports: [
+    BrnHoverCardComponent,
+    BrnHoverCardContentDirective,
+    BrnHoverCardTriggerDirective,
     HlmTableComponent,
     HlmTrowComponent,
+    HlmHoverCardModule,
     HlmThComponent,
     HlmTdComponent,
-    HlmCaptionComponent,
     HlmButtonDirective,
+    FeedbackStatusPipe,
+    FeedbackDepartmentPipe,
+    FadedFeedbackStatusPipe,
     RouterModule,
     CommonModule,
     HlmBadgeDirective,
@@ -38,7 +48,6 @@ export class ProposalViewComponent {
   proposal: ProposalViewDTO | null = null;
   proposalStatusEnum = Proposal.StatusEnum;
   moduleStatusEnum = ModuleVersion.StatusEnum;
-  selectedUserId: string = '546b69f2-918b-4969-9c6e-16f2744abc4a';
 
   constructor() {
     this.fetchProposal();
@@ -69,8 +78,7 @@ export class ProposalViewComponent {
 
   deleteProposal() {
     if (this.proposal) {
-      const userIdDto: UserIdDTO = { userId: this.selectedUserId };
-      this.proposalService.deleteProposal(this.proposal.proposalId!, userIdDto).subscribe({
+      this.proposalService.deleteProposal(this.proposal.proposalId!).subscribe({
         next: () => (window.location.href = '/proposals'),
         error: (err: HttpErrorResponse) => (this.error = err.error)
       });

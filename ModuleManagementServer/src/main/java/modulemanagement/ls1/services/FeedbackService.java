@@ -6,7 +6,6 @@ import modulemanagement.ls1.enums.FeedbackStatus;
 import modulemanagement.ls1.models.Feedback;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.repositories.FeedbackRepository;
-import modulemanagement.ls1.repositories.UserRepository;
 import modulemanagement.ls1.shared.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,16 +14,13 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
-    private final UserRepository userRepository;
 
-    public FeedbackService(FeedbackRepository feedbackRepository, UserRepository userRepository) {
+    public FeedbackService(FeedbackRepository feedbackRepository) {
         this.feedbackRepository = feedbackRepository;
-        this.userRepository = userRepository;
     }
 
     public Feedback Accept(Long feedbackId, User user) {
@@ -69,6 +65,6 @@ public class FeedbackService {
 
     public ModuleVersionUpdateRequestDTO getModuleVersionOfFeedback(Long feedbackId) {
         Feedback feedback = feedbackRepository.findById(feedbackId).orElseThrow(() -> new ResourceNotFoundException("Feedback not found"));
-        return feedback.getModuleVersion().toModuleUpdateRequestDTO();
+        return ModuleVersionUpdateRequestDTO.fromModuleVersion(feedback.getModuleVersion());
     }
 }

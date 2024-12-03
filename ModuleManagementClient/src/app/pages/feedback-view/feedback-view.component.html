@@ -1,71 +1,56 @@
-<app-layout>
-  <div class="grid grid-cols-[2fr_1fr] gap-4 p-4">
-    <!-- Left Column: Module Version Details -->
-    <hlm-scroll-area class="border rounded-md border-none h-[calc(100vh-180px)]">
-      <div class="p-4">
-        @if(loading) {
-        <div class="text-center text-muted-foreground">Loading...</div>
-        }
+<div class="grid grid-cols-[2fr_1fr] gap-4 p-4">
+  <!-- Left Column: Module Version Details -->
+  <hlm-scroll-area class="border rounded-md border-none h-[calc(100vh-180px)]">
+    <div class="p-4">
+      @if(loading) {
+      <div class="text-center text-muted-foreground">Loading...</div>
+      } @if (!loading && moduleVersion) {
+      <div class="space-y-4">
+        <h2 class="text-xl font-semibold mb-4">Module Version Details</h2>
 
-        <div class="space-y-2 mb-4">
-          <brn-select (selectionChange)="onUserChange($event)" [disabled]="loading">
-            <hlm-select-trigger class="w-full">
-              <hlm-select-value placeholder="Select User" />
-            </hlm-select-trigger>
-            <hlm-select-content>
-              @for (user of users; track user.id) {
-              <hlm-option [value]="user.id">{{ user.name }}</hlm-option>
-              }
-            </hlm-select-content>
-          </brn-select>
+        <div class="grid grid-cols-2 gap-2">
+          <div class="font-medium">Version:</div>
+          <div>{{ moduleVersion.version }}</div>
+
+          <div class="font-medium">Complete:</div>
+          <div>{{ moduleVersion.isComplete ? 'Yes' : 'No' }}</div>
         </div>
 
-        @if (!loading && moduleVersion) {
-        <div class="space-y-4">
-          <h2 class="text-xl font-semibold mb-4">Module Version Details</h2>
+        <brn-separator hlmSeparator class="my-4" />
 
-          <div class="grid grid-cols-2 gap-2">
-            <div class="font-medium">Version:</div>
-            <div>{{ moduleVersion.version }}</div>
-
-            <div class="font-medium">Complete:</div>
-            <div>{{ moduleVersion.isComplete ? 'Yes' : 'No' }}</div>
+        @for (field of moduleFields; track field.key) {
+        <div>
+          <strong>{{ field.label }}:</strong>
+          <div style="white-space: pre-wrap">
+            {{ getModuleVersionProperty(field.key) || 'N/A' }}
           </div>
-
-          <brn-separator hlmSeparator class="my-4" />
-
-          @for (field of moduleFields; track field.key) {
-          <div>
-            <strong>{{ field.label }}:</strong>
-            <div style="white-space: pre-wrap">
-              {{ getModuleVersionProperty(field.key) || 'N/A' }}
-            </div>
-          </div>
-          }
         </div>
         }
-      </div>
-    </hlm-scroll-area>
-
-    <!-- Right Column: Textarea and Actions -->
-    <div class="space-y-4">
-      <div class="flex space-x-2">
-        <button hlmBtn (click)="approveFeedback()" class="flex-1">Approve</button>
-        <button hlmBtn variant="destructive" (click)="rejectFeedback()" [disabled]="!reason" class="flex-1">Reject</button>
-      </div>
-      <div class="space-y-2">
-        <label class="text-sm font-medium" for="reason">Reason (for Rejection):</label>
-        <textarea id="reason" hlmInput class="min-h-[120px] w-full" [(ngModel)]="reason" placeholder="Enter reason for rejection" required></textarea>
-      </div>
-
-      @if (error) {
-      <div hlmAlert variant="destructive" class="mt-4">
-        <!-- <hlm-alert-title>Error</hlm-alert-title>
-      <hlm-alert-description>
-        {{ error }}
-      </hlm-alert-description> -->
       </div>
       }
     </div>
+  </hlm-scroll-area>
+
+  <!-- Right Column: Textarea and Actions -->
+  <div class="space-y-4">
+    <div class="flex space-x-2">
+      <hlm-toaster />
+      <button hlmBtn (click)="approveFeedback()" class="flex-1">Approve</button>
+      <hlm-toaster />
+      <button hlmBtn variant="destructive" (click)="rejectFeedback()" [disabled]="!reason" class="flex-1">Reject</button>
+    </div>
+    <div class="space-y-2">
+      <label class="text-sm font-medium" for="reason">Reason (for Rejection):</label>
+      <textarea id="reason" hlmInput class="min-h-[120px] w-full" [(ngModel)]="reason" placeholder="Enter reason for rejection" required></textarea>
+    </div>
+
+    @if (error) {
+    <div hlmAlert variant="destructive" class="mt-4">
+      <!-- <hlm-alert-title>Error</hlm-alert-title>
+      <hlm-alert-description>
+        {{ error }}
+      </hlm-alert-description> -->
+    </div>
+    }
   </div>
-</app-layout>
+</div>

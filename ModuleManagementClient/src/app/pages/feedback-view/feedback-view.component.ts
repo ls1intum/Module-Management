@@ -1,35 +1,33 @@
-import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, RejectFeedbackDTO, UserIdDTO } from '../../core/modules/openapi';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { HlmScrollAreaComponent } from '@spartan-ng/ui-scrollarea-helm';
-// Spartan/UI Imports
 import { BrnSelectModule } from '@spartan-ng/ui-select-brain';
-import { HlmSelectModule } from '@spartan-ng/ui-select-helm';
-import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
-import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { HlmAlertDescriptionDirective, HlmAlertTitleDirective } from '@spartan-ng/ui-alert-helm';
 import { BrnSeparatorModule } from '@spartan-ng/ui-separator-brain';
+import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, RejectFeedbackDTO } from '../../core/modules/openapi';
+import { FormsModule } from '@angular/forms';
+import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
+import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
+import { HlmScrollAreaComponent } from '@spartan-ng/ui-scrollarea-helm';
+import { HlmSelectModule } from '@spartan-ng/ui-select-helm';
 import { HlmSeparatorDirective } from '@spartan-ng/ui-separator-helm';
-import { LayoutComponent } from '../../components/layout.component';
-import { HlmFormFieldComponent } from '@spartan-ng/ui-formfield-helm';
+import { HlmToasterComponent } from '@spartan-ng/ui-sonner-helm';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-feedback-view',
   standalone: true,
   imports: [
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    HlmScrollAreaComponent,
     BrnSelectModule,
-    HlmSelectModule,
-    HlmInputDirective,
-    HlmButtonDirective,
     BrnSeparatorModule,
+    CommonModule,
+    FormsModule,
+    HlmButtonDirective,
+    HlmInputDirective,
+    HlmScrollAreaComponent,
+    HlmSelectModule,
     HlmSeparatorDirective,
-    LayoutComponent
+    HlmToasterComponent,
+    RouterModule
   ],
   templateUrl: './feedback-view.component.html',
   styleUrl: './feedback-view.component.css'
@@ -42,12 +40,6 @@ export class FeedbackViewComponent {
   error: string | null = null;
   reason: string = '';
   reasonRequired: boolean = false;
-  users = [
-    { id: 3, name: 'QM User' },
-    { id: 4, name: 'ASA User' },
-    { id: 5, name: 'EB User' }
-  ];
-  selectedUserId: string = 'TODO ';
 
   getModuleVersionProperty(key: keyof ModuleVersionUpdateRequestDTO): string | undefined {
     return this.moduleVersion ? this.moduleVersion[key]?.toString() : undefined;
@@ -74,16 +66,11 @@ export class FeedbackViewComponent {
     { key: 'lvSwsLecturerEng', label: 'Lecturer SWs (EN)' }
   ] as const;
 
-  constructor(private route: ActivatedRoute, private router: Router) {
+  constructor(route: ActivatedRoute, private router: Router) {
     this.feedbackId = Number(route.snapshot.paramMap.get('id'));
     this.fetchModuleVersion(this.feedbackId);
   }
 
-  public async onUserChange(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    this.selectedUserId = selectElement.value;
-    console.log(this.selectedUserId);
-  }
   private async fetchModuleVersion(feedbackId: number | null) {
     this.loading = true;
     if (feedbackId) {
@@ -100,13 +87,25 @@ export class FeedbackViewComponent {
 
   approveFeedback() {
     if (this.feedbackId) {
-      const userIdDto: UserIdDTO = { userId: this.selectedUserId };
       this.feedbackService.approveFeedback(this.feedbackId).subscribe({
         next: () => {
-          alert('Feedback approved successfully');
-          this.router.navigate(['/feedbacks/for-user'], { queryParams: { created: true } });
+          toast('Feedback Approved', {
+            description: 'The feedback has been successfully approved.',
+            duration: 3000,
+            action: {
+              label: '',
+              onClick: () => {}
+            }
+          });
+          this.router.navigate([''], { queryParams: { created: true } });
         },
-        error: (err) => (this.error = err)
+        error: (err) => {
+          toast('Approval Failed', {
+            description: err.message || 'Unable to approve feedback',
+            duration: 3000
+          });
+          this.error = err;
+        }
       });
     }
   }
@@ -114,16 +113,30 @@ export class FeedbackViewComponent {
   rejectFeedback() {
     if (!this.reason) {
       this.reasonRequired = true;
+      toast('Reason Required', {
+        description: 'Please provide a reason for rejecting the feedback.',
+        duration: 3000
+      });
       return;
     }
+
     if (this.feedbackId) {
       const rejectDto: RejectFeedbackDTO = { comment: this.reason };
       this.feedbackService.rejectFeedback(this.feedbackId, rejectDto).subscribe({
         next: () => {
-          alert('Feedback rejected with reason: ' + this.reason);
+          toast('Rejected', {
+            description: 'The feedback has been successfully approved.',
+            duration: 3000
+          });
           this.router.navigate(['/feedbacks/for-user'], { queryParams: { created: true } });
         },
-        error: (err) => (this.error = err)
+        error: (err) => {
+          toast('Rejection Failed', {
+            description: err.message || 'Unable to reject feedback',
+            duration: 3000
+          });
+          this.error = err;
+        }
       });
     }
   }
