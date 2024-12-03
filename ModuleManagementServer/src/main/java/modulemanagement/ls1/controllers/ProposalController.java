@@ -29,6 +29,13 @@ public class ProposalController {
         this.authenticationService = authenticationService;
     }
 
+    @PostMapping
+    public ResponseEntity<Proposal> createProposal(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody ProposalRequestDTO request) {
+        User user = authenticationService.getAuthenticatedUser(jwt);
+        Proposal proposal = proposalService.createProposalFromRequest(user, request);
+        return ResponseEntity.ok(proposal);
+    }
+
     @PostMapping(value = "/submit/{proposalId}")
     @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
     public ResponseEntity<ProposalViewDTO> submitProposal(@AuthenticationPrincipal Jwt jwt, @PathVariable Long proposalId) {
@@ -37,11 +44,11 @@ public class ProposalController {
         return ResponseEntity.ok(proposalDto);
     }
 
-    @PostMapping
-    public ResponseEntity<Proposal> createProposal(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody ProposalRequestDTO request) {
+    @PostMapping(value = "/cancel-submission/{proposalId}")
+    public ResponseEntity<ProposalViewDTO> cancelSubmission(@AuthenticationPrincipal Jwt jwt, @PathVariable Long proposalId) {
         User user = authenticationService.getAuthenticatedUser(jwt);
-        Proposal proposal = proposalService.createProposalFromRequest(user, request);
-        return ResponseEntity.ok(proposal);
+        var proposalDto = proposalService.cancelSubmission(proposalId, user.getUserId());
+        return ResponseEntity.ok(proposalDto);
     }
 
     @PostMapping("/add-module-version")

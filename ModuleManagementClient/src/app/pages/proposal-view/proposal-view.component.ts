@@ -68,9 +68,16 @@ export class ProposalViewComponent {
   submitProposal() {
     if (this.proposal) {
       this.proposalService.submitProposal(this.proposal.proposalId!).subscribe({
-        next: (response: ProposalViewDTO) => {
-          this.proposal = response;
-        },
+        next: (response: ProposalViewDTO) => (this.proposal = response),
+        error: (err: HttpErrorResponse) => (this.error = err.error)
+      });
+    }
+  }
+
+  cancelProposal() {
+    if (this.proposal) {
+      this.proposalService.cancelSubmission(this.proposal.proposalId!).subscribe({
+        next: (response: ProposalViewDTO) => (this.proposal = response),
         error: (err: HttpErrorResponse) => (this.error = err.error)
       });
     }

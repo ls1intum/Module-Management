@@ -67,6 +67,9 @@ public class ModuleVersionService {
     public void updateStatus(Long moduleVersionId) {
         ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).
                 orElseThrow(() -> new ResourceNotFoundException("Could not update corresponding module version status"));
+        if (mv.getStatus().equals(ModuleVersionStatus.CANCELLED)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Proposal was cancelled by the submitter.");
+        }
         Proposal p = mv.getProposal();
         if (!mv.equals(p.getLatestModuleVersionWithContent())) {
             return;

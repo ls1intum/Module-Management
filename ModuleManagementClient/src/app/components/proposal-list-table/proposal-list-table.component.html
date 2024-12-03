@@ -1,5 +1,5 @@
 <hlm-table class="w-full min-w-[400px]">
-  <hlm-caption>All Proposals created by you</hlm-caption>
+  <hlm-caption>All Proposals you created</hlm-caption>
   <hlm-trow>
     <hlm-th class="w-40">Proposal ID</hlm-th>
     <hlm-th class="flex-1">Latest Title</hlm-th>
@@ -23,9 +23,10 @@
   </hlm-trow>
   } @empty {
   <hlm-trow>
-    <hlm-td class="text-center flex-1 block mt-4 text-sm text-muted-foreground"
-      >You do not have any created module proposals. <a class="text-blue-600" [routerLink]="['/proposals/create']">Create one here.</a></hlm-td
-    >
+    <hlm-td class="text-center flex-1 block mt-4 text-sm text-muted-foreground">
+      You do not have any created module proposals.
+      <a class="text-blue-600" [routerLink]="['/proposals/create']">Create one here.</a>
+    </hlm-td>
   </hlm-trow>
   }
 </hlm-table>

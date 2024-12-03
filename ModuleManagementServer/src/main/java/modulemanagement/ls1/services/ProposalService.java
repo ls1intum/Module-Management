@@ -191,6 +191,47 @@ public class ProposalService {
         return proposal.toProposalViewDTO();
     }
 
+    public ProposalViewDTO cancelSubmission(Long proposalId, UUID userId) {
+        Proposal proposal = proposalRepository.findById(proposalId)
+                .orElseThrow(() -> new IllegalArgumentException("No proposal with id " + proposalId +" found"));
+
+        if (!proposal.getCreatedBy().getUserId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
+        }
+
+        ModuleVersion mv = proposal.getLatestModuleVersionWithContent();
+        if (!mv.getStatus().equals(ModuleVersionStatus.PENDING_FEEDBACK)) {
+            throw new IllegalStateException("Only submitted proposals can cancel their submission. This proposal is " + mv.getStatus() + ".");
+        }
+
+        boolean oneFeedbackNotPending = false;
+        for (Feedback f: mv.getRequiredFeedbacks()) {
+            if (!f.getStatus().equals(FeedbackStatus.PENDING_FEEDBACK)) {
+                oneFeedbackNotPending = true;
+                break;
+            }
+        }
+
+        if (oneFeedbackNotPending) {
+            for (Feedback f: mv.getRequiredFeedbacks()) {
+                if (f.getStatus().equals(FeedbackStatus.PENDING_FEEDBACK)) {
+                    f.setStatus(FeedbackStatus.CANCELLED);
+                }
+            }
+            mv.setStatus(ModuleVersionStatus.CANCELLED);
+            proposal.setStatus(ProposalStatus.REQUIRES_REVIEW);
+        }
+        else {
+            for (Feedback f: mv.getRequiredFeedbacks()) {
+                f.setStatus(FeedbackStatus.PENDING_SUBMISSION);
+            }
+            mv.setStatus(ModuleVersionStatus.PENDING_SUBMISSION);
+            proposal.setStatus(ProposalStatus.PENDING_SUBMISSION);
+        }
+        proposalRepository.save(proposal);
+        return proposal.toProposalViewDTO();
+    }
+
     public void deleteProposalById(long proposalId, UUID userId) {
         Proposal p = proposalRepository.findById(proposalId).orElseThrow(() -> new ResourceNotFoundException("Proposal with id " + proposalId + " not found."));
         if (!p.getCreatedBy().getUserId().equals(userId)) {

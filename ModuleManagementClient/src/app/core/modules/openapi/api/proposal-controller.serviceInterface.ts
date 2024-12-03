@@ -36,6 +36,13 @@ export interface ProposalControllerServiceInterface {
     /**
      * 
      * 
+     * @param proposalId 
+     */
+    cancelSubmission(proposalId: number, extraHttpRequestParams?: any): Observable<ProposalViewDTO>;
+
+    /**
+     * 
+     * 
      * @param proposalRequestDTO 
      */
     createProposal(proposalRequestDTO: ProposalRequestDTO, extraHttpRequestParams?: any): Observable<Proposal>;

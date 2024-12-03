@@ -49,7 +49,7 @@
     <hlm-th class="w-24">Version</hlm-th>
     <hlm-th class="flex-1">Title</hlm-th>
     <hlm-th class="w-44">Status</hlm-th>
-    <hlm-th class="w-48">Feedback</hlm-th>
+    <hlm-th class="w-48">Required Feedbacks</hlm-th>
     <hlm-th class="w-48">Actions</hlm-th>
   </hlm-trow>
 
@@ -73,9 +73,12 @@
         </div>
         <hlm-hover-card-content *brnHoverCardContent class="w-60">
           <div class="grid grid-flow-row auto-rows-min">
-            <span class="text-sm font-bold mb-2">{{ (feedback.requiredRole! | feedbackDepartment).text }}</span>
+            <div>Feedback from</div>
             <div>
-              <span class="text-sm text-center">{{ (feedback.status | fadedFeedbackStatus).text }}</span>
+              <span class="font-bold">{{ (feedback.requiredRole! | feedbackDepartment).text }}</span>
+            </div>
+            <div>
+              {{ (feedback.status | fadedFeedbackStatus).text }}
             </div>
           </div>
         </hlm-hover-card-content>
@@ -83,7 +86,11 @@
       } }
     </hlm-td>
     <hlm-td class="w-48">
+      @if(proposal.latestModuleVersion!.status === moduleStatusEnum.PendingSubmission) {
       <button hlmBtn variant="outline" class="mr-2" (click)="editLatestModuleVersion()">Edit</button>
+      } @if(proposal.latestModuleVersion!.status === moduleStatusEnum.PendingFeedback) {
+      <button hlmBtn variant="outline" class="mr-2" (click)="cancelProposal()">Cancel</button>
+      }
     </hlm-td>
   </hlm-trow>
 </hlm-table>
@@ -96,7 +103,7 @@
     <hlm-th class="w-24">Version</hlm-th>
     <hlm-th class="flex-1">Title</hlm-th>
     <hlm-th class="w-44">Status</hlm-th>
-    <hlm-th class="w-48">Feedback</hlm-th>
+    <hlm-th class="w-48">Required Feedbacks</hlm-th>
     <hlm-th class="w-48">Actions</hlm-th>
   </hlm-trow>
 
@@ -121,9 +128,12 @@
         </div>
         <hlm-hover-card-content *brnHoverCardContent class="w-60">
           <div class="grid grid-flow-row auto-rows-min">
-            <span class="text-sm font-bold mb-2">{{ (feedback.requiredRole! | feedbackDepartment).text }}</span>
+            <div>Feedback from</div>
             <div>
-              <span class="text-sm text-center">{{ (feedback.status | fadedFeedbackStatus).text }}</span>
+              <span class="font-bold">{{ (feedback.requiredRole! | feedbackDepartment).text }}</span>
+            </div>
+            <div>
+              {{ (feedback.status | fadedFeedbackStatus).text }}
             </div>
           </div>
         </hlm-hover-card-content>

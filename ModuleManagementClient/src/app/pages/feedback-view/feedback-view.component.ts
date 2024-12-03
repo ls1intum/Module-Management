@@ -29,8 +29,7 @@ import { toast } from 'ngx-sonner';
     HlmToasterComponent,
     RouterModule
   ],
-  templateUrl: './feedback-view.component.html',
-  styleUrl: './feedback-view.component.css'
+  templateUrl: './feedback-view.component.html'
 })
 export class FeedbackViewComponent {
   feedbackService = inject(FeedbackControllerService);
