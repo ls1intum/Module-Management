@@ -1,8 +1,7 @@
 <div class="flex items-center my-4">
-  <h3 class="text-xl">Welcome! Here is a list of required feedbacks that you can edit</h3>
+  <h3 class="text-xl">Welcome {{ user()!.name }}! Here is a list of required feedbacks that you can process:</h3>
 </div>
 <hlm-table class="w-full min-w-[400px] p-12">
-  <hlm-caption>Feedback List for {{ userId }}</hlm-caption>
   <hlm-trow>
     <hlm-th class="w-40">Feedback ID</hlm-th>
     <hlm-th class="flex-1">Proposal Title</hlm-th>

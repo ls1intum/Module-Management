@@ -1,5 +1,4 @@
-<div class="grid grid-cols-[2fr_1fr] gap-4 p-4">
-  <!-- Left Column: Module Version Details -->
+<div class="grid grid-cols-[minmax(0,1fr)_320px] gap-4 p-4">
   <hlm-scroll-area class="border rounded-md border-none h-[calc(100vh-180px)]">
     <div class="p-4">
       @if(loading) {
@@ -7,17 +6,13 @@
       } @if (!loading && moduleVersion) {
       <div class="space-y-4">
         <h2 class="text-xl font-semibold mb-4">Module Version Details</h2>
-
         <div class="grid grid-cols-2 gap-2">
           <div class="font-medium">Version:</div>
           <div>{{ moduleVersion.version }}</div>
-
           <div class="font-medium">Complete:</div>
           <div>{{ moduleVersion.isComplete ? 'Yes' : 'No' }}</div>
         </div>
-
         <brn-separator hlmSeparator class="my-4" />
-
         @for (field of moduleFields; track field.key) {
         <div>
           <strong>{{ field.label }}:</strong>
@@ -31,26 +26,58 @@
     </div>
   </hlm-scroll-area>
 
-  <!-- Right Column: Textarea and Actions -->
-  <div class="space-y-4">
-    <div class="flex space-x-2">
-      <hlm-toaster />
-      <button hlmBtn (click)="approveFeedback()" class="flex-1">Approve</button>
-      <hlm-toaster />
-      <button hlmBtn variant="destructive" (click)="rejectFeedback()" [disabled]="!reason" class="flex-1">Reject</button>
-    </div>
-    <div class="space-y-2">
-      <label class="text-sm font-medium" for="reason">Reason (for Rejection):</label>
-      <textarea id="reason" hlmInput class="min-h-[120px] w-full" [(ngModel)]="reason" placeholder="Enter reason for rejection" required></textarea>
+  <div class="space-y-4 w-[320px]">
+    <hlm-toaster />
+    @if (!showRejectForm) {
+    <div class="flex justify-center space-x-4 mx-4">
+      <div>
+        <!-- Approve with Alert Dialog -->
+        <hlm-alert-dialog>
+          <button hlmBtn variant="default" brnAlertDialogTrigger class="w-36">Approve</button>
+          <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
+            <hlm-alert-dialog-header>
+              <h3 hlmAlertDialogTitle>Approve this module?</h3>
+              <p hlmAlertDialogDescription>Are you sure you want to approve this module?</p>
+            </hlm-alert-dialog-header>
+            <hlm-alert-dialog-footer>
+              <button hlmAlertDialogCancel (click)="ctx.close()">Cancel</button>
+              <button hlmAlertDialogAction (click)="approveFeedback(); ctx.close()">Approve</button>
+            </hlm-alert-dialog-footer>
+          </hlm-alert-dialog-content>
+        </hlm-alert-dialog>
+      </div>
+      <!-- Rejection -->
+      <div>
+        <button hlmBtn variant="destructive" (click)="openRejectForm()" class="w-36">Reject</button>
+      </div>
     </div>
 
-    @if (error) {
-    <div hlmAlert variant="destructive" class="mt-4">
-      <!-- <hlm-alert-title>Error</hlm-alert-title>
-      <hlm-alert-description>
-        {{ error }}
-      </hlm-alert-description> -->
+    <!-- Rejection Form -->
+    } @if (showRejectForm) {
+    <div class="space-y-4 mx-4">
+      <div class="space-y-2">
+        <label class="text-sm font-medium" for="reason">Reason for Rejection:</label>
+        <textarea id="reason" hlmInput class="min-h-[120px] w-full" [(ngModel)]="reason" placeholder="For what reasons do you reject this module proposal?"></textarea>
+      </div>
+      <div class="flex space-x-4">
+        <button hlmBtn variant="outline" class="flex-1" (click)="cancelReject()">Cancel</button>
+        <hlm-alert-dialog>
+          <button hlmBtn variant="destructive" brnAlertDialogTrigger class="flex-1" [disabled]="!reason.trim()">Send Rejection</button>
+          <hlm-alert-dialog-content *brnAlertDialogContent="let ctx">
+            <hlm-alert-dialog-header>
+              <h3 hlmAlertDialogTitle>Send Rejection?</h3>
+              <p hlmAlertDialogDescription>This action will reject the module.</p>
+            </hlm-alert-dialog-header>
+            <hlm-alert-dialog-footer>
+              <button hlmAlertDialogCancel (click)="ctx.close()">Cancel</button>
+              <button hlmAlertDialogAction (click)="sendRejection(); ctx.close()">Reject</button>
+            </hlm-alert-dialog-footer>
+          </hlm-alert-dialog-content>
+        </hlm-alert-dialog>
+      </div>
     </div>
+    } @if (error) {
+    <div hlmAlert variant="destructive" class="mt-4"></div>
     }
   </div>
 </div>

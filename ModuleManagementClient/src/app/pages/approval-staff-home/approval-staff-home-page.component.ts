@@ -9,33 +9,28 @@ import { HlmTrowComponent } from '../../../spartan-components/ui-table-helm/src/
 import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
 import { HlmTdComponent, HlmThComponent } from '@spartan-ng/ui-table-helm';
 import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
+import { SecurityStore } from '../../core/security/security-store.service';
 
 @Component({
   selector: 'approval-staff-home-page',
   standalone: true,
-  imports: [FeedbackStatusPipe, HlmButtonDirective, HlmCaptionComponent, HlmTableComponent, HlmTdComponent, HlmThComponent, HlmBadgeDirective, HlmTrowComponent, RouterModule],
+  imports: [FeedbackStatusPipe, HlmButtonDirective, HlmTableComponent, HlmTdComponent, HlmThComponent, HlmBadgeDirective, HlmTrowComponent, RouterModule],
   templateUrl: './approval-staff-home-page.component.html'
 })
 export class ApprovalStaffHomePageComponent {
+  securityStore = inject(SecurityStore);
   feedbackService = inject(FeedbackControllerService);
   loading: boolean = true;
   error: string | null = null;
   feedbacks: FeedbackListItemDto[] = [];
   feedbackStatusEnum = Feedback.StatusEnum;
-  userId: string | null = '565cf992-cfe8-4f28-9f2c-d74eca826403';
+  user = this.securityStore.loadedUser;
 
   constructor(private route: ActivatedRoute) {
-    this.userId = route.snapshot.paramMap.get('id')!;
-    this.fetchFeedbacksForUser(this.userId);
+    this.fetchFeedbacksForUser();
   }
 
-  public async onUserChange(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const userId = selectElement.value;
-    await this.fetchFeedbacksForUser(userId);
-  }
-
-  private async fetchFeedbacksForUser(userId: string) {
+  private async fetchFeedbacksForUser() {
     this.loading = true;
     this.feedbackService.getFeedbacksForAuthenticatedUser().subscribe({
       next: (feedbacks: FeedbackListItemDto[]) => (this.feedbacks = feedbacks),

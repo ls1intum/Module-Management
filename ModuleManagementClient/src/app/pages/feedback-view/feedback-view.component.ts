@@ -1,4 +1,4 @@
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { BrnSelectModule } from '@spartan-ng/ui-select-brain';
 import { BrnSeparatorModule } from '@spartan-ng/ui-separator-brain';
 import { CommonModule } from '@angular/common';
@@ -12,6 +12,18 @@ import { HlmSelectModule } from '@spartan-ng/ui-select-helm';
 import { HlmSeparatorDirective } from '@spartan-ng/ui-separator-helm';
 import { HlmToasterComponent } from '@spartan-ng/ui-sonner-helm';
 import { toast } from 'ngx-sonner';
+
+import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
+import {
+  HlmAlertDialogActionButtonDirective,
+  HlmAlertDialogCancelButtonDirective,
+  HlmAlertDialogComponent,
+  HlmAlertDialogContentComponent,
+  HlmAlertDialogDescriptionDirective,
+  HlmAlertDialogFooterComponent,
+  HlmAlertDialogHeaderComponent,
+  HlmAlertDialogTitleDirective
+} from '@spartan-ng/ui-alertdialog-helm';
 
 @Component({
   selector: 'app-feedback-view',
@@ -27,7 +39,18 @@ import { toast } from 'ngx-sonner';
     HlmSelectModule,
     HlmSeparatorDirective,
     HlmToasterComponent,
-    RouterModule
+    RouterModule,
+
+    BrnAlertDialogTriggerDirective,
+    BrnAlertDialogContentDirective,
+    HlmAlertDialogComponent,
+    HlmAlertDialogHeaderComponent,
+    HlmAlertDialogFooterComponent,
+    HlmAlertDialogTitleDirective,
+    HlmAlertDialogDescriptionDirective,
+    HlmAlertDialogCancelButtonDirective,
+    HlmAlertDialogActionButtonDirective,
+    HlmAlertDialogContentComponent
   ],
   templateUrl: './feedback-view.component.html'
 })
@@ -39,6 +62,8 @@ export class FeedbackViewComponent {
   error: string | null = null;
   reason: string = '';
   reasonRequired: boolean = false;
+
+  showRejectForm: boolean = false;
 
   getModuleVersionProperty(key: keyof ModuleVersionUpdateRequestDTO): string | undefined {
     return this.moduleVersion ? this.moduleVersion[key]?.toString() : undefined;
@@ -65,8 +90,10 @@ export class FeedbackViewComponent {
     { key: 'lvSwsLecturerEng', label: 'Lecturer SWs (EN)' }
   ] as const;
 
-  constructor(route: ActivatedRoute, private router: Router) {
-    this.feedbackId = Number(route.snapshot.paramMap.get('id'));
+  constructor(private router: Router) {
+    // this.feedbackId = Number(route.snapshot.paramMap.get('id'));
+    this.feedbackId = Number(window.location.pathname.split('/').pop());
+    console.log('feedbackid: ' + this.feedbackId);
     this.fetchModuleVersion(this.feedbackId);
   }
 
@@ -78,16 +105,22 @@ export class FeedbackViewComponent {
         error: (err) => (this.error = err),
         complete: () => (this.loading = false)
       });
-    } else {
-      this.error = "Couldn't find feedbackId";
-      this.loading = false;
     }
+  }
+
+  openRejectForm() {
+    this.showRejectForm = true;
+  }
+
+  cancelReject() {
+    this.showRejectForm = false;
   }
 
   approveFeedback() {
     if (this.feedbackId) {
       this.feedbackService.approveFeedback(this.feedbackId).subscribe({
         next: () => {
+          this.router.navigate([''], { queryParams: { created: true } });
           toast('Feedback Approved', {
             description: 'The feedback has been successfully approved.',
             duration: 3000,
@@ -96,7 +129,6 @@ export class FeedbackViewComponent {
               onClick: () => {}
             }
           });
-          this.router.navigate([''], { queryParams: { created: true } });
         },
         error: (err) => {
           toast('Approval Failed', {
@@ -109,25 +141,16 @@ export class FeedbackViewComponent {
     }
   }
 
-  rejectFeedback() {
-    if (!this.reason) {
-      this.reasonRequired = true;
-      toast('Reason Required', {
-        description: 'Please provide a reason for rejecting the feedback.',
-        duration: 3000
-      });
-      return;
-    }
-
-    if (this.feedbackId) {
+  sendRejection() {
+    if (this.feedbackId && this.reason.trim().length > 0) {
       const rejectDto: RejectFeedbackDTO = { comment: this.reason };
       this.feedbackService.rejectFeedback(this.feedbackId, rejectDto).subscribe({
         next: () => {
+          this.router.navigate([''], { queryParams: { created: true } });
           toast('Rejected', {
-            description: 'The feedback has been successfully approved.',
+            description: 'The feedback has been successfully rejected.',
             duration: 3000
           });
-          this.router.navigate(['/feedbacks/for-user'], { queryParams: { created: true } });
         },
         error: (err) => {
           toast('Rejection Failed', {

@@ -11,11 +11,23 @@ import { HlmSelectImports } from '@spartan-ng/ui-select-helm';
 import { LayoutComponent } from '../../components/layout.component';
 import { RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 
 @Component({
   selector: 'app-proposal-create',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, HlmButtonDirective, HlmFormFieldModule, HlmInputDirective, BrnSelectImports, HlmSelectImports, LayoutComponent, RouterModule],
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    HlmButtonDirective,
+    HlmFormFieldModule,
+    HlmInputDirective,
+    BrnSelectImports,
+    HlmSelectImports,
+    HlmLabelDirective,
+    LayoutComponent,
+    RouterModule
+  ],
   templateUrl: './proposal-create.component.html'
 })
 export class ProposalsCreateComponent {

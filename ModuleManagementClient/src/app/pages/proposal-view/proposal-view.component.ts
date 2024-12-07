@@ -7,7 +7,7 @@ import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
 import { BrnHoverCardComponent, BrnHoverCardContentDirective, BrnHoverCardTriggerDirective } from '@spartan-ng/ui-hovercard-brain';
 import { HttpErrorResponse } from '@angular/common/http';
-import { StatusDisplayPipe } from '../../pipes/proposalStatus.pipe';
+import { StatusDisplayPipe, StatusInfoPipeline } from '../../pipes/proposalStatus.pipe';
 import { FadedModuleVersionStatusPipe, ModuleVersionStatusPipe } from '../../pipes/moduleVersionStatus.pipe';
 import { HlmHoverCardModule } from '@spartan-ng/ui-hovercard-helm';
 import { FadedFeedbackStatusPipe, FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
@@ -33,6 +33,7 @@ import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
     CommonModule,
     HlmBadgeDirective,
     StatusDisplayPipe,
+    StatusInfoPipeline,
     ModuleVersionStatusPipe,
     FadedModuleVersionStatusPipe
   ],
