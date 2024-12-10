@@ -12,6 +12,10 @@ import { FadedModuleVersionStatusPipe, ModuleVersionStatusPipe } from '../../pip
 import { HlmHoverCardModule } from '@spartan-ng/ui-hovercard-helm';
 import { FadedFeedbackStatusPipe, FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
 import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
+import { HlmAlertDescriptionDirective, HlmAlertDirective, HlmAlertIconDirective, HlmAlertTitleDirective } from '@spartan-ng/ui-alert-helm';
+import { lucideInfo } from '@ng-icons/lucide';
+import { provideIcons } from '@ng-icons/core';
+import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 
 @Component({
   selector: 'app-proposal-view',
@@ -35,12 +39,18 @@ import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
     StatusDisplayPipe,
     StatusInfoPipeline,
     ModuleVersionStatusPipe,
-    FadedModuleVersionStatusPipe
+    FadedModuleVersionStatusPipe,
+    HlmAlertDescriptionDirective,
+    HlmAlertDirective,
+    HlmAlertIconDirective,
+    HlmAlertTitleDirective,
+    HlmIconComponent
   ],
   host: {
     class: 'w-full overflow-x-auto'
   },
-  templateUrl: './proposal-view.component.html'
+  templateUrl: './proposal-view.component.html',
+  providers: [provideIcons({ lucideInfo })]
 })
 export class ProposalViewComponent {
   proposalService = inject(ProposalControllerService);

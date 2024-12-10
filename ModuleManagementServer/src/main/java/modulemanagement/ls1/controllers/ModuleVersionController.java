@@ -2,6 +2,7 @@ package modulemanagement.ls1.controllers;
 
 import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
 import modulemanagement.ls1.dtos.ModuleVersionUpdateResponseDTO;
+import modulemanagement.ls1.dtos.ModuleVersionViewDTO;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.services.AuthenticationService;
 import modulemanagement.ls1.services.ModuleVersionService;
@@ -37,5 +38,13 @@ public class ModuleVersionController {
         User user = authenticationService.getAuthenticatedUser(jwt);
         ModuleVersionUpdateResponseDTO updatedModuleVersion = moduleVersionService.updateModuleVersionFromRequest(user.getUserId(), moduleVersionId, moduleVersion);
         return ResponseEntity.ok(updatedModuleVersion);
+    }
+
+    @GetMapping("/view/{moduleVersionId}")
+    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    public ResponseEntity<ModuleVersionViewDTO> getModuleVersionViewDto(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId) {
+        User user = authenticationService.getAuthenticatedUser(jwt);
+        ModuleVersionViewDTO dto = moduleVersionService.getModuleVersionViewDto(moduleVersionId, user.getUserId());
+        return ResponseEntity.ok(dto);
     }
 }

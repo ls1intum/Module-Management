@@ -30,11 +30,10 @@ export interface ProposalRequestDTO {
     lvSwsLecturerEng?: string;
 }
 export namespace ProposalRequestDTO {
-    export type LanguageEngEnum = 'English' | 'German' | 'undefined';
+    export type LanguageEngEnum = 'English' | 'German';
     export const LanguageEngEnum = {
         English: 'English' as LanguageEngEnum,
-        German: 'German' as LanguageEngEnum,
-        Undefined: 'undefined' as LanguageEngEnum
+        German: 'German' as LanguageEngEnum
     };
 }
 

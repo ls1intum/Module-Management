@@ -2,9 +2,6 @@ package modulemanagement.ls1.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
-import modulemanagement.ls1.dtos.ModuleVersionCompactDTO;
-import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
-import modulemanagement.ls1.dtos.ModuleVersionUpdateResponseDTO;
 import modulemanagement.ls1.enums.Language;
 import modulemanagement.ls1.enums.ModuleVersionStatus;
 import io.micrometer.common.util.StringUtils;
@@ -106,7 +103,7 @@ public class ModuleVersion {
     public boolean isCompleted() {
         return !StringUtils.isEmpty(titleEng)
                 && !StringUtils.isEmpty(levelEng)
-                && languageEng != Language.undefined
+                && languageEng != null
                 && !StringUtils.isEmpty(frequencyEng)
                 && !(credits == null)
                 && !(hoursTotal == null)

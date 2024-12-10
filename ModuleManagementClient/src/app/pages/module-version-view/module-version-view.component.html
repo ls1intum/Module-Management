@@ -1,0 +1,47 @@
+<hlm-scroll-area class="border rounded-md border-none h-[calc(100vh-180px)]">
+  <div class="p-4">
+    @if(loading) {
+      <div class="text-center text-muted-foreground">Loading...</div>
+    } @else if(moduleVersionDto) {
+      <div class="space-y-4">
+        <h2 class="text-xl font-semibold mb-4">Module Version Details</h2>
+        <div class="grid grid-cols-2 gap-2">
+          <div class="font-medium">Module Version ID:</div>
+          <div>{{ moduleVersionDto.moduleVersionId }}</div>
+          <div class="font-medium">Version:</div>
+          <div>{{ moduleVersionDto.version }}</div>
+          <div class="font-medium">Status:</div>
+          <div>{{ moduleVersionDto.status }}</div>
+        </div>
+
+        @if(moduleVersionDto.feedbacks?.length) {
+          <h3 class="text-lg font-semibold mt-6">Feedbacks</h3>
+          <div class="space-y-2">
+            @for(feedback of moduleVersionDto.feedbacks; track feedback.feedbackId) {
+              <div class="p-2 border rounded">
+                <div class="font-medium">Role: {{ feedback.feedbackRole }}</div>
+                <div>Status: {{ feedback.feedbackStatus }}</div>
+                @if(feedback.rejectionComment) {
+                  <div>Comment: {{ feedback.rejectionComment }}</div>
+                }
+              </div>
+            }
+          </div>
+        }
+
+        <br />
+        <h3 class="text-lg font-semibold mt-6">Module Fields</h3>
+        @for(field of moduleFields; track field.key) {
+          <div>
+            <strong>{{ field.label }}:</strong>
+            <div style="white-space: pre-wrap">
+              {{ getModuleVersionProperty(field.key) || 'N/A' }}
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="text-center">No Module Version found</div>
+    }
+  </div>
+</hlm-scroll-area>

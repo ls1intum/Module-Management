@@ -26,13 +26,13 @@ public class FeedbackListItemDto {
         Proposal p = mv.getProposal();
         User createdBy = p.getCreatedBy();
 
-        dto.setFeedbackId(feedback.getFeedbackId());
-        dto.setModuleVersionId(mv.getModuleVersionId());
-        dto.setProposalId(p.getProposalId());
-        dto.setStatus(feedback.getStatus());
-        dto.setModuleVersionTitleEng(mv.getTitleEng());
-        dto.setProposalCreatedByName(createdBy.getFirstName());
-        dto.setProposalCreatedById(createdBy.getUserId());
+        dto.feedbackId = feedback.getFeedbackId();
+        dto.moduleVersionId = mv.getModuleVersionId();
+        dto.proposalId = p.getProposalId();
+        dto.status = feedback.getStatus();
+        dto.moduleVersionTitleEng = mv.getTitleEng();
+        dto.proposalCreatedByName = createdBy.getFirstName() + " " + createdBy.getLastName();
+        dto.proposalCreatedById = createdBy.getUserId();
 
         return dto;
     }

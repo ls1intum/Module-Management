@@ -13,6 +13,7 @@ import { Observable }                                        from 'rxjs';
 
 import { ModuleVersionUpdateRequestDTO } from '../model/models';
 import { ModuleVersionUpdateResponseDTO } from '../model/models';
+import { ModuleVersionViewDTO } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -29,6 +30,13 @@ export interface ModuleVersionControllerServiceInterface {
      * @param moduleVersionId 
      */
     getModuleVersionUpdateDtoFromId(moduleVersionId: number, extraHttpRequestParams?: any): Observable<ModuleVersionUpdateResponseDTO>;
+
+    /**
+     * 
+     * 
+     * @param moduleVersionId 
+     */
+    getModuleVersionViewDto(moduleVersionId: number, extraHttpRequestParams?: any): Observable<ModuleVersionViewDTO>;
 
     /**
      * 

@@ -7,16 +7,18 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ModuleVersionViewFeedbackDTO } from './module-version-view-feedback-dto';
 
 
-export interface ModuleVersionUpdateResponseDTO { 
+export interface ModuleVersionViewDTO { 
+    proposalId?: number;
+    moduleVersionId?: number;
     version?: number;
-    moduleId?: string;
-    status?: ModuleVersionUpdateResponseDTO.StatusEnum;
-    isComplete?: boolean;
+    creationDate?: string;
+    status?: ModuleVersionViewDTO.StatusEnum;
     titleEng?: string;
     levelEng?: string;
-    languageEng?: ModuleVersionUpdateResponseDTO.LanguageEngEnum;
+    languageEng?: ModuleVersionViewDTO.LanguageEngEnum;
     frequencyEng?: string;
     credits?: number;
     hoursTotal?: number;
@@ -32,9 +34,9 @@ export interface ModuleVersionUpdateResponseDTO {
     literatureEng?: string;
     responsiblesEng?: string;
     lvSwsLecturerEng?: string;
-    proposalId: number;
+    feedbacks?: Array<ModuleVersionViewFeedbackDTO>;
 }
-export namespace ModuleVersionUpdateResponseDTO {
+export namespace ModuleVersionViewDTO {
     export type StatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'ACCEPTED' | 'REJECTED' | 'OBSOLETE' | 'CANCELLED';
     export const StatusEnum = {
         PendingSubmission: 'PENDING_SUBMISSION' as StatusEnum,

@@ -43,11 +43,10 @@ export namespace ModuleVersionUpdateRequestDTO {
         Obsolete: 'OBSOLETE' as StatusEnum,
         Cancelled: 'CANCELLED' as StatusEnum
     };
-    export type LanguageEngEnum = 'English' | 'German' | 'undefined';
+    export type LanguageEngEnum = 'English' | 'German';
     export const LanguageEngEnum = {
         English: 'English' as LanguageEngEnum,
-        German: 'German' as LanguageEngEnum,
-        Undefined: 'undefined' as LanguageEngEnum
+        German: 'German' as LanguageEngEnum
     };
 }
 

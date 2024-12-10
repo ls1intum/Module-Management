@@ -2,12 +2,14 @@ package modulemanagement.ls1.services;
 
 import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
 import modulemanagement.ls1.dtos.ModuleVersionUpdateResponseDTO;
+import modulemanagement.ls1.dtos.ModuleVersionViewDTO;
 import modulemanagement.ls1.enums.FeedbackStatus;
 import modulemanagement.ls1.enums.ModuleVersionStatus;
 import modulemanagement.ls1.enums.ProposalStatus;
 import modulemanagement.ls1.models.Feedback;
 import modulemanagement.ls1.models.ModuleVersion;
 import modulemanagement.ls1.models.Proposal;
+import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.repositories.ModuleVersionRepository;
 import modulemanagement.ls1.repositories.ProposalRepository;
 import modulemanagement.ls1.shared.ResourceNotFoundException;
@@ -111,5 +113,15 @@ public class ModuleVersionService {
         }
 
         return ModuleVersionUpdateResponseDTO.fromModuleVersion(mv);
+    }
+
+    public ModuleVersionViewDTO getModuleVersionViewDto(Long moduleVersionId, UUID userId) {
+        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).
+                orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
+        System.out.println("MVID: " + mv.getModuleVersionId());
+        Proposal p = mv.getProposal();
+        if (!p.getCreatedBy().getUserId().equals(userId))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access.");
+        return ModuleVersionViewDTO.from(mv);
     }
 }

@@ -31,20 +31,17 @@
   </div>
 </div>
 
-<div>
-  <h3 class="text-xl">Information</h3>
-  <p>{{ proposal.status! | statusInfo }}</p>
+<div hlmAlert class="w-2/5">
+  <hlm-icon hlmAlertIcon name="lucideInfo" />
+  <h3 hlmAlertTitle>Information</h3>
+  <p hlmAlertDesc>{{ proposal.status! | statusInfo }}</p>
 </div>
 
 <!-- Action Buttons -->
-<div class="flex justify-between mb-10 mt-20">
+<div class="flex justify-between mb-10 mt-10">
   @if(proposal.status === proposalStatusEnum.RequiresReview) {
   <button hlmBtn variant="outline" (click)="addNewModuleVersion()">Create New Version</button>
-  } @if (proposal.status === proposalStatusEnum.PendingSubmission) { @if (proposal.latestModuleVersion?.isComplete) {
-  <button hlmBtn variant="default" class="bg-green-600" (click)="submitProposal()">Submit</button>
-  } @else {
-  <button hlmBtn variant="default" class="mr-2" (click)="editLatestModuleVersion()">Complete Proposal</button>
-  } }
+  }
 </div>
 
 <!-- Latest Version Table -->
@@ -61,7 +58,7 @@
   <hlm-trow>
     <hlm-td truncate class="font-medium w-24">{{ proposal.latestVersion }}</hlm-td>
     <hlm-td class="flex-1">
-      <button hlmBtn variant="link" class="text-left px-0" [routerLink]="['/proposals/edit', proposal.proposalId]">
+      <button hlmBtn variant="link" class="text-left px-0" [routerLink]="['/module-version/view', proposal.latestModuleVersion!.moduleVersionId]">
         {{ proposal.latestModuleVersion!.titleEng }}
       </button>
     </hlm-td>
@@ -91,7 +88,9 @@
       } }
     </hlm-td>
     <hlm-td class="w-48">
-      @if(proposal.latestModuleVersion!.status === moduleStatusEnum.PendingSubmission) {
+      @if (proposal.latestModuleVersion!.isComplete && proposal.latestModuleVersion!.status == moduleStatusEnum.PendingSubmission) {
+      <button hlmBtn variant="default" class="bg-green-600 mr-2" (click)="submitProposal()">Submit</button>
+      } @if(proposal.latestModuleVersion!.status === moduleStatusEnum.PendingSubmission) {
       <button hlmBtn variant="outline" class="mr-2" (click)="editLatestModuleVersion()">Edit</button>
       } @if(proposal.latestModuleVersion!.status === moduleStatusEnum.PendingFeedback) {
       <button hlmBtn variant="outline" class="mr-2" (click)="cancelProposal()">Cancel</button>
@@ -114,9 +113,9 @@
 
   @for (version of proposal.oldModuleVersions; track version.moduleVersionId) {
   <hlm-trow>
-    <hlm-td truncate class="font-medium w-24">{{ version.moduleVersionId }}</hlm-td>
+    <hlm-td truncate class="font-medium w-24">{{ version.version }}</hlm-td>
     <hlm-td class="flex-1">
-      <button hlmBtn variant="link" class="text-left text-muted-foreground px-0" [routerLink]="['/proposals/view', proposal.proposalId]">
+      <button hlmBtn variant="link" class="text-left text-muted-foreground px-0" [routerLink]="['/module-version/view', version.moduleVersionId]">
         {{ version.titleEng }}
       </button>
     </hlm-td>

@@ -20,6 +20,8 @@ model/models.ts
 model/module-version-compact-dto.ts
 model/module-version-update-request-dto.ts
 model/module-version-update-response-dto.ts
+model/module-version-view-dto.ts
+model/module-version-view-feedback-dto.ts
 model/module-version.ts
 model/proposal-request-dto.ts
 model/proposal-view-dto.ts

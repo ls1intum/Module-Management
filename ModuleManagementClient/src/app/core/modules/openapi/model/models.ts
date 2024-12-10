@@ -5,6 +5,8 @@ export * from './module-version';
 export * from './module-version-compact-dto';
 export * from './module-version-update-request-dto';
 export * from './module-version-update-response-dto';
+export * from './module-version-view-dto';
+export * from './module-version-view-feedback-dto';
 export * from './proposal';
 export * from './proposal-request-dto';
 export * from './proposal-view-dto';

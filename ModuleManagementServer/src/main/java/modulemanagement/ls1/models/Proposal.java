@@ -41,6 +41,7 @@ public class Proposal {
     @OneToMany(mappedBy = "proposal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ModuleVersion> moduleVersions = new ArrayList<>();
 
+    @JsonIgnore
     public void addModuleVersion(ModuleVersion moduleVersion) {
         moduleVersions.add(moduleVersion);
     }

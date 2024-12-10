@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ModuleVersionControllerService, ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO, ProposalControllerService } from '../../core/modules/openapi';
+import { ModuleVersionControllerService, ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO, } from '../../core/modules/openapi';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
@@ -11,14 +11,19 @@ import { HlmSelectImports } from '@spartan-ng/ui-select-helm';
 import { LayoutComponent } from '../../components/layout.component';
 import { RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { AutoResizeDirective } from '../../core/shared/autoresize.directive';
+import { HlmAlertDescriptionDirective, HlmAlertDirective, HlmAlertIconDirective, HlmAlertTitleDirective } from '@spartan-ng/ui-alert-helm';
+import { HlmIconComponent, provideIcons } from '@spartan-ng/ui-icon-helm';
+import { lucideInfo } from '@ng-icons/lucide';
 
 @Component({
-  selector: 'app-proposal-create',
+  selector: 'module-version-edit',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, HlmButtonDirective, HlmFormFieldModule, HlmInputDirective, BrnSelectImports, HlmSelectImports, LayoutComponent, RouterModule],
-  templateUrl: './proposal-edit.component.html'
+  imports: [ReactiveFormsModule, CommonModule, HlmButtonDirective, HlmFormFieldModule, HlmInputDirective, BrnSelectImports, HlmSelectImports, LayoutComponent, RouterModule, AutoResizeDirective, HlmAlertDescriptionDirective, HlmAlertDirective, HlmAlertIconDirective, HlmAlertTitleDirective, HlmIconComponent],
+  providers: [provideIcons({lucideInfo})],
+  templateUrl: './module-version-edit.component.html'
 })
-export class ProposalsEditComponent {
+export class ModuleVersionEditComponent {
   proposalForm: FormGroup;
   loading: boolean = false;
   error: string | null = null;
@@ -31,7 +36,7 @@ export class ProposalsEditComponent {
     this.proposalForm = this.formBuilder.group({
       titleEng: ['', Validators.required],
       levelEng: [''],
-      languageEng: ['undefined'],
+      languageEng: [''],
       repetitionEng: [''],
       frequencyEng: [''],
       credits: [null],

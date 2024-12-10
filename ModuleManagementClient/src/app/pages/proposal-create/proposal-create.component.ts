@@ -12,6 +12,11 @@ import { LayoutComponent } from '../../components/layout.component';
 import { RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
+import { AutoResizeDirective } from '../../core/shared/autoresize.directive';
+import { provideIcons } from '@ng-icons/core';
+import { lucideInfo } from '@ng-icons/lucide';
+import { HlmAlertDescriptionDirective, HlmAlertDirective, HlmAlertIconDirective, HlmAlertTitleDirective } from '@spartan-ng/ui-alert-helm';
+import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 
 @Component({
   selector: 'app-proposal-create',
@@ -26,8 +31,10 @@ import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
     HlmSelectImports,
     HlmLabelDirective,
     LayoutComponent,
-    RouterModule
+    RouterModule,
+    AutoResizeDirective, HlmAlertDescriptionDirective, HlmAlertDirective, HlmAlertIconDirective, HlmAlertTitleDirective, HlmIconComponent
   ],
+  providers: [provideIcons({lucideInfo})],
   templateUrl: './proposal-create.component.html'
 })
 export class ProposalsCreateComponent {
@@ -40,7 +47,7 @@ export class ProposalsCreateComponent {
     this.proposalForm = this.formBuilder.group({
       titleEng: ['', Validators.required],
       levelEng: [''],
-      languageEng: ['undefined'],
+      languageEng: ['English'],
       repetitionEng: [''],
       frequencyEng: [''],
       credits: [null],
