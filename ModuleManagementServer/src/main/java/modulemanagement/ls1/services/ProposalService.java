@@ -110,7 +110,7 @@ public class ProposalService {
 
         p.addNewModuleVersion();
         proposalRepository.save(p);
-        return p.toProposalViewDTO();
+        return ProposalViewDTO.from(p);
     }
 
     public List<Proposal> getAllProposals() {
@@ -155,7 +155,7 @@ public class ProposalService {
         if (!p.getCreatedBy().getUserId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
         }
-        return p.toProposalViewDTO();
+        return ProposalViewDTO.from(p);
 
     }
 
@@ -188,7 +188,7 @@ public class ProposalService {
         feedbackRepository.saveAll(feedbacks);
         moduleVersionRepository.save(mv);
         proposalRepository.save(proposal);
-        return proposal.toProposalViewDTO();
+        return ProposalViewDTO.from(proposal);
     }
 
     public ProposalViewDTO cancelSubmission(Long proposalId, UUID userId) {
@@ -229,7 +229,7 @@ public class ProposalService {
             proposal.setStatus(ProposalStatus.PENDING_SUBMISSION);
         }
         proposalRepository.save(proposal);
-        return proposal.toProposalViewDTO();
+        return ProposalViewDTO.from(proposal);
     }
 
     public void deleteProposalById(long proposalId, UUID userId) {

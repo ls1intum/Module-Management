@@ -56,34 +56,6 @@ public class Proposal {
         return getLatestModuleVersionWithContent().getVersion();
     }
 
-    @JsonIgnore
-    public ProposalViewDTO toProposalViewDTO() {
-        var v = new ProposalViewDTO();
-        v.setProposalId(proposalId);
-        v.setLatestVersion(getLatestModuleVersion());
-        v.setCreationDate(creationDate);
-        v.setStatus(status);
-
-        var sortedModuleVersions = moduleVersions.stream()
-                .sorted(Comparator.comparing(ModuleVersion::getVersion).reversed())
-                .toList();
-
-        if (!sortedModuleVersions.isEmpty()) {
-            v.setLatestModuleVersion(ModuleVersionCompactDTO.fromModuleVersion(sortedModuleVersions.getFirst()));
-
-            var oldVersions = sortedModuleVersions.subList(1, sortedModuleVersions.size())
-                    .stream()
-                    .map(ModuleVersionCompactDTO::fromModuleVersion)
-                    .collect(Collectors.toList());
-
-            v.setOldModuleVersions(oldVersions);
-        } else {
-            v.setLatestModuleVersion(null);
-            v.setOldModuleVersions(Collections.emptyList());
-        }
-
-        return v;
-    }
 
     @JsonIgnore
     public void addNewModuleVersion() {
