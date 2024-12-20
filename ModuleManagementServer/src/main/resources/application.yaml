@@ -24,10 +24,6 @@ spring:
           jwk-set-uri: http://localhost:8081/realms/module-management/protocol/openid-connect/certs
           issuer-uri: http://localhost:8081/realms/module-management
 
-  ai:
-    openai:
-      api-key: nss
-
   docker:
     compose:
       enabled: true
