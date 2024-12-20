@@ -18,3 +18,13 @@ services:
     entrypoint: /opt/keycloak/bin/kc.sh start-dev
     ports:
       - "8081:8080"
+
+  ai-service:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    container_name: module-management-ai
+    ports:
+      - "5000:5000"
+    environment:
+      - PYTHON UNBUFFERED=1
