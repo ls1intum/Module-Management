@@ -38,14 +38,10 @@
 </div>
 
 <!-- Action Buttons -->
-<div class="flex justify-between mb-10 mt-10">
-  @if(proposal.status === proposalStatusEnum.RequiresReview) {
-  <button hlmBtn variant="outline" (click)="addNewModuleVersion()">Create New Version</button>
-  }
-</div>
+<!-- <div class="flex justify-between mb-10 mt-10"></div> -->
 
 <!-- Latest Version Table -->
-<h2 class="text-xl mb-8">Current Module Versions</h2>
+<h2 class="text-xl mb-8 mt-16">Current Module Versions</h2>
 <hlm-table class="w-full min-w-[400px] mb-8">
   <hlm-trow>
     <hlm-th class="w-24">Version</hlm-th>
@@ -94,6 +90,8 @@
       <button hlmBtn variant="outline" class="mr-2" (click)="editLatestModuleVersion()">Edit</button>
       } @if(proposal.latestModuleVersion!.status === moduleStatusEnum.PendingFeedback) {
       <button hlmBtn variant="outline" class="mr-2" (click)="cancelProposal()">Cancel</button>
+      } @if(proposal.status === proposalStatusEnum.RequiresReview) {
+      <button hlmBtn variant="outline" (click)="addNewModuleVersion()">Create New Version</button>
       }
     </hlm-td>
   </hlm-trow>

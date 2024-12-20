@@ -1,7 +1,7 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { HlmCaptionComponent, HlmTableComponent, HlmTdComponent, HlmThComponent, HlmTrowComponent } from '@spartan-ng/ui-table-helm';
 import { Proposal, ProposalControllerService, ProposalsCompactDTO } from '../../core/modules/openapi';
-import { HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
@@ -55,4 +55,12 @@ export class ProposalListTableComponent {
       complete: () => (this.loading = false)
     });
   }
+
+  deleteProposal(proposalId: number) {
+      this.proposalService.deleteProposal(proposalId).subscribe({
+        next: () => (window.location.href = '/proposals'),
+        error: (err: HttpErrorResponse) => (this.error = err.error)
+      });
+  }
+
 }
