@@ -36,5 +36,9 @@ module-management:
     client-id: module-management-client
 
 springdoc:
+  springdoc:
+    api-docs:
+      yaml:
+        path: /v3/api-docs.yaml
   default-produces-media-type: application/json
   default-consumes-media-type: application/json
