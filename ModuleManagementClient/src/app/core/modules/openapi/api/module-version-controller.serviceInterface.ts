@@ -36,6 +36,34 @@ export interface ModuleVersionControllerServiceInterface {
     /**
      * 
      * 
+     * @param completionServiceRequestDTO 
+     */
+    generateExaminationAchievements(completionServiceRequestDTO: CompletionServiceRequestDTO, extraHttpRequestParams?: any): Observable<CompletionServiceResponseDTO>;
+
+    /**
+     * 
+     * 
+     * @param completionServiceRequestDTO 
+     */
+    generateLearningOutcomes(completionServiceRequestDTO: CompletionServiceRequestDTO, extraHttpRequestParams?: any): Observable<CompletionServiceResponseDTO>;
+
+    /**
+     * 
+     * 
+     * @param completionServiceRequestDTO 
+     */
+    generateMedia(completionServiceRequestDTO: CompletionServiceRequestDTO, extraHttpRequestParams?: any): Observable<CompletionServiceResponseDTO>;
+
+    /**
+     * 
+     * 
+     * @param completionServiceRequestDTO 
+     */
+    generateTeachingMethods(completionServiceRequestDTO: CompletionServiceRequestDTO, extraHttpRequestParams?: any): Observable<CompletionServiceResponseDTO>;
+
+    /**
+     * 
+     * 
      * @param moduleVersionId 
      */
     getModuleVersionUpdateDtoFromId(moduleVersionId: number, extraHttpRequestParams?: any): Observable<ModuleVersionUpdateResponseDTO>;
