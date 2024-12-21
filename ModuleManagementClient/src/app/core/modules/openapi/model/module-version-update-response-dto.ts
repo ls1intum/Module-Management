@@ -14,6 +14,7 @@ export interface ModuleVersionUpdateResponseDTO {
     moduleId?: string;
     status?: ModuleVersionUpdateResponseDTO.StatusEnum;
     isComplete?: boolean;
+    bulletPoints?: string;
     titleEng?: string;
     levelEng?: string;
     languageEng?: ModuleVersionUpdateResponseDTO.LanguageEngEnum;

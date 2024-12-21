@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ModuleVersionControllerService, ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO, } from '../../core/modules/openapi';
+import { CompletionServiceRequestDTO, CompletionServiceResponseDTO, ModuleVersionControllerService, ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO, } from '../../core/modules/openapi';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
@@ -66,6 +66,18 @@ export class ModuleVersionEditComponent {
       error: (err: HttpErrorResponse) => (this.error = err.error),
       complete: () => (this.loading = false)
     });
+  }
+
+  async test() {
+      const proposalData: CompletionServiceRequestDTO = {
+        bulletPoints: "parallel programming",
+        ...this.proposalForm.value,
+        moduleVersionId: this.moduleVersionId
+      };
+      
+      this.moduleVersionService.generateContent(proposalData).subscribe({
+        next: (response: CompletionServiceResponseDTO) => console.log(response.responseData)
+      })
   }
 
   async onSubmit() {

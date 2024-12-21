@@ -53,6 +53,7 @@ public class ProposalService {
         mv.setCreationDate(LocalDateTime.now());
         mv.setProposal(p);
         mv.setStatus(ModuleVersionStatus.PENDING_SUBMISSION);
+        mv.setBulletPoints(request.getBulletPoints());
         mv.setTitleEng(request.getTitleEng());
         mv.setLevelEng(request.getLevelEng());
         mv.setLanguageEng(request.getLanguageEng());
@@ -111,27 +112,6 @@ public class ProposalService {
         p.addNewModuleVersion();
         proposalRepository.save(p);
         return ProposalViewDTO.from(p);
-    }
-
-    public List<Proposal> getAllProposals() {
-        return proposalRepository.findAll()
-                .stream()
-                .sorted(Comparator.comparing(Proposal::getProposalId))
-                .collect(Collectors.toList());
-    }
-
-    public List<ProposalsCompactDTO> getAllProposalsCompact() {
-        return proposalRepository.findAll()
-                .stream()
-                .map(p -> new ProposalsCompactDTO(
-                        p.getProposalId(),
-                        p.getCreatedBy().getFirstName(),
-                        p.getStatus(),
-                        p.getLatestModuleVersionWithContent() != null ? p.getLatestModuleVersionWithContent().getModuleVersionId() : null,
-                        p.getLatestModuleVersionWithContent() != null ? p.getLatestModuleVersionWithContent().getTitleEng() : null
-                ))
-                .sorted(Comparator.comparing(ProposalsCompactDTO::getProposalId))
-                .collect(Collectors.toList());
     }
 
     public List<ProposalsCompactDTO> getCompactProposalsOfUser(UUID userId) {

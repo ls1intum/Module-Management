@@ -16,6 +16,7 @@ export interface ModuleVersionViewDTO {
     version?: number;
     creationDate?: string;
     status?: ModuleVersionViewDTO.StatusEnum;
+    bulletPoints?: string;
     titleEng?: string;
     levelEng?: string;
     languageEng?: ModuleVersionViewDTO.LanguageEngEnum;

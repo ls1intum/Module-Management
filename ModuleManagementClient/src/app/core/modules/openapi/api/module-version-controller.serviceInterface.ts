@@ -11,6 +11,8 @@ import { HttpHeaders }                                       from '@angular/comm
 
 import { Observable }                                        from 'rxjs';
 
+import { CompletionServiceRequestDTO } from '../model/models';
+import { CompletionServiceResponseDTO } from '../model/models';
 import { ModuleVersionUpdateRequestDTO } from '../model/models';
 import { ModuleVersionUpdateResponseDTO } from '../model/models';
 import { ModuleVersionViewDTO } from '../model/models';
@@ -23,6 +25,13 @@ import { Configuration }                                     from '../configurat
 export interface ModuleVersionControllerServiceInterface {
     defaultHeaders: HttpHeaders;
     configuration: Configuration;
+
+    /**
+     * 
+     * 
+     * @param completionServiceRequestDTO 
+     */
+    generateContent(completionServiceRequestDTO: CompletionServiceRequestDTO, extraHttpRequestParams?: any): Observable<CompletionServiceResponseDTO>;
 
     /**
      * 

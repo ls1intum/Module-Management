@@ -7,7 +7,7 @@ import modulemanagement.ls1.enums.Language;
 
 @Data
 @Builder
-public class ModuleInfoRequestDTO {
+public class CompletionServiceRequestDTO {
     @NotNull private String bulletPoints;
     private String titleEng;
     private String levelEng;

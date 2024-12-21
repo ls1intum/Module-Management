@@ -6,5 +6,4 @@ import lombok.Data;
 @Data
 public class AddModuleVersionDTO {
     @NotNull private Long proposalId;
-
 }

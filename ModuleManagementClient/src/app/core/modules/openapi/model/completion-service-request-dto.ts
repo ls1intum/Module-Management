@@ -9,15 +9,11 @@
  */
 
 
-export interface ModuleVersionUpdateRequestDTO { 
-    version?: number;
-    moduleId?: string;
-    status?: ModuleVersionUpdateRequestDTO.StatusEnum;
-    isComplete?: boolean;
-    bulletPoints?: string;
+export interface CompletionServiceRequestDTO { 
+    bulletPoints: string;
     titleEng?: string;
     levelEng?: string;
-    languageEng?: ModuleVersionUpdateRequestDTO.LanguageEngEnum;
+    languageEng?: CompletionServiceRequestDTO.LanguageEngEnum;
     frequencyEng?: string;
     credits?: number;
     hoursTotal?: number;
@@ -34,16 +30,7 @@ export interface ModuleVersionUpdateRequestDTO {
     responsiblesEng?: string;
     lvSwsLecturerEng?: string;
 }
-export namespace ModuleVersionUpdateRequestDTO {
-    export type StatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'ACCEPTED' | 'REJECTED' | 'OBSOLETE' | 'CANCELLED';
-    export const StatusEnum = {
-        PendingSubmission: 'PENDING_SUBMISSION' as StatusEnum,
-        PendingFeedback: 'PENDING_FEEDBACK' as StatusEnum,
-        Accepted: 'ACCEPTED' as StatusEnum,
-        Rejected: 'REJECTED' as StatusEnum,
-        Obsolete: 'OBSOLETE' as StatusEnum,
-        Cancelled: 'CANCELLED' as StatusEnum
-    };
+export namespace CompletionServiceRequestDTO {
     export type LanguageEngEnum = 'English' | 'German';
     export const LanguageEngEnum = {
         English: 'English' as LanguageEngEnum,

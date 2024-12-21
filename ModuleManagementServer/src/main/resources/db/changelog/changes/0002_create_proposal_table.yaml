@@ -22,7 +22,7 @@ databaseChangeLog:
                   type: TIMESTAMP
               - column:
                   name: status
-                  type: VARCHAR(50)
+                  type: VARCHAR(255)
         - addForeignKeyConstraint:
             baseTableName: proposal
             baseColumnNames: created_by

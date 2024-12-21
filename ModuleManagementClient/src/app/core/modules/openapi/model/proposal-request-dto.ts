@@ -10,6 +10,7 @@
 
 
 export interface ProposalRequestDTO { 
+    bulletPoints?: string;
     titleEng: string;
     levelEng?: string;
     languageEng?: ProposalRequestDTO.LanguageEngEnum;

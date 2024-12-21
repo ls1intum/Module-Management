@@ -33,6 +33,9 @@ public class ModuleVersion {
     @Column(name = "status")
     @NotNull private ModuleVersionStatus status;
 
+    @Column(name = "bullet_points", columnDefinition = "CLOB")
+    private String bulletPoints;
+
     // --------MODULE_FIELDS----------
     @Column(name = "title_eng")
     private String titleEng;

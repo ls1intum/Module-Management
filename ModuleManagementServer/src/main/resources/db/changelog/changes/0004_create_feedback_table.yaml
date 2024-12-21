@@ -20,12 +20,12 @@ databaseChangeLog:
                   type: VARCHAR(255)
               - column:
                   name: required_role
-                  type: VARCHAR(50)
+                  type: VARCHAR(255)
                   constraints:
                     nullable: false
               - column:
                   name: feedback_status
-                  type: VARCHAR(50)
+                  type: VARCHAR(255)
               - column:
                   name: submission_date
                   type: TIMESTAMP

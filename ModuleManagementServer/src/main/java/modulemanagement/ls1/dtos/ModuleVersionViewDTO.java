@@ -17,6 +17,7 @@ public class ModuleVersionViewDTO {
     private Integer version;
     private LocalDateTime creationDate;
     private ModuleVersionStatus status;
+    private String bulletPoints;
 
     private String titleEng;
     private String levelEng;
@@ -45,6 +46,7 @@ public class ModuleVersionViewDTO {
         dto.version = moduleVersion.getVersion();
         dto.creationDate = moduleVersion.getCreationDate();
         dto.status = moduleVersion.getStatus();
+        dto.bulletPoints = moduleVersion.getBulletPoints();
         dto.titleEng = moduleVersion.getTitleEng();
         dto.levelEng = moduleVersion.getLevelEng();
         dto.languageEng = moduleVersion.getLanguageEng();

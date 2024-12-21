@@ -4,7 +4,7 @@ import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
 import modulemanagement.ls1.dtos.ModuleVersionUpdateResponseDTO;
 import modulemanagement.ls1.dtos.ModuleVersionViewDTO;
 import modulemanagement.ls1.dtos.ai.CompletionServiceResponseDTO;
-import modulemanagement.ls1.dtos.ai.ModuleInfoRequestDTO;
+import modulemanagement.ls1.dtos.ai.CompletionServiceRequestDTO;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.services.AiCompletionService;
 import modulemanagement.ls1.services.AuthenticationService;
@@ -55,8 +55,7 @@ public class ModuleVersionController {
 
     @PostMapping("/generate/content")
     @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
-    public ResponseEntity<CompletionServiceResponseDTO> generateContent(@Valid @RequestBody ModuleInfoRequestDTO moduleInfoRequestDTO) {
-//        return ResponseEntity.ok(new CompletionServiceResponseDTO(aiCompletionService.generateContent(moduleInfoRequestDTO).block()));
-        return null;
+    public ResponseEntity<CompletionServiceResponseDTO> generateContent(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
+        return ResponseEntity.ok(new CompletionServiceResponseDTO(aiCompletionService.generateContent(moduleInfoRequestDTO).block()));
     }
 }

@@ -9,39 +9,37 @@ class Language(str, Enum):
 
 
 class ModuleInfo(BaseModel):
-    bullet_points: str
-    title_eng: Optional[str] = None
-    level_eng: Optional[str] = None
-    language_eng: Optional[Language] = None
-    frequency_eng: Optional[str] = None
+    bulletPoints: str
+    titleEng: Optional[str] = None
+    levelEng: Optional[str] = None
+    languageEng: Optional[Language] = None
+    frequencyEng: Optional[str] = None
     credits: Optional[int] = None
-    hours_total: Optional[int] = None
-    hours_self_study: Optional[int] = None
-    hours_presence: Optional[int] = None
-    examination_achievements_eng: Optional[str] = None
-    repetition_eng: Optional[str] = None
-    recommended_prerequisites_eng: Optional[str] = None
-    content_eng: Optional[str] = None
-    learning_outcomes_eng: Optional[str] = None
-    teaching_methods_eng: Optional[str] = None
-    media_eng: Optional[str] = None
-    literature_eng: Optional[str] = None
-    responsibles_eng: Optional[str] = None
-    lv_sws_lecturer_eng: Optional[str] = None
-
+    hoursTotal: Optional[int] = None
+    hoursSelfStudy: Optional[int] = None
+    hoursPresence: Optional[int] = None
+    examinationAchievementsEng: Optional[str] = None
+    repetitionEng: Optional[str] = None
+    recommendedPrerequisitesEng: Optional[str] = None
+    contentEng: Optional[str] = None
+    learningOutcomesEng: Optional[str] = None
+    teachingMethodsEng: Optional[str] = None
+    mediaEng: Optional[str] = None
+    literatureEng: Optional[str] = None
+    responsiblesEng: Optional[str] = None
+    lvSwsLecturerEng: Optional[str] = None
 
 class ContentGenerationResponse(BaseModel):
-    content: str
-
+    responseData: str
 
 class ExaminationAchievementsGenerationResponse(BaseModel):
-    examination_achievement: str
+    responseData: str
 
 class LearningOutcomesGenerationResponse(BaseModel):
-    learning_outcomes: str
+    responseData: str
 
 class TeachingMethodsGenerationResponse(BaseModel):
-    teaching_methods: str
+    responseData: str
 
 class MediaGenerationResponse(BaseModel):
-    media: str
+    responseData: str

@@ -12,6 +12,7 @@ public class ModuleVersionUpdateRequestDTO {
     private String moduleId;
     private ModuleVersionStatus status;
     private Boolean isComplete;
+    private String bulletPoints;
     private String titleEng;
     private String levelEng;
     private Language languageEng;
@@ -44,6 +45,7 @@ public class ModuleVersionUpdateRequestDTO {
         mdto.setModuleId(mv.getModuleId());
         mdto.setStatus(mv.getStatus());
         mdto.setIsComplete(mv.isCompleted());
+        mdto.setBulletPoints(mv.getBulletPoints());
         mdto.setTitleEng(mv.getTitleEng());
         mdto.setLevelEng(mv.getLevelEng());
         mdto.setLanguageEng(mv.getLanguageEng());

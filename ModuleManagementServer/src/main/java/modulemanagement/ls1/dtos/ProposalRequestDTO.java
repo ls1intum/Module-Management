@@ -8,6 +8,7 @@ import java.util.UUID;
 
 @Data
 public class ProposalRequestDTO {
+    private String bulletPoints;
     @NotNull private String titleEng;
     private String levelEng;
     private Language languageEng;

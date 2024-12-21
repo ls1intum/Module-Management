@@ -23,19 +23,22 @@ databaseChangeLog:
                   type: TIMESTAMP
               - column:
                   name: status
-                  type: VARCHAR(50)
+                  type: VARCHAR(255)
+              - column:
+                  name: bullet_points
+                  type: CLOB
               - column:
                   name: title_eng
-                  type: VARCHAR(50)
+                  type: VARCHAR(255)
               - column:
                   name: level_eng
-                  type: VARCHAR(50)
+                  type: VARCHAR(255)
               - column:
                   name: language_eng
                   type: VARCHAR(10)
               - column:
                   name: frequency_eng
-                  type: VARCHAR(50)
+                  type: VARCHAR(255)
               - column:
                   name: credits
                   type: INTEGER

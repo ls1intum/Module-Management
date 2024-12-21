@@ -43,6 +43,7 @@ public class ModuleVersionService {
             throw new IllegalStateException("Cannot update a submitted ModuleVersion");
         }
 
+        mv.setBulletPoints(request.getBulletPoints());
         mv.setTitleEng(request.getTitleEng());
         mv.setLevelEng(request.getLevelEng());
         mv.setLanguageEng(request.getLanguageEng());

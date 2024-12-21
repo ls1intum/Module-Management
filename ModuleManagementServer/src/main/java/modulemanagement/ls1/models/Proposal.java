@@ -13,10 +13,8 @@ import modulemanagement.ls1.services.ProposalService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -65,6 +63,7 @@ public class Proposal {
         newMv.setVersion(latestMv.getVersion() + 1);
         newMv.setCreationDate(LocalDateTime.now());
         newMv.setStatus(ModuleVersionStatus.PENDING_SUBMISSION);
+        newMv.setBulletPoints(latestMv.getBulletPoints());
         newMv.setTitleEng(latestMv.getTitleEng());
         newMv.setLevelEng(latestMv.getLevelEng());
         newMv.setLanguageEng(latestMv.getLanguageEng());

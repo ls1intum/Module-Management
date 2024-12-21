@@ -1,4 +1,6 @@
 export * from './add-module-version-dto';
+export * from './completion-service-request-dto';
+export * from './completion-service-response-dto';
 export * from './feedback';
 export * from './feedback-list-item-dto';
 export * from './module-version';

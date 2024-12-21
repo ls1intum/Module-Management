@@ -16,6 +16,7 @@ export interface ModuleVersion {
     moduleId?: string;
     creationDate?: string;
     status: ModuleVersion.StatusEnum;
+    bulletPoints?: string;
     titleEng?: string;
     levelEng?: string;
     languageEng?: ModuleVersion.LanguageEngEnum;
