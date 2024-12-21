@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { ProposalsCreateComponent } from './pages/proposal-create/proposal-create.component';
+import { ProposalCreateComponent } from './pages/proposal-create/proposal-create.component';
 import { ProposalViewComponent } from './pages/proposal-view/proposal-view.component';
 import { FeedbackViewComponent } from './pages/feedback-view/feedback-view.component';
 import { IndexComponent } from './pages/index/index.component';
@@ -12,7 +12,7 @@ import { ModuleVersionViewComponent } from './pages/module-version-view/module-v
 export const routes: Routes = [
   { path: '', component: IndexComponent },
   { path: 'proposals', component: ProfessorHomePageComponent, canActivate: [AuthGuard] },
-  { path: 'proposals/create', component: ProposalsCreateComponent, canActivate: [AuthGuard] },
+  { path: 'proposals/create', component: ProposalCreateComponent, canActivate: [AuthGuard] },
   { path: 'proposals/view/:id', component: ProposalViewComponent, canActivate: [AuthGuard] },
   { path: 'module-version/edit/:id', component: ModuleVersionEditComponent, canActivate: [AuthGuard] },
   { path: 'module-version/view/:id', component: ModuleVersionViewComponent, canActivate: [AuthGuard]},

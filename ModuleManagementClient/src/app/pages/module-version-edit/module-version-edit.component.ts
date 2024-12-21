@@ -1,58 +1,55 @@
-import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CompletionServiceRequestDTO, CompletionServiceResponseDTO, ModuleVersionControllerService, ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO, } from '../../core/modules/openapi';
+import { Component } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmFormFieldModule } from '@spartan-ng/ui-formfield-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
 import { HlmSelectImports } from '@spartan-ng/ui-select-helm';
-import { LayoutComponent } from '../../components/layout.component';
+import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AutoResizeDirective } from '../../core/shared/autoresize.directive';
 import { HlmAlertDescriptionDirective, HlmAlertDirective, HlmAlertIconDirective, HlmAlertTitleDirective } from '@spartan-ng/ui-alert-helm';
-import { HlmIconComponent, provideIcons } from '@spartan-ng/ui-icon-helm';
+import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
+import { provideIcons } from '@ng-icons/core';
 import { lucideInfo } from '@ng-icons/lucide';
+import { LayoutComponent } from '../../components/layout.component';
+import { ProposalBaseComponent } from '../../components/create-edit-base/create-edit-base.component';
+import { ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO } from '../../core/modules/openapi';
 
 @Component({
-  selector: 'module-version-edit',
+  selector: 'app-module-version-edit',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, HlmButtonDirective, HlmFormFieldModule, HlmInputDirective, BrnSelectImports, HlmSelectImports, LayoutComponent, RouterModule, AutoResizeDirective, HlmAlertDescriptionDirective, HlmAlertDirective, HlmAlertIconDirective, HlmAlertTitleDirective, HlmIconComponent],
-  providers: [provideIcons({lucideInfo})],
-  templateUrl: './module-version-edit.component.html'
+  imports: [
+    ReactiveFormsModule,
+    CommonModule,
+    HlmButtonDirective,
+    HlmFormFieldModule,
+    HlmInputDirective,
+    BrnSelectImports,
+    HlmSelectImports,
+    HlmLabelDirective,
+    LayoutComponent,
+    RouterModule,
+    AutoResizeDirective,
+    HlmAlertDescriptionDirective,
+    HlmAlertDirective,
+    HlmAlertIconDirective,
+    HlmAlertTitleDirective,
+    HlmIconComponent
+  ],
+  providers: [provideIcons({ lucideInfo })],
+  templateUrl: '../../components/create-edit-base/create-edit-base.component.html'
 })
-export class ModuleVersionEditComponent {
-  proposalForm: FormGroup;
-  loading: boolean = false;
-  error: string | null = null;
+export class ModuleVersionEditComponent extends ProposalBaseComponent {
   moduleVersionId: number | null = null;
-  moduleVersionDto: ModuleVersionUpdateRequestDTO | null = null;
-  moduleVersionService: ModuleVersionControllerService = inject(ModuleVersionControllerService);
+  override moduleVersionDto: ModuleVersionUpdateRequestDTO | null = null;
 
-  constructor(private formBuilder: FormBuilder, route: ActivatedRoute, private router: Router) {
+  constructor(route: ActivatedRoute) {
+    super();
     this.moduleVersionId = Number(route.snapshot.paramMap.get('id'));
-    this.proposalForm = this.formBuilder.group({
-      titleEng: ['', Validators.required],
-      levelEng: [''],
-      languageEng: [''],
-      repetitionEng: [''],
-      frequencyEng: [''],
-      credits: [null],
-      hoursTotal: [null],
-      hoursSelfStudy: [null],
-      hoursPresence: [null],
-      examinationAchievementsEng: [''],
-      recommendedPrerequisitesEng: [''],
-      contentEng: [''],
-      learningOutcomesEng: [''],
-      teachingMethodsEng: [''],
-      mediaEng: [''],
-      literatureEng: [''],
-      responsiblesEng: [''],
-      lvSwsLecturerEng: ['']
-    });
     this.fetchModuleVersion(this.moduleVersionId);
   }
 
@@ -68,20 +65,8 @@ export class ModuleVersionEditComponent {
     });
   }
 
-  async test() {
-      const proposalData: CompletionServiceRequestDTO = {
-        bulletPoints: "parallel programming",
-        ...this.proposalForm.value,
-        moduleVersionId: this.moduleVersionId
-      };
-      
-      this.moduleVersionService.generateContent(proposalData).subscribe({
-        next: (response: CompletionServiceResponseDTO) => console.log(response.responseData)
-      })
-  }
-
-  async onSubmit() {
-    if (this.proposalForm.valid) {
+  override async onSubmit() {
+    if (this.proposalForm.valid && this.moduleVersionId) {
       this.loading = true;
       this.error = null;
 
@@ -89,7 +74,8 @@ export class ModuleVersionEditComponent {
         ...this.proposalForm.value,
         moduleVersionId: this.moduleVersionId
       };
-      this.moduleVersionService.updateModuleVersion(this.moduleVersionId!, proposalData).subscribe({
+      
+      this.moduleVersionService.updateModuleVersion(this.moduleVersionId, proposalData).subscribe({
         next: (response: ModuleVersionUpdateResponseDTO) => {
           this.proposalForm.reset();
           this.router.navigate(['/proposals/view', response.proposalId], {
@@ -97,7 +83,7 @@ export class ModuleVersionEditComponent {
           });
         },
         error: (err: HttpErrorResponse) => {
-          console.log(err);
+          console.error(err);
           this.error = err.error;
           this.loading = false;
         },
