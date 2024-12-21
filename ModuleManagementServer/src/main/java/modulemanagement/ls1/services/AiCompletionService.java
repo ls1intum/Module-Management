@@ -1,6 +1,5 @@
 package modulemanagement.ls1.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import modulemanagement.ls1.dtos.ai.CompletionServiceResponseDTO;
@@ -16,11 +15,6 @@ public class AiCompletionService {
     private final ObjectMapper objectMapper;
 
     public Mono<String> generateContent(CompletionServiceRequestDTO request) {
-        try {
-            System.out.println("Request body: " + objectMapper.writeValueAsString(request));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
         return aiServiceWebClient.post()
                 .uri("/completions/content")
                 .bodyValue(request)
@@ -32,6 +26,33 @@ public class AiCompletionService {
     public Mono<String> generateExaminationAchievements(CompletionServiceRequestDTO request) {
         return aiServiceWebClient.post()
                 .uri("/completions/examination-achievements")
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(CompletionServiceResponseDTO.class)
+                .map(CompletionServiceResponseDTO::getResponseData);
+    }
+
+    public Mono<String> generateLearningOutcomes(CompletionServiceRequestDTO request) {
+        return aiServiceWebClient.post()
+                .uri("/completions/learning-outcomes")
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(CompletionServiceResponseDTO.class)
+                .map(CompletionServiceResponseDTO::getResponseData);
+    }
+
+    public Mono<String> generateTeachingMethods(CompletionServiceRequestDTO request) {
+        return aiServiceWebClient.post()
+                .uri("/completions/teaching-methods")
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(CompletionServiceResponseDTO.class)
+                .map(CompletionServiceResponseDTO::getResponseData);
+    }
+
+    public Mono<String> generateMedia(CompletionServiceRequestDTO request) {
+        return aiServiceWebClient.post()
+                .uri("/completions/media")
                 .bodyValue(request)
                 .retrieve()
                 .bodyToMono(CompletionServiceResponseDTO.class)

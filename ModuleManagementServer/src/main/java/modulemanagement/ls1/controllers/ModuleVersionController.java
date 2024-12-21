@@ -58,4 +58,28 @@ public class ModuleVersionController {
     public ResponseEntity<CompletionServiceResponseDTO> generateContent(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         return ResponseEntity.ok(new CompletionServiceResponseDTO(aiCompletionService.generateContent(moduleInfoRequestDTO).block()));
     }
+
+    @PostMapping("/generate/examination-achievements")
+    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    public ResponseEntity<CompletionServiceResponseDTO> generateExaminationAchievements(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
+        return ResponseEntity.ok(new CompletionServiceResponseDTO(aiCompletionService.generateExaminationAchievements(moduleInfoRequestDTO).block()));
+    }
+
+    @PostMapping("/generate/learning-outcomes")
+    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    public ResponseEntity<CompletionServiceResponseDTO> generateLearningOutcomes(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
+        return ResponseEntity.ok(new CompletionServiceResponseDTO(aiCompletionService.generateLearningOutcomes(moduleInfoRequestDTO).block()));
+    }
+
+    @PostMapping("/generate/teaching-methods")
+    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    public ResponseEntity<CompletionServiceResponseDTO> generateTeachingMethods(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
+        return ResponseEntity.ok(new CompletionServiceResponseDTO(aiCompletionService.generateTeachingMethods(moduleInfoRequestDTO).block()));
+    }
+
+    @PostMapping("/generate/media")
+    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    public ResponseEntity<CompletionServiceResponseDTO> generateMedia(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
+        return ResponseEntity.ok(new CompletionServiceResponseDTO(aiCompletionService.generateMedia(moduleInfoRequestDTO).block()));
+    }
 }
