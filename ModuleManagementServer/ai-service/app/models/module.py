@@ -10,6 +10,7 @@ class Language(str, Enum):
 
 class ModuleInfo(BaseModel):
     bulletPoints: str
+    contextPrompt: Optional[str] = None
     titleEng: Optional[str] = None
     levelEng: Optional[str] = None
     languageEng: Optional[Language] = None

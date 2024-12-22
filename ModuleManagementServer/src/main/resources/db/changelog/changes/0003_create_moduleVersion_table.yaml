@@ -55,6 +55,9 @@ databaseChangeLog:
                   name: examination_achievements_eng
                   type: CLOB
               - column:
+                  name: examination_achievements_prompt_eng
+                  type: CLOB
+              - column:
                   name: repetition_eng
                   type: VARCHAR (255)
               - column:
@@ -64,13 +67,25 @@ databaseChangeLog:
                   name: content_eng
                   type: CLOB
               - column:
+                  name: content_prompt_eng
+                  type: CLOB
+              - column:
                   name: learning_outcomes_eng
+                  type: CLOB
+              - column:
+                  name: learning_outcomes_prompt_eng
                   type: CLOB
               - column:
                   name: teaching_methods_eng
                   type: CLOB
               - column:
+                  name: teaching_methods_prompt_eng
+                  type: CLOB
+              - column:
                   name: media_eng
+                  type: CLOB
+              - column:
+                  name: media_prompt_eng
                   type: CLOB
               - column:
                   name: literature_eng

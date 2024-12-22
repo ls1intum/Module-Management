@@ -18,12 +18,17 @@ public class ProposalRequestDTO {
     private Integer hoursSelfStudy;
     private Integer hoursPresence;
     private String examinationAchievementsEng;
+    private String examinationAchievementsPromptEng;
     private String repetitionEng;
     private String recommendedPrerequisitesEng;
     private String contentEng;
+    private String contentPromptEng;
     private String learningOutcomesEng;
+    private String learningOutcomesPromptEng;
     private String teachingMethodsEng;
+    private String teachingMethodsPromptEng;
     private String mediaEng;
+    private String mediaPromptEng;
     private String literatureEng;
     private String responsiblesEng;
     private String lvSwsLecturerEng;

@@ -11,6 +11,7 @@
 
 export interface CompletionServiceRequestDTO { 
     bulletPoints: string;
+    contextPrompt?: string;
     titleEng?: string;
     levelEng?: string;
     languageEng?: CompletionServiceRequestDTO.LanguageEngEnum;

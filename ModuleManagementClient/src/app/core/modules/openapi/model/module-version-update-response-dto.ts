@@ -24,12 +24,17 @@ export interface ModuleVersionUpdateResponseDTO {
     hoursSelfStudy?: number;
     hoursPresence?: number;
     examinationAchievementsEng?: string;
+    examinationAchievementsPromptEng?: string;
     repetitionEng?: string;
     recommendedPrerequisitesEng?: string;
     contentEng?: string;
+    contentPromptEng?: string;
     learningOutcomesEng?: string;
+    learningOutcomesPromptEng?: string;
     teachingMethodsEng?: string;
+    teachingMethodsPromptEng?: string;
     mediaEng?: string;
+    mediaPromptEng?: string;
     literatureEng?: string;
     responsiblesEng?: string;
     lvSwsLecturerEng?: string;

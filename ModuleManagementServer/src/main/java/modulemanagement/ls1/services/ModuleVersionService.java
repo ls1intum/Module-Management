@@ -53,12 +53,17 @@ public class ModuleVersionService {
         mv.setHoursSelfStudy(request.getHoursSelfStudy());
         mv.setHoursPresence(request.getHoursPresence());
         mv.setExaminationAchievementsEng(request.getExaminationAchievementsEng());
+        mv.setExaminationAchievementsPromptEng(request.getExaminationAchievementsPromptEng());
         mv.setRepetitionEng(request.getRepetitionEng());
         mv.setRecommendedPrerequisitesEng(request.getRecommendedPrerequisitesEng());
         mv.setContentEng(request.getContentEng());
+        mv.setContentPromptEng(request.getContentPromptEng());
         mv.setLearningOutcomesEng(request.getLearningOutcomesEng());
+        mv.setLearningOutcomesPromptEng(request.getLearningOutcomesPromptEng());
         mv.setTeachingMethodsEng(request.getTeachingMethodsEng());
+        mv.setTeachingMethodsPromptEng(request.getTeachingMethodsPromptEng());
         mv.setMediaEng(request.getMediaEng());
+        mv.setMediaPromptEng(request.getMediaPromptEng());
         mv.setLiteratureEng(request.getLiteratureEng());
         mv.setResponsiblesEng(request.getResponsiblesEng());
         mv.setLvSwsLecturerEng(request.getLvSwsLecturerEng());

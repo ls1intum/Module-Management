@@ -9,6 +9,7 @@ import modulemanagement.ls1.enums.Language;
 @Builder
 public class CompletionServiceRequestDTO {
     @NotNull private String bulletPoints;
+    private String contextPrompt;
     private String titleEng;
     private String levelEng;
     private Language languageEng;

@@ -65,6 +65,9 @@ public class ModuleVersion {
     @Column(name = "examination_achievements_eng", columnDefinition = "CLOB")
     private String examinationAchievementsEng;
 
+    @Column(name = "examination_achievements_prompt_eng", columnDefinition = "CLOB")
+    private String examinationAchievementsPromptEng;
+
     @Column(name = "repetition_eng")
     private String repetitionEng;
 
@@ -74,14 +77,26 @@ public class ModuleVersion {
     @Column(name = "content_eng", columnDefinition = "CLOB")
     private String contentEng;
 
+    @Column(name = "content_prompt_eng", columnDefinition = "CLOB")
+    private String contentPromptEng;
+
     @Column(name = "learning_outcomes_eng", columnDefinition = "CLOB")
     private String learningOutcomesEng;
+
+    @Column(name = "learning_outcomes_prompt_eng", columnDefinition = "CLOB")
+    private String learningOutcomesPromptEng;
 
     @Column(name = "teaching_methods_eng", columnDefinition = "CLOB")
     private String teachingMethodsEng;
 
+    @Column(name = "teaching_methods_prompt_eng", columnDefinition = "CLOB")
+    private String teachingMethodsPromptEng;
+
     @Column(name = "media_eng", columnDefinition = "CLOB")
     private String mediaEng;
+
+    @Column(name = "media_prompt_eng", columnDefinition = "CLOB")
+    private String mediaPromptEng;
 
     @Column(name = "literature_eng", columnDefinition = "CLOB")
     private String literatureEng;
