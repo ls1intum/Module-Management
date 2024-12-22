@@ -3,7 +3,6 @@
 } @else if (error) {
 <div class="text-center text-red-500">{{ error }}</div>
 } @else if (proposal) {
-<!-- Header Info -->
 <div class="mb-6 space-y-4">
   <div class="flex items-center justify-between">
     <h2 class="text-3xl font-bold">Module Proposal</h2>
@@ -37,10 +36,6 @@
   <p hlmAlertDesc>{{ proposal.status! | statusInfo }}</p>
 </div>
 
-<!-- Action Buttons -->
-<!-- <div class="flex justify-between mb-10 mt-10"></div> -->
-
-<!-- Latest Version Table -->
 <h2 class="text-xl mb-8 mt-16">Current Module Versions</h2>
 <hlm-table class="w-full min-w-[400px] mb-8">
   <hlm-trow>
@@ -97,7 +92,6 @@
   </hlm-trow>
 </hlm-table>
 
-<!-- Historical Versions Table -->
 <h2 class="text-xl mb-8 text-muted-foreground">Previous Module Versions</h2>
 @if (proposal.oldModuleVersions && proposal.oldModuleVersions.length > 0) {
 <hlm-table class="w-full min-w-[400px] text-muted-foreground">

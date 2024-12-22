@@ -1,47 +1,125 @@
-<hlm-scroll-area class="border rounded-md border-none h-[calc(100vh-180px)]">
-  <div class="p-4">
-    @if(loading) {
-      <div class="text-center text-muted-foreground">Loading...</div>
-    } @else if(moduleVersionDto) {
-      <div class="space-y-4">
-        <h2 class="text-xl font-semibold mb-4">Module Version Details</h2>
-        <div class="grid grid-cols-2 gap-2">
-          <div class="font-medium">Module Version ID:</div>
-          <div>{{ moduleVersionDto.moduleVersionId }}</div>
-          <div class="font-medium">Version:</div>
-          <div>{{ moduleVersionDto.version }}</div>
-          <div class="font-medium">Status:</div>
-          <div>{{ moduleVersionDto.status }}</div>
-        </div>
+<div class="p-6">
+  @if (loading) {
+  <div class="text-center py-4">Loading...</div>
+  } @else if (error) {
+  <div class="text-center text-red-500 py-4">{{ error }}</div>
+  } @else if (moduleVersionDto) {
+  <div class="max-w-4xl mx-auto space-y-8">
+    <div class="flex items-center justify-between">
+      <h2 class="text-3xl font-bold">{{ getModuleVersionProperty('titleEng') }}</h2>
+      @if (isLatestVersion() && moduleVersionDto.status == moduleVersionStatus.PendingSubmission) {
+      <button hlmBtn [routerLink]="['/module-version/edit', moduleVersionDto.moduleVersionId]">Edit Module Version</button>
+      }
+    </div>
 
-        @if(moduleVersionDto.feedbacks?.length) {
-          <h3 class="text-lg font-semibold mt-6">Feedbacks</h3>
-          <div class="space-y-2">
-            @for(feedback of moduleVersionDto.feedbacks; track feedback.feedbackId) {
-              <div class="p-2 border rounded">
-                <div class="font-medium">Role: {{ feedback.feedbackRole }}</div>
-                <div>Status: {{ feedback.feedbackStatus }}</div>
-                @if(feedback.rejectionComment) {
-                  <div>Comment: {{ feedback.rejectionComment }}</div>
-                }
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <div>
+        <p class="text-sm text-muted-foreground">Module Version ID</p>
+        <p class="text-lg font-medium">{{ moduleVersionDto.moduleVersionId }}</p>
+      </div>
+      <div>
+        <p class="text-sm text-muted-foreground">Version</p>
+        <p class="text-lg font-medium">{{ moduleVersionDto.version }} / {{ moduleVersionDto.latestVersion }}</p>
+      </div>
+      <div>
+        <p class="text-sm text-muted-foreground">Status</p>
+        <div hlmBadge [class]="(moduleVersionDto.status! | moduleVersionStatus).colorClass">
+          {{ (moduleVersionDto.status! | moduleVersionStatus).text }}
+        </div>
+      </div>
+      <div>
+        <p class="text-sm text-muted-foreground">Created On</p>
+        <p class="text-lg font-medium">{{ moduleVersionDto.creationDate | date : 'yyyy-MM-dd' }}</p>
+      </div>
+    </div>
+
+    <div class="bg-card rounded-lg shadow-sm">
+      <h3 class="text-xl font-semibold mb-4">Feedbacks</h3>
+      @if (moduleVersionDto.feedbacks?.length) {
+      <div class="space-y-4">
+        @for (feedback of moduleVersionDto.feedbacks; track feedback.feedbackId) {
+        <div>
+          <div class="p-4 bg-muted rounded-md">
+            <h3 class="text-lg font-medium mb-2">
+              {{ (feedback.feedbackRole! | feedbackDepartment).text }}
+            </h3>
+            <div class="flex justify-between items-start">
+              <div>
+                <p class="font-medium">{{ feedback.feedbackFromFirstName }} {{ feedback.feedbackFromLastName }}</p>
+                <div class="mt-1">
+                  <div hlmBadge [class]="(feedback.feedbackStatus! | feedbackStatus).colorClass">
+                    {{ (feedback.feedbackStatus! | feedbackStatus).text }}
+                  </div>
+                </div>
               </div>
+              <p class="text-sm text-muted-foreground">
+                {{ feedback.submissionDate | date : 'yyyy-MM-dd' }}
+              </p>
+            </div>
+            @if (feedback.rejectionComment) {
+            <p class="mt-2 text-muted-foreground">{{ feedback.rejectionComment }}</p>
             }
           </div>
-        }
-
-        <br />
-        <h3 class="text-lg font-semibold mt-6">Module Fields</h3>
-        @for(field of moduleFields; track field.key) {
-          <div>
-            <strong>{{ field.label }}:</strong>
-            <div style="white-space: pre-wrap">
-              {{ getModuleVersionProperty(field.key) || 'N/A' }}
-            </div>
-          </div>
+        </div>
         }
       </div>
-    } @else {
-      <div class="text-center">No Module Version found</div>
+      } @else {
+      <p class="text-muted-foreground">No feedback provided yet</p>
+      }
+    </div>
+
+    <section class="space-y-4">
+      <h3 class="text-xl font-semibold">Module Version Data</h3>
+      <div class="grid grid-cols-2 gap-4">
+        @for (field of getFieldsBySection('basic'); track field.key) {
+        <div class="p-4 bg-muted rounded-md">
+          <p class="text-sm text-muted-foreground">{{ field.label }}</p>
+          <p class="text-base">
+            @if (getModuleVersionProperty(field.key)) {
+            {{ getModuleVersionProperty(field.key) }}
+            } @else {
+            <span class="text-muted-foreground italic">Not specified</span>
+            }
+          </p>
+        </div>
+        }
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        @for (field of getFieldsBySection('hours'); track field.key) {
+        <div class="p-4 bg-muted rounded-md">
+          <p class="text-sm text-muted-foreground">{{ field.label }}</p>
+          <p class="text-base">
+            @if (getModuleVersionProperty(field.key)) {
+            {{ getModuleVersionProperty(field.key) }}
+            } @else {
+            <span class="text-muted-foreground italic">Not specified</span>
+            }
+          </p>
+        </div>
+        }
+      </div>
+    </section>
+
+    @for (field of getFieldsBySection('content'); track field.key) {
+    <section class="space-y-2 p-6 bg-muted rounded-md">
+      <h3 class="text-xl font-semibold">{{ field.label }}</h3>
+      @if (getModuleVersionProperty(field.key)) {
+      <p class="text-base whitespace-pre-line">{{ getModuleVersionProperty(field.key) }}</p>
+      @if (field.hasPrompt && getModuleVersionProperty(field.hasPrompt)) {
+      <div class="mt-4 p-4 bg-background rounded-md">
+        <p class="text-sm font-medium text-muted-foreground">Generation Prompt:</p>
+        <p class="text-base italic">{{ getModuleVersionProperty(field.hasPrompt) }}</p>
+      </div>
+      } } @else {
+      <p class="text-muted-foreground italic">No content provided</p>
+      }
+    </section>
     }
   </div>
-</hlm-scroll-area>
+  } @else {
+  <div class="text-center py-4">No module version found</div>
+  }
+</div>

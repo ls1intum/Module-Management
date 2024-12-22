@@ -13,6 +13,7 @@ import { ModuleVersionViewFeedbackDTO } from './module-version-view-feedback-dto
 export interface ModuleVersionViewDTO { 
     proposalId?: number;
     moduleVersionId?: number;
+    latestVersion?: number;
     version?: number;
     creationDate?: string;
     status?: ModuleVersionViewDTO.StatusEnum;

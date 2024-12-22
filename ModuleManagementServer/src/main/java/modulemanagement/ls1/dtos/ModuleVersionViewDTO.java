@@ -14,6 +14,7 @@ import java.util.List;
 public class ModuleVersionViewDTO {
     private Long proposalId;
     private Long moduleVersionId;
+    private Integer latestVersion;
     private Integer version;
     private LocalDateTime creationDate;
     private ModuleVersionStatus status;
@@ -48,6 +49,7 @@ public class ModuleVersionViewDTO {
         ModuleVersionViewDTO dto = new ModuleVersionViewDTO();
         dto.proposalId = moduleVersion.getProposal().getProposalId();
         dto.moduleVersionId = moduleVersion.getModuleVersionId();
+        dto.latestVersion = moduleVersion.getProposal().getLatestModuleVersion();
         dto.version = moduleVersion.getVersion();
         dto.creationDate = moduleVersion.getCreationDate();
         dto.status = moduleVersion.getStatus();

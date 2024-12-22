@@ -17,7 +17,7 @@ databaseChangeLog:
                   type: UUID
               - column:
                   name: comment
-                  type: VARCHAR(255)
+                  type: CLOB
               - column:
                   name: required_role
                   type: VARCHAR(255)
