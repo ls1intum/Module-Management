@@ -1,0 +1,75 @@
+services:
+  postgres:
+    image: "postgres:latest"
+    container_name: module-management-db
+    environment:
+      - "POSTGRES_DB=ModuleManagement"
+      - "POSTGRES_PASSWORD=${DB_PASSWORD}"
+      - "POSTGRES_USER=${DB_USER}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - module-management-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.6
+    container_name: module-management-keycloak
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+    entrypoint: /opt/keycloak/bin/kc.sh start-dev
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    restart: unless-stopped
+    networks:
+      - module-management-network
+
+  ai-service:
+    build:
+      context: ./ModuleManagementServer/ai-service
+      dockerfile: Dockerfile
+    container_name: module-management-ai
+    env_file:
+      - ./ModuleManagementServer/ai-service/.env
+    restart: unless-stopped
+    networks:
+      - module-management-network
+
+  backend:
+    build:
+      context: ./ModuleManagementServer
+      dockerfile: ./server.Dockerfile
+    container_name: module-management-backend
+    depends_on:
+      - postgres
+      - keycloak
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/ModuleManagement
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+    restart: unless-stopped
+    networks:
+      - module-management-network
+
+  frontend:
+    build:
+      context: ./ModuleManagementClient
+      dockerfile: ./client.Dockerfile
+    container_name: module-management-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+      - ai-service
+    restart: unless-stopped
+    networks:
+      - module-management-network
+
+volumes:
+  postgres_data:
+  keycloak_data:
+
+networks:
+  module-management-network:
+    driver: bridge
