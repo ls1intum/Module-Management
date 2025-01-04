@@ -24,6 +24,9 @@ spring:
           jwk-set-uri: http://keycloak:8080/realms/module-management/protocol/openid-connect/certs
           issuer-uri: http://keycloak:8080/realms/module-management
 
+ai-service:
+  url: ${AI_SERVICE_URL:http://localhost:5000}
+
 module-management:
   keycloak:
     url: http://localhost:8081
