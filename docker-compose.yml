@@ -9,6 +9,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
+    ports:
+      - "5432:5432"
     networks:
       - module-management-network
 
@@ -18,9 +20,14 @@ services:
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-    entrypoint: /opt/keycloak/bin/kc.sh start-dev
+    command: 
+      - start-dev
+      - --import-realm
     volumes:
       - keycloak_data:/opt/keycloak/data
+      - ./module-management-realm.json:/opt/keycloak/data/import/realm.json
+    ports:
+      - "8081:8080"
     restart: unless-stopped
     networks:
       - module-management-network
@@ -49,6 +56,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
     restart: unless-stopped
+    ports:
+      - "8080:8080"
     networks:
       - module-management-network
 
