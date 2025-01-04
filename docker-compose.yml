@@ -55,6 +55,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/ModuleManagement
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=http://keycloak:8080/realms/module-management/protocol/openid-connect/certs
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak:8080/realms/module-management
     restart: unless-stopped
     ports:
       - "8080:8080"
