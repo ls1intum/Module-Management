@@ -8,22 +8,22 @@ databaseChangeLog:
             columns:
               - column:
                   name: user_id
-                  value: d80cde46-36bb-40dd-a7ff-da8478524cf7
+                  value: ab739f99-60ed-4289-a751-1ab11fd62f41
               - column:
                   name: user_name
                   value: professor1
               - column:
                   name: first_name
-                  value: 'Peter'
+                  value: "Peter"
               - column:
                   name: last_name
                   value: "Rofessor"
               - column:
                   name: email
-                  value: 'p1@tum.de'
+                  value: "p1@tum.de"
               - column:
                   name: role
-                  value: 'PROFESSOR'
+                  value: "PROFESSOR"
         - insert:
             tableName: app_user
             columns:
@@ -35,16 +35,16 @@ databaseChangeLog:
                   value: professor2
               - column:
                   name: first_name
-                  value: 'Agate'
+                  value: "Agate"
               - column:
                   name: last_name
                   value: "Miker"
               - column:
                   name: email
-                  value: 'p2@tum.de'
+                  value: "p2@tum.de"
               - column:
                   name: role
-                  value: 'PROFESSOR'
+                  value: "PROFESSOR"
         - insert:
             tableName: app_user
             columns:
@@ -53,19 +53,19 @@ databaseChangeLog:
                   value: 60945aae-4d89-4353-8732-d2fecb3eeae6
               - column:
                   name: user_name
-                  value: 'apa1'
+                  value: "apa1"
               - column:
                   name: first_name
-                  value: 'Academic'
+                  value: "Academic"
               - column:
                   name: last_name
-                  value: 'Program Advisor'
+                  value: "Program Advisor"
               - column:
                   name: email
-                  value: 'apa1@tum.de'
+                  value: "apa1@tum.de"
               - column:
                   name: role
-                  value: 'ACADEMIC_PROGRAM_ADVISOR'
+                  value: "ACADEMIC_PROGRAM_ADVISOR"
         - insert:
             tableName: app_user
             columns:
@@ -74,19 +74,19 @@ databaseChangeLog:
                   value: 9c999a95-2b3e-4349-a063-0736c4662233
               - column:
                   name: user_name
-                  value: 'qm1'
+                  value: "qm1"
               - column:
                   name: first_name
-                  value: 'Quirin'
+                  value: "Quirin"
               - column:
                   name: last_name
-                  value: 'Moos'
+                  value: "Moos"
               - column:
                   name: email
-                  value: 'qm1@tum.de'
+                  value: "qm1@tum.de"
               - column:
                   name: role
-                  value: 'QUALITY_MANAGEMENT'
+                  value: "QUALITY_MANAGEMENT"
         - insert:
             tableName: app_user
             columns:
@@ -95,16 +95,16 @@ databaseChangeLog:
                   value: 7c135fd9-b88b-40e0-90b2-863041fb2979
               - column:
                   name: user_name
-                  value: 'eb1'
+                  value: "eb1"
               - column:
                   name: first_name
-                  value: 'Erik'
+                  value: "Erik"
               - column:
                   name: last_name
-                  value: 'Bert'
+                  value: "Bert"
               - column:
                   name: email
-                  value: 'eb1@tum.de'
+                  value: "eb1@tum.de"
               - column:
                   name: role
-                  value: 'EXAMINATION_BOARD'
+                  value: "EXAMINATION_BOARD"

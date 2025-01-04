@@ -78,6 +78,6 @@ export class KeycloakService {
   }
 
   logout() {
-    return this.keycloak.logout({ redirectUri: environment.clientUrl });
+    return this.keycloak.logout({ redirectUri: environment.redirect });
   }
 }

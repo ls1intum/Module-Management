@@ -56,7 +56,6 @@ export class SecurityStore {
 
   async updateToken() {
     await this.keycloakService.updateToken();
-    // update bearer in user with new token
     const user = this.user();
     if (user && this.keycloakService.profile) {
       user.bearer = this.keycloakService.profile.token;

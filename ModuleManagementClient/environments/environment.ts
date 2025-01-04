@@ -1,5 +1,5 @@
 export const environment = {
-  clientUrl: 'http://localhost:4200',
+  redirect: 'http://localhost',
   serverUrl: 'http://localhost:8080',
   keycloak: {
     url: 'http://localhost:8081',
