@@ -24,16 +24,11 @@ spring:
           jwk-set-uri: http://localhost:8081/realms/module-management/protocol/openid-connect/certs
           issuer-uri: http://localhost:8081/realms/module-management
 
-  docker:
-    compose:
-      enabled: true
-      lifecycle-management: start_only
-      file: compose.yaml
-
-
 module-management:
   keycloak:
-    client-id: module-management-client
+    url: http://localhost:8081
+    realm: module-management
+    client-id: module-management
 
 springdoc:
   springdoc:
