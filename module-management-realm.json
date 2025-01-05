@@ -45,6 +45,93 @@
   "quickLoginCheckMilliSeconds": 1000,
   "maxDeltaTimeSeconds": 43200,
   "failureFactor": 30,
+  "users": [
+    {
+      "id": "ab739f99-60ed-4289-a751-1ab11fd62f41",
+      "username": "professor1", 
+      "enabled": true,
+      "firstName": "Peter",
+      "lastName": "Rofessor",
+      "email": "p1@tum.de",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "test",
+          "temporary": true
+        }
+      ],
+      "realmRoles": ["proposal-submitter"],
+      "emailVerified": true
+    },
+    {
+      "id": "8d0f2579-1c0a-4ffb-b531-50ce96a372c0",
+      "username": "professor2",
+      "enabled": true,
+      "firstName": "Agate",
+      "lastName": "Miker", 
+      "email": "p2@tum.de",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "test",
+          "temporary": true
+        }
+      ],
+      "realmRoles": ["proposal-submitter"],
+      "emailVerified": true
+    },
+    {
+      "id": "60945aae-4d89-4353-8732-d2fecb3eeae6",
+      "username": "apa1",
+      "enabled": true,
+      "firstName": "Academic",
+      "lastName": "Program Advisor",
+      "email": "apa1@tum.de",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "test",
+          "temporary": true
+        }
+      ],
+      "realmRoles": ["proposal-reviewer"],
+      "emailVerified": true
+    },
+    {
+      "id": "9c999a95-2b3e-4349-a063-0736c4662233",
+      "username": "qm1",
+      "enabled": true,
+      "firstName": "Quirin",
+      "lastName": "Moos",
+      "email": "qm1@tum.de",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "test",
+          "temporary": true
+        }
+      ],
+      "realmRoles": ["proposal-reviewer"],
+      "emailVerified": true
+    },
+    {
+      "id": "7c135fd9-b88b-40e0-90b2-863041fb2979",
+      "username": "eb1",
+      "enabled": true,
+      "firstName": "Erik",
+      "lastName": "Bert",
+      "email": "eb1@tum.de",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "test",
+          "temporary": true
+        }
+      ],
+      "realmRoles": ["proposal-reviewer"],
+      "emailVerified": true
+    }
+  ],
   "roles": {
     "realm": [
       {
@@ -699,10 +786,11 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "http://localhost:80/*"
+        "http://localhost/*"
       ],
       "webOrigins": [
-        "http://localhost:80"
+        "htt://localhost:8080",
+        "http://localhost"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -718,7 +806,7 @@
         "realm_client": "false",
         "oidc.ciba.grant.enabled": "false",
         "backchannel.logout.session.required": "true",
-        "post.logout.redirect.uris": "http://localhost:80",
+        "post.logout.redirect.uris": "http://localhost:80##http://localhost",
         "oauth2.device.authorization.grant.enabled": "false",
         "display.on.consent.screen": "false",
         "backchannel.logout.revoke.offline.tokens": "false"
