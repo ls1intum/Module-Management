@@ -778,7 +778,7 @@
       "clientId": "module-management",
       "name": "Module-Management",
       "description": "",
-      "rootUrl": "http://localhost:80",
+      "rootUrl": "https://module-management.ase.cit.tum.de",
       "adminUrl": "http://localhost:80",
       "baseUrl": "http://localhost:80",
       "surrogateAuthRequired": false,
@@ -786,11 +786,13 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "http://localhost/*"
+        "http://localhost/*",
+	"https://module-management.ase.cit.tum.de/*"
       ],
       "webOrigins": [
-        "htt://localhost:8080",
-        "http://localhost"
+        "http://localhost:8080",
+        "http://localhost",
+	"https://module-management.ase.cit.tum.de"
       ],
       "notBefore": 0,
       "bearerOnly": false,
@@ -806,8 +808,9 @@
         "realm_client": "false",
         "oidc.ciba.grant.enabled": "false",
         "backchannel.logout.session.required": "true",
-        "post.logout.redirect.uris": "http://localhost:80##http://localhost",
+        "post.logout.redirect.uris": "http://localhost:80##http://localhost##https://module-management.ase.cit.tum.de",
         "oauth2.device.authorization.grant.enabled": "false",
+        "pkce.code.challenge.method": "S256",
         "display.on.consent.screen": "false",
         "backchannel.logout.revoke.offline.tokens": "false"
       },

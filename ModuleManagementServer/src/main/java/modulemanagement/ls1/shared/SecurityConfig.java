@@ -52,7 +52,8 @@ public class SecurityConfig {
             token -> {
                 String issuer = token.getIssuer().toString();
                 if (issuer.equals("http://localhost:8081/realms/module-management") || 
-                    issuer.equals("http://keycloak:8080/realms/module-management")) {
+                    issuer.equals("http://keycloak:8080/realms/module-management") ||
+		    issuer.equals("http://module-management.ase.cit.tum.de/auth/realms/module-management")) {
                     return OAuth2TokenValidatorResult.success();
                 }
                 return OAuth2TokenValidatorResult.failure(
@@ -83,7 +84,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost", "http://localhost:80", "http://localhost:4200")
+                        .allowedOrigins("http://localhost", "http://localhost:80", "http://localhost:4200", "https://module-management.ase.cit.tum.de")
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .exposedHeaders("*")

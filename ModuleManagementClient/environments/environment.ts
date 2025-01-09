@@ -1,8 +1,8 @@
 export const environment = {
-  redirect: 'http://localhost',
-  serverUrl: 'http://localhost:8080',
+  redirect: 'https://module-management.ase.cit.tum.de',
+  serverUrl: 'https://module-management.ase.cit.tum.de/api',
   keycloak: {
-    url: 'http://localhost:8081',
+    url: 'https://module-management.ase.cit.tum.de/auth',
     realm: 'module-management',
     clientId: 'module-management'
   },

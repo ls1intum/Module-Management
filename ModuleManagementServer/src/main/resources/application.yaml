@@ -1,7 +1,6 @@
 spring:
   application:
     name: ModuleManagement
-
   datasource:
     url: jdbc:postgresql://localhost:5432/ModuleManagement
     username: myuser
@@ -21,22 +20,21 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: http://keycloak:8080/realms/module-management/protocol/openid-connect/certs
-          issuer-uri: http://keycloak:8080/realms/module-management
+          jwk-set-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI:http://keycloak:8080/auth/realms/module-management/protocol/openid-connect/certs}
+          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI:http://keycloak:8080/auth/realms/module-management}
 
 ai-service:
   url: ${AI_SERVICE_URL:http://localhost:5000}
 
 module-management:
   keycloak:
-    url: http://localhost:8081
+    url: ${KEYCLOAK_URL:https://module-management.ase.cit.tum.de/auth}
     realm: module-management
     client-id: module-management
 
 springdoc:
-  springdoc:
-    api-docs:
-      yaml:
-        path: /v3/api-docs.yaml
+  api-docs:
+    yaml:
+      path: /v3/api-docs.yaml
   default-produces-media-type: application/json
   default-consumes-media-type: application/json

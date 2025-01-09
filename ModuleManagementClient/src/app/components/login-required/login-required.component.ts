@@ -13,43 +13,8 @@ import { HlmTdComponent } from "../../../spartan-components/ui-table-helm/src/li
   imports: [HlmButtonDirective, HlmTableComponent, HlmTrowComponent, HlmThComponent, HlmTdComponent],
   template: `
     <p class="text-center text-xl mt-8">You need to log in to use the website.</p>
-    <p class="text-center text-lg mt-8">Test users currently available in the system</p>
-    <div class="flex justify-center">
-    <hlm-table class="w-1/2 mt-8">
-     <hlm-trow>
-       <hlm-th class="w-52">Username</hlm-th>
-       <hlm-th class="w-40">Password</hlm-th>
-       <hlm-th class="flex-1">Roles</hlm-th>
-     </hlm-trow>
-     <hlm-trow>
-       <hlm-td class="font-medium w-52">professor1</hlm-td>
-       <hlm-td class="w-40">test</hlm-td>
-       <hlm-td class="flex-1">Proposal Submitter</hlm-td>
-     </hlm-trow>
-     <hlm-trow>
-       <hlm-td class="font-medium w-52">professor2</hlm-td>
-       <hlm-td class="w-40">test</hlm-td>
-       <hlm-td class="flex-1">Proposal Submitter</hlm-td>
-     </hlm-trow>
-     <hlm-trow>
-       <hlm-td class="font-medium w-52">apa1</hlm-td>
-       <hlm-td class="w-40">test</hlm-td>
-       <hlm-td class="flex-1">Proposal Reviewer</hlm-td>
-     </hlm-trow>
-     <hlm-trow>
-       <hlm-td class="font-medium w-52">qm1</hlm-td>
-       <hlm-td class="w-40">test</hlm-td>
-       <hlm-td class="flex-1">Proposal Reviewer</hlm-td>
-     </hlm-trow>
-     <hlm-trow>
-       <hlm-td class="font-medium w-52">eb1</hlm-td>
-       <hlm-td class="w-40">test</hlm-td>
-       <hlm-td class="flex-1">Proposal Reviewer</hlm-td>
-     </hlm-trow>
-   </hlm-table>
-    </div>
-    <div class="flex justify-center mt-8">
-      <button hlmBtn variant="default" (click)="login()">Login/Sign up</button>
+    <div class="flex justify-center items-center mt-8 space-x-4">
+      <a href="https://confluence.ase.in.tum.de/spaces/CITMMAI/pages/236925137/Application+Test+Users" target="_blank">Application Test Users can be found here</a>
     </div>
   `
 })

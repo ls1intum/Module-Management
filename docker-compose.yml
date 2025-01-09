@@ -1,4 +1,21 @@
 services:
+  nginx:
+    image: nginx:alpine
+    container_name: module-management-nginx
+    volumes:
+      - ./ModuleManagementClient/nginx.conf:/etc/nginx/conf.d/default.conf
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - frontend
+      - backend
+      - keycloak
+    networks:
+      - module-management-network
+    restart: unless-stopped
+
   postgres:
     image: "postgres:latest"
     container_name: module-management-db
@@ -8,11 +25,9 @@ services:
       - "POSTGRES_USER=${DB_USER}"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
-    ports:
-      - "5432:5432"
     networks:
       - module-management-network
+    restart: unless-stopped
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.0.6
@@ -20,17 +35,20 @@ services:
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-    command: 
+      KC_PROXY: edge
+      KC_HOSTNAME: module-management.ase.cit.tum.de
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "true"
+      KC_HTTP_RELATIVE_PATH: /auth
+    command:
       - start-dev
       - --import-realm
     volumes:
       - keycloak_data:/opt/keycloak/data
       - ./module-management-realm.json:/opt/keycloak/data/import/realm.json
-    ports:
-      - "8081:8080"
-    restart: unless-stopped
     networks:
       - module-management-network
+    restart: unless-stopped
 
   ai-service:
     build:
@@ -39,9 +57,9 @@ services:
     container_name: module-management-ai
     env_file:
       - ./ModuleManagementServer/ai-service/.env
-    restart: unless-stopped
     networks:
       - module-management-network
+    restart: unless-stopped
 
   backend:
     build:
@@ -55,28 +73,26 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/ModuleManagement
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=http://keycloak:8080/realms/module-management/protocol/openid-connect/certs
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak:8080/realms/module-management
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=http://keycloak:8080/auth/realms/module-management/protocol/openid-connect/certs
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=http://keycloak:8080/auth/realms/module-management
       - AI_SERVICE_URL=http://ai-service:5000
-    restart: unless-stopped
-    ports:
-      - "8080:8080"
     networks:
       - module-management-network
+    restart: unless-stopped
 
   frontend:
     build:
       context: ./ModuleManagementClient
       dockerfile: ./client.Dockerfile
     container_name: module-management-frontend
-    ports:
-      - "80:80"
+    environment:
+      - KEYCLOAK_URL=https://module-management.ase.cit.tum.de/auth
     depends_on:
       - backend
       - ai-service
-    restart: unless-stopped
     networks:
       - module-management-network
+    restart: unless-stopped
 
 volumes:
   postgres_data:

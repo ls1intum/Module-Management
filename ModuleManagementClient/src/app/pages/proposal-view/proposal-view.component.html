@@ -82,7 +82,7 @@
       @if (proposal.latestModuleVersion!.isComplete && proposal.latestModuleVersion!.status == moduleStatusEnum.PendingSubmission) {
       <button hlmBtn variant="default" class="bg-green-600 mr-2" (click)="submitProposal()">Submit</button>
       } @if(proposal.latestModuleVersion!.status === moduleStatusEnum.PendingSubmission) {
-      <button hlmBtn variant="outline" class="mr-2" (click)="editLatestModuleVersion()">Edit</button>
+      <button hlmBtn variant="outline" class="mr-2" [routerLink]="['/module-version/edit', proposal.latestModuleVersion!.moduleVersionId]">Edit</button>
       } @if(proposal.latestModuleVersion!.status === moduleStatusEnum.PendingFeedback) {
       <button hlmBtn variant="outline" class="mr-2" (click)="cancelProposal()">Cancel</button>
       } @if(proposal.status === proposalStatusEnum.RequiresReview) {
