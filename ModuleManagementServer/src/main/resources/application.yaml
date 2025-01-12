@@ -2,9 +2,9 @@ spring:
   application:
     name: ModuleManagement
   datasource:
-    url: jdbc:postgresql://localhost:5432/ModuleManagement
-    username: myuser
-    password: secret
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   liquibase:
     enabled: true
@@ -20,17 +20,23 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI:http://keycloak:8080/auth/realms/module-management/protocol/openid-connect/certs}
-          issuer-uri: ${SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI:http://keycloak:8080/auth/realms/module-management}
+          jwk-set-uri: http://localhost:${AUTH_PORT}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/certs
+          issuer-uri: http://localhost:${AUTH_PORT}/realms/${KEYCLOAK_REALM}
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.security.jwt: DEBUG
 
 ai-service:
-  url: ${AI_SERVICE_URL:http://localhost:5000}
+  url: http://localhost:${AI_SERVICE_PORT}
 
 module-management:
   keycloak:
-    url: ${KEYCLOAK_URL:https://module-management.ase.cit.tum.de/auth}
-    realm: module-management
-    client-id: module-management
+    url: http://localhost:${AUTH_PORT}/auth
+    realm: ${KEYCLOAK_REALM}
+    client-id: ${KEYCLOAK_CLIENT_ID}
 
 springdoc:
   api-docs:

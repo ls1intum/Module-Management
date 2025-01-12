@@ -51,10 +51,10 @@ public class SecurityConfig {
             new JwtTimestampValidator(),
             token -> {
                 String issuer = token.getIssuer().toString();
-                if (issuer.equals("http://localhost:8081/realms/module-management") || 
+                if (issuer.equals("http://localhost:8081/realms/module-management") ||
                     issuer.equals("http://keycloak:8080/realms/module-management") ||
-		    issuer.equals("http://module-management.ase.cit.tum.de/auth/realms/module-management")) {
-                    return OAuth2TokenValidatorResult.success();
+		            issuer.equals("http://module-management.ase.cit.tum.de/auth/realms/module-management")) {
+                        return OAuth2TokenValidatorResult.success();
                 }
                 return OAuth2TokenValidatorResult.failure(
                     new OAuth2Error("invalid_token", "Invalid issuer: " + issuer, null));
