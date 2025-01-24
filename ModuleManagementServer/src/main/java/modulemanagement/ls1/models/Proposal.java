@@ -2,8 +2,6 @@ package modulemanagement.ls1.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
-import modulemanagement.ls1.dtos.ModuleVersionCompactDTO;
-import modulemanagement.ls1.dtos.ProposalViewDTO;
 import modulemanagement.ls1.enums.ModuleVersionStatus;
 import modulemanagement.ls1.enums.ProposalStatus;
 import jakarta.persistence.*;
@@ -69,6 +67,7 @@ public class Proposal {
         newMv.setLanguageEng(latestMv.getLanguageEng());
         newMv.setFrequencyEng(latestMv.getFrequencyEng());
         newMv.setCredits(latestMv.getCredits());
+        newMv.setDuration(latestMv.getDuration());
         newMv.setHoursTotal(latestMv.getHoursTotal());
         newMv.setHoursSelfStudy(latestMv.getHoursSelfStudy());
         newMv.setHoursPresence(latestMv.getHoursPresence());

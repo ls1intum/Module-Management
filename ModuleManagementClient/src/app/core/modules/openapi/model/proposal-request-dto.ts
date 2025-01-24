@@ -16,6 +16,7 @@ export interface ProposalRequestDTO {
     languageEng?: ProposalRequestDTO.LanguageEngEnum;
     frequencyEng?: string;
     credits?: number;
+    duration?: string;
     hoursTotal?: number;
     hoursSelfStudy?: number;
     hoursPresence?: number;

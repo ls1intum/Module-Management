@@ -23,6 +23,7 @@ export interface ModuleVersionViewDTO {
     languageEng?: ModuleVersionViewDTO.LanguageEngEnum;
     frequencyEng?: string;
     credits?: number;
+    duration?: string;
     hoursTotal?: number;
     hoursSelfStudy?: number;
     hoursPresence?: number;

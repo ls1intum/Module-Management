@@ -14,7 +14,7 @@ export abstract class ProposalBaseComponent {
   loading: boolean = false;
   error: string | null = null;
   moduleVersionDto: ModuleVersionUpdateRequestDTO | null = null;
-  
+
   showPrompt: { [key: string]: boolean } = {
     examination: false,
     content: false,
@@ -41,6 +41,7 @@ export abstract class ProposalBaseComponent {
       repetitionEng: [''],
       frequencyEng: [''],
       credits: [null],
+      duration: [''],
       hoursTotal: [null],
       hoursSelfStudy: [null],
       hoursPresence: [null],
@@ -64,11 +65,11 @@ export abstract class ProposalBaseComponent {
 
   protected async generateField(field: string) {
     const promptFieldMapping: { [key: string]: string } = {
-      'examination': 'examinationAchievementsPromptEng',
-      'content': 'contentPromptEng',
-      'learning': 'learningOutcomesPromptEng',
-      'teaching': 'teachingMethodsPromptEng',
-      'media': 'mediaPromptEng'
+      examination: 'examinationAchievementsPromptEng',
+      content: 'contentPromptEng',
+      learning: 'learningOutcomesPromptEng',
+      teaching: 'teachingMethodsPromptEng',
+      media: 'mediaPromptEng'
     };
 
     const proposalData: CompletionServiceRequestDTO = {
@@ -79,7 +80,7 @@ export abstract class ProposalBaseComponent {
     this.loading = true;
     try {
       let response;
-      switch(field) {
+      switch (field) {
         case 'content':
           response = await this.moduleVersionService.generateContent(proposalData).toPromise();
           break;
@@ -96,16 +97,16 @@ export abstract class ProposalBaseComponent {
           response = await this.moduleVersionService.generateMedia(proposalData).toPromise();
           break;
       }
-      
+
       if (response?.responseData) {
         const fieldMapping: { [key: string]: string } = {
-          'content': 'contentEng',
-          'examination': 'examinationAchievementsEng',
-          'learning': 'learningOutcomesEng',
-          'teaching': 'teachingMethodsEng',
-          'media': 'mediaEng'
+          content: 'contentEng',
+          examination: 'examinationAchievementsEng',
+          learning: 'learningOutcomesEng',
+          teaching: 'teachingMethodsEng',
+          media: 'mediaEng'
         };
-        
+
         this.proposalForm.patchValue({
           [fieldMapping[field]]: response.responseData
         });

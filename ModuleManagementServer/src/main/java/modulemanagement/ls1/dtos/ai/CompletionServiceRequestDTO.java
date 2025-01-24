@@ -15,6 +15,7 @@ public class CompletionServiceRequestDTO {
     private Language languageEng;
     private String frequencyEng;
     private Integer credits;
+    private String durationEng;
     private Integer hoursTotal;
     private Integer hoursSelfStudy;
     private Integer hoursPresence;

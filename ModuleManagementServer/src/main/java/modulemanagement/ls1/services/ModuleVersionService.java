@@ -49,6 +49,7 @@ public class ModuleVersionService {
         mv.setLanguageEng(request.getLanguageEng());
         mv.setFrequencyEng(request.getFrequencyEng());
         mv.setCredits(request.getCredits());
+        mv.setDuration(request.getDuration());
         mv.setHoursTotal(request.getHoursTotal());
         mv.setHoursSelfStudy(request.getHoursSelfStudy());
         mv.setHoursPresence(request.getHoursPresence());
@@ -124,7 +125,6 @@ public class ModuleVersionService {
     public ModuleVersionViewDTO getModuleVersionViewDto(Long moduleVersionId, UUID userId) {
         ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).
                 orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
-        System.out.println("MVID: " + mv.getModuleVersionId());
         Proposal p = mv.getProposal();
         if (!p.getCreatedBy().getUserId().equals(userId))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access.");

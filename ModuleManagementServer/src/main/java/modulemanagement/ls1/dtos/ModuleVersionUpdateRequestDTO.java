@@ -18,6 +18,7 @@ public class ModuleVersionUpdateRequestDTO {
     private Language languageEng;
     private String frequencyEng;
     private Integer credits;
+    private String duration;
     private Integer hoursTotal;
     private Integer hoursSelfStudy;
     private Integer hoursPresence;
@@ -56,6 +57,7 @@ public class ModuleVersionUpdateRequestDTO {
         mdto.setLanguageEng(mv.getLanguageEng());
         mdto.setFrequencyEng(mv.getFrequencyEng());
         mdto.setCredits(mv.getCredits());
+        mdto.setDuration(mv.getDuration());
         mdto.setHoursTotal(mv.getHoursTotal());
         mdto.setHoursSelfStudy(mv.getHoursSelfStudy());
         mdto.setHoursPresence(mv.getHoursPresence());

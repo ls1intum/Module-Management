@@ -20,6 +20,7 @@ export interface ModuleVersionUpdateRequestDTO {
     languageEng?: ModuleVersionUpdateRequestDTO.LanguageEngEnum;
     frequencyEng?: string;
     credits?: number;
+    duration?: string;
     hoursTotal?: number;
     hoursSelfStudy?: number;
     hoursPresence?: number;

@@ -53,6 +53,9 @@ public class ModuleVersion {
     @Column(name = "credits")
     private Integer credits;
 
+    @Column(name = "duration")
+    private String duration;
+
     @Column(name = "hours_total")
     private Integer hoursTotal;
 
@@ -124,6 +127,7 @@ public class ModuleVersion {
                 && languageEng != null
                 && !StringUtils.isEmpty(frequencyEng)
                 && !(credits == null)
+                && !StringUtils.isEmpty(duration)
                 && !(hoursTotal == null)
                 && !(hoursSelfStudy == null)
                 && !(hoursPresence == null)

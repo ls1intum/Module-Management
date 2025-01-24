@@ -17,6 +17,7 @@ export interface CompletionServiceRequestDTO {
     languageEng?: CompletionServiceRequestDTO.LanguageEngEnum;
     frequencyEng?: string;
     credits?: number;
+    durationEng?: string;
     hoursTotal?: number;
     hoursSelfStudy?: number;
     hoursPresence?: number;

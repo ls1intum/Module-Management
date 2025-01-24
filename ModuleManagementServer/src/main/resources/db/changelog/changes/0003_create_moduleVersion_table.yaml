@@ -43,6 +43,9 @@ databaseChangeLog:
                   name: credits
                   type: INTEGER
               - column:
+                  name: duration
+                  type: VARCHAR(255)
+              - column:
                   name: hours_total
                   type: INTEGER
               - column:

@@ -59,6 +59,7 @@ public class ProposalService {
         mv.setLanguageEng(request.getLanguageEng());
         mv.setFrequencyEng(request.getFrequencyEng());
         mv.setCredits(request.getCredits());
+        mv.setDuration(request.getDuration());
         mv.setHoursTotal(request.getHoursTotal());
         mv.setHoursSelfStudy(request.getHoursSelfStudy());
         mv.setHoursPresence(request.getHoursPresence());

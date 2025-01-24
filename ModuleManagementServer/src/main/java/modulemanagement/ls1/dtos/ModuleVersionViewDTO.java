@@ -25,6 +25,7 @@ public class ModuleVersionViewDTO {
     private Language languageEng;
     private String frequencyEng;
     private Integer credits;
+    private String duration;
     private Integer hoursTotal;
     private Integer hoursSelfStudy;
     private Integer hoursPresence;
@@ -59,6 +60,7 @@ public class ModuleVersionViewDTO {
         dto.languageEng = moduleVersion.getLanguageEng();
         dto.frequencyEng = moduleVersion.getFrequencyEng();
         dto.credits = moduleVersion.getCredits();
+        dto.duration = moduleVersion.getDuration();
         dto.hoursTotal = moduleVersion.getHoursTotal();
         dto.hoursSelfStudy = moduleVersion.getHoursSelfStudy();
         dto.hoursPresence = moduleVersion.getHoursPresence();

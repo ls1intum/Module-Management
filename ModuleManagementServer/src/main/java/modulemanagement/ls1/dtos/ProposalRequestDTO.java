@@ -14,6 +14,7 @@ public class ProposalRequestDTO {
     private Language languageEng;
     private String frequencyEng;
     private Integer credits;
+    private String duration;
     private Integer hoursTotal;
     private Integer hoursSelfStudy;
     private Integer hoursPresence;

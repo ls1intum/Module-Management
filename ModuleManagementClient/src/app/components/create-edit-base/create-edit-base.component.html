@@ -14,19 +14,25 @@
 
     <div>
       <label hlmLabel class="text-xl">
-        Key Points
+        Title
         <hlm-form-field class="mt-2">
-          <textarea autoResize hlmInput formControlName="bulletPoints" placeholder="Enter key points about the module" class="w-full min-h-[100px]"></textarea>
+          <input hlmInput formControlName="titleEng" placeholder="Title (English)" class="w-full" />
+          <hlm-error>A preliminary title is required</hlm-error>
         </hlm-form-field>
       </label>
     </div>
 
     <div>
       <label hlmLabel class="text-xl">
-        Title
+        Key Points
         <hlm-form-field class="mt-2">
-          <input hlmInput formControlName="titleEng" placeholder="Title (English)" class="w-full" />
-          <hlm-error>A preliminary title is required</hlm-error>
+          <textarea
+            autoResize
+            hlmInput
+            formControlName="bulletPoints"
+            placeholder="Enter key points about the module to generate module descriptions from"
+            class="w-full min-h-[100px]"
+          ></textarea>
         </hlm-form-field>
       </label>
     </div>
@@ -70,6 +76,15 @@
         Frequency
         <hlm-form-field class="mt-2">
           <input hlmInput formControlName="frequencyEng" placeholder="e.g. Winter/Summer" class="w-full" />
+        </hlm-form-field>
+      </label>
+    </div>
+
+    <div>
+      <label hlmLabel class="text-lg">
+        Duration
+        <hlm-form-field class="mt-2">
+          <input hlmInput formControlName="duration" placeholder="e.g. One Semester/Two Semesters" class="w-full" />
         </hlm-form-field>
       </label>
     </div>
