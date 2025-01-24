@@ -29,7 +29,6 @@ public class ProposalRequestDTO {
     private String teachingMethodsEng;
     private String teachingMethodsPromptEng;
     private String mediaEng;
-    private String mediaPromptEng;
     private String literatureEng;
     private String responsiblesEng;
     private String lvSwsLecturerEng;

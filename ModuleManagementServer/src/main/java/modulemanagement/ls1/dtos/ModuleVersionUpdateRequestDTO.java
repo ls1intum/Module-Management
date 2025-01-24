@@ -33,7 +33,6 @@ public class ModuleVersionUpdateRequestDTO {
     private String teachingMethodsEng;
     private String teachingMethodsPromptEng;
     private String mediaEng;
-    private String mediaPromptEng;
     private String literatureEng;
     private String responsiblesEng;
     private String lvSwsLecturerEng;
@@ -72,7 +71,6 @@ public class ModuleVersionUpdateRequestDTO {
         mdto.setTeachingMethodsEng(mv.getTeachingMethodsEng());
         mdto.setTeachingMethodsPromptEng(mv.getTeachingMethodsPromptEng());
         mdto.setMediaEng(mv.getMediaEng());
-        mdto.setMediaPromptEng(mv.getMediaPromptEng());
         mdto.setLiteratureEng(mv.getLiteratureEng());
         mdto.setResponsiblesEng(mv.getResponsiblesEng());
         mdto.setLvSwsLecturerEng(mv.getLvSwsLecturerEng());

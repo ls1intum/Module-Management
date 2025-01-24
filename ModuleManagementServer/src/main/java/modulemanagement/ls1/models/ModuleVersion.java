@@ -98,9 +98,6 @@ public class ModuleVersion {
     @Column(name = "media_eng", columnDefinition = "CLOB")
     private String mediaEng;
 
-    @Column(name = "media_prompt_eng", columnDefinition = "CLOB")
-    private String mediaPromptEng;
-
     @Column(name = "literature_eng", columnDefinition = "CLOB")
     private String literatureEng;
 

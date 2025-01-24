@@ -64,7 +64,6 @@ public class ModuleVersionService {
         mv.setTeachingMethodsEng(request.getTeachingMethodsEng());
         mv.setTeachingMethodsPromptEng(request.getTeachingMethodsPromptEng());
         mv.setMediaEng(request.getMediaEng());
-        mv.setMediaPromptEng(request.getMediaPromptEng());
         mv.setLiteratureEng(request.getLiteratureEng());
         mv.setResponsiblesEng(request.getResponsiblesEng());
         mv.setLvSwsLecturerEng(request.getLvSwsLecturerEng());

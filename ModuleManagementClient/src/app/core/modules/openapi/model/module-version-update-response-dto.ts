@@ -35,7 +35,6 @@ export interface ModuleVersionUpdateResponseDTO {
     teachingMethodsEng?: string;
     teachingMethodsPromptEng?: string;
     mediaEng?: string;
-    mediaPromptEng?: string;
     literatureEng?: string;
     responsiblesEng?: string;
     lvSwsLecturerEng?: string;

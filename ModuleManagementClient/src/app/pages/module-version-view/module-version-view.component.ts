@@ -22,22 +22,14 @@ interface ModuleField {
 @Component({
   selector: 'module-version-view',
   standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    HlmBadgeDirective,
-    HlmButtonDirective,
-    ModuleVersionStatusPipe,
-    FeedbackStatusPipe,
-    FeedbackDepartmentPipe
-  ],
+  imports: [CommonModule, RouterModule, HlmBadgeDirective, HlmButtonDirective, ModuleVersionStatusPipe, FeedbackStatusPipe, FeedbackDepartmentPipe],
   templateUrl: './module-version-view.component.html'
 })
 export class ModuleVersionViewComponent {
   moduleVerisionService = inject(ModuleVersionControllerService);
   loading = true;
   moduleVersionDto: ModuleVersionViewDTO | null = null;
-  moduleVersionStatus= ModuleVersion.StatusEnum;
+  moduleVersionStatus = ModuleVersion.StatusEnum;
   error: string | null = null;
 
   moduleFields: ModuleField[] = [
@@ -51,41 +43,40 @@ export class ModuleVersionViewComponent {
     { key: 'hoursSelfStudy', label: 'Self-Study Hours', section: 'hours' },
     { key: 'hoursPresence', label: 'Presence Hours', section: 'hours' },
     { key: 'bulletPoints', label: 'Key Points', section: 'content', isLongText: true },
-    { 
-      key: 'examinationAchievementsEng', 
-      label: 'Examination Achievements', 
-      section: 'content', 
-      isLongText: true, 
-      hasPrompt: 'examinationAchievementsPromptEng' 
+    {
+      key: 'examinationAchievementsEng',
+      label: 'Examination Achievements',
+      section: 'content',
+      isLongText: true,
+      hasPrompt: 'examinationAchievementsPromptEng'
     },
     { key: 'recommendedPrerequisitesEng', label: 'Recommended Prerequisites', section: 'content', isLongText: true },
-    { 
-      key: 'contentEng', 
-      label: 'Module Content', 
-      section: 'content', 
-      isLongText: true, 
-      hasPrompt: 'contentPromptEng' 
+    {
+      key: 'contentEng',
+      label: 'Module Content',
+      section: 'content',
+      isLongText: true,
+      hasPrompt: 'contentPromptEng'
     },
-    { 
-      key: 'learningOutcomesEng', 
-      label: 'Learning Outcomes', 
-      section: 'content', 
-      isLongText: true, 
-      hasPrompt: 'learningOutcomesPromptEng' 
+    {
+      key: 'learningOutcomesEng',
+      label: 'Learning Outcomes',
+      section: 'content',
+      isLongText: true,
+      hasPrompt: 'learningOutcomesPromptEng'
     },
-    { 
-      key: 'teachingMethodsEng', 
-      label: 'Teaching Methods', 
-      section: 'content', 
-      isLongText: true, 
-      hasPrompt: 'teachingMethodsPromptEng' 
+    {
+      key: 'teachingMethodsEng',
+      label: 'Teaching Methods',
+      section: 'content',
+      isLongText: true,
+      hasPrompt: 'teachingMethodsPromptEng'
     },
-    { 
-      key: 'mediaEng', 
-      label: 'Media', 
-      section: 'content', 
-      isLongText: true, 
-      hasPrompt: 'mediaPromptEng' 
+    {
+      key: 'mediaEng',
+      label: 'Media',
+      section: 'content',
+      isLongText: true
     },
     { key: 'literatureEng', label: 'Literature', section: 'content', isLongText: true },
     { key: 'responsiblesEng', label: 'Responsibles', section: 'content', isLongText: true },
@@ -112,7 +103,7 @@ export class ModuleVersionViewComponent {
   }
 
   getFieldsBySection(section: 'basic' | 'hours' | 'content') {
-    return this.moduleFields.filter(field => field.section === section);
+    return this.moduleFields.filter((field) => field.section === section);
   }
 
   isLatestVersion(): boolean {

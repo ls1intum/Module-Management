@@ -12,7 +12,6 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class AiCompletionService {
     private final WebClient aiServiceWebClient;
-    private final ObjectMapper objectMapper;
 
     public Mono<String> generateContent(CompletionServiceRequestDTO request) {
         return aiServiceWebClient.post()
@@ -44,15 +43,6 @@ public class AiCompletionService {
     public Mono<String> generateTeachingMethods(CompletionServiceRequestDTO request) {
         return aiServiceWebClient.post()
                 .uri("/completions/teaching-methods")
-                .bodyValue(request)
-                .retrieve()
-                .bodyToMono(CompletionServiceResponseDTO.class)
-                .map(CompletionServiceResponseDTO::getResponseData);
-    }
-
-    public Mono<String> generateMedia(CompletionServiceRequestDTO request) {
-        return aiServiceWebClient.post()
-                .uri("/completions/media")
                 .bodyValue(request)
                 .retrieve()
                 .bodyToMono(CompletionServiceResponseDTO.class)

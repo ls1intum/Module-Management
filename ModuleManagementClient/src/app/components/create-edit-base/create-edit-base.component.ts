@@ -56,7 +56,6 @@ export abstract class ProposalBaseComponent {
       teachingMethodsEng: [''],
       teachingMethodsPromptEng: [''],
       mediaEng: [''],
-      mediaPromptEng: [''],
       literatureEng: [''],
       responsiblesEng: [''],
       lvSwsLecturerEng: ['']
@@ -92,9 +91,6 @@ export abstract class ProposalBaseComponent {
           break;
         case 'teaching':
           response = await this.moduleVersionService.generateTeachingMethods(proposalData).toPromise();
-          break;
-        case 'media':
-          response = await this.moduleVersionService.generateMedia(proposalData).toPromise();
           break;
       }
 

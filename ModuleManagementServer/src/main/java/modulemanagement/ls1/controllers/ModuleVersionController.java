@@ -76,10 +76,4 @@ public class ModuleVersionController {
     public ResponseEntity<CompletionServiceResponseDTO> generateTeachingMethods(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         return ResponseEntity.ok(new CompletionServiceResponseDTO(aiCompletionService.generateTeachingMethods(moduleInfoRequestDTO).block()));
     }
-
-    @PostMapping("/generate/media")
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
-    public ResponseEntity<CompletionServiceResponseDTO> generateMedia(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
-        return ResponseEntity.ok(new CompletionServiceResponseDTO(aiCompletionService.generateMedia(moduleInfoRequestDTO).block()));
-    }
 }

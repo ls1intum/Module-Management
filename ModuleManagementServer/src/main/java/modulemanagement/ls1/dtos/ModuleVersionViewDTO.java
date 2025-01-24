@@ -40,7 +40,6 @@ public class ModuleVersionViewDTO {
     private String teachingMethodsEng;
     private String teachingMethodsPromptEng;
     private String mediaEng;
-    private String mediaPromptEng;
     private String literatureEng;
     private String responsiblesEng;
     private String lvSwsLecturerEng;
@@ -75,7 +74,6 @@ public class ModuleVersionViewDTO {
         dto.teachingMethodsEng = moduleVersion.getTeachingMethodsEng();
         dto.teachingMethodsPromptEng = moduleVersion.getTeachingMethodsPromptEng();
         dto.mediaEng = moduleVersion.getMediaEng();
-        dto.mediaPromptEng = moduleVersion.getMediaPromptEng();
         dto.literatureEng = moduleVersion.getLiteratureEng();
         dto.responsiblesEng = moduleVersion.getResponsiblesEng();
         dto.lvSwsLecturerEng = moduleVersion.getLvSwsLecturerEng();

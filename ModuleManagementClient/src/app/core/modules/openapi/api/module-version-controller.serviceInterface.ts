@@ -52,13 +52,6 @@ export interface ModuleVersionControllerServiceInterface {
      * 
      * @param completionServiceRequestDTO 
      */
-    generateMedia(completionServiceRequestDTO: CompletionServiceRequestDTO, extraHttpRequestParams?: any): Observable<CompletionServiceResponseDTO>;
-
-    /**
-     * 
-     * 
-     * @param completionServiceRequestDTO 
-     */
     generateTeachingMethods(completionServiceRequestDTO: CompletionServiceRequestDTO, extraHttpRequestParams?: any): Observable<CompletionServiceResponseDTO>;
 
     /**

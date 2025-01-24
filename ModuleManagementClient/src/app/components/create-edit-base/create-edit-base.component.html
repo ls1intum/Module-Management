@@ -252,17 +252,6 @@
         <hlm-form-field class="mt-2">
           <textarea autoResize hlmInput formControlName="mediaEng" placeholder="What media will be used?" class="w-full min-h-[100px]"></textarea>
         </hlm-form-field>
-        <div class="flex justify-between items-center gap-2 mt-2">
-          <button hlmBtn type="button" variant="outline" class="min-w-28" size="sm" (click)="togglePromptField('media')">
-            {{ showPrompt['media'] ? 'Hide Prompt' : 'Show Prompt' }}
-          </button>
-          <button hlmBtn type="button" variant="default" size="sm" (click)="generateField('media')" [disabled]="loading">Generate Content</button>
-        </div>
-        @if (showPrompt['media']) {
-        <hlm-form-field class="mt-2 mb-2">
-          <textarea autoResize hlmInput [formControlName]="'mediaPromptEng'" placeholder="Enter additional prompt text for media generation" class="w-full min-h-[60px]"></textarea>
-        </hlm-form-field>
-        }
       </label>
     </div>
 
