@@ -1,7 +1,10 @@
 from langchain_openai import ChatOpenAI
+from langchain.chat_models.base import BaseChatModel
 from ..settings import settings
 
 class LLMService:
+    model: BaseChatModel
+
     def __init__(self):
         self.model = ChatOpenAI(
             temperature=0.7,

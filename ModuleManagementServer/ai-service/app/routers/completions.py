@@ -9,7 +9,7 @@ async def generate_content(module_info: ModuleInfo) -> ContentGenerationResponse
     field = 'content'
     context = accumulate_module_info_for(field, module_info)
     prompt = get_prompt_for(field, module_info.bulletPoints, module_info.contextPrompt, context)
-    content = await llm_service.generate_content(prompt)
+    content = await llm_service.model.generate_content(prompt)
     return ContentGenerationResponse(responseData=content)
 
 @router.post("/examination-achievements", response_model=ExaminationAchievementsGenerationResponse)
