@@ -35,15 +35,6 @@ async def generate_teaching_methods(module_info: ModuleInfo) -> TeachingMethodsG
     prompt = get_prompt_for(field, module_info.bulletPoints, module_info.contextPrompt, context)
     teaching_methods = await llm_service.generate_content(prompt)
     return TeachingMethodsGenerationResponse(responseData=teaching_methods)
-
-@router.post("/media", response_model=MediaGenerationResponse)
-async def generate_media(module_info: ModuleInfo) -> MediaGenerationResponse:
-    field = 'media'
-    context = accumulate_module_info_for(field, module_info)
-    prompt = get_prompt_for(field, module_info.bulletPoints, module_info.contextPrompt, context)
-    media = await llm_service.generate_content(prompt)
-    return MediaGenerationResponse(responseData=media)
-
     
 def accumulate_module_info_for(field: str, module_info: ModuleInfo):
     context_parts = []
@@ -103,6 +94,7 @@ The description should:
 - Follow a logical structure
 - Maintain a professional tone
 - Be suitable for a university module catalog
+- Never mention Credits, Hours, Frequency, Duration unless it is asked for in the specific context
 
 Consider all information, but without breaking the establised rules, specifically consider the following context:
 
