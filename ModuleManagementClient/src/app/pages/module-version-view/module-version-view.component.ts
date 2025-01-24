@@ -1,9 +1,7 @@
-// module-version-view.component.ts
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModuleVersion, ModuleVersionControllerService, ModuleVersionViewDTO } from '../../core/modules/openapi';
 import { RouterModule } from '@angular/router';
-import { HlmScrollAreaComponent } from '@spartan-ng/ui-scrollarea-helm';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
