@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from ..models.module import ModuleInfo, ContentGenerationResponse, ExaminationAchievementsGenerationResponse, LearningOutcomesGenerationResponse, TeachingMethodsGenerationResponse, MediaGenerationResponse
+from ..models.module import ModuleInfo, ContentGenerationResponse, ExaminationAchievementsGenerationResponse, LearningOutcomesGenerationResponse, TeachingMethodsGenerationResponse
 from ..services.llm_service import llm_service
 
 router = APIRouter(prefix="/completions", tags=["completions"])
@@ -9,32 +9,36 @@ async def generate_content(module_info: ModuleInfo) -> ContentGenerationResponse
     field = 'content'
     context = accumulate_module_info_for(field, module_info)
     prompt = get_prompt_for(field, module_info.bulletPoints, module_info.contextPrompt, context)
-    content = await llm_service.model.generate_content(prompt)
-    return ContentGenerationResponse(responseData=content)
+    content = await llm_service.model.ainvoke(prompt)
+    # content = await llm_service.model.generate(prompt)
+    return ContentGenerationResponse(responseData=content.content)
 
 @router.post("/examination-achievements", response_model=ExaminationAchievementsGenerationResponse)
 async def generate_examination_achievements(module_info: ModuleInfo) -> ExaminationAchievementsGenerationResponse:
     field = 'examination-achievements'
     context = accumulate_module_info_for(field, module_info)
     prompt = get_prompt_for(field, module_info.bulletPoints, module_info.contextPrompt, context)
-    examination_achievements = await llm_service.generate_content(prompt)
-    return ExaminationAchievementsGenerationResponse(responseData=examination_achievements)
+    examination_achievements = await llm_service.model.ainvoke(prompt)
+    # examination_achievements = await llm_service.model.generate(prompt)
+    return ExaminationAchievementsGenerationResponse(responseData=examination_achievements.content)
 
 @router.post("/learning-outcomes", response_model=LearningOutcomesGenerationResponse)
 async def generate_learning_outcomes(module_info: ModuleInfo) -> LearningOutcomesGenerationResponse:
     field = 'learning-outcomes'
     context = accumulate_module_info_for(field, module_info)
     prompt = get_prompt_for(field, module_info.bulletPoints, module_info.contextPrompt, context)
-    learning_outcomes = await llm_service.generate_content(prompt)
-    return LearningOutcomesGenerationResponse(responseData=learning_outcomes)
+    learning_outcomes = await llm_service.model.ainvoke(prompt)
+    # learning_outcomes = await llm_service.model.generate(prompt)
+    return LearningOutcomesGenerationResponse(responseData=learning_outcomes.content)
 
 @router.post("/teaching-methods", response_model=TeachingMethodsGenerationResponse)
 async def generate_teaching_methods(module_info: ModuleInfo) -> TeachingMethodsGenerationResponse:
     field = 'teaching-methods'
     context = accumulate_module_info_for(field, module_info)
     prompt = get_prompt_for(field, module_info.bulletPoints, module_info.contextPrompt, context)
-    teaching_methods = await llm_service.generate_content(prompt)
-    return TeachingMethodsGenerationResponse(responseData=teaching_methods)
+    teaching_methods = await llm_service.model.ainvoke(prompt)
+    # teaching_methods = await llm_service.model.generate(prompt)
+    return TeachingMethodsGenerationResponse(responseData=teaching_methods.content)
     
 def accumulate_module_info_for(field: str, module_info: ModuleInfo):
     context_parts = []
