@@ -1,40 +1,52 @@
-from fastapi import APIRouter
-from ..models.module import ModuleInfo, ContentGenerationResponse, ExaminationAchievementsGenerationResponse, LearningOutcomesGenerationResponse, TeachingMethodsGenerationResponse
-from ..services.llm_service import llm_service
+from fastapi import APIRouter, HTTPException
+from app.models.module import ModuleInfo, ContentGenerationResponse, ExaminationAchievementsGenerationResponse, LearningOutcomesGenerationResponse, TeachingMethodsGenerationResponse
+from app.services.llm_service import llm_service
 
 router = APIRouter(prefix="/completions", tags=["completions"])
 
 @router.post("/content", response_model=ContentGenerationResponse)
 async def generate_content(module_info: ModuleInfo) -> ContentGenerationResponse:
-    field = 'content'
-    context = accumulate_module_info_for(field, module_info)
-    prompt = get_prompt_for(field, module_info.bulletPoints, module_info.contextPrompt, context)
-    content = await llm_service.model.ainvoke(prompt)
-    return ContentGenerationResponse(responseData=content.content)
+    try:
+        field = 'content'
+        context = accumulate_module_info_for(field, module_info)
+        prompt = get_prompt_for(field, module_info.bulletPoints, module_info.contextPrompt, context)
+        content = await llm_service.model.ainvoke(prompt)
+        return ContentGenerationResponse(responseData=content.content)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/examination-achievements", response_model=ExaminationAchievementsGenerationResponse)
 async def generate_examination_achievements(module_info: ModuleInfo) -> ExaminationAchievementsGenerationResponse:
-    field = 'examination-achievements'
-    context = accumulate_module_info_for(field, module_info)
-    prompt = get_prompt_for(field, module_info.bulletPoints, module_info.contextPrompt, context)
-    examination_achievements = await llm_service.model.ainvoke(prompt)
-    return ExaminationAchievementsGenerationResponse(responseData=examination_achievements.content)
+    try:
+        field = 'examination-achievements'
+        context = accumulate_module_info_for(field, module_info)
+        prompt = get_prompt_for(field, module_info.bulletPoints, module_info.contextPrompt, context)
+        examination_achievements = await llm_service.model.ainvoke(prompt)
+        return ExaminationAchievementsGenerationResponse(responseData=examination_achievements.content)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/learning-outcomes", response_model=LearningOutcomesGenerationResponse)
 async def generate_learning_outcomes(module_info: ModuleInfo) -> LearningOutcomesGenerationResponse:
-    field = 'learning-outcomes'
-    context = accumulate_module_info_for(field, module_info)
-    prompt = get_prompt_for(field, module_info.bulletPoints, module_info.contextPrompt, context)
-    learning_outcomes = await llm_service.model.ainvoke(prompt)
-    return LearningOutcomesGenerationResponse(responseData=learning_outcomes.content)
+    try:
+        field = 'learning-outcomes'
+        context = accumulate_module_info_for(field, module_info)
+        prompt = get_prompt_for(field, module_info.bulletPoints, module_info.contextPrompt, context)
+        learning_outcomes = await llm_service.model.ainvoke(prompt)
+        return LearningOutcomesGenerationResponse(responseData=learning_outcomes.content)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/teaching-methods", response_model=TeachingMethodsGenerationResponse)
 async def generate_teaching_methods(module_info: ModuleInfo) -> TeachingMethodsGenerationResponse:
-    field = 'teaching-methods'
-    context = accumulate_module_info_for(field, module_info)
-    prompt = get_prompt_for(field, module_info.bulletPoints, module_info.contextPrompt, context)
-    teaching_methods = await llm_service.model.ainvoke(prompt)
-    return TeachingMethodsGenerationResponse(responseData=teaching_methods.content)
+    try:
+        field = 'teaching-methods'
+        context = accumulate_module_info_for(field, module_info)
+        prompt = get_prompt_for(field, module_info.bulletPoints, module_info.contextPrompt, context)
+        teaching_methods = await llm_service.model.ainvoke(prompt)
+        return TeachingMethodsGenerationResponse(responseData=teaching_methods.content)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
     
 def accumulate_module_info_for(field: str, module_info: ModuleInfo):
     context_parts = []

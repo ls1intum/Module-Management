@@ -14,4 +14,6 @@ export * from './proposal-request-dto';
 export * from './proposal-view-dto';
 export * from './proposals-compact-dto';
 export * from './reject-feedback-dto';
+export * from './similar-module';
+export * from './similar-modules-dto';
 export * from './user';

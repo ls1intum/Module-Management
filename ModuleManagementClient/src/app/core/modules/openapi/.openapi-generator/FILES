@@ -30,6 +30,8 @@ model/proposal-view-dto.ts
 model/proposal.ts
 model/proposals-compact-dto.ts
 model/reject-feedback-dto.ts
+model/similar-module.ts
+model/similar-modules-dto.ts
 model/user.ts
 param.ts
 variables.ts

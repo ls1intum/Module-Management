@@ -1,6 +1,5 @@
 package modulemanagement.ls1.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import modulemanagement.ls1.dtos.ai.CompletionServiceResponseDTO;
 import modulemanagement.ls1.dtos.ai.CompletionServiceRequestDTO;

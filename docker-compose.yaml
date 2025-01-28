@@ -55,8 +55,10 @@ services:
       context: ./ModuleManagementServer/ai-service
       dockerfile: Dockerfile
     container_name: module-management-ai
+    volumes:
+      - overlap_data:/code/data
     env_file:
-      - ./ModuleManagementServer/ai-service/.env
+      - .env
     networks:
       - module-management-network
     restart: unless-stopped
@@ -97,6 +99,7 @@ services:
 volumes:
   postgres_data:
   keycloak_data:
+  overlap_data:
 
 networks:
   module-management-network:

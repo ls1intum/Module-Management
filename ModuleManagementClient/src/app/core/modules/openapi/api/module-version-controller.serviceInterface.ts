@@ -16,6 +16,7 @@ import { CompletionServiceResponseDTO } from '../model/models';
 import { ModuleVersionUpdateRequestDTO } from '../model/models';
 import { ModuleVersionUpdateResponseDTO } from '../model/models';
 import { ModuleVersionViewDTO } from '../model/models';
+import { SimilarModulesDTO } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -25,6 +26,13 @@ import { Configuration }                                     from '../configurat
 export interface ModuleVersionControllerServiceInterface {
     defaultHeaders: HttpHeaders;
     configuration: Configuration;
+
+    /**
+     * 
+     * 
+     * @param completionServiceRequestDTO 
+     */
+    checkSimilarity(completionServiceRequestDTO: CompletionServiceRequestDTO, extraHttpRequestParams?: any): Observable<SimilarModulesDTO>;
 
     /**
      * 

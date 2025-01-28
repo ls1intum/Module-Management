@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from .routers.completions import router as completions_router
+from app.routers.completions import router as completions_router
+from app.routers.overlap_detection import router as overlap_detection_router
 
 app = FastAPI(
     title="Module Description Completion Service API",
@@ -8,3 +9,4 @@ app = FastAPI(
 )
 
 app.include_router(completions_router)
+app.include_router(overlap_detection_router)

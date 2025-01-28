@@ -5,11 +5,13 @@ import modulemanagement.ls1.dtos.ModuleVersionUpdateResponseDTO;
 import modulemanagement.ls1.dtos.ModuleVersionViewDTO;
 import modulemanagement.ls1.dtos.ai.CompletionServiceResponseDTO;
 import modulemanagement.ls1.dtos.ai.CompletionServiceRequestDTO;
+import modulemanagement.ls1.dtos.ai.SimilarModulesDTO;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.services.AiCompletionService;
 import modulemanagement.ls1.services.AuthenticationService;
 import modulemanagement.ls1.services.ModuleVersionService;
 import jakarta.validation.Valid;
+import modulemanagement.ls1.services.OverlapDetectionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,11 +24,13 @@ public class ModuleVersionController {
     private final ModuleVersionService moduleVersionService;
     private final AuthenticationService authenticationService;
     private final AiCompletionService aiCompletionService;
+    private final OverlapDetectionService overlapDetectionService;
 
-    public ModuleVersionController(ModuleVersionService moduleVersionService, AuthenticationService authenticationService, AiCompletionService aiCompletionService) {
+    public ModuleVersionController(ModuleVersionService moduleVersionService, AuthenticationService authenticationService, AiCompletionService aiCompletionService, OverlapDetectionService overlapDetectionService) {
         this.moduleVersionService = moduleVersionService;
         this.authenticationService = authenticationService;
         this.aiCompletionService = aiCompletionService;
+        this.overlapDetectionService = overlapDetectionService;
     }
 
     @GetMapping("/{moduleVersionId}")
@@ -75,5 +79,11 @@ public class ModuleVersionController {
     @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
     public ResponseEntity<CompletionServiceResponseDTO> generateTeachingMethods(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         return ResponseEntity.ok(new CompletionServiceResponseDTO(aiCompletionService.generateTeachingMethods(moduleInfoRequestDTO).block()));
+    }
+
+    @PostMapping("/overlap-detection/check-similarity")
+    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    public ResponseEntity<SimilarModulesDTO> checkSimilarity(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
+        return ResponseEntity.ok(new SimilarModulesDTO(overlapDetectionService.checkModuleOverlap(moduleInfoRequestDTO).block()));
     }
 }

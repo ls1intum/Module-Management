@@ -1,7 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CompletionServiceRequestDTO, ModuleVersionControllerService, ProposalControllerService, ModuleVersionUpdateRequestDTO } from '../../core/modules/openapi';
+import {
+  CompletionServiceRequestDTO,
+  ModuleVersionControllerService,
+  ProposalControllerService,
+  ModuleVersionUpdateRequestDTO,
+  SimilarModulesDTO
+} from '../../core/modules/openapi';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({ template: '' })
 export abstract class ProposalBaseComponent {
@@ -60,6 +67,20 @@ export abstract class ProposalBaseComponent {
       responsiblesEng: [''],
       lvSwsLecturerEng: ['']
     });
+  }
+
+  protected async test() {
+    const data: CompletionServiceRequestDTO = {
+      bulletPoints: this.proposalForm.get('bulletPoints')?.value || 'New Module',
+      ...this.proposalForm.value
+    };
+
+    this.moduleVersionService.checkSimilarity(data).subscribe({
+      next: (response: SimilarModulesDTO) => console.log(response.similarModules),
+      error: (err: HttpErrorResponse) => console.log(err)
+    });
+
+    return;
   }
 
   protected async generateField(field: string) {
