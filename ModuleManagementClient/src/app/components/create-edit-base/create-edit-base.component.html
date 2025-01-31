@@ -143,7 +143,7 @@
           <button hlmBtn type="button" variant="outline" size="sm" (click)="togglePromptField('examination')">
             {{ showPrompt['examination'] ? 'Hide Prompt' : 'Show Prompt' }}
           </button>
-          <button hlmBtn type="button" variant="default" size="sm" class="min-w-28" (click)="generateField('examination')" [disabled]="loading">Generate Content</button>
+          <button hlmBtn type="button" variant="default" size="sm" class="min-w-28" (click)="generateExaminationAchievements()" [disabled]="loading">Generate Content</button>
         </div>
         @if (showPrompt['examination']) {
         <hlm-form-field class="mt-2 mb-2">
@@ -178,7 +178,7 @@
           <button hlmBtn type="button" variant="outline" size="sm" class="min-w-28" (click)="togglePromptField('content')">
             {{ showPrompt['content'] ? 'Hide Prompt' : 'Show Prompt' }}
           </button>
-          <button hlmBtn type="button" variant="default" size="sm" (click)="generateField('content')" [disabled]="loading">Generate Content</button>
+          <button hlmBtn type="button" variant="default" size="sm" (click)="generateContent()" [disabled]="loading">Generate Content</button>
         </div>
         @if (showPrompt['content']) {
         <hlm-form-field class="mt-2 mb-2">
@@ -204,7 +204,7 @@
           <button hlmBtn type="button" variant="outline" class="min-w-28" size="sm" (click)="togglePromptField('learning')">
             {{ showPrompt['learning'] ? 'Hide Prompt' : 'Show Prompt' }}
           </button>
-          <button hlmBtn type="button" variant="default" size="sm" (click)="generateField('learning')" [disabled]="loading">Generate Content</button>
+          <button hlmBtn type="button" variant="default" size="sm" (click)="generateLearningOutcomes()" [disabled]="loading">Generate Content</button>
         </div>
         @if (showPrompt['learning']) {
         <hlm-form-field class="mt-2 mb-2">
@@ -230,7 +230,7 @@
           <button hlmBtn type="button" variant="outline" class="min-w-28" size="sm" (click)="togglePromptField('teaching')">
             {{ showPrompt['teaching'] ? 'Hide Prompt' : 'Show Prompt' }}
           </button>
-          <button hlmBtn type="button" variant="default" size="sm" (click)="generateField('teaching')" [disabled]="loading">Generate Content</button>
+          <button hlmBtn type="button" variant="default" size="sm" (click)="generateTeachingMethods()" [disabled]="loading">Generate Content</button>
         </div>
         @if (showPrompt['teaching']) {
         <hlm-form-field class="mt-2 mb-2">

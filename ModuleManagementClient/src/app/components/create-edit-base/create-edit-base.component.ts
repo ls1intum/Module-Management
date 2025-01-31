@@ -32,14 +32,6 @@ export abstract class ProposalBaseComponent {
     media: false
   };
 
-  promptFieldMapping: { [key: string]: string } = {
-    examination: 'examinationAchievementsPromptEng',
-    content: 'contentPromptEng',
-    learning: 'learningOutcomesPromptEng',
-    teaching: 'teachingMethodsPromptEng',
-    media: 'mediaPromptEng'
-  };
-
   fieldMapping: { [key: string]: string } = {
     content: 'contentEng',
     examination: 'examinationAchievementsEng',
@@ -100,36 +92,77 @@ export abstract class ProposalBaseComponent {
     return;
   }
 
-  protected async generateField(field: string) {
-    this.loading = true;
-
-    const proposalData: CompletionServiceRequestDTO = {
-      bulletPoints: this.proposalForm.get('bulletPoints')?.value || 'New Module',
-      contextPrompt: this.proposalForm.get(this.promptFieldMapping[field])?.value || '',
-      ...this.proposalForm.value
+  private getCompletionServiceRequestDTO(field: string): CompletionServiceRequestDTO {
+    const promptFieldMapping: { [key: string]: string } = {
+      examination: 'examinationAchievementsPromptEng',
+      content: 'contentPromptEng',
+      learning: 'learningOutcomesPromptEng',
+      teaching: 'teachingMethodsPromptEng',
+      media: 'mediaPromptEng'
     };
 
-    let response;
-    switch (field) {
-      case 'content':
-        response = this.moduleVersionService.generateContent(proposalData);
-        break;
-      case 'examination':
-        response = this.moduleVersionService.generateExaminationAchievements(proposalData);
-        break;
-      case 'learning':
-        response = this.moduleVersionService.generateLearningOutcomes(proposalData);
-        break;
-      case 'teaching':
-        response = this.moduleVersionService.generateTeachingMethods(proposalData);
-        break;
-    }
+    const data: CompletionServiceRequestDTO = {
+      bulletPoints: this.proposalForm.get('bulletPoints')?.value || 'New Module',
+      contextPrompt: this.proposalForm.get(promptFieldMapping[field])?.value || '',
+      ...this.proposalForm.value
+    };
+    return data;
+  }
 
-    response!.subscribe({
+  protected async generateContent() {
+    this.loading = true;
+    const data = this.getCompletionServiceRequestDTO('content');
+    this.moduleVersionService.generateContent(data).subscribe({
       next: (response: CompletionServiceResponseDTO) => {
-        this.proposalForm.patchValue({
-          [this.fieldMapping[field]]: response!.responseData
-        });
+        this.proposalForm.patchValue({ contentEng: response.responseData });
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err.error);
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
+  }
+
+  protected async generateExaminationAchievements() {
+    this.loading = true;
+    const data = this.getCompletionServiceRequestDTO('examinationAchievementsEng');
+    this.moduleVersionService.generateExaminationAchievements(data).subscribe({
+      next: (response: CompletionServiceResponseDTO) => {
+        this.proposalForm.patchValue({ examinationAchievementsEng: response.responseData });
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err.error);
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
+  }
+
+  protected async generateLearningOutcomes() {
+    this.loading = true;
+    const data = this.getCompletionServiceRequestDTO('learningOutcomesEng');
+    this.moduleVersionService.generateLearningOutcomes(data).subscribe({
+      next: (response: CompletionServiceResponseDTO) => {
+        this.proposalForm.patchValue({ learningOutcomesEng: response.responseData });
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err.error);
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
+  }
+
+  protected async generateTeachingMethods() {
+    this.loading = true;
+    const data = this.getCompletionServiceRequestDTO('teachingMethodsEng');
+    this.moduleVersionService.generateTeachingMethods(data).subscribe({
+      next: (response: CompletionServiceResponseDTO) => {
+        this.proposalForm.patchValue({ teachingMethodsEng: response.responseData });
       },
       error: (err: HttpErrorResponse) => {
         console.log(err.error);
