@@ -25,6 +25,7 @@ model/module-version-update-response-dto.ts
 model/module-version-view-dto.ts
 model/module-version-view-feedback-dto.ts
 model/module-version.ts
+model/overlap-detection-request-dto.ts
 model/proposal-request-dto.ts
 model/proposal-view-dto.ts
 model/proposal.ts

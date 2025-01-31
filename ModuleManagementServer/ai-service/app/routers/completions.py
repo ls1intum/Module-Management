@@ -1,11 +1,11 @@
 from fastapi import APIRouter, HTTPException
-from app.models.module import ModuleInfo, ContentGenerationResponse, ExaminationAchievementsGenerationResponse, LearningOutcomesGenerationResponse, TeachingMethodsGenerationResponse
+from app.models.completionModels import GenerationModuleInfo, ContentGenerationResponse, ExaminationAchievementsGenerationResponse, LearningOutcomesGenerationResponse, TeachingMethodsGenerationResponse
 from app.services.llm_service import llm_service
 
 router = APIRouter(prefix="/completions", tags=["completions"])
 
 @router.post("/content", response_model=ContentGenerationResponse)
-async def generate_content(module_info: ModuleInfo) -> ContentGenerationResponse:
+async def generate_content(module_info: GenerationModuleInfo) -> ContentGenerationResponse:
     try:
         field = 'content'
         context = accumulate_module_info_for(field, module_info)
@@ -16,7 +16,7 @@ async def generate_content(module_info: ModuleInfo) -> ContentGenerationResponse
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/examination-achievements", response_model=ExaminationAchievementsGenerationResponse)
-async def generate_examination_achievements(module_info: ModuleInfo) -> ExaminationAchievementsGenerationResponse:
+async def generate_examination_achievements(module_info: GenerationModuleInfo) -> ExaminationAchievementsGenerationResponse:
     try:
         field = 'examination-achievements'
         context = accumulate_module_info_for(field, module_info)
@@ -27,7 +27,7 @@ async def generate_examination_achievements(module_info: ModuleInfo) -> Examinat
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/learning-outcomes", response_model=LearningOutcomesGenerationResponse)
-async def generate_learning_outcomes(module_info: ModuleInfo) -> LearningOutcomesGenerationResponse:
+async def generate_learning_outcomes(module_info: GenerationModuleInfo) -> LearningOutcomesGenerationResponse:
     try:
         field = 'learning-outcomes'
         context = accumulate_module_info_for(field, module_info)
@@ -38,7 +38,7 @@ async def generate_learning_outcomes(module_info: ModuleInfo) -> LearningOutcome
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/teaching-methods", response_model=TeachingMethodsGenerationResponse)
-async def generate_teaching_methods(module_info: ModuleInfo) -> TeachingMethodsGenerationResponse:
+async def generate_teaching_methods(module_info: GenerationModuleInfo) -> TeachingMethodsGenerationResponse:
     try:
         field = 'teaching-methods'
         context = accumulate_module_info_for(field, module_info)
@@ -48,7 +48,7 @@ async def generate_teaching_methods(module_info: ModuleInfo) -> TeachingMethodsG
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
-def accumulate_module_info_for(field: str, module_info: ModuleInfo):
+def accumulate_module_info_for(field: str, module_info: GenerationModuleInfo):
     context_parts = []
 
     if module_info.titleEng:
@@ -61,6 +61,8 @@ def accumulate_module_info_for(field: str, module_info: ModuleInfo):
         context_parts.append(f"Frequency: {module_info.frequencyEng}")
     if module_info.credits:
         context_parts.append(f"Credits: {module_info.credits}")
+    if module_info.durationEng:
+        context_parts.append(f"Duration: {module_info.durationEng}")
     if module_info.hoursTotal:
         context_parts.append(f"Total Hours: {module_info.hoursTotal}")
     if module_info.hoursSelfStudy:

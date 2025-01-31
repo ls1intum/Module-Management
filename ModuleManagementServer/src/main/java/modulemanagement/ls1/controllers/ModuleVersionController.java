@@ -3,9 +3,10 @@ package modulemanagement.ls1.controllers;
 import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
 import modulemanagement.ls1.dtos.ModuleVersionUpdateResponseDTO;
 import modulemanagement.ls1.dtos.ModuleVersionViewDTO;
-import modulemanagement.ls1.dtos.ai.CompletionServiceResponseDTO;
-import modulemanagement.ls1.dtos.ai.CompletionServiceRequestDTO;
-import modulemanagement.ls1.dtos.ai.SimilarModulesDTO;
+import modulemanagement.ls1.dtos.Completion.CompletionServiceResponseDTO;
+import modulemanagement.ls1.dtos.Completion.CompletionServiceRequestDTO;
+import modulemanagement.ls1.dtos.OverlapDetection.OverlapDetectionRequestDTO;
+import modulemanagement.ls1.dtos.OverlapDetection.SimilarModulesDTO;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.services.AiCompletionService;
 import modulemanagement.ls1.services.AuthenticationService;
@@ -83,7 +84,7 @@ public class ModuleVersionController {
 
     @PostMapping("/overlap-detection/check-similarity")
     @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
-    public ResponseEntity<SimilarModulesDTO> checkSimilarity(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
+    public ResponseEntity<SimilarModulesDTO> checkSimilarity(@Valid @RequestBody OverlapDetectionRequestDTO moduleInfoRequestDTO) {
         return ResponseEntity.ok(new SimilarModulesDTO(overlapDetectionService.checkModuleOverlap(moduleInfoRequestDTO).block()));
     }
 }

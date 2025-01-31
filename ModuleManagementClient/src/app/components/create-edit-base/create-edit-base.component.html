@@ -287,7 +287,6 @@
       <button type="submit" hlmBtn [disabled]="proposalForm.invalid || loading">
         {{ loading ? 'Saving...' : moduleVersionDto ? 'Update Proposal' : 'Create Proposal' }}
       </button>
-      <button hlmBtn (click)="test()">Test</button>
     </div>
 
     @if (error) {

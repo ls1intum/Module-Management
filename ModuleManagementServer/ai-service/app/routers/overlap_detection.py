@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from app.models.module import ModuleInfo
-from app.models.overlap import SimilarityResponse, ModuleAddedResponse
+from app.models.completionModels import ModuleInfo
+from app.models.overlapModels import SimilarityResponse, ModuleAddedResponse
 from app.services.overlap_service import OverlapService
 
 router = APIRouter(prefix="/overlap-detection", tags=["overlap-detection"])

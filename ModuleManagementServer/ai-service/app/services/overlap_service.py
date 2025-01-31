@@ -7,8 +7,8 @@ from datetime import datetime
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 from typing import List, Dict
-from app.models.module import ModuleInfo
-from app.models.overlap import SimilarModule
+from app.models.completionModels import ModuleInfo
+from app.models.overlapModels import SimilarModule
 
 logger = logging.getLogger('uvicorn.error')
 

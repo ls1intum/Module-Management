@@ -5,7 +5,9 @@ import {
   ModuleVersionControllerService,
   ProposalControllerService,
   ModuleVersionUpdateRequestDTO,
-  SimilarModulesDTO
+  SimilarModulesDTO,
+  CompletionServiceResponseDTO,
+  OverlapDetectionRequestDTO
 } from '../../core/modules/openapi';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -28,6 +30,22 @@ export abstract class ProposalBaseComponent {
     learning: false,
     teaching: false,
     media: false
+  };
+
+  promptFieldMapping: { [key: string]: string } = {
+    examination: 'examinationAchievementsPromptEng',
+    content: 'contentPromptEng',
+    learning: 'learningOutcomesPromptEng',
+    teaching: 'teachingMethodsPromptEng',
+    media: 'mediaPromptEng'
+  };
+
+  fieldMapping: { [key: string]: string } = {
+    content: 'contentEng',
+    examination: 'examinationAchievementsEng',
+    learning: 'learningOutcomesEng',
+    teaching: 'teachingMethodsEng',
+    media: 'mediaEng'
   };
 
   togglePromptField(field: string) {
@@ -69,9 +87,8 @@ export abstract class ProposalBaseComponent {
     });
   }
 
-  protected async test() {
-    const data: CompletionServiceRequestDTO = {
-      bulletPoints: this.proposalForm.get('bulletPoints')?.value || 'New Module',
+  protected async checkSimilarity() {
+    const data: OverlapDetectionRequestDTO = {
       ...this.proposalForm.value
     };
 
@@ -84,55 +101,43 @@ export abstract class ProposalBaseComponent {
   }
 
   protected async generateField(field: string) {
-    const promptFieldMapping: { [key: string]: string } = {
-      examination: 'examinationAchievementsPromptEng',
-      content: 'contentPromptEng',
-      learning: 'learningOutcomesPromptEng',
-      teaching: 'teachingMethodsPromptEng',
-      media: 'mediaPromptEng'
-    };
+    this.loading = true;
 
     const proposalData: CompletionServiceRequestDTO = {
       bulletPoints: this.proposalForm.get('bulletPoints')?.value || 'New Module',
-      contextPrompt: this.proposalForm.get(promptFieldMapping[field])?.value || '',
+      contextPrompt: this.proposalForm.get(this.promptFieldMapping[field])?.value || '',
       ...this.proposalForm.value
     };
-    this.loading = true;
-    try {
-      let response;
-      switch (field) {
-        case 'content':
-          response = await this.moduleVersionService.generateContent(proposalData).toPromise();
-          break;
-        case 'examination':
-          response = await this.moduleVersionService.generateExaminationAchievements(proposalData).toPromise();
-          break;
-        case 'learning':
-          response = await this.moduleVersionService.generateLearningOutcomes(proposalData).toPromise();
-          break;
-        case 'teaching':
-          response = await this.moduleVersionService.generateTeachingMethods(proposalData).toPromise();
-          break;
-      }
 
-      if (response?.responseData) {
-        const fieldMapping: { [key: string]: string } = {
-          content: 'contentEng',
-          examination: 'examinationAchievementsEng',
-          learning: 'learningOutcomesEng',
-          teaching: 'teachingMethodsEng',
-          media: 'mediaEng'
-        };
-
-        this.proposalForm.patchValue({
-          [fieldMapping[field]]: response.responseData
-        });
-      }
-    } catch (err: any) {
-      this.error = err.error;
-    } finally {
-      this.loading = false;
+    let response;
+    switch (field) {
+      case 'content':
+        response = this.moduleVersionService.generateContent(proposalData);
+        break;
+      case 'examination':
+        response = this.moduleVersionService.generateExaminationAchievements(proposalData);
+        break;
+      case 'learning':
+        response = this.moduleVersionService.generateLearningOutcomes(proposalData);
+        break;
+      case 'teaching':
+        response = this.moduleVersionService.generateTeachingMethods(proposalData);
+        break;
     }
+
+    response!.subscribe({
+      next: (response: CompletionServiceResponseDTO) => {
+        this.proposalForm.patchValue({
+          [this.fieldMapping[field]]: response!.responseData
+        });
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err.error);
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
   }
 
   abstract onSubmit(): void;

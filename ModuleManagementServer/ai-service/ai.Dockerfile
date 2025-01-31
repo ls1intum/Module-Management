@@ -9,6 +9,8 @@ COPY ./app /code/app
 
 COPY ./data/module-info /code/data/module-info
 
+COPY ./data/cache /code/data/cache
+
 VOLUME ["/code/data"]
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "5000"]

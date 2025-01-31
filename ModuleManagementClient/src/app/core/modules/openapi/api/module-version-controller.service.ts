@@ -27,6 +27,8 @@ import { ModuleVersionUpdateResponseDTO } from '../model/module-version-update-r
 // @ts-ignore
 import { ModuleVersionViewDTO } from '../model/module-version-view-dto';
 // @ts-ignore
+import { OverlapDetectionRequestDTO } from '../model/overlap-detection-request-dto';
+// @ts-ignore
 import { SimilarModulesDTO } from '../model/similar-modules-dto';
 
 // @ts-ignore
@@ -104,16 +106,16 @@ export class ModuleVersionControllerService implements ModuleVersionControllerSe
     }
 
     /**
-     * @param completionServiceRequestDTO 
+     * @param overlapDetectionRequestDTO 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public checkSimilarity(completionServiceRequestDTO: CompletionServiceRequestDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<SimilarModulesDTO>;
-    public checkSimilarity(completionServiceRequestDTO: CompletionServiceRequestDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<SimilarModulesDTO>>;
-    public checkSimilarity(completionServiceRequestDTO: CompletionServiceRequestDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<SimilarModulesDTO>>;
-    public checkSimilarity(completionServiceRequestDTO: CompletionServiceRequestDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (completionServiceRequestDTO === null || completionServiceRequestDTO === undefined) {
-            throw new Error('Required parameter completionServiceRequestDTO was null or undefined when calling checkSimilarity.');
+    public checkSimilarity(overlapDetectionRequestDTO: OverlapDetectionRequestDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<SimilarModulesDTO>;
+    public checkSimilarity(overlapDetectionRequestDTO: OverlapDetectionRequestDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<SimilarModulesDTO>>;
+    public checkSimilarity(overlapDetectionRequestDTO: OverlapDetectionRequestDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<SimilarModulesDTO>>;
+    public checkSimilarity(overlapDetectionRequestDTO: OverlapDetectionRequestDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (overlapDetectionRequestDTO === null || overlapDetectionRequestDTO === undefined) {
+            throw new Error('Required parameter overlapDetectionRequestDTO was null or undefined when calling checkSimilarity.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -165,7 +167,7 @@ export class ModuleVersionControllerService implements ModuleVersionControllerSe
         return this.httpClient.request<SimilarModulesDTO>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: completionServiceRequestDTO,
+                body: overlapDetectionRequestDTO,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

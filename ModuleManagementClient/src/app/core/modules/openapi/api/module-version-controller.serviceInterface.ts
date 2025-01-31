@@ -16,6 +16,7 @@ import { CompletionServiceResponseDTO } from '../model/models';
 import { ModuleVersionUpdateRequestDTO } from '../model/models';
 import { ModuleVersionUpdateResponseDTO } from '../model/models';
 import { ModuleVersionViewDTO } from '../model/models';
+import { OverlapDetectionRequestDTO } from '../model/models';
 import { SimilarModulesDTO } from '../model/models';
 
 
@@ -30,9 +31,9 @@ export interface ModuleVersionControllerServiceInterface {
     /**
      * 
      * 
-     * @param completionServiceRequestDTO 
+     * @param overlapDetectionRequestDTO 
      */
-    checkSimilarity(completionServiceRequestDTO: CompletionServiceRequestDTO, extraHttpRequestParams?: any): Observable<SimilarModulesDTO>;
+    checkSimilarity(overlapDetectionRequestDTO: OverlapDetectionRequestDTO, extraHttpRequestParams?: any): Observable<SimilarModulesDTO>;
 
     /**
      * 

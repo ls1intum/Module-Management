@@ -53,7 +53,7 @@ services:
   ai-service:
     build:
       context: ./ModuleManagementServer/ai-service
-      dockerfile: Dockerfile
+      dockerfile: ai.Dockerfile
     container_name: module-management-ai
     volumes:
       - overlap_data:/code/data

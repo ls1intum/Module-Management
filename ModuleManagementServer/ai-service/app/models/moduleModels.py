@@ -1,21 +1,20 @@
+
 from enum import Enum
 from typing import Optional
 from pydantic import BaseModel
-
 
 class Language(str, Enum):
     ENGLISH = "English"
     GERMAN = "German"
 
-
 class ModuleInfo(BaseModel):
-    bulletPoints: str
     contextPrompt: Optional[str] = None
     titleEng: Optional[str] = None
     levelEng: Optional[str] = None
     languageEng: Optional[Language] = None
     frequencyEng: Optional[str] = None
     credits: Optional[int] = None
+    durationEng: Optional[int] = None
     hoursTotal: Optional[int] = None
     hoursSelfStudy: Optional[int] = None
     hoursPresence: Optional[int] = None
@@ -29,18 +28,3 @@ class ModuleInfo(BaseModel):
     literatureEng: Optional[str] = None
     responsiblesEng: Optional[str] = None
     lvSwsLecturerEng: Optional[str] = None
-
-class ContentGenerationResponse(BaseModel):
-    responseData: str
-
-class ExaminationAchievementsGenerationResponse(BaseModel):
-    responseData: str
-
-class LearningOutcomesGenerationResponse(BaseModel):
-    responseData: str
-
-class TeachingMethodsGenerationResponse(BaseModel):
-    responseData: str
-
-class MediaGenerationResponse(BaseModel):
-    responseData: str

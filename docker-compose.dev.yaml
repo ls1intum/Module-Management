@@ -35,7 +35,7 @@ services:
   ai-service:
     build:
       context: ./ModuleManagementServer/ai-service
-      dockerfile: Dockerfile
+      dockerfile: ai.Dockerfile
     container_name: module-management-ai
     environment:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
