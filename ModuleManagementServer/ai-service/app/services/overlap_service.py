@@ -29,13 +29,11 @@ class OverlapService:
             os.makedirs(self.cache_dir)
 
     def get_modules_hash(self, modules: List[Dict]) -> str:
-        """Generate a hash of the modules data to detect changes"""
-        # Sort modules by ID to ensure consistent hashing
+        # sort for consistent hashing
         sorted_modules = sorted(modules, key=lambda x: x.get('module_id', ''))
         return hashlib.md5(json.dumps(sorted_modules, sort_keys=True).encode()).hexdigest()
 
     def load_cache(self) -> bool:
-        """Load cached embeddings if they're still valid"""
         embeddings_file = os.path.join(self.cache_dir, 'embeddings.npz')
         metadata_file = os.path.join(self.cache_dir, 'metadata.json')
         
@@ -43,18 +41,15 @@ class OverlapService:
             return False
 
         try:
-            # Load metadata
             with open(metadata_file, 'r') as f:
                 metadata = json.load(f)
             
-            # Load current modules to compare hash
-            current_modules = self.load_modules_from_files()
+            current_modules = self.load_modules_from_json()
             current_hash = self.get_modules_hash(current_modules)
             
-            # Check if cache is still valid
+            # check if data was updated
             if (metadata['data_hash'] == current_hash and 
                 metadata['model_name'] == self.model_name):
-                # Load embeddings
                 data = np.load(embeddings_file)
                 self.embeddings = data['embeddings']
                 self.modules = current_modules
@@ -67,16 +62,12 @@ class OverlapService:
         return False
 
     def save_cache(self):
-        """Save embeddings and metadata to cache"""
-        logger.info("Saving to cache")
         embeddings_file = os.path.join(self.cache_dir, 'embeddings.npz')
         metadata_file = os.path.join(self.cache_dir, 'metadata.json')
         
         try:
-            # Save embeddings
             np.savez_compressed(embeddings_file, embeddings=self.embeddings)
             
-            # Save metadata
             metadata = {
                 'data_hash': self.get_modules_hash(self.modules),
                 'model_name': self.model_name,
@@ -86,12 +77,10 @@ class OverlapService:
             with open(metadata_file, 'w') as f:
                 json.dump(metadata, f, indent=2)
                 
-            logger.info("Cache saved successfully")
         except Exception as e:
             logger.error(f"Error saving cache: {e}")
 
-    def load_modules_from_files(self) -> List[Dict]:
-        """Load modules from JSON files"""
+    def load_modules_from_json(self) -> List[Dict]:
         modules = []
         default_dir = os.path.join(self.json_dir)
         
@@ -106,18 +95,15 @@ class OverlapService:
         return modules
 
     def load_default_modules(self):
-        """Load modules and compute/load embeddings"""
         logger.info("Loading modules")
         
-        # Try to load from cache first
+        # prefer cached data
         if self.load_cache():
             return
             
-        # If cache invalid or missing, load from files and compute new embeddings
-        modules_data = self.load_modules_from_files()
+        # load and compute new, if necessary
+        modules_data = self.load_modules_from_json()
         self.modules = modules_data
-        
-        # Compute new embeddings
         logger.info("Computing new embeddings")
         texts = [self.create_module_text(ModuleInfo(
             moduleId=m.get("module_id", ""),
@@ -145,17 +131,14 @@ class OverlapService:
         return " ".join([f for f in weighted_fields if f])
 
     def find_similar_modules(self, module: ModuleInfo) -> List[SimilarModule]:
-        logger.info("Finding similar module")
         if not self.modules:
             return []
 
         module_text = self.create_module_text(module)
         module_embedding = self.model.encode([module_text])[0]
-        
         similarities = cosine_similarity([module_embedding], self.embeddings)[0]
         mask = similarities >= self.threshold
         similar_indices = np.where(mask)[0]
-        
         results = [
             SimilarModule(
                 moduleId=self.modules[idx]["module_id"],
@@ -165,12 +148,9 @@ class OverlapService:
             for idx in similar_indices
         ]
 
-        logger.info(results)
-
         return sorted(results, key=lambda x: x.similarity, reverse=True)[:5]
 
     def add_module(self, module: ModuleInfo):
-        """Add a new module and update embeddings"""
         module_dict = {
             "module_id": module.moduleId,
             "title": module.titleEng,
@@ -181,7 +161,6 @@ class OverlapService:
             "literature": module.literatureEng
         }
         self.modules.append(module_dict)
-        
         module_text = self.create_module_text(module)
         new_embedding = self.model.encode([module_text])[0]
         
