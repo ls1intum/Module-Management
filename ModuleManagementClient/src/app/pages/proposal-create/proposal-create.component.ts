@@ -14,7 +14,6 @@ import { HlmAlertDescriptionDirective, HlmAlertDirective, HlmAlertIconDirective,
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { provideIcons } from '@ng-icons/core';
 import { lucideInfo } from '@ng-icons/lucide';
-import { LayoutComponent } from '../../components/layout.component';
 import { ProposalBaseComponent } from '../../components/create-edit-base/create-edit-base.component';
 
 @Component({
@@ -29,7 +28,6 @@ import { ProposalBaseComponent } from '../../components/create-edit-base/create-
     BrnSelectImports,
     HlmSelectImports,
     HlmLabelDirective,
-    LayoutComponent,
     RouterModule,
     AutoResizeDirective,
     HlmAlertDescriptionDirective,

@@ -7,7 +7,6 @@ import { HlmFormFieldModule } from '@spartan-ng/ui-formfield-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
 import { HlmSelectImports } from '@spartan-ng/ui-select-helm';
-import { HlmLabelDirective } from '@spartan-ng/ui-label-helm';
 import { RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AutoResizeDirective } from '../../core/shared/autoresize.directive';
@@ -15,7 +14,6 @@ import { HlmAlertDescriptionDirective, HlmAlertDirective, HlmAlertIconDirective,
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { provideIcons } from '@ng-icons/core';
 import { lucideInfo } from '@ng-icons/lucide';
-import { LayoutComponent } from '../../components/layout.component';
 import { ProposalBaseComponent } from '../../components/create-edit-base/create-edit-base.component';
 import { ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO } from '../../core/modules/openapi';
 
@@ -30,8 +28,6 @@ import { ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO } from '.
     HlmInputDirective,
     BrnSelectImports,
     HlmSelectImports,
-    HlmLabelDirective,
-    LayoutComponent,
     RouterModule,
     AutoResizeDirective,
     HlmAlertDescriptionDirective,

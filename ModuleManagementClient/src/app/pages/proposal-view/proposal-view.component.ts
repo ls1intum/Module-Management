@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { HlmTableComponent, HlmTrowComponent, HlmThComponent, HlmTdComponent, HlmCaptionComponent } from '@spartan-ng/ui-table-helm';
 import { AddModuleVersionDTO, ModuleVersion, Proposal, ProposalControllerService, ProposalViewDTO } from '../../core/modules/openapi';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
@@ -53,6 +53,8 @@ import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
   providers: [provideIcons({ lucideInfo })]
 })
 export class ProposalViewComponent {
+  router = inject(Router);
+  route = inject(ActivatedRoute);
   proposalService = inject(ProposalControllerService);
   loading: boolean = true;
   error: string | null = null;
@@ -65,15 +67,17 @@ export class ProposalViewComponent {
   }
 
   private async fetchProposal() {
-    const proposalId = Number(window.location.pathname.split('/').pop());
-    if (proposalId) {
-      this.loading = true;
-      this.proposalService.getProposalView(proposalId).subscribe({
-        next: (data: ProposalViewDTO) => (this.proposal = data),
-        error: (err: HttpErrorResponse) => (this.error = err.error),
-        complete: () => (this.loading = false)
-      });
-    }
+    this.route.params.subscribe((params) => {
+      const proposalId = Number(params['id']);
+      if (proposalId) {
+        this.loading = true;
+        this.proposalService.getProposalView(proposalId).subscribe({
+          next: (data: ProposalViewDTO) => (this.proposal = data),
+          error: (err: HttpErrorResponse) => (this.error = err.error),
+          complete: () => (this.loading = false)
+        });
+      }
+    });
   }
 
   submitProposal() {
@@ -97,7 +101,7 @@ export class ProposalViewComponent {
   deleteProposal() {
     if (this.proposal) {
       this.proposalService.deleteProposal(this.proposal.proposalId!).subscribe({
-        next: () => (window.location.href = '/proposals'),
+        next: () => this.router.navigate(['/proposals']),
         error: (err: HttpErrorResponse) => (this.error = err.error)
       });
     }
@@ -105,19 +109,19 @@ export class ProposalViewComponent {
 
   updateProposal() {
     if (this.proposal) {
-      window.location.href = `/proposals/edit/${this.proposal.proposalId}`;
+      this.router.navigate(['/proposals/edit', this.proposal.proposalId]);
     }
   }
 
   viewModuleVersion(versionId: number | undefined) {
     if (versionId) {
-      window.location.href = `/module-version/view/${versionId}`;
+      this.router.navigate(['/module-version/view', versionId]);
     }
   }
 
   editLatestModuleVersion() {
     if (this.proposal?.latestVersion) {
-      window.location.href = `/module-version/edit/${this.proposal.latestModuleVersion!.moduleVersionId}`;
+      this.router.navigate(['/module-version/edit', this.proposal.latestModuleVersion!.moduleVersionId]);
     }
   }
 

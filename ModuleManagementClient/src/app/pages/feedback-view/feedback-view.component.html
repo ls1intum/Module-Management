@@ -1,11 +1,11 @@
-<div class="grid grid-cols-[minmax(0,1fr)_320px] gap-4 p-4">
-  <hlm-scroll-area class="border rounded-md border-none h-[calc(100vh-180px)]">
+<h2 class="text-2xl">Module Proposal for '{{ moduleVersion?.titleEng }}'</h2>
+<div class="grid grid-cols-[minmax(0,1fr)_320px] gap-4">
+  <hlm-scroll-area class="border rounded-md border-none h-[calc(100vh-200px)]">
     <div class="p-4">
       @if(loading) {
       <div class="text-center text-muted-foreground">Loading...</div>
       } @if (!loading && moduleVersion) {
       <div class="space-y-4">
-        <h2 class="text-xl font-semibold mb-4">Module Version Details</h2>
         <div class="grid grid-cols-2 gap-2">
           <div class="font-medium">Version:</div>
           <div>{{ moduleVersion.version }}</div>

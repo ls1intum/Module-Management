@@ -1,204 +1,196 @@
-<app-layout>
-  <form [formGroup]="proposalForm" (ngSubmit)="onSubmit()" class="space-y-6 max-w-4xl mx-auto p-6">
-    <h1 class="text-2xl mb-8">Edit Proposal for {{ moduleVersionDto?.titleEng }}</h1>
+<form [formGroup]="proposalForm" (ngSubmit)="onSubmit()" class="space-y-6 max-w-4xl mx-auto p-6">
+  <h1 class="text-2xl mb-8">Edit Proposal for {{ moduleVersionDto?.titleEng }}</h1>
 
-    <div hlmAlert class="mb-8">
-      <hlm-icon hlmAlertIcon name="lucideInfo" />
-      <h3 hlmAlertTitle>Information</h3>
-      <p hlmAlertDesc>
-        Please fill out all information fields required for a new module.
-        <br />
-        After giving the module a title you can save your progress at any time and come back at another time.
-      </p>
-    </div>
+  <div hlmAlert class="mb-8">
+    <hlm-icon hlmAlertIcon name="lucideInfo" />
+    <h3 hlmAlertTitle>Information</h3>
+    <p hlmAlertDesc>
+      Please fill out all information fields required for a new module.
+      <br />
+      After giving the module a title you can save your progress at any time and come back at another time.
+    </p>
+  </div>
 
-    <div>
-      <label hlmLabel class="text-lg">
-        Title
-        <hlm-form-field class="mt-2">
-          <input hlmInput formControlName="titleEng" placeholder="Title (English)" class="w-full" />
-          <hlm-error>A preliminary title is required</hlm-error>
-        </hlm-form-field>
-      </label>
-    </div>
-
-    <div>
-      <label hlmLabel class="text-lg">
-        Level
-        <hlm-form-field class="mt-2">
-          <input hlmInput formControlName="levelEng" placeholder="e.g. Masters/Bachelors" class="w-full" />
-        </hlm-form-field>
-      </label>
-    </div>
-
-    <div>
-      <label hlmLabel class="text-lg">Language</label>
+  <div>
+    <label hlmLabel class="text-lg">
+      Title
       <hlm-form-field class="mt-2">
-        <brn-select class="inline-block" placeholder="Select Language" formControlName="languageEng">
-          <hlm-select-trigger class="w-full">
-            <hlm-select-value />
-          </hlm-select-trigger>
-          <hlm-select-content>
-            <hlm-select-label>Language</hlm-select-label>
-            <hlm-option value="English">English</hlm-option>
-            <hlm-option value="German">German</hlm-option>
-          </hlm-select-content>
-        </brn-select>
+        <input hlmInput formControlName="titleEng" placeholder="Title (English)" class="w-full" />
+        <hlm-error>A preliminary title is required</hlm-error>
       </hlm-form-field>
-    </div>
+    </label>
+  </div>
 
+  <div>
+    <label hlmLabel class="text-lg">
+      Level
+      <hlm-form-field class="mt-2">
+        <input hlmInput formControlName="levelEng" placeholder="e.g. Masters/Bachelors" class="w-full" />
+      </hlm-form-field>
+    </label>
+  </div>
+
+  <div>
+    <label hlmLabel class="text-lg">Language</label>
+    <hlm-form-field class="mt-2">
+      <brn-select class="inline-block" placeholder="Select Language" formControlName="languageEng">
+        <hlm-select-trigger class="w-full">
+          <hlm-select-value />
+        </hlm-select-trigger>
+        <hlm-select-content>
+          <hlm-select-label>Language</hlm-select-label>
+          <hlm-option value="English">English</hlm-option>
+          <hlm-option value="German">German</hlm-option>
+        </hlm-select-content>
+      </brn-select>
+    </hlm-form-field>
+  </div>
+
+  <div>
+    <label hlmLabel class="text-lg">
+      Repetition
+      <hlm-form-field class="mt-2">
+        <input hlmInput formControlName="repetitionEng" placeholder="e.g. Every Semester" class="w-full" />
+      </hlm-form-field>
+    </label>
+  </div>
+
+  <div>
+    <label hlmLabel class="text-lg">
+      Frequency
+      <hlm-form-field class="mt-2">
+        <input hlmInput formControlName="frequencyEng" placeholder="e.g. Winter/Summer" class="w-full" />
+      </hlm-form-field>
+    </label>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <div>
       <label hlmLabel class="text-lg">
-        Repetition
+        Credits
         <hlm-form-field class="mt-2">
-          <input hlmInput formControlName="repetitionEng" placeholder="e.g. Every Semester" class="w-full" />
+          <input hlmInput type="number" formControlName="credits" placeholder="Credits" class="w-full" />
         </hlm-form-field>
       </label>
     </div>
 
     <div>
       <label hlmLabel class="text-lg">
-        Frequency
+        Total Hours
         <hlm-form-field class="mt-2">
-          <input hlmInput formControlName="frequencyEng" placeholder="e.g. Winter/Summer" class="w-full" />
-        </hlm-form-field>
-      </label>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <label hlmLabel class="text-lg">
-          Credits
-          <hlm-form-field class="mt-2">
-            <input hlmInput type="number" formControlName="credits" placeholder="Credits" class="w-full" />
-          </hlm-form-field>
-        </label>
-      </div>
-
-      <div>
-        <label hlmLabel class="text-lg">
-          Total Hours
-          <hlm-form-field class="mt-2">
-            <input hlmInput type="number" formControlName="hoursTotal" placeholder="Total Hours" class="w-full" />
-          </hlm-form-field>
-        </label>
-      </div>
-
-      <div>
-        <label hlmLabel class="text-lg">
-          Self-Study Hours
-          <hlm-form-field class="mt-2">
-            <input hlmInput type="number" formControlName="hoursSelfStudy" placeholder="Self-Study Hours" class="w-full" />
-          </hlm-form-field>
-        </label>
-      </div>
-
-      <div>
-        <label hlmLabel class="text-lg">
-          Presence Hours
-          <hlm-form-field class="mt-2">
-            <input hlmInput type="number" formControlName="hoursPresence" placeholder="Presence Hours" class="w-full" />
-          </hlm-form-field>
-        </label>
-      </div>
-    </div>
-
-    <div>
-      <label hlmLabel class="text-lg">
-        Examination Achievements
-        <hlm-form-field class="mt-2">
-          <textarea
-            autoResize
-            hlmInput
-            formControlName="examinationAchievementsEng"
-            placeholder="How is the students performance evaluated?"
-            class="w-full min-h-[100px]"
-          ></textarea>
-        </hlm-form-field>
-        <button hlmBtn type="button" variant="default" (click)="test()">Test</button>
-      </label>
-    </div>
-
-    <div>
-      <label hlmLabel class="text-lg">
-        Recommended Prerequisites
-        <hlm-form-field class="mt-2">
-          <textarea autoResize hlmInput formControlName="recommendedPrerequisitesEng" placeholder="What are participents expected to know?" class="w-full min-h-[100px]"></textarea>
+          <input hlmInput type="number" formControlName="hoursTotal" placeholder="Total Hours" class="w-full" />
         </hlm-form-field>
       </label>
     </div>
 
     <div>
       <label hlmLabel class="text-lg">
-        Module Content
+        Self-Study Hours
         <hlm-form-field class="mt-2">
-          <textarea autoResize hlmInput formControlName="contentEng" placeholder="What is the module about?" class="w-full min-h-[100px]"></textarea>
+          <input hlmInput type="number" formControlName="hoursSelfStudy" placeholder="Self-Study Hours" class="w-full" />
         </hlm-form-field>
       </label>
     </div>
 
     <div>
       <label hlmLabel class="text-lg">
-        Learning Outcomes
+        Presence Hours
         <hlm-form-field class="mt-2">
-          <textarea autoResize hlmInput formControlName="learningOutcomesEng" placeholder="What will the participents learn?" class="w-full min-h-[100px]"></textarea>
+          <input hlmInput type="number" formControlName="hoursPresence" placeholder="Presence Hours" class="w-full" />
         </hlm-form-field>
       </label>
     </div>
+  </div>
 
-    <div>
-      <label hlmLabel class="text-lg">
-        Teaching Methods
-        <hlm-form-field class="mt-2">
-          <textarea autoResize hlmInput formControlName="teachingMethodsEng" placeholder="How will the content be taught." class="w-full min-h-[100px]"></textarea>
-        </hlm-form-field>
-      </label>
-    </div>
+  <div>
+    <label hlmLabel class="text-lg">
+      Examination Achievements
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="examinationAchievementsEng" placeholder="How is the students performance evaluated?" class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
+      <button hlmBtn type="button" variant="default" (click)="test()">Test</button>
+    </label>
+  </div>
 
-    <div>
-      <label hlmLabel class="text-lg">
-        Media used
-        <hlm-form-field class="mt-2">
-          <textarea autoResize hlmInput formControlName="mediaEng" placeholder="What media will be used?" class="w-full min-h-[100px]"></textarea>
-        </hlm-form-field>
-      </label>
-    </div>
+  <div>
+    <label hlmLabel class="text-lg">
+      Recommended Prerequisites
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="recommendedPrerequisitesEng" placeholder="What are participents expected to know?" class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
+    </label>
+  </div>
 
-    <div>
-      <label hlmLabel class="text-lg">
-        Literature
-        <hlm-form-field class="mt-2">
-          <textarea autoResize hlmInput formControlName="literatureEng" placeholder="What literature is reccommended?" class="w-full min-h-[100px]"></textarea>
-        </hlm-form-field>
-      </label>
-    </div>
+  <div>
+    <label hlmLabel class="text-lg">
+      Module Content
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="contentEng" placeholder="What is the module about?" class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
+    </label>
+  </div>
 
-    <div>
-      <label hlmLabel class="text-lg">
-        Responsibles
-        <hlm-form-field class="mt-2">
-          <textarea autoResize hlmInput formControlName="responsiblesEng" placeholder="Who is responsible for the module?" class="w-full min-h-[100px]"></textarea>
-        </hlm-form-field>
-      </label>
-    </div>
+  <div>
+    <label hlmLabel class="text-lg">
+      Learning Outcomes
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="learningOutcomesEng" placeholder="What will the participents learn?" class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
+    </label>
+  </div>
 
-    <div>
-      <label hlmLabel class="text-lg">
-        Lecturer
-        <hlm-form-field class="mt-2">
-          <textarea autoResize hlmInput formControlName="lvSwsLecturerEng" placeholder="Who will hold the lectures?" class="w-full min-h-[100px]"></textarea>
-        </hlm-form-field>
-      </label>
-    </div>
+  <div>
+    <label hlmLabel class="text-lg">
+      Teaching Methods
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="teachingMethodsEng" placeholder="How will the content be taught." class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
+    </label>
+  </div>
 
-    <div class="flex justify-between gap-4">
-      <button hlmBtn [routerLink]="['/proposals']" variant="outline">Cancel</button>
-      <button type="submit" hlmBtn [disabled]="proposalForm.invalid || loading">
-        {{ loading ? 'Updating...' : 'Update Proposal' }}
-      </button>
-    </div>
-    @if (error) {
-    <div class="text-red-500 mt-4">{{ error }}</div>
-    }
-  </form>
-</app-layout>
+  <div>
+    <label hlmLabel class="text-lg">
+      Media used
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="mediaEng" placeholder="What media will be used?" class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
+    </label>
+  </div>
+
+  <div>
+    <label hlmLabel class="text-lg">
+      Literature
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="literatureEng" placeholder="What literature is reccommended?" class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
+    </label>
+  </div>
+
+  <div>
+    <label hlmLabel class="text-lg">
+      Responsibles
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="responsiblesEng" placeholder="Who is responsible for the module?" class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
+    </label>
+  </div>
+
+  <div>
+    <label hlmLabel class="text-lg">
+      Lecturer
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="lvSwsLecturerEng" placeholder="Who will hold the lectures?" class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
+    </label>
+  </div>
+
+  <div class="flex justify-between gap-4">
+    <button hlmBtn [routerLink]="['/proposals']" variant="outline">Cancel</button>
+    <button type="submit" hlmBtn [disabled]="proposalForm.invalid || loading">
+      {{ loading ? 'Updating...' : 'Update Proposal' }}
+    </button>
+  </div>
+  @if (error) {
+  <div class="text-red-500 mt-4">{{ error }}</div>
+  }
+</form>
