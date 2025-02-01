@@ -4,7 +4,7 @@
   } @else if (error) {
   <div class="text-center text-red-500 py-4">{{ error }}</div>
   } @else if (moduleVersionDto) {
-  <div class="max-w-4xl mx-auto space-y-8">
+  <div class="max-w-4xl mx-auto space-y-6">
     <div class="flex items-center justify-between">
       <h2 class="text-3xl font-bold">{{ getModuleVersionProperty('titleEng') }}</h2>
       @if (isLatestVersion() && moduleVersionDto.status == moduleVersionStatus.PendingSubmission) {

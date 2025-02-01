@@ -74,7 +74,9 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
         ...this.proposalForm.value,
         moduleVersionId: this.moduleVersionId
       };
-      
+
+      console.log(proposalData);
+
       this.moduleVersionService.updateModuleVersion(this.moduleVersionId, proposalData).subscribe({
         next: (response: ModuleVersionUpdateResponseDTO) => {
           this.proposalForm.reset();

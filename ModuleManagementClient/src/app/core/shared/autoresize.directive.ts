@@ -1,17 +1,19 @@
-import { Directive, ElementRef, AfterViewInit } from '@angular/core';
+import { Directive, ElementRef, AfterViewInit, NgZone } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
   selector: 'textarea[autoResize]'
 })
 export class AutoResizeDirective implements AfterViewInit {
-  constructor(private el: ElementRef<HTMLTextAreaElement>, private ngControl: NgControl) {}
+  constructor(private el: ElementRef<HTMLTextAreaElement>, private ngControl: NgControl, private ngZone: NgZone) {}
 
   ngAfterViewInit(): void {
     this.adjust();
-    if (this.ngControl && this.ngControl.valueChanges) {
+    if (this.ngControl?.valueChanges) {
       this.ngControl.valueChanges.subscribe(() => {
-        setTimeout(() => this.adjust());
+        this.ngZone.runOutsideAngular(() => {
+          setTimeout(() => this.adjust());
+        });
       });
     }
   }

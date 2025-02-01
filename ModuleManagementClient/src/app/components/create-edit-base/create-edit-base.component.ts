@@ -28,16 +28,14 @@ export abstract class ProposalBaseComponent {
     examination: false,
     content: false,
     learning: false,
-    teaching: false,
-    media: false
+    teaching: false
   };
 
   fieldMapping: { [key: string]: string } = {
     content: 'contentEng',
     examination: 'examinationAchievementsEng',
     learning: 'learningOutcomesEng',
-    teaching: 'teachingMethodsEng',
-    media: 'mediaEng'
+    teaching: 'teachingMethodsEng'
   };
 
   togglePromptField(field: string) {
@@ -47,11 +45,6 @@ export abstract class ProposalBaseComponent {
   constructor() {
     this.proposalForm = this.formBuilder.group({
       bulletPoints: [''],
-      examinationPrompt: [''],
-      contentPrompt: [''],
-      learningPrompt: [''],
-      teachingPrompt: [''],
-      mediaPrompt: [''],
       titleEng: ['', Validators.required],
       levelEng: [''],
       languageEng: ['English'],
@@ -65,11 +58,10 @@ export abstract class ProposalBaseComponent {
       examinationAchievementsEng: [''],
       examinationAchievementsPromptEng: [''],
       recommendedPrerequisitesEng: [''],
-      recommendedPrerequisitesPromptEng: [''],
       contentEng: [''],
       contentPromptEng: [''],
       learningOutcomesEng: [''],
-      learningOutcomesPrompotEng: [''],
+      learningOutcomesPromptEng: [''],
       teachingMethodsEng: [''],
       teachingMethodsPromptEng: [''],
       mediaEng: [''],
@@ -97,8 +89,7 @@ export abstract class ProposalBaseComponent {
       examination: 'examinationAchievementsPromptEng',
       content: 'contentPromptEng',
       learning: 'learningOutcomesPromptEng',
-      teaching: 'teachingMethodsPromptEng',
-      media: 'mediaPromptEng'
+      teaching: 'teachingMethodsPromptEng'
     };
 
     const data: CompletionServiceRequestDTO = {
