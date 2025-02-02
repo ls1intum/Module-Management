@@ -8,8 +8,7 @@ import { LayoutComponent } from './components/layout.component';
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule, RouterOutlet, HeaderComponent, LayoutComponent],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
   title = 'CIT Module Management';
