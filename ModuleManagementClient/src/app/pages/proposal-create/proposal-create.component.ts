@@ -38,9 +38,7 @@ import { BrnSeparatorComponent } from '@spartan-ng/ui-separator-brain';
     HlmAlertIconDirective,
     HlmAlertTitleDirective,
     HlmIconComponent,
-    FeedbackDepartmentPipe,
-    HlmSeparatorModule,
-    BrnSeparatorComponent
+    FeedbackDepartmentPipe
   ],
   providers: [provideIcons({ lucideInfo })],
   templateUrl: '../../components/create-edit-base/create-edit-base.component.html'
