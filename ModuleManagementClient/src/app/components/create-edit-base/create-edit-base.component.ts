@@ -7,12 +7,19 @@ import {
   ModuleVersionUpdateRequestDTO,
   SimilarModulesDTO,
   CompletionServiceResponseDTO,
-  OverlapDetectionRequestDTO
+  OverlapDetectionRequestDTO,
+  ModuleVersionViewFeedbackDTO
 } from '../../core/modules/openapi';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { HlmSeparatorDirective, HlmSeparatorModule } from '@spartan-ng/ui-separator-helm';
+import { BrnSeparatorModule } from '@spartan-ng/ui-separator-brain';
+import { BrnSelectComponent } from '@spartan-ng/ui-select-brain';
 
-@Component({ template: '' })
+@Component({
+  template: '',
+  imports: [BrnSeparatorModule, HlmSeparatorModule]
+})
 export abstract class ProposalBaseComponent {
   protected formBuilder = inject(FormBuilder);
   protected router = inject(Router);
@@ -23,6 +30,7 @@ export abstract class ProposalBaseComponent {
   loading: boolean = false;
   error: string | null = null;
   moduleVersionDto: ModuleVersionUpdateRequestDTO | null = null;
+  rejectionFeedbacks: ModuleVersionViewFeedbackDTO[] = [];
 
   showPrompt: { [key: string]: boolean } = {
     examination: false,

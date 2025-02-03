@@ -1,10 +1,7 @@
 package modulemanagement.ls1.services;
 
 import jakarta.validation.Valid;
-import modulemanagement.ls1.dtos.AddModuleVersionDTO;
-import modulemanagement.ls1.dtos.ProposalRequestDTO;
-import modulemanagement.ls1.dtos.ProposalViewDTO;
-import modulemanagement.ls1.dtos.ProposalsCompactDTO;
+import modulemanagement.ls1.dtos.*;
 import modulemanagement.ls1.enums.*;
 import modulemanagement.ls1.models.Feedback;
 import modulemanagement.ls1.models.ModuleVersion;
@@ -227,5 +224,4 @@ public class ProposalService {
         }
         proposalRepository.delete(p);
     }
-
 }

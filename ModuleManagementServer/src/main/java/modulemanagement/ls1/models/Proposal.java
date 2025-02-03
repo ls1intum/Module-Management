@@ -2,6 +2,7 @@ package modulemanagement.ls1.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
+import modulemanagement.ls1.dtos.ModuleVersionViewFeedbackDTO;
 import modulemanagement.ls1.enums.ModuleVersionStatus;
 import modulemanagement.ls1.enums.ProposalStatus;
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import modulemanagement.ls1.services.ProposalService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -87,5 +89,23 @@ public class Proposal {
         newMv.setRequiredFeedbacks(requiredFeedbacks);
         addModuleVersion(newMv);
         this.setStatus(ProposalStatus.PENDING_SUBMISSION);
+    }
+
+    public List<ModuleVersionViewFeedbackDTO> getLastRejectionReasons() {
+        List<ModuleVersion> mvs = this.getModuleVersions();
+        Collections.reverse(mvs);
+        for (ModuleVersion mv : mvs) {
+            if (mv.isRejected()) {
+                List<ModuleVersionViewFeedbackDTO> rejectionFeedback = new ArrayList<>();
+                List<Feedback> feedbacks = mv.getRequiredFeedbacks();
+                for (Feedback feedback : feedbacks) {
+                    if (feedback.isRejected()) {
+                        rejectionFeedback.add(ModuleVersionViewFeedbackDTO.from(feedback));
+                    }
+                }
+                return rejectionFeedback;
+            }
+        }
+        return Collections.emptyList();
     }
 }

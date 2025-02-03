@@ -5,6 +5,7 @@ import modulemanagement.ls1.dtos.ModuleVersionUpdateResponseDTO;
 import modulemanagement.ls1.dtos.ModuleVersionViewDTO;
 import modulemanagement.ls1.dtos.Completion.CompletionServiceResponseDTO;
 import modulemanagement.ls1.dtos.Completion.CompletionServiceRequestDTO;
+import modulemanagement.ls1.dtos.ModuleVersionViewFeedbackDTO;
 import modulemanagement.ls1.dtos.OverlapDetection.OverlapDetectionRequestDTO;
 import modulemanagement.ls1.dtos.OverlapDetection.SimilarModulesDTO;
 import modulemanagement.ls1.models.User;
@@ -18,6 +19,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/module-versions")
@@ -56,6 +59,14 @@ public class ModuleVersionController {
         User user = authenticationService.getAuthenticatedUser(jwt);
         ModuleVersionViewDTO dto = moduleVersionService.getModuleVersionViewDto(moduleVersionId, user.getUserId());
         return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/{id}/last-reject-reasons")
+    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    public ResponseEntity<List<ModuleVersionViewFeedbackDTO>> getLastRejectReasons(@AuthenticationPrincipal Jwt jwt, @PathVariable Long id) {
+        User user = authenticationService.getAuthenticatedUser(jwt);
+        List<ModuleVersionViewFeedbackDTO> lastRejectionReasons = moduleVersionService.getLastRejectionReasons(user.getUserId(), id);
+        return ResponseEntity.ok(lastRejectionReasons);
     }
 
     @PostMapping("/generate/content")

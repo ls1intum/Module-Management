@@ -7,6 +7,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ModuleVersionViewFeedbackDTO } from './module-version-view-feedback-dto';
 import { User } from './user';
 import { ModuleVersion } from './module-version';
 
@@ -17,6 +18,7 @@ export interface Proposal {
     creationDate?: string;
     status: Proposal.StatusEnum;
     moduleVersions?: Array<ModuleVersion>;
+    lastRejectionReasons?: Array<ModuleVersionViewFeedbackDTO>;
 }
 export namespace Proposal {
     export type StatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'ACCEPTED' | 'REQUIRES_REVIEW' | 'CANCELED';

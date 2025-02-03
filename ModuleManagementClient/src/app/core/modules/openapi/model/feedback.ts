@@ -17,6 +17,7 @@ export interface Feedback {
     status: Feedback.StatusEnum;
     submissionDate?: string;
     comment?: string;
+    rejected?: boolean;
 }
 export namespace Feedback {
     export type RequiredRoleEnum = 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR';

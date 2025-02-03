@@ -16,6 +16,7 @@ import { CompletionServiceResponseDTO } from '../model/models';
 import { ModuleVersionUpdateRequestDTO } from '../model/models';
 import { ModuleVersionUpdateResponseDTO } from '../model/models';
 import { ModuleVersionViewDTO } from '../model/models';
+import { ModuleVersionViewFeedbackDTO } from '../model/models';
 import { OverlapDetectionRequestDTO } from '../model/models';
 import { SimilarModulesDTO } from '../model/models';
 
@@ -62,6 +63,13 @@ export interface ModuleVersionControllerServiceInterface {
      * @param completionServiceRequestDTO 
      */
     generateTeachingMethods(completionServiceRequestDTO: CompletionServiceRequestDTO, extraHttpRequestParams?: any): Observable<CompletionServiceResponseDTO>;
+
+    /**
+     * 
+     * 
+     * @param id 
+     */
+    getLastRejectReasons(id: number, extraHttpRequestParams?: any): Observable<Array<ModuleVersionViewFeedbackDTO>>;
 
     /**
      * 

@@ -41,4 +41,8 @@ public class Feedback {
     @JoinColumn(name = "module_version_id", nullable = false)
     @JsonIgnore
     private ModuleVersion moduleVersion;
+
+    public boolean isRejected() {
+        return this.getStatus() == FeedbackStatus.REJECTED;
+    }
 }

@@ -41,6 +41,7 @@ export interface ModuleVersion {
     responsiblesEng?: string;
     lvSwsLecturerEng?: string;
     requiredFeedbacks?: Array<Feedback>;
+    rejected?: boolean;
 }
 export namespace ModuleVersion {
     export type StatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'ACCEPTED' | 'REJECTED' | 'OBSOLETE' | 'CANCELLED';

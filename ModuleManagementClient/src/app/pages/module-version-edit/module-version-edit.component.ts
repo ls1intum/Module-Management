@@ -15,7 +15,10 @@ import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { provideIcons } from '@ng-icons/core';
 import { lucideInfo } from '@ng-icons/lucide';
 import { ProposalBaseComponent } from '../../components/create-edit-base/create-edit-base.component';
-import { ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO } from '../../core/modules/openapi';
+import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
+import { ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
+import { BrnSeparatorModule } from '@spartan-ng/ui-separator-brain';
+import { HlmSeparatorModule } from '@spartan-ng/ui-separator-helm';
 
 @Component({
   selector: 'app-module-version-edit',
@@ -34,7 +37,10 @@ import { ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO } from '.
     HlmAlertDirective,
     HlmAlertIconDirective,
     HlmAlertTitleDirective,
-    HlmIconComponent
+    HlmIconComponent,
+    FeedbackDepartmentPipe,
+    BrnSeparatorModule,
+    HlmSeparatorModule
   ],
   providers: [provideIcons({ lucideInfo })],
   templateUrl: '../../components/create-edit-base/create-edit-base.component.html'
@@ -42,22 +48,41 @@ import { ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO } from '.
 export class ModuleVersionEditComponent extends ProposalBaseComponent {
   moduleVersionId: number | null = null;
   override moduleVersionDto: ModuleVersionUpdateRequestDTO | null = null;
+  moduleLoading: boolean = false;
+  override rejectionFeedbacks: ModuleVersionViewFeedbackDTO[] = [];
+  feedbackLoading: boolean = false;
 
   constructor(route: ActivatedRoute) {
     super();
     this.moduleVersionId = Number(route.snapshot.paramMap.get('id'));
     this.fetchModuleVersion(this.moduleVersionId);
+    this.fetchLastRejectionFeedback(this.moduleVersionId);
   }
 
   async fetchModuleVersion(moduleVersionId: number) {
-    this.loading = true;
+    this.moduleLoading = true;
     this.moduleVersionService.getModuleVersionUpdateDtoFromId(moduleVersionId).subscribe({
       next: (response: ModuleVersionUpdateRequestDTO) => {
         this.proposalForm.patchValue(response);
         this.moduleVersionDto = response;
       },
       error: (err: HttpErrorResponse) => (this.error = err.error),
-      complete: () => (this.loading = false)
+      complete: () => {
+        this.moduleLoading = false;
+        this.loading = this.moduleLoading && this.feedbackLoading;
+      }
+    });
+  }
+
+  async fetchLastRejectionFeedback(moduleVersionId: number) {
+    this.feedbackLoading = true;
+    this.moduleVersionService.getLastRejectReasons(moduleVersionId).subscribe({
+      next: (response: ModuleVersionViewFeedbackDTO[]) => (this.rejectionFeedbacks = response),
+      error: (err: HttpErrorResponse) => (this.error = err.error),
+      complete: () => {
+        this.feedbackLoading = false;
+        this.loading = this.moduleLoading && this.feedbackLoading;
+      }
     });
   }
 
@@ -72,7 +97,6 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
       };
 
       console.log(proposalData);
-
       this.moduleVersionService.updateModuleVersion(this.moduleVersionId, proposalData).subscribe({
         next: (response: ModuleVersionUpdateResponseDTO) => {
           this.proposalForm.reset();

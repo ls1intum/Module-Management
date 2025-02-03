@@ -3,6 +3,7 @@ package modulemanagement.ls1.services;
 import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
 import modulemanagement.ls1.dtos.ModuleVersionUpdateResponseDTO;
 import modulemanagement.ls1.dtos.ModuleVersionViewDTO;
+import modulemanagement.ls1.dtos.ModuleVersionViewFeedbackDTO;
 import modulemanagement.ls1.enums.FeedbackStatus;
 import modulemanagement.ls1.enums.ModuleVersionStatus;
 import modulemanagement.ls1.enums.ProposalStatus;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -128,5 +130,18 @@ public class ModuleVersionService {
         if (!p.getCreatedBy().getUserId().equals(userId))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access.");
         return ModuleVersionViewDTO.from(mv);
+    }
+
+    public List<ModuleVersionViewFeedbackDTO> getLastRejectionReasons(UUID userId, Long moduleVersionId) {
+        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).
+                orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
+
+        Proposal proposal = mv.getProposal();
+
+        if (!proposal.getCreatedBy().getUserId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
+        }
+
+        return proposal.getLastRejectionReasons();
     }
 }

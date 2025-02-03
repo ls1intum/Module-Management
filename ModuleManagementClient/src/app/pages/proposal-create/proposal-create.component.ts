@@ -15,6 +15,9 @@ import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { provideIcons } from '@ng-icons/core';
 import { lucideInfo } from '@ng-icons/lucide';
 import { ProposalBaseComponent } from '../../components/create-edit-base/create-edit-base.component';
+import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
+import { HlmSeparatorModule } from '@spartan-ng/ui-separator-helm';
+import { BrnSeparatorComponent } from '@spartan-ng/ui-separator-brain';
 
 @Component({
   selector: 'app-proposal-create',
@@ -34,7 +37,10 @@ import { ProposalBaseComponent } from '../../components/create-edit-base/create-
     HlmAlertDirective,
     HlmAlertIconDirective,
     HlmAlertTitleDirective,
-    HlmIconComponent
+    HlmIconComponent,
+    FeedbackDepartmentPipe,
+    HlmSeparatorModule,
+    BrnSeparatorComponent
   ],
   providers: [provideIcons({ lucideInfo })],
   templateUrl: '../../components/create-edit-base/create-edit-base.component.html'

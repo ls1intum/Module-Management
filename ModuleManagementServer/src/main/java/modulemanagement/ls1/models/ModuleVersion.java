@@ -139,4 +139,8 @@ public class ModuleVersion {
                 && !StringUtils.isEmpty(responsiblesEng)
                 && !StringUtils.isEmpty(lvSwsLecturerEng);
     }
+
+    public boolean isRejected() {
+        return this.getStatus() == ModuleVersionStatus.REJECTED;
+    }
 }
