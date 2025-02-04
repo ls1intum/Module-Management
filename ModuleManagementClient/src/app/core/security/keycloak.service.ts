@@ -74,8 +74,8 @@ export class KeycloakService {
     }
   }
 
-  login() {
-    return this.keycloak.login();
+  login(returnUrl?: string) {
+    return this.keycloak.login({ redirectUri: window.location.origin + (returnUrl || '') });
   }
 
   logout() {

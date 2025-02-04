@@ -43,7 +43,7 @@
     <hlm-th class="flex-1">Title</hlm-th>
     <hlm-th class="w-44">Status</hlm-th>
     <hlm-th class="w-48">Required Feedbacks</hlm-th>
-    <hlm-th class="w-48">Actions</hlm-th>
+    <hlm-th class="w-64">Actions</hlm-th>
   </hlm-trow>
 
   <hlm-trow>
@@ -78,10 +78,12 @@
       </brn-hover-card>
       } }
     </hlm-td>
-    <hlm-td class="w-48">
+    <hlm-td class="w-64">
       @if (proposal.latestModuleVersion!.isComplete && proposal.latestModuleVersion!.status == moduleStatusEnum.PendingSubmission) {
       <button hlmBtn variant="default" class="bg-green-600 mr-2" (click)="submitProposal()">Submit</button>
-      } @if(proposal.latestModuleVersion!.status === moduleStatusEnum.PendingSubmission) {
+      }
+      <button hlmBtn variant="outline" class="mr-2" [routerLink]="['/overlap', proposal.latestModuleVersion?.moduleVersionId]">Overlaps</button>
+      @if(proposal.latestModuleVersion!.status === moduleStatusEnum.PendingSubmission) {
       <button hlmBtn variant="outline" class="mr-2" [routerLink]="['/module-version/edit', proposal.latestModuleVersion!.moduleVersionId]">Edit</button>
       } @if(proposal.latestModuleVersion!.status === moduleStatusEnum.PendingFeedback) {
       <button hlmBtn variant="outline" class="mr-2" (click)="cancelProposal()">Cancel</button>
@@ -100,7 +102,7 @@
     <hlm-th class="flex-1">Title</hlm-th>
     <hlm-th class="w-44">Status</hlm-th>
     <hlm-th class="w-48">Required Feedbacks</hlm-th>
-    <hlm-th class="w-48">Actions</hlm-th>
+    <hlm-th class="w-64">Actions</hlm-th>
   </hlm-trow>
 
   @for (version of proposal.oldModuleVersions; track version.moduleVersionId) {
@@ -136,7 +138,7 @@
       </brn-hover-card>
       } }
     </hlm-td>
-    <hlm-td class="w-48">
+    <hlm-td class="w-64">
       <button hlmBtn variant="ghost" (click)="viewModuleVersion(version.moduleVersionId)">View</button>
     </hlm-td>
   </hlm-trow>

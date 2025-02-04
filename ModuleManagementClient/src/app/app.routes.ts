@@ -8,6 +8,7 @@ import { ModuleVersionEditComponent } from './pages/module-version-edit/module-v
 import { ApprovalStaffHomePageComponent } from './pages/approval-staff-home/approval-staff-home-page.component';
 import { AuthGuard } from './core/security/auth.guard';
 import { ModuleVersionViewComponent } from './pages/module-version-view/module-version-view.component';
+import { SimilarModulesPage } from './pages/similar-modules/similar-modules.component';
 
 export const routes: Routes = [
   { path: '', component: IndexComponent },
@@ -15,7 +16,8 @@ export const routes: Routes = [
   { path: 'proposals/create', component: ProposalCreateComponent, canActivate: [AuthGuard] },
   { path: 'proposals/view/:id', component: ProposalViewComponent, canActivate: [AuthGuard] },
   { path: 'module-version/edit/:id', component: ModuleVersionEditComponent, canActivate: [AuthGuard] },
-  { path: 'module-version/view/:id', component: ModuleVersionViewComponent, canActivate: [AuthGuard]},
+  { path: 'module-version/view/:id', component: ModuleVersionViewComponent, canActivate: [AuthGuard] },
+  { path: 'overlap/:id', component: SimilarModulesPage },
   { path: 'feedbacks/for-user/:id', component: ApprovalStaffHomePageComponent },
   { path: 'feedbacks/view/:id', component: FeedbackViewComponent }
 ];

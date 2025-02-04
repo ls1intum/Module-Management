@@ -17,8 +17,7 @@ import { ModuleVersionUpdateRequestDTO } from '../model/models';
 import { ModuleVersionUpdateResponseDTO } from '../model/models';
 import { ModuleVersionViewDTO } from '../model/models';
 import { ModuleVersionViewFeedbackDTO } from '../model/models';
-import { OverlapDetectionRequestDTO } from '../model/models';
-import { SimilarModulesDTO } from '../model/models';
+import { SimilarModuleDTO } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -32,9 +31,9 @@ export interface ModuleVersionControllerServiceInterface {
     /**
      * 
      * 
-     * @param overlapDetectionRequestDTO 
+     * @param moduleVersionId 
      */
-    checkSimilarity(overlapDetectionRequestDTO: OverlapDetectionRequestDTO, extraHttpRequestParams?: any): Observable<SimilarModulesDTO>;
+    checkSimilarity(moduleVersionId: number, extraHttpRequestParams?: any): Observable<Array<SimilarModuleDTO>>;
 
     /**
      * 

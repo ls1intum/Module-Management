@@ -2,7 +2,8 @@ package modulemanagement.ls1.services;
 
 import lombok.RequiredArgsConstructor;
 import modulemanagement.ls1.dtos.OverlapDetection.OverlapDetectionRequestDTO;
-import modulemanagement.ls1.dtos.OverlapDetection.SimilarModulesDTO;
+import modulemanagement.ls1.dtos.OverlapDetection.SimilarModuleDTO;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -15,12 +16,11 @@ public class OverlapDetectionService {
 
     private final WebClient aiServiceWebClient;
 
-    public Mono<List<SimilarModulesDTO.SimilarModule>> checkModuleOverlap(OverlapDetectionRequestDTO request) {
+    public Mono<List<SimilarModuleDTO>> checkModuleOverlap(OverlapDetectionRequestDTO request) {
         return aiServiceWebClient.post()
                 .uri("/overlap-detection/check-similarity")
                 .bodyValue(request)
                 .retrieve()
-                .bodyToMono(SimilarModulesDTO.class)
-                .map(SimilarModulesDTO::getSimilarModules);
+                .bodyToMono(new ParameterizedTypeReference<>() { });
     }
 }

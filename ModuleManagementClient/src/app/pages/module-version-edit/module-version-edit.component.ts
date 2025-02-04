@@ -17,8 +17,6 @@ import { lucideInfo } from '@ng-icons/lucide';
 import { ProposalBaseComponent } from '../../components/create-edit-base/create-edit-base.component';
 import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
 import { ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
-import { BrnSeparatorModule } from '@spartan-ng/ui-separator-brain';
-import { HlmSeparatorModule } from '@spartan-ng/ui-separator-helm';
 
 @Component({
   selector: 'app-module-version-edit',
@@ -44,7 +42,7 @@ import { HlmSeparatorModule } from '@spartan-ng/ui-separator-helm';
   templateUrl: '../../components/create-edit-base/create-edit-base.component.html'
 })
 export class ModuleVersionEditComponent extends ProposalBaseComponent {
-  moduleVersionId: number | null = null;
+  override moduleVersionId: number;
   override moduleVersionDto: ModuleVersionUpdateRequestDTO | null = null;
   moduleLoading: boolean = false;
   override rejectionFeedbacks: ModuleVersionViewFeedbackDTO[] = [];

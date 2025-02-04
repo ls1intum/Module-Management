@@ -46,8 +46,8 @@ export class SecurityStore {
     }
   }
 
-  async signIn() {
-    await this.keycloakService.login();
+  async signIn(returnUrl?: string) {
+    await this.keycloakService.login(returnUrl);
   }
 
   async signOut() {

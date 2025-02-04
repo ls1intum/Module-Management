@@ -1,13 +1,8 @@
 package modulemanagement.ls1.dtos.OverlapDetection;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import modulemanagement.ls1.enums.Language;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -38,5 +33,6 @@ public class SimilarModuleDTO {
     private String literatureEng;
     private String responsiblesEng;
     private String lvSwsLecturerEng;
+    private double similarity;
 }
 

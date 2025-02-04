@@ -5,16 +5,13 @@ import {
   ModuleVersionControllerService,
   ProposalControllerService,
   ModuleVersionUpdateRequestDTO,
-  SimilarModulesDTO,
   CompletionServiceResponseDTO,
-  OverlapDetectionRequestDTO,
   ModuleVersionViewFeedbackDTO
 } from '../../core/modules/openapi';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { HlmSeparatorDirective, HlmSeparatorModule } from '@spartan-ng/ui-separator-helm';
+import { HlmSeparatorModule } from '@spartan-ng/ui-separator-helm';
 import { BrnSeparatorModule } from '@spartan-ng/ui-separator-brain';
-import { BrnSelectComponent } from '@spartan-ng/ui-select-brain';
 
 @Component({
   template: '',
@@ -30,6 +27,7 @@ export abstract class ProposalBaseComponent {
   loading: boolean = false;
   error: string | null = null;
   moduleVersionDto: ModuleVersionUpdateRequestDTO | null = null;
+  moduleVersionId: number | null = null;
   rejectionFeedbacks: ModuleVersionViewFeedbackDTO[] = [];
 
   showPrompt: { [key: string]: boolean } = {
@@ -77,19 +75,6 @@ export abstract class ProposalBaseComponent {
       responsiblesEng: [''],
       lvSwsLecturerEng: ['']
     });
-  }
-
-  protected async checkSimilarity() {
-    const data: OverlapDetectionRequestDTO = {
-      ...this.proposalForm.value
-    };
-
-    this.moduleVersionService.checkSimilarity(data).subscribe({
-      next: (response: SimilarModulesDTO) => console.log(response.similarModules),
-      error: (err: HttpErrorResponse) => console.log(err)
-    });
-
-    return;
   }
 
   private getCompletionServiceRequestDTO(field: string): CompletionServiceRequestDTO {

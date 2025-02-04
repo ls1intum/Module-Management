@@ -4,13 +4,14 @@ import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
 import modulemanagement.ls1.dtos.ModuleVersionUpdateResponseDTO;
 import modulemanagement.ls1.dtos.ModuleVersionViewDTO;
 import modulemanagement.ls1.dtos.ModuleVersionViewFeedbackDTO;
+import modulemanagement.ls1.dtos.OverlapDetection.OverlapDetectionRequestDTO;
+import modulemanagement.ls1.dtos.OverlapDetection.SimilarModuleDTO;
 import modulemanagement.ls1.enums.FeedbackStatus;
 import modulemanagement.ls1.enums.ModuleVersionStatus;
 import modulemanagement.ls1.enums.ProposalStatus;
 import modulemanagement.ls1.models.Feedback;
 import modulemanagement.ls1.models.ModuleVersion;
 import modulemanagement.ls1.models.Proposal;
-import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.repositories.ModuleVersionRepository;
 import modulemanagement.ls1.repositories.ProposalRepository;
 import modulemanagement.ls1.shared.ResourceNotFoundException;
@@ -26,10 +27,12 @@ import java.util.UUID;
 public class ModuleVersionService {
     private final ModuleVersionRepository moduleVersionRepository;
     private final ProposalRepository proposalRepository;
+    private final OverlapDetectionService overlapDetectionService;
 
-    public ModuleVersionService(ModuleVersionRepository moduleVersionRepository, ProposalRepository proposalRepository) {
+    public ModuleVersionService(ModuleVersionRepository moduleVersionRepository, ProposalRepository proposalRepository, OverlapDetectionService overlapDetectionService) {
         this.moduleVersionRepository = moduleVersionRepository;
         this.proposalRepository = proposalRepository;
+        this.overlapDetectionService = overlapDetectionService;
     }
 
     public ModuleVersionUpdateResponseDTO updateModuleVersionFromRequest(UUID userId, Long moduleVersionId, ModuleVersionUpdateRequestDTO request) {
@@ -133,15 +136,21 @@ public class ModuleVersionService {
     }
 
     public List<ModuleVersionViewFeedbackDTO> getLastRejectionReasons(UUID userId, Long moduleVersionId) {
-        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).
-                orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
-
+        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId). orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
         Proposal proposal = mv.getProposal();
-
         if (!proposal.getCreatedBy().getUserId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
         }
 
         return proposal.getLastRejectionReasons();
+    }
+
+    public List<SimilarModuleDTO> getSimilarModules(UUID userId, Long moduleVersionId) {
+        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId). orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
+        Proposal proposal = mv.getProposal();
+        if (!proposal.getCreatedBy().getUserId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
+        }
+        return this.overlapDetectionService.checkModuleOverlap(OverlapDetectionRequestDTO.from(mv)).block();
     }
 }

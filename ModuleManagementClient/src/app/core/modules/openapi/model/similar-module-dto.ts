@@ -9,34 +9,31 @@
  */
 
 
-export interface OverlapDetectionRequestDTO { 
-    contextPrompt?: string;
+export interface SimilarModuleDTO { 
+    moduleId?: string;
     titleEng?: string;
     levelEng?: string;
-    languageEng?: OverlapDetectionRequestDTO.LanguageEngEnum;
+    languageEng?: string;
     frequencyEng?: string;
     credits?: number;
-    durationEng?: string;
+    duration?: string;
     hoursTotal?: number;
     hoursSelfStudy?: number;
     hoursPresence?: number;
     examinationAchievementsEng?: string;
+    examinationAchievementsPromptEng?: string;
     repetitionEng?: string;
     recommendedPrerequisitesEng?: string;
     contentEng?: string;
+    contentPromptEng?: string;
     learningOutcomesEng?: string;
+    learningOutcomesPromptEng?: string;
     teachingMethodsEng?: string;
+    teachingMethodsPromptEng?: string;
     mediaEng?: string;
     literatureEng?: string;
     responsiblesEng?: string;
     lvSwsLecturerEng?: string;
+    similarity?: number;
 }
-export namespace OverlapDetectionRequestDTO {
-    export type LanguageEngEnum = 'English' | 'German';
-    export const LanguageEngEnum = {
-        English: 'English' as LanguageEngEnum,
-        German: 'German' as LanguageEngEnum
-    };
-}
-
 

@@ -4,11 +4,12 @@
 <div class="text-center text-red-500 py-4">{{ error }}</div>
 } @else if (moduleVersionDto) {
 <div class="max-w-4xl mx-auto space-y-6">
-  <div class="flex items-center justify-between">
-    <h2 class="text-2xl">Overview of '{{ moduleVersionDto.titleEng }}' - Version {{ moduleVersionDto.version }}</h2>
+  <h2 class="text-2xl">Overview of '{{ moduleVersionDto.titleEng }}' - Version {{ moduleVersionDto.version }}</h2>
+  <div>
     @if (isLatestVersion() && moduleVersionDto.status == moduleVersionStatus.PendingSubmission) {
-    <button hlmBtn [routerLink]="['/module-version/edit', moduleVersionDto.moduleVersionId]">Edit Module Version</button>
+    <button hlmBtn class="mr-4" [routerLink]="['/module-version/edit', moduleVersionDto.moduleVersionId]">Edit Module Version</button>
     }
+    <button hlmBtn variant="outline" [routerLink]="['/overlap', moduleVersionDto.moduleVersionId]">Find Overlaps</button>
   </div>
 
   <div class="grid grid-cols-2 gap-4 mb-6">

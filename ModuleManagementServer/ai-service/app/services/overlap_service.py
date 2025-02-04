@@ -142,7 +142,29 @@ class OverlapService:
         results = [
             SimilarModule(
                 moduleId=self.modules[idx]["module_id"],
-                title=self.modules[idx]["title"],
+                titleEng=self.modules[idx]["title"],
+                levelEng="",
+                languageEng="",
+                frequencyEng="",
+                credits=0,
+                duration="",
+                hoursTotal=0,
+                hoursSelfStudy=0,
+                hoursPresence=0,
+                contentEng=self.modules[idx]["content"],
+                contentPromptEng="",
+                learningOutcomesEng=self.modules[idx]["learning_outcomes"],
+                learningOutcomesPromptEng="",
+                examinationAchievementsEng=self.modules[idx]["examination_achievements"],
+                examinationAchievementsPromptEng="",
+                repetitionEng="",
+                recommendedPrerequisitesEng="",
+                teachingMethodsEng=self.modules[idx]["teaching_methods"],
+                teachingMethodsPromptEng="",
+                mediaEng="",
+                literatureEng=self.modules[idx].get("literature", ""),
+                responsiblesEng="",
+                lvSwsLecturerEng="",
                 similarity=float(similarities[idx])
             )
             for idx in similar_indices

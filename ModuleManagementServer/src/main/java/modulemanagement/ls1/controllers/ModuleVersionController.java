@@ -6,8 +6,7 @@ import modulemanagement.ls1.dtos.ModuleVersionViewDTO;
 import modulemanagement.ls1.dtos.Completion.CompletionServiceResponseDTO;
 import modulemanagement.ls1.dtos.Completion.CompletionServiceRequestDTO;
 import modulemanagement.ls1.dtos.ModuleVersionViewFeedbackDTO;
-import modulemanagement.ls1.dtos.OverlapDetection.OverlapDetectionRequestDTO;
-import modulemanagement.ls1.dtos.OverlapDetection.SimilarModulesDTO;
+import modulemanagement.ls1.dtos.OverlapDetection.SimilarModuleDTO;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.services.AiCompletionService;
 import modulemanagement.ls1.services.AuthenticationService;
@@ -93,9 +92,10 @@ public class ModuleVersionController {
         return ResponseEntity.ok(new CompletionServiceResponseDTO(aiCompletionService.generateTeachingMethods(moduleInfoRequestDTO).block()));
     }
 
-    @PostMapping("/overlap-detection/check-similarity")
+    @PostMapping("/overlap-detection/check-similarity/{moduleVersionId}")
     @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
-    public ResponseEntity<SimilarModulesDTO> checkSimilarity(@Valid @RequestBody OverlapDetectionRequestDTO moduleInfoRequestDTO) {
-        return ResponseEntity.ok(new SimilarModulesDTO(overlapDetectionService.checkModuleOverlap(moduleInfoRequestDTO).block()));
+    public ResponseEntity<List<SimilarModuleDTO>> checkSimilarity(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId) {
+        User user = authenticationService.getAuthenticatedUser(jwt);
+        return ResponseEntity.ok(this.moduleVersionService.getSimilarModules(user.getUserId(), moduleVersionId));
     }
 }

@@ -29,9 +29,7 @@ import { ModuleVersionViewDTO } from '../model/module-version-view-dto';
 // @ts-ignore
 import { ModuleVersionViewFeedbackDTO } from '../model/module-version-view-feedback-dto';
 // @ts-ignore
-import { OverlapDetectionRequestDTO } from '../model/overlap-detection-request-dto';
-// @ts-ignore
-import { SimilarModulesDTO } from '../model/similar-modules-dto';
+import { SimilarModuleDTO } from '../model/similar-module-dto';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -108,16 +106,16 @@ export class ModuleVersionControllerService implements ModuleVersionControllerSe
     }
 
     /**
-     * @param overlapDetectionRequestDTO 
+     * @param moduleVersionId 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public checkSimilarity(overlapDetectionRequestDTO: OverlapDetectionRequestDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<SimilarModulesDTO>;
-    public checkSimilarity(overlapDetectionRequestDTO: OverlapDetectionRequestDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<SimilarModulesDTO>>;
-    public checkSimilarity(overlapDetectionRequestDTO: OverlapDetectionRequestDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<SimilarModulesDTO>>;
-    public checkSimilarity(overlapDetectionRequestDTO: OverlapDetectionRequestDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (overlapDetectionRequestDTO === null || overlapDetectionRequestDTO === undefined) {
-            throw new Error('Required parameter overlapDetectionRequestDTO was null or undefined when calling checkSimilarity.');
+    public checkSimilarity(moduleVersionId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<SimilarModuleDTO>>;
+    public checkSimilarity(moduleVersionId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<SimilarModuleDTO>>>;
+    public checkSimilarity(moduleVersionId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<SimilarModuleDTO>>>;
+    public checkSimilarity(moduleVersionId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (moduleVersionId === null || moduleVersionId === undefined) {
+            throw new Error('Required parameter moduleVersionId was null or undefined when calling checkSimilarity.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -145,15 +143,6 @@ export class ModuleVersionControllerService implements ModuleVersionControllerSe
         }
 
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
-        }
-
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
             if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -165,11 +154,10 @@ export class ModuleVersionControllerService implements ModuleVersionControllerSe
             }
         }
 
-        let localVarPath = `/api/module-versions/overlap-detection/check-similarity`;
-        return this.httpClient.request<SimilarModulesDTO>('post', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/api/module-versions/overlap-detection/check-similarity/${this.configuration.encodeParam({name: "moduleVersionId", value: moduleVersionId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
+        return this.httpClient.request<Array<SimilarModuleDTO>>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: overlapDetectionRequestDTO,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
