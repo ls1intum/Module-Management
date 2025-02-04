@@ -295,7 +295,6 @@
 
     <div class="flex justify-between gap-4">
       <button hlmBtn [routerLink]="['/proposals']" variant="outline">Cancel</button>
-      <button hlmBtn [routerLink]="['/overlap', moduleVersionId]">Find Similar Modules</button>
       <button type="submit" hlmBtn [disabled]="proposalForm.invalid || loading">
         {{ loading ? 'Saving...' : moduleVersionDto ? 'Update Proposal' : 'Create Proposal' }}
       </button>
