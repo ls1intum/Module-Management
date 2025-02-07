@@ -10,6 +10,7 @@
     </p>
   </div>
 
+  @if (rejectionFeedbacks.length !== 0) {
   <div class="mb-12 p-4 border border-red-300 rounded-lg">
     <h2 class="text-xl font-semibold text-red-700">Last Rejection Reasons</h2>
     @for (rejectionFeedback of rejectionFeedbacks; track rejectionFeedback.feedbackId) {
@@ -21,6 +22,7 @@
     </div>
     }
   </div>
+  }
 
   <form [formGroup]="proposalForm" (ngSubmit)="onSubmit()" class="space-y-6">
     <div>
