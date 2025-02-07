@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: ModuleManagement
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/master.yaml
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:${AUTH_PORT}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/certs
+          issuer-uri: http://localhost:${AUTH_PORT}/realms/${KEYCLOAK_REALM}
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.security.jwt: DEBUG
+
+ai-service:
+  url: http://localhost:${AI_SERVICE_PORT}
+
+module-management:
+  keycloak:
+    url: http://localhost:${AUTH_PORT}/auth
+    realm: ${KEYCLOAK_REALM}
+    client-id: ${KEYCLOAK_CLIENT_ID}
+
+springdoc:
+  api-docs:
+    yaml:
+      path: /v3/api-docs.yaml
+  default-produces-media-type: application/json
+  default-consumes-media-type: application/json

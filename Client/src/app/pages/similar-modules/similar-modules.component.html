@@ -1,0 +1,46 @@
+<div>
+  <h1 class="text-2xl font-semibold mb-6">Potential Module Overlaps</h1>
+
+  @if (isLoading) {
+  <div class="flex justify-center items-center min-h-[200px]">
+    <div class="animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent"></div>
+  </div>
+  } @else if (similarModules.length === 0) {
+  <div hlmAlert class="mb-4">
+    <hlm-icon hlmAlertIcon name="lucideInfo" />
+    <h3 hlmAlertTitle>No Similar Modules Found</h3>
+    <p hlmAlertDesc>We couldn't find any modules that are similar to your proposal.</p>
+  </div>
+  } @else {
+  <div class="space-y-4">
+    @for (module of similarModules; track module.moduleId) {
+    <div class="border rounded-lg p-6 bg-card">
+      <div class="flex justify-between items-start mb-4">
+        <div>
+          <h3 class="text-lg font-medium">{{ module.titleEng || 'Module ' + module.moduleId }}</h3>
+          <p class="text-sm text-muted-foreground">Module ID: {{ module.moduleId }}</p>
+        </div>
+      </div>
+
+      <div hlmCard class="bg-muted/50">
+        <h4 class="font-medium mb-2">Module Content:</h4>
+        <p class="text-sm leading-relaxed">{{ module.contentEng }}</p>
+      </div>
+
+      @if (module.similarity !== undefined) {
+      <div class="mt-4 flex items-center gap-2">
+        <span class="text-sm text-muted-foreground">Similarity Score:</span>
+        <div hlmBadge [class]="module.similarity > 0.7 ? 'bg-red-500' : module.similarity > 0.4 ? 'bg-yellow-500' : 'bg-green-500'">
+          {{ (module.similarity * 100).toFixed(1) }}%
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </div>
+  }
+
+  <div class="mt-8">
+    <button hlmBtn variant="outline" class="mr-4" (click)="goBack()">Go Back</button>
+  </div>
+</div>

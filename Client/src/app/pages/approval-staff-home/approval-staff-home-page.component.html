@@ -1,0 +1,44 @@
+<h3 class="text-2xl">Welcome {{ user()!.name }}! Here is a list of required feedbacks that you can process:</h3>
+<hlm-table class="w-full min-w-[400px] mt-12">
+  <hlm-trow>
+    <hlm-th class="w-40">Feedback ID</hlm-th>
+    <hlm-th class="flex-1">Proposal Title</hlm-th>
+    <hlm-th class="w-48">Created By</hlm-th>
+    <hlm-th class="w-48">Status</hlm-th>
+    <hlm-th class="justify-end w-40">Actions</hlm-th>
+  </hlm-trow>
+  @if (loading) {
+  <hlm-trow>
+    <hlm-td colspan="5" class="text-center flex-1 block mt-4 text-sm text-muted-foreground">Loading feedbacks...</hlm-td>
+  </hlm-trow>
+  } @if (error) {
+  <hlm-trow>
+    <hlm-td colspan="5" class="text-center flex-1 block mt-4 text-sm text-muted-foreground">
+      {{ error }}
+    </hlm-td>
+  </hlm-trow>
+  } @for (feedback of feedbacks; track feedback.feedbackId) {
+  <hlm-trow>
+    <hlm-td truncate class="font-medium w-40 text-center">{{ feedback.feedbackId }}</hlm-td>
+    <hlm-td class="flex-1">
+      <button hlmBtn variant="link" class="text-left px-0" [routerLink]="['/feedbacks/view', feedback.feedbackId]">
+        {{ feedback.moduleVersionTitleEng || 'Untitled Proposal' }}
+      </button>
+    </hlm-td>
+    <hlm-td class="w-48">
+      <div>{{ feedback.proposalCreatedByName || 'Unknown' }}</div>
+    </hlm-td>
+    <hlm-td class="w-48">
+      <div hlmBadge [class]="(feedback.status | feedbackStatus).colorClass">
+        {{ (feedback.status | feedbackStatus).text }}
+      </div>
+    </hlm-td>
+    <hlm-td class="justify-end w-40">
+      <button hlmBtn variant="outline" [routerLink]="['/feedbacks/view', feedback.feedbackId]">View</button>
+    </hlm-td>
+  </hlm-trow>
+  } @empty {
+  <hlm-td colspan="5" class="text-center flex-1 block mt-4 text-sm text-muted-foreground">No feedbacks available.</hlm-td>
+  }
+  <hlm-trow></hlm-trow>
+</hlm-table>

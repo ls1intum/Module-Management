@@ -1,0 +1,19 @@
+<div>
+  <h3 class="text-2xl">Welcome, {{ user()?.name }}!</h3>
+  <div class="flex justify-between items-end my-4">
+    <div hlmAlert class="w-2/5">
+      <hlm-icon hlmAlertIcon name="lucideInfo" />
+      <h4 hlmAlertTitle>Information</h4>
+      <p hlmAlertDesc>
+        To offer a new module, please create a new Module Proposal.
+        <br />
+        After submitting the proposal the necessary entities will be notified and evaluate your proposal.
+      </p>
+    </div>
+    <button hlmBtn variant="default" class="mt-4" [routerLink]="['/proposals/create']">Create a new Module Proposal</button>
+  </div>
+  <div>
+    <h3 class="text-xl mt-8">Here are your module proposals:</h3>
+  </div>
+  <proposal-list-table class="p-12"></proposal-list-table>
+</div>
