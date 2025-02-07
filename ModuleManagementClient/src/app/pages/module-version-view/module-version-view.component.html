@@ -9,7 +9,6 @@
     @if (isLatestVersion() && moduleVersionDto.status == moduleVersionStatus.PendingSubmission) {
     <button hlmBtn class="mr-4" [routerLink]="['/module-version/edit', moduleVersionDto.moduleVersionId]">Edit Module Version</button>
     }
-    <!-- <button hlmBtn variant="outline" [routerLink]="['/overlap', moduleVersionDto.moduleVersionId]">Find Overlaps</button> -->
   </div>
 
   <div class="grid grid-cols-2 gap-4 mb-6">

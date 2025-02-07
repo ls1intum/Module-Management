@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { HlmTableComponent, HlmTrowComponent, HlmThComponent, HlmTdComponent } from '@spartan-ng/ui-table-helm';
 import { Feedback, FeedbackControllerService } from '../../core/modules/openapi';
 import { HttpErrorResponse } from '@angular/common/http';
