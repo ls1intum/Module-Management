@@ -56,7 +56,7 @@ services:
 
   ai-service:
     build:
-      context: ./ModuleManagementServer/ai-service
+      context: ./ModuleManagementAI
       dockerfile: ai.Dockerfile
     container_name: module-management-ai
     volumes:
