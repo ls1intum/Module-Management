@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { HlmCaptionComponent, HlmTableComponent, HlmTdComponent, HlmThComponent, HlmTrowComponent } from '@spartan-ng/ui-table-helm';
 import { Proposal, ProposalControllerService, ProposalsCompactDTO } from '../../core/modules/openapi';
 import { HttpErrorResponse } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
@@ -19,10 +19,10 @@ import { SecurityStore } from '../../core/security/security-store.service';
     HlmTdComponent,
     HlmCaptionComponent,
     HlmButtonDirective,
-    RouterModule,
     CommonModule,
     HlmBadgeDirective,
-    StatusDisplayPipe
+    StatusDisplayPipe,
+    RouterModule
   ],
   host: {
     class: 'w-full overflow-x-auto'
@@ -30,6 +30,7 @@ import { SecurityStore } from '../../core/security/security-store.service';
   templateUrl: './proposal-list-table.component.html'
 })
 export class ProposalListTableComponent {
+  router = inject(Router);
   proposalService = inject(ProposalControllerService);
   securityStore = inject(SecurityStore);
   loading: boolean = true;
@@ -50,17 +51,16 @@ export class ProposalListTableComponent {
     this.loading = true;
 
     this.proposalService.getCompactProposalsFromUser().subscribe({
-      next: (proposals) => (this.proposals = proposals),
+      next: (proposals: ProposalsCompactDTO[]) => (this.proposals = proposals),
       error: (err: HttpErrorResponse) => (this.error = err.error),
       complete: () => (this.loading = false)
     });
   }
 
   deleteProposal(proposalId: number) {
-      this.proposalService.deleteProposal(proposalId).subscribe({
-        next: () => (window.location.href = '/proposals'),
-        error: (err: HttpErrorResponse) => (this.error = err.error)
-      });
+    this.proposalService.deleteProposal(proposalId).subscribe({
+      next: () => this.router.navigate(['/proposals']),
+      error: (err: HttpErrorResponse) => (this.error = err.error)
+    });
   }
-
 }

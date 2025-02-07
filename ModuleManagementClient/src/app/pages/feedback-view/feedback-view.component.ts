@@ -1,4 +1,4 @@
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { BrnSelectModule } from '@spartan-ng/ui-select-brain';
 import { BrnSeparatorModule } from '@spartan-ng/ui-separator-brain';
 import { CommonModule } from '@angular/common';
@@ -55,6 +55,8 @@ import {
   templateUrl: './feedback-view.component.html'
 })
 export class FeedbackViewComponent {
+  router = inject(Router);
+  route = inject(ActivatedRoute);
   feedbackService = inject(FeedbackControllerService);
   feedbackId: number | null = null;
   moduleVersion: ModuleVersionUpdateRequestDTO | null = null;
@@ -90,9 +92,8 @@ export class FeedbackViewComponent {
     { key: 'lvSwsLecturerEng', label: 'Lecturer SWs (EN)' }
   ] as const;
 
-  constructor(private router: Router) {
-    // this.feedbackId = Number(route.snapshot.paramMap.get('id'));
-    this.feedbackId = Number(window.location.pathname.split('/').pop());
+  constructor() {
+    this.feedbackId = Number(this.route.snapshot.paramMap.get('id'));
     console.log('feedbackid: ' + this.feedbackId);
     this.fetchModuleVersion(this.feedbackId);
   }

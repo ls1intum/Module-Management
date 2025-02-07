@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ModuleVersion, ModuleVersionControllerService, ModuleVersionViewDTO } from '../../core/modules/openapi';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
@@ -24,6 +24,7 @@ interface ModuleField {
   templateUrl: './module-version-view.component.html'
 })
 export class ModuleVersionViewComponent {
+  route = inject(ActivatedRoute);
   moduleVerisionService = inject(ModuleVersionControllerService);
   loading = true;
   moduleVersionDto: ModuleVersionViewDTO | null = null;
@@ -82,7 +83,7 @@ export class ModuleVersionViewComponent {
   ];
 
   constructor() {
-    const moduleVersionId = Number(window.location.pathname.split('/').pop());
+    const moduleVersionId = Number(this.route.snapshot.paramMap.get('id'));
     this.fetchModuleVersionViewDto(moduleVersionId);
   }
 

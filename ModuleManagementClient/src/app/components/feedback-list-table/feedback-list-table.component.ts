@@ -1,5 +1,5 @@
 import { Component, Input, inject } from '@angular/core';
-import { HlmTableComponent, HlmTrowComponent, HlmThComponent, HlmTdComponent, HlmCaptionComponent } from '@spartan-ng/ui-table-helm';
+import { HlmTableComponent, HlmTrowComponent, HlmThComponent, HlmTdComponent } from '@spartan-ng/ui-table-helm';
 import { Feedback, FeedbackControllerService } from '../../core/modules/openapi';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -12,18 +12,7 @@ import { SecurityStore } from '../../core/security/security-store.service';
 @Component({
   selector: 'feedback-list-table',
   standalone: true,
-  imports: [
-    HlmTableComponent,
-    HlmTrowComponent,
-    HlmThComponent,
-    HlmTdComponent,
-    HlmCaptionComponent,
-    HlmButtonDirective,
-    RouterModule,
-    CommonModule,
-    HlmBadgeDirective,
-    FeedbackStatusPipe
-  ],
+  imports: [HlmTableComponent, HlmTrowComponent, HlmThComponent, HlmTdComponent, HlmButtonDirective, RouterModule, CommonModule, HlmBadgeDirective, FeedbackStatusPipe],
   host: {
     class: 'w-full overflow-x-auto'
   },
