@@ -54,7 +54,15 @@
       <label hlmLabel class="text-xl">
         Level
         <hlm-form-field class="mt-2">
-          <input hlmInput formControlName="levelEng" placeholder="e.g. Masters/Bachelors" class="w-full" />
+          <app-toggle-button-group
+            [options]="[
+              { value: 'Bachelor', label: 'Bachelor' },
+              { value: 'Master', label: 'Master' },
+              { value: 'Bachelor/Master', label: 'Bachelor/Master' }
+            ]"
+            [required]="false"
+            formControlName="levelEng"
+          ></app-toggle-button-group>
         </hlm-form-field>
       </label>
     </div>
@@ -62,16 +70,14 @@
     <div>
       <label hlmLabel class="text-xl">Language</label>
       <hlm-form-field class="mt-2">
-        <brn-select class="inline-block" placeholder="Select Language" formControlName="languageEng">
-          <hlm-select-trigger class="w-full">
-            <hlm-select-value />
-          </hlm-select-trigger>
-          <hlm-select-content>
-            <hlm-select-label>Language</hlm-select-label>
-            <hlm-option value="English">English</hlm-option>
-            <hlm-option value="German">German</hlm-option>
-          </hlm-select-content>
-        </brn-select>
+        <app-toggle-button-group
+          [options]="[
+            { value: 'English', label: 'English' },
+            { value: 'German', label: 'German' }
+          ]"
+          [required]="true"
+          formControlName="languageEng"
+        ></app-toggle-button-group>
       </hlm-form-field>
     </div>
 
@@ -79,7 +85,15 @@
       <label hlmLabel class="text-xl">
         Repetition
         <hlm-form-field class="mt-2">
-          <input hlmInput formControlName="repetitionEng" placeholder="e.g. Every Semester" class="w-full" />
+          <app-toggle-button-group
+            [options]="[
+              { value: 'End of Semester', label: 'End of Semester' },
+              { value: 'Following Semester', label: 'Following Semester' },
+              { value: 'Enf of Semester/Following Semester', label: 'Enf of Semester/Following Semester' }
+            ]"
+            [required]="false"
+            formControlName="repetitionEng"
+          ></app-toggle-button-group>
         </hlm-form-field>
       </label>
     </div>
@@ -88,7 +102,15 @@
       <label hlmLabel class="text-xl">
         Frequency
         <hlm-form-field class="mt-2">
-          <input hlmInput formControlName="frequencyEng" placeholder="e.g. Winter/Summer" class="w-full" />
+          <app-toggle-button-group
+            [options]="[
+              { value: 'Winter semester', label: 'Winter semester' },
+              { value: 'Summer semester', label: 'Summer semester' },
+              { value: 'Winter/Summer semester', label: 'Winter/Summer semester' }
+            ]"
+            [required]="false"
+            formControlName="frequencyEng"
+          ></app-toggle-button-group>
         </hlm-form-field>
       </label>
     </div>

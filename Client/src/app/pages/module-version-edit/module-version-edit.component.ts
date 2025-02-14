@@ -17,6 +17,7 @@ import { lucideInfo } from '@ng-icons/lucide';
 import { ProposalBaseComponent } from '../../components/create-edit-base/create-edit-base.component';
 import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
 import { ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
+import { ToggleButtonGroupComponent } from '../../components/toggle-button-group/toggle-button-group.component';
 
 @Component({
   selector: 'app-module-version-edit',
@@ -36,7 +37,8 @@ import { ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO, ModuleVe
     HlmAlertIconDirective,
     HlmAlertTitleDirective,
     HlmIconComponent,
-    FeedbackDepartmentPipe
+    FeedbackDepartmentPipe,
+    ToggleButtonGroupComponent
   ],
   providers: [provideIcons({ lucideInfo })],
   templateUrl: '../../components/create-edit-base/create-edit-base.component.html'
