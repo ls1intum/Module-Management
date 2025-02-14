@@ -14,7 +14,7 @@ class ModuleInfo(BaseModel):
     languageEng: Optional[Language] = None
     frequencyEng: Optional[str] = None
     credits: Optional[int] = None
-    durationEng: Optional[int] = None
+    durationEng: Optional[str] = None
     hoursTotal: Optional[int] = None
     hoursSelfStudy: Optional[int] = None
     hoursPresence: Optional[int] = None
