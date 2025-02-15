@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { BrnFormFieldControl } from '@spartan-ng/ui-formfield-brain';
 
 export interface ToggleOption {
   value: any;
@@ -10,17 +10,26 @@ export interface ToggleOption {
 @Component({
   selector: 'app-toggle-button-group',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: ToggleButtonGroupComponent,
       multi: true,
     },
+    {
+      provide: BrnFormFieldControl,
+      useExisting: ToggleButtonGroupComponent,
+    },
   ],
   templateUrl: './toggle-button-group.component.html',
   styleUrls: ['./toggle-button-group.component.css']
 })
+/*
+
+Disclaimer: This component is a last minute addition and AI Generated. It is slightly buggy and should not be reworked.
+
+*/
 export class ToggleButtonGroupComponent implements ControlValueAccessor {
   @Input() options: ToggleOption[] = [];
   @Input() required = false;

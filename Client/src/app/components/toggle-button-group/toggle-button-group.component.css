@@ -1,7 +1,7 @@
 .button-group {
   display: flex;
   gap: 0.5rem;
-  pointer-events: none; /* Prevent container from capturing pointer events */
+  pointer-events: none;
 }
 
 .toggle_button {
