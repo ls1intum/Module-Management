@@ -176,9 +176,11 @@
         </hlm-form-field>
         <div class="flex justify-between items-center gap-2 mt-2">
           <button hlmBtn type="button" variant="outline" size="sm" (click)="togglePromptField('examination')">
-            {{ showPrompt['examination'] ? 'Hide Prompt' : 'Show Prompt' }}
+            {{ showPrompt['examination'] ? 'Hide Prompt' : 'Customize Prompt' }}
           </button>
-          <button hlmBtn type="button" variant="default" size="sm" class="min-w-28" (click)="generateExaminationAchievements()" [disabled]="loading">Generate Content</button>
+          <button hlmBtn type="button" variant="default" size="sm" class="min-w-28" (click)="generateExaminationAchievements()" [disabled]="loading">
+            Generate Examination Achievements
+          </button>
         </div>
         @if (showPrompt['examination']) {
         <hlm-form-field class="mt-2 mb-2">
@@ -211,7 +213,7 @@
         </hlm-form-field>
         <div class="flex justify-between items-center gap-2 mt-2">
           <button hlmBtn type="button" variant="outline" size="sm" class="min-w-28" (click)="togglePromptField('content')">
-            {{ showPrompt['content'] ? 'Hide Prompt' : 'Show Prompt' }}
+            {{ showPrompt['content'] ? 'Hide Prompt' : 'Customize Prompt' }}
           </button>
           <button hlmBtn type="button" variant="default" size="sm" (click)="generateContent()" [disabled]="loading">Generate Content</button>
         </div>
@@ -237,9 +239,9 @@
         </hlm-form-field>
         <div class="flex justify-between items-center gap-2 mt-2">
           <button hlmBtn type="button" variant="outline" class="min-w-28" size="sm" (click)="togglePromptField('learning')">
-            {{ showPrompt['learning'] ? 'Hide Prompt' : 'Show Prompt' }}
+            {{ showPrompt['learning'] ? 'Hide Prompt' : 'Customize Prompt' }}
           </button>
-          <button hlmBtn type="button" variant="default" size="sm" (click)="generateLearningOutcomes()" [disabled]="loading">Generate Content</button>
+          <button hlmBtn type="button" variant="default" size="sm" (click)="generateLearningOutcomes()" [disabled]="loading">Generate Learning Outcomes</button>
         </div>
         @if (showPrompt['learning']) {
         <hlm-form-field class="mt-2 mb-2">
@@ -263,9 +265,9 @@
         </hlm-form-field>
         <div class="flex justify-between items-center gap-2 mt-2">
           <button hlmBtn type="button" variant="outline" class="min-w-28" size="sm" (click)="togglePromptField('teaching')">
-            {{ showPrompt['teaching'] ? 'Hide Prompt' : 'Show Prompt' }}
+            {{ showPrompt['teaching'] ? 'Hide Prompt' : 'Customize Prompt' }}
           </button>
-          <button hlmBtn type="button" variant="default" size="sm" (click)="generateTeachingMethods()" [disabled]="loading">Generate Content</button>
+          <button hlmBtn type="button" variant="default" size="sm" (click)="generateTeachingMethods()" [disabled]="loading">Generate Teaching Methods</button>
         </div>
         @if (showPrompt['teaching']) {
         <hlm-form-field class="mt-2 mb-2">
