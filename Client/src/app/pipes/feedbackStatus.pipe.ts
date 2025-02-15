@@ -11,6 +11,8 @@ export class FeedbackStatusPipe implements PipeTransform {
         return { text: 'Pending Feedback', colorClass: 'bg-yellow-500 text-white' };
       case 'APPROVED':
         return { text: 'Approved', colorClass: 'bg-green-500 text-white' };
+      case 'FEEDBACK_GIVEN':
+        return { text: 'Feedback given', colorClass: 'bg-blue-500 text-white' };
       case 'REJECTED':
         return { text: 'Rejected', colorClass: 'bg-red-500 text-white' };
       case 'OBSOLETE':
@@ -33,6 +35,8 @@ export class FadedFeedbackStatusPipe implements PipeTransform {
         return { text: 'Pending Feedback', colorClass: 'bg-yellow-300 text-white' };
       case 'APPROVED':
         return { text: 'Approved', colorClass: 'bg-green-300 text-white' };
+      case 'FEEDBACK_GIVEN':
+        return { text: 'Feedback given', colorClass: 'bg-blue-300 text-white' };
       case 'REJECTED':
         return { text: 'Rejected', colorClass: 'bg-red-300 text-white' };
       case 'OBSOLETE':

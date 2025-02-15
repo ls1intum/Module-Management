@@ -14,6 +14,8 @@ export class ModuleVersionStatusPipe implements PipeTransform {
         return { text: 'Pending Feedback', colorClass: 'bg-yellow-500' };
       case ModuleVersionCompactDTO.StatusEnum.Accepted:
         return { text: 'Accepted', colorClass: 'bg-green-500' };
+      case ModuleVersionCompactDTO.StatusEnum.FeedbackGiven:
+        return { text: 'Feedback given', colorClass: 'bg-blue-500' };
       case ModuleVersionCompactDTO.StatusEnum.Rejected:
         return { text: 'Rejected', colorClass: 'bg-red-500' };
       case ModuleVersionCompactDTO.StatusEnum.Cancelled:
@@ -37,6 +39,8 @@ export class FadedModuleVersionStatusPipe implements PipeTransform {
         return { text: 'Pending Feedback', colorClass: 'bg-yellow-300' };
       case ModuleVersionCompactDTO.StatusEnum.Accepted:
         return { text: 'Accepted', colorClass: 'bg-green-300' };
+      case ModuleVersionCompactDTO.StatusEnum.FeedbackGiven:
+        return { text: 'Feedback given', colorClass: 'bg-blue-300' };
       case ModuleVersionCompactDTO.StatusEnum.Rejected:
         return { text: 'Rejected', colorClass: 'bg-red-300' };
       case ModuleVersionCompactDTO.StatusEnum.Cancelled:

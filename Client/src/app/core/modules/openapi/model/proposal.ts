@@ -21,12 +21,13 @@ export interface Proposal {
     lastRejectionReasons?: Array<ModuleVersionViewFeedbackDTO>;
 }
 export namespace Proposal {
-    export type StatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'ACCEPTED' | 'REQUIRES_REVIEW' | 'CANCELED';
+    export type StatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'ACCEPTED' | 'REQUIRES_REVIEW' | 'REJECTED' | 'CANCELED';
     export const StatusEnum = {
         PendingSubmission: 'PENDING_SUBMISSION' as StatusEnum,
         PendingFeedback: 'PENDING_FEEDBACK' as StatusEnum,
         Accepted: 'ACCEPTED' as StatusEnum,
         RequiresReview: 'REQUIRES_REVIEW' as StatusEnum,
+        Rejected: 'REJECTED' as StatusEnum,
         Canceled: 'CANCELED' as StatusEnum
     };
 }

@@ -13,8 +13,8 @@ import { Observable }                                        from 'rxjs';
 
 import { Feedback } from '../model/models';
 import { FeedbackListItemDto } from '../model/models';
+import { GiveFeedbackDTO } from '../model/models';
 import { ModuleVersionUpdateRequestDTO } from '../model/models';
-import { RejectFeedbackDTO } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -49,8 +49,16 @@ export interface FeedbackControllerServiceInterface {
      * 
      * 
      * @param feedbackId 
-     * @param rejectFeedbackDTO 
+     * @param giveFeedbackDTO 
      */
-    rejectFeedback(feedbackId: number, rejectFeedbackDTO: RejectFeedbackDTO, extraHttpRequestParams?: any): Observable<Feedback>;
+    giveFeedback(feedbackId: number, giveFeedbackDTO: GiveFeedbackDTO, extraHttpRequestParams?: any): Observable<Feedback>;
+
+    /**
+     * 
+     * 
+     * @param feedbackId 
+     * @param giveFeedbackDTO 
+     */
+    rejectFeedback(feedbackId: number, giveFeedbackDTO: GiveFeedbackDTO, extraHttpRequestParams?: any): Observable<Feedback>;
 
 }

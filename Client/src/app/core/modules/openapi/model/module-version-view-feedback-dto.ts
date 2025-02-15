@@ -26,11 +26,12 @@ export namespace ModuleVersionViewFeedbackDTO {
         ExaminationBoard: 'EXAMINATION_BOARD' as FeedbackRoleEnum,
         Professor: 'PROFESSOR' as FeedbackRoleEnum
     };
-    export type FeedbackStatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'APPROVED' | 'REJECTED' | 'OBSOLETE' | 'CANCELLED';
+    export type FeedbackStatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'APPROVED' | 'FEEDBACK_GIVEN' | 'REJECTED' | 'OBSOLETE' | 'CANCELLED';
     export const FeedbackStatusEnum = {
         PendingSubmission: 'PENDING_SUBMISSION' as FeedbackStatusEnum,
         PendingFeedback: 'PENDING_FEEDBACK' as FeedbackStatusEnum,
         Approved: 'APPROVED' as FeedbackStatusEnum,
+        FeedbackGiven: 'FEEDBACK_GIVEN' as FeedbackStatusEnum,
         Rejected: 'REJECTED' as FeedbackStatusEnum,
         Obsolete: 'OBSOLETE' as FeedbackStatusEnum,
         Cancelled: 'CANCELLED' as FeedbackStatusEnum

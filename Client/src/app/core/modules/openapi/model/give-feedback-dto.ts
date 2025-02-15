@@ -9,7 +9,7 @@
  */
 
 
-export interface RejectFeedbackDTO { 
+export interface GiveFeedbackDTO { 
     comment: string;
 }
 

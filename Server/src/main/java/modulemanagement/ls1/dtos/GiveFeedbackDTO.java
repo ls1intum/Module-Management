@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class RejectFeedbackDTO {
+public class GiveFeedbackDTO {
     @NotBlank
     private String comment;
 }

@@ -19,11 +19,12 @@ export interface ModuleVersionCompactDTO {
     feedbackList?: Array<Feedback>;
 }
 export namespace ModuleVersionCompactDTO {
-    export type StatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'ACCEPTED' | 'REJECTED' | 'OBSOLETE' | 'CANCELLED';
+    export type StatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'ACCEPTED' | 'FEEDBACK_GIVEN' | 'REJECTED' | 'OBSOLETE' | 'CANCELLED';
     export const StatusEnum = {
         PendingSubmission: 'PENDING_SUBMISSION' as StatusEnum,
         PendingFeedback: 'PENDING_FEEDBACK' as StatusEnum,
         Accepted: 'ACCEPTED' as StatusEnum,
+        FeedbackGiven: 'FEEDBACK_GIVEN' as StatusEnum,
         Rejected: 'REJECTED' as StatusEnum,
         Obsolete: 'OBSOLETE' as StatusEnum,
         Cancelled: 'CANCELLED' as StatusEnum

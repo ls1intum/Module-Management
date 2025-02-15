@@ -2,7 +2,7 @@ package modulemanagement.ls1.controllers;
 
 import modulemanagement.ls1.dtos.FeedbackListItemDto;
 import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
-import modulemanagement.ls1.dtos.RejectFeedbackDTO;
+import modulemanagement.ls1.dtos.GiveFeedbackDTO;
 import modulemanagement.ls1.models.Feedback;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.services.AuthenticationService;
@@ -55,11 +55,21 @@ public class FeedbackController {
         return ResponseEntity.ok(dto);
     }
 
+    @PutMapping("/{feedbackId}/give-feedback")
+    @PreAuthorize("hasAnyRole('admin', 'proposal-reviewer')")
+    public ResponseEntity<Feedback> giveFeedback(@AuthenticationPrincipal Jwt jwt, @PathVariable Long feedbackId, @Valid @RequestBody GiveFeedbackDTO request) {
+        User user = authenticationService.getAuthenticatedUser(jwt);
+        Feedback updatedFeedback = feedbackService.GiveFeedback(feedbackId, user, request.getComment());
+        moduleVersionService.updateStatus(updatedFeedback.getModuleVersion().getModuleVersionId());
+
+        return ResponseEntity.ok(updatedFeedback);
+    }
+
     @PutMapping("/{feedbackId}/reject")
     @PreAuthorize("hasAnyRole('admin', 'proposal-reviewer')")
-    public ResponseEntity<Feedback> rejectFeedback(@AuthenticationPrincipal Jwt jwt, @PathVariable Long feedbackId, @Valid @RequestBody RejectFeedbackDTO request) {
+    public ResponseEntity<Feedback> rejectFeedback(@AuthenticationPrincipal Jwt jwt, @PathVariable Long feedbackId, @Valid @RequestBody GiveFeedbackDTO request) {
         User user = authenticationService.getAuthenticatedUser(jwt);
-        Feedback updatedFeedback = feedbackService.Reject(feedbackId, user, request.getComment());
+        Feedback updatedFeedback = feedbackService.RejectFeedback(feedbackId, user, request.getComment());
         moduleVersionService.updateStatus(updatedFeedback.getModuleVersion().getModuleVersionId());
 
         return ResponseEntity.ok(updatedFeedback);

@@ -3,7 +3,7 @@ import { BrnSelectModule } from '@spartan-ng/ui-select-brain';
 import { BrnSeparatorModule } from '@spartan-ng/ui-separator-brain';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, RejectFeedbackDTO } from '../../core/modules/openapi';
+import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, GiveFeedbackDTO } from '../../core/modules/openapi';
 import { FormsModule } from '@angular/forms';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
@@ -142,20 +142,20 @@ export class FeedbackViewComponent {
     }
   }
 
-  sendRejection() {
+  giveFeedback() {
     if (this.feedbackId && this.reason.trim().length > 0) {
-      const rejectDto: RejectFeedbackDTO = { comment: this.reason };
-      this.feedbackService.rejectFeedback(this.feedbackId, rejectDto).subscribe({
+      const giveFeedbackDTO: GiveFeedbackDTO = { comment: this.reason };
+      this.feedbackService.giveFeedback(this.feedbackId, giveFeedbackDTO).subscribe({
         next: () => {
           this.router.navigate([''], { queryParams: { created: true } });
-          toast('Rejected', {
-            description: 'The feedback has been successfully rejected.',
+          toast('Feedback given.', {
+            description: 'Feedback was sucessfully given.',
             duration: 3000
           });
         },
         error: (err) => {
-          toast('Rejection Failed', {
-            description: err.message || 'Unable to reject feedback',
+          toast('Sending feedback failed.', {
+            description: err.message || 'Unable to send feedback',
             duration: 3000
           });
           this.error = err;

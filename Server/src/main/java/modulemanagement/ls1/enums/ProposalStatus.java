@@ -5,5 +5,6 @@ public enum ProposalStatus {
     PENDING_FEEDBACK,
     ACCEPTED,
     REQUIRES_REVIEW,
+    REJECTED,
     CANCELED
 }

@@ -90,12 +90,16 @@ public class ModuleVersionService {
 
         boolean allFeedbackPositive = true;
         boolean oneFeedbackNegative = false;
+        boolean oneFeedbackRejected = false;
         for (Feedback feedback: mv.getRequiredFeedbacks()) {
             if (!feedback.getStatus().equals(FeedbackStatus.APPROVED)) {
                 allFeedbackPositive = false;
             }
-            if (feedback.getStatus().equals(FeedbackStatus.REJECTED)) {
+            if (feedback.getStatus().equals(FeedbackStatus.FEEDBACK_GIVEN)) {
                 oneFeedbackNegative = true;
+            }
+            if (feedback.getStatus().equals(FeedbackStatus.REJECTED)) {
+                oneFeedbackRejected = true;
             }
         }
 
@@ -105,8 +109,12 @@ public class ModuleVersionService {
             mv.getProposal().setStatus(ProposalStatus.ACCEPTED);
         }
         if (oneFeedbackNegative) {
-            mv.setStatus(ModuleVersionStatus.REJECTED);
+            mv.setStatus(ModuleVersionStatus.FEEDBACK_GIVEN);
             p.setStatus(ProposalStatus.REQUIRES_REVIEW);
+        }
+        if (oneFeedbackRejected) {
+            mv.setStatus(ModuleVersionStatus.REJECTED);
+            p.setStatus(ProposalStatus.REJECTED);
         }
         proposalRepository.save(p);
         moduleVersionRepository.save(mv);

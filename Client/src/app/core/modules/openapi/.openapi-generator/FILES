@@ -18,6 +18,7 @@ model/completion-service-request-dto.ts
 model/completion-service-response-dto.ts
 model/feedback-list-item-dto.ts
 model/feedback.ts
+model/give-feedback-dto.ts
 model/models.ts
 model/module-version-compact-dto.ts
 model/module-version-update-request-dto.ts
@@ -29,7 +30,6 @@ model/proposal-request-dto.ts
 model/proposal-view-dto.ts
 model/proposal.ts
 model/proposals-compact-dto.ts
-model/reject-feedback-dto.ts
 model/similar-module-dto.ts
 model/user.ts
 param.ts
