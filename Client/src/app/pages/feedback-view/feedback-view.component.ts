@@ -24,6 +24,7 @@ import {
   HlmAlertDialogHeaderComponent,
   HlmAlertDialogTitleDirective
 } from '@spartan-ng/ui-alertdialog-helm';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-feedback-view',
@@ -65,7 +66,10 @@ export class FeedbackViewComponent {
   reason: string = '';
   reasonRequired: boolean = false;
 
+  showFeedbackForm: boolean = false;
   showRejectForm: boolean = false;
+  feedbackReason: string = '';
+  rejectionReason: string = '';
 
   getModuleVersionProperty(key: keyof ModuleVersionUpdateRequestDTO): string | undefined {
     return this.moduleVersion ? this.moduleVersion[key]?.toString() : undefined;
@@ -109,56 +113,77 @@ export class FeedbackViewComponent {
     }
   }
 
+  // Form control methods
+  openFeedbackForm() {
+    this.showFeedbackForm = true;
+    this.showRejectForm = false;
+    this.rejectionReason = '';
+  }
+
   openRejectForm() {
     this.showRejectForm = true;
+    this.showFeedbackForm = false;
+    this.feedbackReason = '';
+  }
+
+  cancelFeedback() {
+    this.showFeedbackForm = false;
+    this.feedbackReason = '';
   }
 
   cancelReject() {
     this.showRejectForm = false;
+    this.rejectionReason = '';
   }
 
-  approveFeedback() {
+approve() {
     if (this.feedbackId) {
       this.feedbackService.approveFeedback(this.feedbackId).subscribe({
         next: () => {
-          this.router.navigate([''], { queryParams: { created: true } });
-          toast('Feedback Approved', {
-            description: 'The feedback has been successfully approved.',
-            duration: 3000,
-            action: {
-              label: '',
-              onClick: () => {}
-            }
-          });
+          this.router.navigate([''], { queryParams: { accepted: true } });
         },
-        error: (err) => {
+        error: (err: HttpErrorResponse) => {
           toast('Approval Failed', {
-            description: err.message || 'Unable to approve feedback',
+            description: err.error || 'Unable to approve feedback',
             duration: 3000
           });
-          this.error = err;
+          this.error = err.error;
         }
       });
     }
   }
 
   giveFeedback() {
-    if (this.feedbackId && this.reason.trim().length > 0) {
-      const giveFeedbackDTO: GiveFeedbackDTO = { comment: this.reason };
+    if (this.feedbackId && this.feedbackReason.trim().length > 0) {
+      const giveFeedbackDTO: GiveFeedbackDTO = { comment: this.feedbackReason };
       this.feedbackService.giveFeedback(this.feedbackId, giveFeedbackDTO).subscribe({
         next: () => {
-          this.router.navigate([''], { queryParams: { created: true } });
-          toast('Feedback given.', {
-            description: 'Feedback was sucessfully given.',
-            duration: 3000
-          });
+          this.router.navigate([''], { queryParams: { feedback_given: true } });
         },
-        error: (err) => {
+        error: (err: HttpErrorResponse) => {
           toast('Sending feedback failed.', {
-            description: err.message || 'Unable to send feedback',
+            description: err.error || 'Unable to send feedback',
             duration: 3000
           });
-          this.error = err;
+          this.error = err.error;
+        }
+      });
+    }
+  }
+
+  reject() {
+    if (this.feedbackId && this.rejectionReason.trim().length > 0) {
+      const giveFeedbackDTO: GiveFeedbackDTO = { comment: this.rejectionReason };
+      this.feedbackService.rejectFeedback(this.feedbackId, giveFeedbackDTO).subscribe({
+        next: () => {
+          this.router.navigate([''], { queryParams: { rejected: true } });
+        },
+        error: (err: HttpErrorResponse) => {
+          toast('Rejection failed.', {
+            description: err.error || 'Unable to reject module',
+            duration: 3000
+          });
+          this.error = err.error;
         }
       });
     }

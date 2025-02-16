@@ -16,7 +16,7 @@ export class StatusDisplayPipe implements PipeTransform {
       case 'CANCELED':
         return { text: 'Canceled', colorClass: 'bg-gray-300' };
       case 'REJECTED':
-        return { text: 'Rejected', colorClass: 'bg-red-300' };
+        return { text: 'Rejected', colorClass: 'bg-red-500' };
       default:
         return { text: status, colorClass: 'bg-gray-400' };
     }
