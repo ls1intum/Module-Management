@@ -44,7 +44,6 @@ public class FeedbackController {
         User user = authenticationService.getAuthenticatedUser(jwt);
         Feedback updatedFeedback = feedbackService.Accept(feedbackId, user);
         moduleVersionService.updateStatus(updatedFeedback.getModuleVersion().getModuleVersionId());
-
         return ResponseEntity.ok(updatedFeedback);
     }
 
@@ -61,7 +60,6 @@ public class FeedbackController {
         User user = authenticationService.getAuthenticatedUser(jwt);
         Feedback updatedFeedback = feedbackService.GiveFeedback(feedbackId, user, request.getComment());
         moduleVersionService.updateStatus(updatedFeedback.getModuleVersion().getModuleVersionId());
-
         return ResponseEntity.ok(updatedFeedback);
     }
 
