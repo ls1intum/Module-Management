@@ -36,6 +36,7 @@ export class ModuleVersionViewComponent {
     { key: 'levelEng', label: 'Level', section: 'basic' },
     { key: 'languageEng', label: 'Language', section: 'basic' },
     { key: 'frequencyEng', label: 'Frequency', section: 'basic' },
+    { key: 'duration', label: 'Duration', section: 'basic' },
     { key: 'repetitionEng', label: 'Repetition', section: 'basic' },
     { key: 'credits', label: 'Credits', section: 'hours' },
     { key: 'hoursTotal', label: 'Total Hours', section: 'hours' },

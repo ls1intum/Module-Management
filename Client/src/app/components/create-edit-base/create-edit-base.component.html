@@ -82,6 +82,22 @@
     </div>
 
     <div>
+      <label hlmLabel class="text-xl">Duration</label>
+      <hlm-form-field class="mt-2">
+        <app-toggle-button-group
+          [options]="[
+            { value: 'One Semester', label: 'One Semester' },
+            { value: 'Two Semesters', label: 'Two Semesters' },
+            { value: 'Three Semesters', label: 'Three Semesters' },
+            { value: 'Four Semesters', label: 'One Semesters' }
+          ]"
+          [required]="false"
+          formControlName="duration"
+        ></app-toggle-button-group>
+      </hlm-form-field>
+    </div>
+
+    <div>
       <label hlmLabel class="text-xl">
         Repetition
         <hlm-form-field class="mt-2">
