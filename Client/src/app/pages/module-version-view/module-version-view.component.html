@@ -33,7 +33,7 @@
   </div>
 
   <div class="bg-card rounded-lg shadow-sm">
-    <h3 class="text-xl font-semibold mb-4">Feedbacks</h3>
+    <h3 id="feedbacks" class="text-xl font-semibold mb-4">Feedbacks</h3>
     @if (moduleVersionDto.feedbacks?.length) {
     <div class="space-y-4">
       @for (feedback of moduleVersionDto.feedbacks; track feedback.feedbackId) {
@@ -57,7 +57,7 @@
           </div>
           @if (feedback.rejectionComment) {
           <p class="mt-2 text-muted-foreground">
-            <strong>Reason:</strong>
+            <strong>Comment:</strong>
             {{ feedback.rejectionComment }}
           </p>
           }
