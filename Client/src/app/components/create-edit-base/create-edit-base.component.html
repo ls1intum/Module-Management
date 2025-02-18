@@ -89,7 +89,7 @@
             { value: 'One Semester', label: 'One Semester' },
             { value: 'Two Semesters', label: 'Two Semesters' },
             { value: 'Three Semesters', label: 'Three Semesters' },
-            { value: 'Four Semesters', label: 'One Semesters' }
+            { value: 'Four Semesters', label: 'Four Semesters' }
           ]"
           [required]="false"
           formControlName="duration"
@@ -105,7 +105,7 @@
             [options]="[
               { value: 'End of Semester', label: 'End of Semester' },
               { value: 'Following Semester', label: 'Following Semester' },
-              { value: 'Enf of Semester/Following Semester', label: 'Enf of Semester/Following Semester' }
+              { value: 'End of Semester/Following Semester', label: 'End of Semester/Following Semester' }
             ]"
             [required]="false"
             formControlName="repetitionEng"
@@ -127,15 +127,6 @@
             [required]="false"
             formControlName="frequencyEng"
           ></app-toggle-button-group>
-        </hlm-form-field>
-      </label>
-    </div>
-
-    <div>
-      <label hlmLabel class="text-lg">
-        Duration
-        <hlm-form-field class="mt-2">
-          <input hlmInput formControlName="duration" placeholder="e.g. One Semester/Two Semesters" class="w-full" />
         </hlm-form-field>
       </label>
     </div>
