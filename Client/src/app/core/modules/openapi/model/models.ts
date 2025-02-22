@@ -2,6 +2,7 @@ export * from './add-module-version-dto';
 export * from './completion-service-request-dto';
 export * from './completion-service-response-dto';
 export * from './feedback';
+export * from './feedback-dto';
 export * from './feedback-list-item-dto';
 export * from './give-feedback-dto';
 export * from './module-version';

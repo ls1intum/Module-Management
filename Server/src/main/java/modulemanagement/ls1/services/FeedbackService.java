@@ -1,6 +1,7 @@
 package modulemanagement.ls1.services;
 
 import jakarta.validation.constraints.NotBlank;
+import modulemanagement.ls1.dtos.FeedbackDTO;
 import modulemanagement.ls1.dtos.FeedbackListItemDto;
 import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
 import modulemanagement.ls1.enums.FeedbackStatus;
@@ -35,14 +36,15 @@ public class FeedbackService {
         return feedback;
     }
 
-    public Feedback GiveFeedback(Long feedbackId, User user, String comment) {
+    public Feedback GiveFeedback(Long feedbackId, User user, FeedbackDTO givenFeedback) {
         Feedback feedback = getPendingFeedback(feedbackId);
         if (!user.getRole().equals(feedback.getRequiredRole()))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You do not have permission to accept this feedback");
         feedback.setFeedbackFrom(user);
         feedback.setSubmissionDate(LocalDateTime.now());
-        feedback.setStatus(FeedbackStatus.FEEDBACK_GIVEN);
-        feedback.setComment(comment);
+        feedback.insert(givenFeedback);
+        boolean positive = feedback.isAllFeedbackPositive();
+        feedback.setStatus(positive ? FeedbackStatus.APPROVED : FeedbackStatus.FEEDBACK_GIVEN);
         feedback = feedbackRepository.save(feedback);
         return feedback;
     }

@@ -16,6 +16,7 @@ index.ts
 model/add-module-version-dto.ts
 model/completion-service-request-dto.ts
 model/completion-service-response-dto.ts
+model/feedback-dto.ts
 model/feedback-list-item-dto.ts
 model/feedback.ts
 model/give-feedback-dto.ts

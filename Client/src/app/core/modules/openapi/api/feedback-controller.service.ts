@@ -19,6 +19,8 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { Feedback } from '../model/feedback';
 // @ts-ignore
+import { FeedbackDTO } from '../model/feedback-dto';
+// @ts-ignore
 import { FeedbackListItemDto } from '../model/feedback-list-item-dto';
 // @ts-ignore
 import { GiveFeedbackDTO } from '../model/give-feedback-dto';
@@ -286,19 +288,19 @@ export class FeedbackControllerService implements FeedbackControllerServiceInter
 
     /**
      * @param feedbackId 
-     * @param giveFeedbackDTO 
+     * @param feedbackDTO 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public giveFeedback(feedbackId: number, giveFeedbackDTO: GiveFeedbackDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Feedback>;
-    public giveFeedback(feedbackId: number, giveFeedbackDTO: GiveFeedbackDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Feedback>>;
-    public giveFeedback(feedbackId: number, giveFeedbackDTO: GiveFeedbackDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Feedback>>;
-    public giveFeedback(feedbackId: number, giveFeedbackDTO: GiveFeedbackDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public giveFeedback(feedbackId: number, feedbackDTO: FeedbackDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Feedback>;
+    public giveFeedback(feedbackId: number, feedbackDTO: FeedbackDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Feedback>>;
+    public giveFeedback(feedbackId: number, feedbackDTO: FeedbackDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Feedback>>;
+    public giveFeedback(feedbackId: number, feedbackDTO: FeedbackDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (feedbackId === null || feedbackId === undefined) {
             throw new Error('Required parameter feedbackId was null or undefined when calling giveFeedback.');
         }
-        if (giveFeedbackDTO === null || giveFeedbackDTO === undefined) {
-            throw new Error('Required parameter giveFeedbackDTO was null or undefined when calling giveFeedback.');
+        if (feedbackDTO === null || feedbackDTO === undefined) {
+            throw new Error('Required parameter feedbackDTO was null or undefined when calling giveFeedback.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -350,7 +352,7 @@ export class FeedbackControllerService implements FeedbackControllerServiceInter
         return this.httpClient.request<Feedback>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: giveFeedbackDTO,
+                body: feedbackDTO,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

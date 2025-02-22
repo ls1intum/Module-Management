@@ -7,20 +7,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { User } from './user';
 
 
-export interface Feedback { 
-    feedbackId?: number;
-    feedbackFrom?: User;
-    requiredRole?: Feedback.RequiredRoleEnum;
-    status: Feedback.StatusEnum;
-    submissionDate?: string;
+export interface FeedbackDTO { 
     titleFeedback?: string;
     titleAccepted?: boolean;
     levelFeedback?: string;
     levelAccepted?: boolean;
-    languageFeedback?: string;
+    language_feedback?: string;
     languageAccepted?: boolean;
     frequencyFeedback?: string;
     frequencyAccepted?: boolean;
@@ -52,28 +46,5 @@ export interface Feedback {
     responsiblesAccepted?: boolean;
     lvSwsLecturerFeedback?: string;
     lvSwsLecturerAccepted?: boolean;
-    comment?: string;
-    allFeedbackPositive?: boolean;
-    rejected?: boolean;
 }
-export namespace Feedback {
-    export type RequiredRoleEnum = 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR';
-    export const RequiredRoleEnum = {
-        QualityManagement: 'QUALITY_MANAGEMENT' as RequiredRoleEnum,
-        AcademicProgramAdvisor: 'ACADEMIC_PROGRAM_ADVISOR' as RequiredRoleEnum,
-        ExaminationBoard: 'EXAMINATION_BOARD' as RequiredRoleEnum,
-        Professor: 'PROFESSOR' as RequiredRoleEnum
-    };
-    export type StatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'APPROVED' | 'FEEDBACK_GIVEN' | 'REJECTED' | 'OBSOLETE' | 'CANCELLED';
-    export const StatusEnum = {
-        PendingSubmission: 'PENDING_SUBMISSION' as StatusEnum,
-        PendingFeedback: 'PENDING_FEEDBACK' as StatusEnum,
-        Approved: 'APPROVED' as StatusEnum,
-        FeedbackGiven: 'FEEDBACK_GIVEN' as StatusEnum,
-        Rejected: 'REJECTED' as StatusEnum,
-        Obsolete: 'OBSOLETE' as StatusEnum,
-        Cancelled: 'CANCELLED' as StatusEnum
-    };
-}
-
 

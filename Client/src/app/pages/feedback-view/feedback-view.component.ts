@@ -3,8 +3,8 @@ import { BrnSelectModule } from '@spartan-ng/ui-select-brain';
 import { BrnSeparatorModule } from '@spartan-ng/ui-separator-brain';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, GiveFeedbackDTO } from '../../core/modules/openapi';
-import { FormsModule } from '@angular/forms';
+import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, FeedbackDTO, GiveFeedbackDTO } from '../../core/modules/openapi';
+import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmScrollAreaComponent } from '@spartan-ng/ui-scrollarea-helm';
@@ -30,18 +30,18 @@ import { HttpErrorResponse } from '@angular/common/http';
   selector: 'app-feedback-view',
   standalone: true,
   imports: [
-    BrnSelectModule,
-    BrnSeparatorModule,
     CommonModule,
     FormsModule,
+    RouterModule,
+
+    BrnSelectModule,
+    BrnSeparatorModule,
     HlmButtonDirective,
     HlmInputDirective,
     HlmScrollAreaComponent,
     HlmSelectModule,
     HlmSeparatorDirective,
     HlmToasterComponent,
-    RouterModule,
-
     BrnAlertDialogTriggerDirective,
     BrnAlertDialogContentDirective,
     HlmAlertDialogComponent,
@@ -57,8 +57,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class FeedbackViewComponent {
   router = inject(Router);
-  route = inject(ActivatedRoute);
   feedbackService = inject(FeedbackControllerService);
+  protected formBuilder = inject(FormBuilder);
+  feedbackForm: FormGroup;
   feedbackId: number | null = null;
   moduleVersion: ModuleVersionUpdateRequestDTO | null = null;
   loading: boolean = true;
@@ -81,6 +82,7 @@ export class FeedbackViewComponent {
     { key: 'languageEng', label: 'Language (EN)' },
     { key: 'frequencyEng', label: 'Frequency (EN)' },
     { key: 'credits', label: 'Credits' },
+    { key: 'duration', label: 'Duration' },
     { key: 'hoursTotal', label: 'Total Hours' },
     { key: 'hoursSelfStudy', label: 'Self-Study Hours' },
     { key: 'hoursPresence', label: 'Presence Hours' },
@@ -96,9 +98,46 @@ export class FeedbackViewComponent {
     { key: 'lvSwsLecturerEng', label: 'Lecturer SWs (EN)' }
   ] as const;
 
-  constructor() {
-    this.feedbackId = Number(this.route.snapshot.paramMap.get('id'));
-    console.log('feedbackid: ' + this.feedbackId);
+  constructor(route: ActivatedRoute) {
+    this.feedbackForm = this.formBuilder.group({
+      titleAccepted: [],
+      titleFeedback: [''],
+      levelAccepted: [],
+      levelFeedback: [''],
+      languageAccepted: [],
+      language_feedback: [''],
+      frequencyAccepted: [],
+      frequencyFeedback: [''],
+      creditsAccepted: [],
+      creditsFeedback: [''],
+      durationAccepted: [],
+      durationFeedback: [''],
+      hoursTotalAccepted: [],
+      hoursTotalFeedback: [''],
+      hoursSelfStudyAccepted: [],
+      hoursSelfStudyFeedback: [''],
+      hoursPresenceAccepted: [],
+      hoursPresenceFeedback: [''],
+      examinationAchievementsAccepted: [],
+      examinationAchievementsFeedback: [''],
+      repetitionAccepted: [],
+      repetitionFeedback: [''],
+      contentAccepted: [],
+      contentFeedback: [''],
+      learningOutcomesAccepted: [],
+      learningOutcomesFeedback: [''],
+      teachingMethodsAccepted: [],
+      teachingMethodsFeedback: [''],
+      mediaAccepted: [],
+      mediaFeedback: [''],
+      literatureAccepted: [],
+      literatureFeedback: [''],
+      responsiblesAccepted: [],
+      responsiblesFeedback: [''],
+      lvSwsLecturerAccepted: [],
+      lvSwsLecturerFeedback: [''],
+    });
+    this.feedbackId = Number(route.snapshot.paramMap.get('id'));
     this.fetchModuleVersion(this.feedbackId);
   }
 
@@ -106,8 +145,8 @@ export class FeedbackViewComponent {
     this.loading = true;
     if (feedbackId) {
       this.feedbackService.getModuleVersionOfFeedback(feedbackId).subscribe({
-        next: (response) => (this.moduleVersion = response),
-        error: (err) => (this.error = err),
+        next: (response: ModuleVersionUpdateRequestDTO) => (this.moduleVersion = response),
+        error: (err: HttpErrorResponse) => (this.error = err.error),
         complete: () => (this.loading = false)
       });
     }
@@ -136,27 +175,28 @@ export class FeedbackViewComponent {
     this.rejectionReason = '';
   }
 
-approve() {
-    if (this.feedbackId) {
-      this.feedbackService.approveFeedback(this.feedbackId).subscribe({
-        next: () => {
-          this.router.navigate([''], { queryParams: { accepted: true } });
-        },
-        error: (err: HttpErrorResponse) => {
-          toast('Approval Failed', {
-            description: err.error || 'Unable to approve feedback',
-            duration: 3000
-          });
-          this.error = err.error;
-        }
-      });
-    }
+  cancel() {
+    this.router.navigate(['']);
+  }
+
+  submit() {
+
+  }
+
+  hasRejectedFields() {
+    return false;
+  }
+
+  hasApprovedFields() {
+    return true;
   }
 
   giveFeedback() {
     if (this.feedbackId && this.feedbackReason.trim().length > 0) {
-      const giveFeedbackDTO: GiveFeedbackDTO = { comment: this.feedbackReason };
-      this.feedbackService.giveFeedback(this.feedbackId, giveFeedbackDTO).subscribe({
+      const feedbackDTO: FeedbackDTO = {
+        ...this.feedbackForm.value,
+      }
+      this.feedbackService.giveFeedback(this.feedbackId, feedbackDTO).subscribe({
         next: () => {
           this.router.navigate([''], { queryParams: { feedback_given: true } });
         },
