@@ -212,7 +212,7 @@ export class FeedbackViewComponent {
       const giveFeedbackDTO: GiveFeedbackDTO = { comment: this.rejectionReason };
       this.feedbackService.rejectFeedback(this.feedbackId, giveFeedbackDTO).subscribe({
         next: () => {
-          this.router.navigate([''], { queryParams: { rejected: true } });
+          this.router.navigate([''], { queryParams: { feedback_given: true } });
         },
         error: (err: HttpErrorResponse) => {
           toast('Rejection failed.', {

@@ -84,7 +84,7 @@
       <button hlmBtn variant="default" class="bg-green-600 mr-2" (click)="submitProposal()">Submit</button>
       } @if (proposal.latestModuleVersion!.isComplete && proposal.latestModuleVersion!.status !== moduleStatusEnum.FeedbackGiven) {
       <button hlmBtn variant="outline" class="mr-2" [routerLink]="['/overlap', proposal.latestModuleVersion?.moduleVersionId]">Overlaps</button>
-      } @if (proposal.latestModuleVersion!.status === moduleStatusEnum.FeedbackGiven) {
+      } @if (proposal.latestModuleVersion!.status === moduleStatusEnum.FeedbackGiven || proposal.latestModuleVersion!.status === moduleStatusEnum.Rejected) {
       <button hlmBtn variant="outline" class="mr-2" [routerLink]="['/module-version/view', proposal.latestModuleVersion?.moduleVersionId]" fragment="feedbacks">
         View Feedback
       </button>
