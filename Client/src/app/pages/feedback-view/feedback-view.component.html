@@ -22,9 +22,9 @@
               variant="ghost"
               hlmBtn
               class="w-12"
-              [class.bg-green-300]="fieldStates[field.key]?.accepted === true"
-              [class.text-green-600]="fieldStates[field.key]?.accepted === true"
-              [class.hover:bg-gray-200]="fieldStates[field.key]?.accepted !== true"
+              [class.bg-green-300]="fieldStates[field.key].accepted === true"
+              [class.text-green-600]="fieldStates[field.key].accepted === true"
+              [class.hover:bg-gray-200]="fieldStates[field.key].accepted !== true"
               (click)="handleApprove(field.key)"
             >
               <hlm-icon name="lucideCheck" />
@@ -33,9 +33,9 @@
               hlmBtn
               variant="ghost"
               class="w-12"
-              [class.bg-red-300]="fieldStates[field.key]?.accepted === false"
-              [class.text-red-600]="fieldStates[field.key]?.accepted === false"
-              [class.hover:bg-gray-200]="fieldStates[field.key]?.accepted !== false"
+              [class.bg-red-300]="fieldStates[field.key].accepted === false"
+              [class.text-red-600]="fieldStates[field.key].accepted === false"
+              [class.hover:bg-gray-200]="fieldStates[field.key].accepted !== false"
               (click)="handleReject(field.key)"
             >
               <hlm-icon name="lucideX" />
@@ -45,7 +45,7 @@
       </div>
 
       <!-- Feedback section - Full width -->
-      @if (fieldStates[field.key]?.accepted === false) {
+      @if (fieldStates[field.key].accepted === false) {
       <div class="mt-4">
         <textarea
           hlmInput

@@ -35,25 +35,15 @@ export class ApprovalStaffHomePageComponent implements OnInit {
     ngOnInit() {
     this.route.queryParams.subscribe(params => {
       if (params['feedback_given'] === 'true') {
-        setTimeout(() => {
-          toast.success('Feedback Submitted', {
-            description: 'Your feedback has been submitted successfully'
-          });
-        }, 100);
+      toast.success('Feedback Submitted', {
+        description: 'Your feedback has been submitted successfully'
+        });
       }
       if (params['rejected'] === 'true') {
-        setTimeout(() => {
-          toast.success('Module Proposal Rejected', {
-            description: 'You sucessfully rejected this Module Proposal'
-          });
-        }, 100);
+        toast.success('Module Proposal Rejected', {
+          description: 'You sucessfully rejected this Module Proposal'
+        });
       }
-    });
-  }
-
-  showToast() {
-    toast.success('Hello!', {
-      description: 'This is a test toast message'
     });
   }
 

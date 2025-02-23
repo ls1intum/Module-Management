@@ -16,6 +16,7 @@ import { HlmAlertDescriptionDirective, HlmAlertDirective, HlmAlertIconDirective,
 import { lucideInfo } from '@ng-icons/lucide';
 import { provideIcons } from '@ng-icons/core';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
+import { HlmToasterComponent } from "../../../spartan-components/ui-sonner-helm/src/lib/hlm-toaster.component";
 
 @Component({
   selector: 'app-proposal-view',
@@ -44,8 +45,9 @@ import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
     HlmAlertDirective,
     HlmAlertIconDirective,
     HlmAlertTitleDirective,
-    HlmIconComponent
-  ],
+    HlmIconComponent,
+    HlmToasterComponent
+],
   host: {
     class: 'w-full overflow-x-auto'
   },

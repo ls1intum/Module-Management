@@ -97,6 +97,10 @@ export class FeedbackViewComponent {
   ] as const;
 
   constructor(formBulider: FormBuilder, route: ActivatedRoute) {
+    this.moduleFields.forEach(field => {
+      this.fieldStates[field.key] = { accepted: null };
+      this.fieldFeedback[field.key] = '';
+    });
     this.feedbackForm = formBulider.group({
       titleAccepted: [null],
       titleFeedback: [''],
