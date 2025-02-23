@@ -44,67 +44,14 @@ export class ModuleVersionViewComponent {
     { key: 'hoursSelfStudy', label: 'Self-Study Hours', section: 'hours', feedbackKey: 'hoursSelfStudyFeedback' },
     { key: 'hoursPresence', label: 'Presence Hours', section: 'hours', feedbackKey: 'hoursPresenceFeedback' },
     { key: 'bulletPoints', label: 'Key Points', section: 'content', isLongText: true },
-    {
-      key: 'examinationAchievementsEng',
-      label: 'Examination Achievements',
-      section: 'content',
-      isLongText: true,
-      hasPrompt: 'examinationAchievementsPromptEng',
-      feedbackKey: 'examinationAchievementsFeedback'
-    },
-    { key: 'recommendedPrerequisitesEng', label: 'Recommended Prerequisites', section: 'content', isLongText: true },
-    {
-      key: 'contentEng',
-      label: 'Module Content',
-      section: 'content',
-      isLongText: true,
-      hasPrompt: 'contentPromptEng',
-      feedbackKey: 'contentFeedback'
-    },
-    {
-      key: 'learningOutcomesEng',
-      label: 'Learning Outcomes',
-      section: 'content',
-      isLongText: true,
-      hasPrompt: 'learningOutcomesPromptEng',
-      feedbackKey: 'learningOutcomesFeedback'
-    },
-    {
-      key: 'teachingMethodsEng',
-      label: 'Teaching Methods',
-      section: 'content',
-      isLongText: true,
-      hasPrompt: 'teachingMethodsPromptEng',
-      feedbackKey: 'teachingMethodsFeedback'
-    },
-    {
-      key: 'mediaEng',
-      label: 'Media',
-      section: 'content',
-      isLongText: true,
-      feedbackKey: 'mediaFeedback'
-    },
-    { 
-      key: 'literatureEng', 
-      label: 'Literature', 
-      section: 'content', 
-      isLongText: true,
-      feedbackKey: 'literatureFeedback'
-    },
-    { 
-      key: 'responsiblesEng', 
-      label: 'Responsibles', 
-      section: 'content', 
-      isLongText: true,
-      feedbackKey: 'responsiblesFeedback'
-    },
-    { 
-      key: 'lvSwsLecturerEng', 
-      label: 'Lecturer', 
-      section: 'content', 
-      isLongText: true,
-      feedbackKey: 'lvSwsLecturerFeedback'
-    }
+    { key: 'examinationAchievementsEng', label: 'Examination Achievements', section: 'content', isLongText: true, hasPrompt: 'examinationAchievementsPromptEng', feedbackKey: 'examinationAchievementsFeedback' },
+    { key: 'recommendedPrerequisitesEng', label: 'Recommended Prerequisites', section: 'content', isLongText: true }, { key: 'contentEng', label: 'Module Content', section: 'content', isLongText: true, hasPrompt: 'contentPromptEng', feedbackKey: 'contentFeedback' },
+    { key: 'learningOutcomesEng', label: 'Learning Outcomes', section: 'content', isLongText: true, hasPrompt: 'learningOutcomesPromptEng', feedbackKey: 'learningOutcomesFeedback' },
+    { key: 'teachingMethodsEng', label: 'Teaching Methods', section: 'content', isLongText: true, hasPrompt: 'teachingMethodsPromptEng', feedbackKey: 'teachingMethodsFeedback' },
+    { key: 'mediaEng', label: 'Media', section: 'content', isLongText: true, feedbackKey: 'mediaFeedback' },
+    { key: 'literatureEng', label: 'Literature', section: 'content', isLongText: true, feedbackKey: 'literatureFeedback' },
+    { key: 'responsiblesEng', label: 'Responsibles', section: 'content', isLongText: true, feedbackKey: 'responsiblesFeedback' },
+    { key: 'lvSwsLecturerEng', label: 'Lecturer', section: 'content', isLongText: true, feedbackKey: 'lvSwsLecturerFeedback' }
   ];
 
   constructor() {
@@ -173,15 +120,6 @@ export class ModuleVersionViewComponent {
   }
 
   getFeedbackBorderClass(status: ModuleVersionViewFeedbackDTO.FeedbackStatusEnum): string {
-    switch (status) {
-      case 'APPROVED':
-        return 'border-green-500';
-      case 'REJECTED':
-        return 'border-red-500';
-      case 'FEEDBACK_GIVEN':
-        return 'border-yellow-500';
-      default:
-        return 'border-gray-500';
-    }
+    return 'border-blue-500';
   }
 }
