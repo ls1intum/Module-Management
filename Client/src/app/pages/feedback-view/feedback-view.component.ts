@@ -12,8 +12,6 @@ import { toast } from 'ngx-sonner';
 
 import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
 import {
-  HlmAlertDialogActionButtonDirective,
-  HlmAlertDialogCancelButtonDirective,
   HlmAlertDialogComponent,
   HlmAlertDialogContentComponent,
   HlmAlertDialogDescriptionDirective,
@@ -25,6 +23,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { lucideCheck, lucideX } from '@ng-icons/lucide';
 import { provideIcons } from '@ng-icons/core';
 import { HlmIconComponent } from "../../../spartan-components/ui-icon-helm/src/lib/hlm-icon.component";
+import { BrnDialogCloseDirective } from '@spartan-ng/ui-dialog-brain';
+import { HlmToasterComponent } from '@spartan-ng/ui-sonner-helm';
 
 @Component({
   selector: 'app-feedback-view',
@@ -40,15 +40,15 @@ import { HlmIconComponent } from "../../../spartan-components/ui-icon-helm/src/l
     HlmSelectModule,
     BrnAlertDialogTriggerDirective,
     BrnAlertDialogContentDirective,
+    BrnDialogCloseDirective,
     HlmAlertDialogComponent,
     HlmAlertDialogHeaderComponent,
     HlmAlertDialogFooterComponent,
     HlmAlertDialogTitleDirective,
     HlmAlertDialogDescriptionDirective,
-    HlmAlertDialogCancelButtonDirective,
-    HlmAlertDialogActionButtonDirective,
     HlmAlertDialogContentComponent,
-    HlmIconComponent
+    HlmIconComponent,
+    HlmToasterComponent
 ],
   providers: [provideIcons({ lucideCheck, lucideX })],
   templateUrl: './feedback-view.component.html'
@@ -56,49 +56,23 @@ import { HlmIconComponent } from "../../../spartan-components/ui-icon-helm/src/l
 export class FeedbackViewComponent {
   router = inject(Router);
   feedbackService = inject(FeedbackControllerService);
-  protected formBuilder = inject(FormBuilder);
   feedbackForm: FormGroup;
   feedbackId: number | null = null;
   moduleVersion: ModuleVersionUpdateRequestDTO | null = null;
   loading: boolean = true;
   error: string | null = null;
-  reason: string = '';
-  reasonRequired: boolean = false;
-
-  showFeedbackForm: boolean = false;
-  showRejectForm: boolean = false;
-  feedbackReason: string = '';
   rejectionReason: string = '';
+
+  // utility
 
   fieldStates: Record<string, { accepted: boolean | null }> = {};
   fieldFeedback: Record<string, string> = {};
 
-  handleApprove(key: string) {
-    this.fieldStates[key] = { accepted: true };
-    this.fieldFeedback[key] = '';
-    this.feedbackForm.patchValue({
-      [`${key}Accepted`]: true,
-      [`${key}Feedback`]: ''
-    });
-  }
-
-  handleReject(key: string) {
-    this.fieldStates[key] = { accepted: false };
-    this.feedbackForm.patchValue({
-      [`${key}Accepted`]: false
-    });
-  }
-
-  updateFeedback(key: string, value: string) {
-    this.fieldFeedback[key] = value;
-    this.feedbackForm.patchValue({
-      [`${key}Feedback`]: value
-    });
-  }
-
   getModuleVersionProperty(key: keyof ModuleVersionUpdateRequestDTO): string | undefined {
     return this.moduleVersion ? this.moduleVersion[key]?.toString() : undefined;
   }
+
+  // prepare form and data
 
   moduleFields = [
     { key: 'titleEng', label: 'Title' },
@@ -122,48 +96,50 @@ export class FeedbackViewComponent {
     { key: 'lvSwsLecturerEng', label: 'Lecturer SWs' }
   ] as const;
 
-  constructor(route: ActivatedRoute) {
-    this.feedbackForm = this.formBuilder.group({
-      titleAccepted: [],
+  constructor(formBulider: FormBuilder, route: ActivatedRoute) {
+    this.feedbackForm = formBulider.group({
+      titleAccepted: [null],
       titleFeedback: [''],
-      levelAccepted: [],
+      levelAccepted: [null],
       levelFeedback: [''],
-      languageAccepted: [],
+      languageAccepted: [null],
       language_feedback: [''],
-      frequencyAccepted: [],
+      frequencyAccepted: [null],
       frequencyFeedback: [''],
-      creditsAccepted: [],
+      creditsAccepted: [null],
       creditsFeedback: [''],
-      durationAccepted: [],
+      durationAccepted: [null],
       durationFeedback: [''],
-      hoursTotalAccepted: [],
+      hoursTotalAccepted: [null],
       hoursTotalFeedback: [''],
-      hoursSelfStudyAccepted: [],
+      hoursSelfStudyAccepted: [null],
       hoursSelfStudyFeedback: [''],
-      hoursPresenceAccepted: [],
+      hoursPresenceAccepted: [null],
       hoursPresenceFeedback: [''],
-      examinationAchievementsAccepted: [],
+      examinationAchievementsAccepted: [null],
       examinationAchievementsFeedback: [''],
-      repetitionAccepted: [],
+      repetitionAccepted: [null],
       repetitionFeedback: [''],
-      contentAccepted: [],
+      contentAccepted: [null],
       contentFeedback: [''],
-      learningOutcomesAccepted: [],
+      learningOutcomesAccepted: [null],
       learningOutcomesFeedback: [''],
-      teachingMethodsAccepted: [],
+      teachingMethodsAccepted: [null],
       teachingMethodsFeedback: [''],
-      mediaAccepted: [],
+      mediaAccepted: [null],
       mediaFeedback: [''],
-      literatureAccepted: [],
+      literatureAccepted: [null],
       literatureFeedback: [''],
-      responsiblesAccepted: [],
+      responsiblesAccepted: [null],
       responsiblesFeedback: [''],
-      lvSwsLecturerAccepted: [],
+      lvSwsLecturerAccepted: [null],
       lvSwsLecturerFeedback: [''],
     });
     this.feedbackId = Number(route.snapshot.paramMap.get('id'));
     this.fetchModuleVersion(this.feedbackId);
   }
+
+  // get data
 
   private async fetchModuleVersion(feedbackId: number | null) {
     this.loading = true;
@@ -176,63 +152,55 @@ export class FeedbackViewComponent {
     }
   }
 
-  // Form control methods
-  openFeedbackForm() {
-    this.showFeedbackForm = true;
-    this.showRejectForm = false;
-    this.rejectionReason = '';
+  // field methods
+
+  handleApprove(key: string) {
+    const formField = key.replace('Eng', ''); 
+    this.fieldStates[key] = { accepted: true };
+    this.fieldFeedback[key] = '';
+    const acceptedField = `${formField}Accepted`;
+    const feedbackField = `${formField}Feedback`;
+    this.feedbackForm.get(acceptedField)?.setValue(true);
+    this.feedbackForm.get(feedbackField)?.setValue('');
   }
 
-  openRejectForm() {
-    this.showRejectForm = true;
-    this.showFeedbackForm = false;
-    this.feedbackReason = '';
+  handleReject(key: string) {
+    const formField = key.replace('Eng', ''); 
+    this.fieldStates[key] = { accepted: false };
+    const acceptedField = `${formField}Accepted`;
+    this.feedbackForm.get(acceptedField)?.setValue(false);
   }
 
-  cancelFeedback() {
-    this.showFeedbackForm = false;
-    this.feedbackReason = '';
+  updateFeedback(key: string, value: string) {
+    const formField = key.replace('Eng', ''); 
+    this.fieldFeedback[key] = value;
+    this.feedbackForm.patchValue({
+      [`${formField}Feedback`]: value
+    });
   }
 
-  cancelReject() {
-    this.showRejectForm = false;
-    this.rejectionReason = '';
+  // form methods
+
+  isEveryFieldFilled(): boolean {
+  const formValues = this.feedbackForm.value;
+  return Object.keys(formValues)
+    .filter(key => key.endsWith('Accepted'))
+    .every(acceptedKey => {
+      const isAccepted = formValues[acceptedKey];
+      if (isAccepted === true) {
+        return true;
+      }
+      if (isAccepted === false) {
+        const feedbackKey = acceptedKey.replace('Accepted', 'Feedback');
+        const feedback = formValues[feedbackKey];
+        return feedback && feedback.trim().length > 0;
+      }
+      return false;
+    });
   }
 
   cancel() {
     this.router.navigate(['']);
-  }
-
-  submit() {
-
-  }
-
-  hasRejectedFields() {
-    return false;
-  }
-
-  hasApprovedFields() {
-    return true;
-  }
-
-  giveFeedback() {
-    if (this.feedbackId && this.feedbackReason.trim().length > 0) {
-      const feedbackDTO: FeedbackDTO = {
-        ...this.feedbackForm.value,
-      }
-      this.feedbackService.giveFeedback(this.feedbackId, feedbackDTO).subscribe({
-        next: () => {
-          this.router.navigate([''], { queryParams: { feedback_given: true } });
-        },
-        error: (err: HttpErrorResponse) => {
-          toast('Sending feedback failed.', {
-            description: err.error || 'Unable to send feedback',
-            duration: 3000
-          });
-          this.error = err.error;
-        }
-      });
-    }
   }
 
   reject() {
@@ -245,6 +213,26 @@ export class FeedbackViewComponent {
         error: (err: HttpErrorResponse) => {
           toast('Rejection failed.', {
             description: err.error || 'Unable to reject module',
+            duration: 3000
+          });
+          this.error = err.error;
+        }
+      });
+    }
+  }
+
+  giveFeedback() {
+    if (this.feedbackId) {
+      const feedbackDTO: FeedbackDTO = {
+        ...this.feedbackForm.value,
+      }
+      this.feedbackService.giveFeedback(this.feedbackId, feedbackDTO).subscribe({
+        next: () => {
+          this.router.navigate([''], { queryParams: { rejected: true } });
+        },
+        error: (err: HttpErrorResponse) => {
+          toast('Sending feedback failed.', {
+            description: err.error || 'Unable to send feedback',
             duration: 3000
           });
           this.error = err.error;

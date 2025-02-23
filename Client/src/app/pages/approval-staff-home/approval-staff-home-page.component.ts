@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FeedbackControllerService, Feedback, FeedbackListItemDto } from '../../core/modules/openapi';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -10,14 +10,16 @@ import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
 import { HlmTdComponent, HlmThComponent } from '@spartan-ng/ui-table-helm';
 import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
 import { SecurityStore } from '../../core/security/security-store.service';
+import { toast } from 'ngx-sonner';
+import { HlmToasterComponent } from '@spartan-ng/ui-sonner-helm';
 
 @Component({
   selector: 'approval-staff-home-page',
   standalone: true,
-  imports: [FeedbackStatusPipe, HlmButtonDirective, HlmTableComponent, HlmTdComponent, HlmThComponent, HlmBadgeDirective, HlmTrowComponent, RouterModule],
+  imports: [FeedbackStatusPipe, HlmButtonDirective, HlmTableComponent, HlmTdComponent, HlmThComponent, HlmBadgeDirective, HlmTrowComponent, RouterModule, HlmToasterComponent],
   templateUrl: './approval-staff-home-page.component.html'
 })
-export class ApprovalStaffHomePageComponent {
+export class ApprovalStaffHomePageComponent implements OnInit {
   securityStore = inject(SecurityStore);
   feedbackService = inject(FeedbackControllerService);
   loading: boolean = true;
@@ -28,6 +30,31 @@ export class ApprovalStaffHomePageComponent {
 
   constructor(private route: ActivatedRoute) {
     this.fetchFeedbacksForUser();
+  }
+
+    ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      if (params['feedback_given'] === 'true') {
+        setTimeout(() => {
+          toast.success('Feedback Submitted', {
+            description: 'Your feedback has been submitted successfully'
+          });
+        }, 100);
+      }
+      if (params['rejected'] === 'true') {
+        setTimeout(() => {
+          toast.success('Module Proposal Rejected', {
+            description: 'You sucessfully rejected this Module Proposal'
+          });
+        }, 100);
+      }
+    });
+  }
+
+  showToast() {
+    toast.success('Hello!', {
+      description: 'This is a test toast message'
+    });
   }
 
   private async fetchFeedbacksForUser() {
