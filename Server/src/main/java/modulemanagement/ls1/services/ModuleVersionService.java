@@ -144,7 +144,7 @@ public class ModuleVersionService {
     }
 
     public List<ModuleVersionViewFeedbackDTO> getLastRejectionReasons(UUID userId, Long moduleVersionId) {
-        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId). orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
+        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
         Proposal proposal = mv.getProposal();
         if (!proposal.getCreatedBy().getUserId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");

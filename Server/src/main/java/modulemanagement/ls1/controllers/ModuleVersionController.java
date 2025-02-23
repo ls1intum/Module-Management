@@ -12,7 +12,6 @@ import modulemanagement.ls1.services.AiCompletionService;
 import modulemanagement.ls1.services.AuthenticationService;
 import modulemanagement.ls1.services.ModuleVersionService;
 import jakarta.validation.Valid;
-import modulemanagement.ls1.services.OverlapDetectionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,13 +26,11 @@ public class ModuleVersionController {
     private final ModuleVersionService moduleVersionService;
     private final AuthenticationService authenticationService;
     private final AiCompletionService aiCompletionService;
-    private final OverlapDetectionService overlapDetectionService;
 
-    public ModuleVersionController(ModuleVersionService moduleVersionService, AuthenticationService authenticationService, AiCompletionService aiCompletionService, OverlapDetectionService overlapDetectionService) {
+    public ModuleVersionController(ModuleVersionService moduleVersionService, AuthenticationService authenticationService, AiCompletionService aiCompletionService) {
         this.moduleVersionService = moduleVersionService;
         this.authenticationService = authenticationService;
         this.aiCompletionService = aiCompletionService;
-        this.overlapDetectionService = overlapDetectionService;
     }
 
     @GetMapping("/{moduleVersionId}")

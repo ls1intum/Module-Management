@@ -17,6 +17,24 @@ export interface ModuleVersionViewFeedbackDTO {
     feedbackRole?: ModuleVersionViewFeedbackDTO.FeedbackRoleEnum;
     feedbackStatus?: ModuleVersionViewFeedbackDTO.FeedbackStatusEnum;
     submissionDate?: string;
+    titleFeedback?: string;
+    levelFeedback?: string;
+    languageFeedback?: string;
+    frequencyFeedback?: string;
+    creditsFeedback?: string;
+    durationFeedback?: string;
+    hoursTotalFeedback?: string;
+    hoursSelfStudyFeedback?: string;
+    hoursPresenceFeedback?: string;
+    examinationAchievementsFeedback?: string;
+    repetitionFeedback?: string;
+    contentFeedback?: string;
+    learningOutcomesFeedback?: string;
+    teachingMethodsFeedback?: string;
+    mediaFeedback?: string;
+    literatureFeedback?: string;
+    responsiblesFeedback?: string;
+    lvSwsLecturerFeedback?: string;
 }
 export namespace ModuleVersionViewFeedbackDTO {
     export type FeedbackRoleEnum = 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR';

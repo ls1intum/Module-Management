@@ -14,7 +14,7 @@ export interface FeedbackDTO {
     titleAccepted?: boolean;
     levelFeedback?: string;
     levelAccepted?: boolean;
-    language_feedback?: string;
+    languageFeedback?: string;
     languageAccepted?: boolean;
     frequencyFeedback?: string;
     frequencyAccepted?: boolean;
