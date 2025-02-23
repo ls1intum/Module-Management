@@ -32,7 +32,7 @@ export class ModuleVersionViewComponent {
   error: string | null = null;
 
   moduleFields: ModuleField[] = [
-    { key: 'titleEng', label: 'Title (EN)', section: 'basic' },
+    { key: 'titleEng', label: 'Title', section: 'basic' },
     { key: 'levelEng', label: 'Level', section: 'basic' },
     { key: 'languageEng', label: 'Language', section: 'basic' },
     { key: 'frequencyEng', label: 'Frequency', section: 'basic' },
