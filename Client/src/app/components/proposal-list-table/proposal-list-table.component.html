@@ -19,7 +19,9 @@
         {{ (proposal.status! | statusDisplay).text }}
       </div>
     </hlm-td>
-    <hlm-td class="justify-end w-40">{{ proposal.createdBy }}</hlm-td>
+    <hlm-td class="justify-end w-40">
+      <button hlmBtn variant="outline" [routerLink]="['/proposals/view', proposal.proposalId]">View</button>
+    </hlm-td>
   </hlm-trow>
   } @empty {
   <hlm-trow>
