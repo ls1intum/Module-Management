@@ -10,65 +10,75 @@
     </p>
   </div>
 
-  @if (rejectionFeedbacks.length !== 0) {
-  <div class="mb-12 p-4 border border-red-300 rounded-lg">
-    <h2 class="text-xl font-semibold text-red-700">Last Rejection Reasons</h2>
-    @for (rejectionFeedback of rejectionFeedbacks; track rejectionFeedback.feedbackId) {
-    <div class="mt-4 bg-white rounded-lg">
-      <label hlmLabel class="text-lg font-medium text-gray-800">
-        {{ (rejectionFeedback.feedbackRole! | feedbackDepartment).text }}
-      </label>
-      <p class="text-gray-600">{{ rejectionFeedback.rejectionComment }}</p>
-    </div>
-    }
-  </div>
-  }
-
   <form [formGroup]="proposalForm" (ngSubmit)="onSubmit()" class="space-y-6">
     <div>
-      <label hlmLabel class="text-xl">
-        Title
-        <hlm-form-field class="mt-2">
-          <input hlmInput formControlName="titleEng" placeholder="Title (English)" class="w-full" />
-          <hlm-error>A preliminary title is required</hlm-error>
-        </hlm-form-field>
-      </label>
+      <label hlmLabel class="text-xl">Title</label>
+      @if (moduleVersionId && hasFeedback('titleFeedback')) {
+      <div class="mt-2 text-sm text-gray-600">
+        @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.titleFeedback) {
+        <p>
+          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          {{ feedback.titleFeedback }}
+        </p>
+        } }
+      </div>
+      }
+      <hlm-form-field class="mt-2">
+        <input hlmInput formControlName="titleEng" placeholder="Title (English)" class="w-full" />
+        <hlm-error>A preliminary title is required</hlm-error>
+      </hlm-form-field>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">
-        Key Points
-        <hlm-form-field class="mt-2">
-          <textarea
-            autoResize
-            hlmInput
-            formControlName="bulletPoints"
-            placeholder="Enter key points about the module to generate module descriptions from"
-            class="w-full min-h-[100px]"
-          ></textarea>
-        </hlm-form-field>
-      </label>
+      <label hlmLabel class="text-xl">Key Points</label>
+      <hlm-form-field class="mt-2">
+        <textarea
+          autoResize
+          hlmInput
+          formControlName="bulletPoints"
+          placeholder="Enter key points about the module to generate module descriptions from"
+          class="w-full min-h-[100px]"
+        ></textarea>
+      </hlm-form-field>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">
-        Level
-        <hlm-form-field class="mt-2">
-          <app-toggle-button-group
-            [options]="[
-              { value: 'Bachelor', label: 'Bachelor' },
-              { value: 'Master', label: 'Master' },
-              { value: 'Bachelor/Master', label: 'Bachelor/Master' }
-            ]"
-            [required]="false"
-            formControlName="levelEng"
-          ></app-toggle-button-group>
-        </hlm-form-field>
-      </label>
+      <label hlmLabel class="text-xl">Level</label>
+      @if (moduleVersionId && hasFeedback('levelFeedback')) {
+      <div class="mt-2 text-sm text-gray-600">
+        @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.levelFeedback) {
+        <p>
+          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          {{ feedback.levelFeedback }}
+        </p>
+        } }
+      </div>
+      }
+      <hlm-form-field class="mt-2">
+        <app-toggle-button-group
+          [options]="[
+            { value: 'Bachelor', label: 'Bachelor' },
+            { value: 'Master', label: 'Master' },
+            { value: 'Bachelor/Master', label: 'Bachelor/Master' }
+          ]"
+          [required]="false"
+          formControlName="levelEng"
+        ></app-toggle-button-group>
+      </hlm-form-field>
     </div>
 
     <div>
       <label hlmLabel class="text-xl">Language</label>
+      @if (moduleVersionId && hasFeedback('languageFeedback')) {
+      <div class="mt-2 text-sm text-gray-600">
+        @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.languageFeedback) {
+        <p>
+          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          {{ feedback.languageFeedback }}
+        </p>
+        } }
+      </div>
+      }
       <hlm-form-field class="mt-2">
         <app-toggle-button-group
           [options]="[
@@ -83,6 +93,16 @@
 
     <div>
       <label hlmLabel class="text-xl">Duration</label>
+      @if (moduleVersionId && hasFeedback('durationFeedback')) {
+      <div class="mt-2 text-sm text-gray-600">
+        @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.durationFeedback) {
+        <p>
+          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          {{ feedback.durationFeedback }}
+        </p>
+        } }
+      </div>
+      }
       <hlm-form-field class="mt-2">
         <app-toggle-button-group
           [options]="[
@@ -98,232 +118,346 @@
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">
-        Repetition
-        <hlm-form-field class="mt-2">
-          <app-toggle-button-group
-            [options]="[
-              { value: 'End of Semester', label: 'End of Semester' },
-              { value: 'Following Semester', label: 'Following Semester' },
-              { value: 'End of Semester/Following Semester', label: 'End of Semester/Following Semester' }
-            ]"
-            [required]="false"
-            formControlName="repetitionEng"
-          ></app-toggle-button-group>
-        </hlm-form-field>
-      </label>
+      <label hlmLabel class="text-xl">Repetition</label>
+      @if (moduleVersionId && hasFeedback('repetitionFeedback')) {
+      <div class="mt-2 text-sm text-gray-600">
+        @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.repetitionFeedback) {
+        <p>
+          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          {{ feedback.repetitionFeedback }}
+        </p>
+        } }
+      </div>
+      }
+      <hlm-form-field class="mt-2">
+        <app-toggle-button-group
+          [options]="[
+            { value: 'End of Semester', label: 'End of Semester' },
+            { value: 'Following Semester', label: 'Following Semester' },
+            { value: 'End of Semester/Following Semester', label: 'End of Semester/Following Semester' }
+          ]"
+          [required]="false"
+          formControlName="repetitionEng"
+        ></app-toggle-button-group>
+      </hlm-form-field>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">
-        Frequency
-        <hlm-form-field class="mt-2">
-          <app-toggle-button-group
-            [options]="[
-              { value: 'Winter semester', label: 'Winter semester' },
-              { value: 'Summer semester', label: 'Summer semester' },
-              { value: 'Winter/Summer semester', label: 'Winter/Summer semester' }
-            ]"
-            [required]="false"
-            formControlName="frequencyEng"
-          ></app-toggle-button-group>
-        </hlm-form-field>
-      </label>
+      <label hlmLabel class="text-xl">Frequency</label>
+      @if (moduleVersionId && hasFeedback('frequencyFeedback')) {
+      <div class="mt-2 text-sm text-gray-600">
+        @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.frequencyFeedback) {
+        <p>
+          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          {{ feedback.frequencyFeedback }}
+        </p>
+        } }
+      </div>
+      }
+      <hlm-form-field class="mt-2">
+        <app-toggle-button-group
+          [options]="[
+            { value: 'Winter semester', label: 'Winter semester' },
+            { value: 'Summer semester', label: 'Summer semester' },
+            { value: 'Winter/Summer semester', label: 'Winter/Summer semester' }
+          ]"
+          [required]="false"
+          formControlName="frequencyEng"
+        ></app-toggle-button-group>
+      </hlm-form-field>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
-        <label hlmLabel class="text-xl">
-          Credits
-          <hlm-form-field class="mt-2">
-            <input hlmInput type="number" formControlName="credits" placeholder="Credits" class="w-full" />
-          </hlm-form-field>
-        </label>
+        <label hlmLabel class="text-xl">Credits</label>
+        @if (moduleVersionId && hasFeedback('creditsFeedback')) {
+        <div class="mt-2 text-sm text-gray-600">
+          @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.creditsFeedback) {
+          <p>
+            <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+            {{ feedback.creditsFeedback }}
+          </p>
+          } }
+        </div>
+        }
+        <hlm-form-field class="mt-2">
+          <input hlmInput type="number" formControlName="credits" placeholder="Credits" class="w-full" />
+        </hlm-form-field>
       </div>
 
       <div>
-        <label hlmLabel class="text-xl">
-          Total Hours
-          <hlm-form-field class="mt-2">
-            <input hlmInput type="number" formControlName="hoursTotal" placeholder="Total Hours" class="w-full" />
-          </hlm-form-field>
-        </label>
+        <label hlmLabel class="text-xl">Total Hours</label>
+        @if (moduleVersionId && hasFeedback('hoursTotalFeedback')) {
+        <div class="mt-2 text-sm text-gray-600">
+          @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.hoursTotalFeedback) {
+          <p>
+            <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+            {{ feedback.hoursTotalFeedback }}
+          </p>
+          } }
+        </div>
+        }
+        <hlm-form-field class="mt-2">
+          <input hlmInput type="number" formControlName="hoursTotal" placeholder="Total Hours" class="w-full" />
+        </hlm-form-field>
       </div>
 
       <div>
-        <label hlmLabel class="text-xl">
-          Self-Study Hours
-          <hlm-form-field class="mt-2">
-            <input hlmInput type="number" formControlName="hoursSelfStudy" placeholder="Self-Study Hours" class="w-full" />
-          </hlm-form-field>
-        </label>
+        <label hlmLabel class="text-xl">Self-Study Hours</label>
+        @if (moduleVersionId && hasFeedback('hoursSelfStudyFeedback')) {
+        <div class="mt-2 text-sm text-gray-600">
+          @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.hoursSelfStudyFeedback) {
+          <p>
+            <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+            {{ feedback.hoursSelfStudyFeedback }}
+          </p>
+          } }
+        </div>
+        }
+        <hlm-form-field class="mt-2">
+          <input hlmInput type="number" formControlName="hoursSelfStudy" placeholder="Self-Study Hours" class="w-full" />
+        </hlm-form-field>
       </div>
 
       <div>
-        <label hlmLabel class="text-xl">
-          Presence Hours
-          <hlm-form-field class="mt-2">
-            <input hlmInput type="number" formControlName="hoursPresence" placeholder="Presence Hours" class="w-full" />
-          </hlm-form-field>
-        </label>
+        <label hlmLabel class="text-xl">Presence Hours</label>
+        @if (moduleVersionId && hasFeedback('hoursPresenceFeedback')) {
+        <div class="mt-2 text-sm text-gray-600">
+          @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.hoursPresenceFeedback) {
+          <p>
+            <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+            {{ feedback.hoursPresenceFeedback }}
+          </p>
+          } }
+        </div>
+        }
+        <hlm-form-field class="mt-2">
+          <input hlmInput type="number" formControlName="hoursPresence" placeholder="Presence Hours" class="w-full" />
+        </hlm-form-field>
       </div>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">
-        Examination Achievements
-        <hlm-form-field class="mt-2">
-          <textarea
-            autoResize
-            hlmInput
-            formControlName="examinationAchievementsEng"
-            placeholder="How is the students performance evaluated?"
-            class="w-full min-h-[100px]"
-          ></textarea>
-        </hlm-form-field>
-        <div class="flex justify-between items-center gap-2 mt-2">
-          <button hlmBtn type="button" variant="outline" size="sm" (click)="togglePromptField('examination')">
-            {{ showPrompt['examination'] ? 'Hide Prompt' : 'Customize Prompt' }}
-          </button>
-          <button hlmBtn type="button" variant="default" size="sm" class="min-w-28" (click)="generateExaminationAchievements()" [disabled]="loading">
-            Generate Examination Achievements
-          </button>
-        </div>
-        @if (showPrompt['examination']) {
-        <hlm-form-field class="mt-2 mb-2">
-          <textarea
-            autoResize
-            hlmInput
-            [formControlName]="'examinationAchievementsPromptEng'"
-            placeholder="Enter additional prompt text for examination achievements generation"
-            class="w-full min-h-[60px]"
-          ></textarea>
-        </hlm-form-field>
-        }
-      </label>
+      <label hlmLabel class="text-xl">Examination Achievements</label>
+      @if (moduleVersionId && hasFeedback('examinationAchievementsFeedback')) {
+      <div class="mt-2 text-sm text-gray-600">
+        @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.examinationAchievementsFeedback) {
+        <p>
+          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          {{ feedback.examinationAchievementsFeedback }}
+        </p>
+        } }
+      </div>
+      }
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="examinationAchievementsEng" placeholder="How is the students performance evaluated?" class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
+      <div class="flex justify-between items-center gap-2 mt-2">
+        <button hlmBtn type="button" variant="outline" size="sm" (click)="togglePromptField('examination')">
+          {{ showPrompt['examination'] ? 'Hide Prompt' : 'Customize Prompt' }}
+        </button>
+        <button hlmBtn type="button" variant="default" size="sm" class="min-w-28" (click)="generateExaminationAchievements()" [disabled]="loading">
+          Generate Examination Achievements
+        </button>
+      </div>
+      @if (showPrompt['examination']) {
+      <hlm-form-field class="mt-2 mb-2">
+        <textarea
+          autoResize
+          hlmInput
+          [formControlName]="'examinationAchievementsPromptEng'"
+          placeholder="Enter additional prompt text for examination achievements generation"
+          class="w-full min-h-[60px]"
+        ></textarea>
+      </hlm-form-field>
+      }
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">
-        Recommended Prerequisites
-        <hlm-form-field class="mt-2">
-          <textarea autoResize hlmInput formControlName="recommendedPrerequisitesEng" placeholder="What are participants expected to know?" class="w-full min-h-[100px]"></textarea>
-        </hlm-form-field>
-      </label>
+      <label hlmLabel class="text-xl">Recommended Prerequisites</label>
+      @if (moduleVersionId && hasFeedback('repetitionFeedback')) {
+      <div class="mt-2 text-sm text-gray-600">
+        @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.repetitionFeedback) {
+        <p>
+          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          {{ feedback.repetitionFeedback }}
+        </p>
+        } }
+      </div>
+      }
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="recommendedPrerequisitesEng" placeholder="What are participants expected to know?" class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">
-        Module Content
-        <hlm-form-field class="mt-2">
-          <textarea autoResize hlmInput formControlName="contentEng" placeholder="What is the module about?" class="w-full min-h-[100px]"></textarea>
-        </hlm-form-field>
-        <div class="flex justify-between items-center gap-2 mt-2">
-          <button hlmBtn type="button" variant="outline" size="sm" class="min-w-28" (click)="togglePromptField('content')">
-            {{ showPrompt['content'] ? 'Hide Prompt' : 'Customize Prompt' }}
-          </button>
-          <button hlmBtn type="button" variant="default" size="sm" (click)="generateContent()" [disabled]="loading">Generate Content</button>
-        </div>
-        @if (showPrompt['content']) {
-        <hlm-form-field class="mt-2 mb-2">
-          <textarea
-            autoResize
-            hlmInput
-            [formControlName]="'contentPromptEng'"
-            placeholder="Enter additional prompt text for content generation"
-            class="w-full min-h-[60px]"
-          ></textarea>
-        </hlm-form-field>
-        }
-      </label>
+      <label hlmLabel class="text-xl">Module Content</label>
+      @if (moduleVersionId && hasFeedback('contentFeedback')) {
+      <div class="mt-2 text-sm text-gray-600">
+        @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.contentFeedback) {
+        <p>
+          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          {{ feedback.contentFeedback }}
+        </p>
+        } }
+      </div>
+      }
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="contentEng" placeholder="What is the module about?" class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
+      <div class="flex justify-between items-center gap-2 mt-2">
+        <button hlmBtn type="button" variant="outline" size="sm" class="min-w-28" (click)="togglePromptField('content')">
+          {{ showPrompt['content'] ? 'Hide Prompt' : 'Customize Prompt' }}
+        </button>
+        <button hlmBtn type="button" variant="default" size="sm" (click)="generateContent()" [disabled]="loading">Generate Content</button>
+      </div>
+      @if (showPrompt['content']) {
+      <hlm-form-field class="mt-2 mb-2">
+        <textarea
+          autoResize
+          hlmInput
+          [formControlName]="'contentPromptEng'"
+          placeholder="Enter additional prompt text for content generation"
+          class="w-full min-h-[60px]"
+        ></textarea>
+      </hlm-form-field>
+      }
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">
-        Learning Outcomes
-        <hlm-form-field class="mt-2">
-          <textarea autoResize hlmInput formControlName="learningOutcomesEng" placeholder="What will the participants learn?" class="w-full min-h-[100px]"></textarea>
-        </hlm-form-field>
-        <div class="flex justify-between items-center gap-2 mt-2">
-          <button hlmBtn type="button" variant="outline" class="min-w-28" size="sm" (click)="togglePromptField('learning')">
-            {{ showPrompt['learning'] ? 'Hide Prompt' : 'Customize Prompt' }}
-          </button>
-          <button hlmBtn type="button" variant="default" size="sm" (click)="generateLearningOutcomes()" [disabled]="loading">Generate Learning Outcomes</button>
-        </div>
-        @if (showPrompt['learning']) {
-        <hlm-form-field class="mt-2 mb-2">
-          <textarea
-            autoResize
-            hlmInput
-            [formControlName]="'learningOutcomesPromptEng'"
-            placeholder="Enter additional prompt text for learning outcomes generation"
-            class="w-full min-h-[60px]"
-          ></textarea>
-        </hlm-form-field>
-        }
-      </label>
+      <label hlmLabel class="text-xl">Learning Outcomes</label>
+      @if (moduleVersionId && hasFeedback('learningOutcomesFeedback')) {
+      <div class="mt-2 text-sm text-gray-600">
+        @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.learningOutcomesFeedback) {
+        <p>
+          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          {{ feedback.learningOutcomesFeedback }}
+        </p>
+        } }
+      </div>
+      }
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="learningOutcomesEng" placeholder="What will the participants learn?" class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
+      <div class="flex justify-between items-center gap-2 mt-2">
+        <button hlmBtn type="button" variant="outline" class="min-w-28" size="sm" (click)="togglePromptField('learning')">
+          {{ showPrompt['learning'] ? 'Hide Prompt' : 'Customize Prompt' }}
+        </button>
+        <button hlmBtn type="button" variant="default" size="sm" (click)="generateLearningOutcomes()" [disabled]="loading">Generate Learning Outcomes</button>
+      </div>
+      @if (showPrompt['learning']) {
+      <hlm-form-field class="mt-2 mb-2">
+        <textarea
+          autoResize
+          hlmInput
+          [formControlName]="'learningOutcomesPromptEng'"
+          placeholder="Enter additional prompt text for learning outcomes generation"
+          class="w-full min-h-[60px]"
+        ></textarea>
+      </hlm-form-field>
+      }
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">
-        Teaching Methods
-        <hlm-form-field class="mt-2">
-          <textarea autoResize hlmInput formControlName="teachingMethodsEng" placeholder="How will the content be taught?" class="w-full min-h-[100px]"></textarea>
-        </hlm-form-field>
-        <div class="flex justify-between items-center gap-2 mt-2">
-          <button hlmBtn type="button" variant="outline" class="min-w-28" size="sm" (click)="togglePromptField('teaching')">
-            {{ showPrompt['teaching'] ? 'Hide Prompt' : 'Customize Prompt' }}
-          </button>
-          <button hlmBtn type="button" variant="default" size="sm" (click)="generateTeachingMethods()" [disabled]="loading">Generate Teaching Methods</button>
-        </div>
-        @if (showPrompt['teaching']) {
-        <hlm-form-field class="mt-2 mb-2">
-          <textarea
-            autoResize
-            hlmInput
-            [formControlName]="'teachingMethodsPromptEng'"
-            placeholder="Enter additional prompt text for teaching methods generation"
-            class="w-full min-h-[60px]"
-          ></textarea>
-        </hlm-form-field>
-        }
-      </label>
+      <label hlmLabel class="text-xl">Teaching Methods</label>
+      @if (moduleVersionId && hasFeedback('teachingMethodsFeedback')) {
+      <div class="mt-2 text-sm text-gray-600">
+        @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.teachingMethodsFeedback) {
+        <p>
+          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          {{ feedback.teachingMethodsFeedback }}
+        </p>
+        } }
+      </div>
+      }
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="teachingMethodsEng" placeholder="How will the content be taught?" class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
+      <div class="flex justify-between items-center gap-2 mt-2">
+        <button hlmBtn type="button" variant="outline" class="min-w-28" size="sm" (click)="togglePromptField('teaching')">
+          {{ showPrompt['teaching'] ? 'Hide Prompt' : 'Customize Prompt' }}
+        </button>
+        <button hlmBtn type="button" variant="default" size="sm" (click)="generateTeachingMethods()" [disabled]="loading">Generate Teaching Methods</button>
+      </div>
+      @if (showPrompt['teaching']) {
+      <hlm-form-field class="mt-2 mb-2">
+        <textarea
+          autoResize
+          hlmInput
+          [formControlName]="'teachingMethodsPromptEng'"
+          placeholder="Enter additional prompt text for teaching methods generation"
+          class="w-full min-h-[60px]"
+        ></textarea>
+      </hlm-form-field>
+      }
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">
-        Media used
-        <hlm-form-field class="mt-2">
-          <textarea autoResize hlmInput formControlName="mediaEng" placeholder="What media will be used?" class="w-full min-h-[100px]"></textarea>
-        </hlm-form-field>
-      </label>
+      <label hlmLabel class="text-xl">Media used</label>
+      @if (moduleVersionId && hasFeedback('mediaFeedback')) {
+      <div class="mt-2 text-sm text-gray-600">
+        @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.mediaFeedback) {
+        <p>
+          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          {{ feedback.mediaFeedback }}
+        </p>
+        } }
+      </div>
+      }
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="mediaEng" placeholder="What media will be used?" class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">
-        Literature
-        <hlm-form-field class="mt-2">
-          <textarea autoResize hlmInput formControlName="literatureEng" placeholder="What literature is reccommended?" class="w-full min-h-[100px]"></textarea>
-        </hlm-form-field>
-      </label>
+      <label hlmLabel class="text-xl">Literature</label>
+      @if (moduleVersionId && hasFeedback('literatureFeedback')) {
+      <div class="mt-2 text-sm text-gray-600">
+        @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.literatureFeedback) {
+        <p>
+          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          {{ feedback.literatureFeedback }}
+        </p>
+        } }
+      </div>
+      }
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="literatureEng" placeholder="What literature is reccommended?" class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">
-        Responsibles
-        <hlm-form-field class="mt-2">
-          <textarea autoResize hlmInput formControlName="responsiblesEng" placeholder="Who is responsible for the module?" class="w-full min-h-[100px]"></textarea>
-        </hlm-form-field>
-      </label>
+      <label hlmLabel class="text-xl">Responsibles</label>
+      @if (moduleVersionId && hasFeedback('responsiblesFeedback')) {
+      <div class="mt-2 text-sm text-gray-600">
+        @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.responsiblesFeedback) {
+        <p>
+          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          {{ feedback.responsiblesFeedback }}
+        </p>
+        } }
+      </div>
+      }
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="responsiblesEng" placeholder="Who is responsible for the module?" class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">
-        Lecturer
-        <hlm-form-field class="mt-2">
-          <textarea autoResize hlmInput formControlName="lvSwsLecturerEng" placeholder="Who will hold the lectures?" class="w-full min-h-[100px]"></textarea>
-        </hlm-form-field>
-      </label>
+      <label hlmLabel class="text-xl">Lecturer</label>
+      @if (moduleVersionId && hasFeedback('lvSwsLecturerFeedback')) {
+      <div class="mt-2 text-sm text-gray-600">
+        @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.lvSwsLecturerFeedback) {
+        <p>
+          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          {{ feedback.lvSwsLecturerFeedback }}
+        </p>
+        } }
+      </div>
+      }
+      <hlm-form-field class="mt-2">
+        <textarea autoResize hlmInput formControlName="lvSwsLecturerEng" placeholder="Who will hold the lectures?" class="w-full min-h-[100px]"></textarea>
+      </hlm-form-field>
     </div>
 
     <div class="flex justify-between gap-4">

@@ -153,8 +153,8 @@ public class Feedback {
     @Column(name = "lv_accepted")
     private boolean lvSwsLecturerAccepted;
 
-    public boolean isRejected() {
-        return this.getStatus() == FeedbackStatus.REJECTED;
+    public boolean isFeedbackGiven() {
+        return this.getStatus() == FeedbackStatus.FEEDBACK_GIVEN;
     }
 
     public void insert(FeedbackDTO dto) {

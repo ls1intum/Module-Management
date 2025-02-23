@@ -107,7 +107,7 @@ export class FeedbackViewComponent {
       levelAccepted: [null],
       levelFeedback: [''],
       languageAccepted: [null],
-      language_feedback: [''],
+      languageFeedback: [''],
       frequencyAccepted: [null],
       frequencyFeedback: [''],
       creditsAccepted: [null],

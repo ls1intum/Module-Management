@@ -57,11 +57,11 @@ public class ModuleVersionController {
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("/{id}/last-reject-reasons")
+    @GetMapping("/{id}/previous-module-version-feedback")
     @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
-    public ResponseEntity<List<ModuleVersionViewFeedbackDTO>> getLastRejectReasons(@AuthenticationPrincipal Jwt jwt, @PathVariable Long id) {
+    public ResponseEntity<List<ModuleVersionViewFeedbackDTO>> getPreviousModuleVersionFeedback(@AuthenticationPrincipal Jwt jwt, @PathVariable Long id) {
         User user = authenticationService.getAuthenticatedUser(jwt);
-        List<ModuleVersionViewFeedbackDTO> lastRejectionReasons = moduleVersionService.getLastRejectionReasons(user.getUserId(), id);
+        List<ModuleVersionViewFeedbackDTO> lastRejectionReasons = moduleVersionService.getPreviousModuleVersionFeedback(user.getUserId(), id);
         return ResponseEntity.ok(lastRejectionReasons);
     }
 

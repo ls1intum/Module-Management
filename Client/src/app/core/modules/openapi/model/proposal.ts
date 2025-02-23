@@ -18,7 +18,7 @@ export interface Proposal {
     creationDate?: string;
     status: Proposal.StatusEnum;
     moduleVersions?: Array<ModuleVersion>;
-    lastRejectionReasons?: Array<ModuleVersionViewFeedbackDTO>;
+    previousModuleVersionFeedback?: Array<ModuleVersionViewFeedbackDTO>;
 }
 export namespace Proposal {
     export type StatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'ACCEPTED' | 'REQUIRES_REVIEW' | 'REJECTED' | 'CANCELED';

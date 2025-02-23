@@ -13,7 +13,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { HlmSeparatorModule } from '@spartan-ng/ui-separator-helm';
 import { BrnSeparatorModule } from '@spartan-ng/ui-separator-brain';
 
-
 @Component({
   template: '',
   imports: [BrnSeparatorModule, HlmSeparatorModule]
@@ -29,7 +28,7 @@ export abstract class ProposalBaseComponent {
   error: string | null = null;
   moduleVersionDto: ModuleVersionUpdateRequestDTO | null = null;
   moduleVersionId: number | null = null;
-  rejectionFeedbacks: ModuleVersionViewFeedbackDTO[] = [];
+  feedbacks: ModuleVersionViewFeedbackDTO[] | undefined = [];
 
   showPrompt: { [key: string]: boolean } = {
     examination: false,
@@ -92,6 +91,10 @@ export abstract class ProposalBaseComponent {
       ...this.proposalForm.value
     };
     return data;
+  }
+
+  hasFeedback(field: keyof ModuleVersionViewFeedbackDTO): boolean {
+    return this.feedbacks?.some(feedback => feedback[field]) || false;
   }
 
   protected async generateContent() {

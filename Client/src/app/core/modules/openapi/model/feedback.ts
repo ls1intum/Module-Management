@@ -54,7 +54,7 @@ export interface Feedback {
     lvSwsLecturerAccepted?: boolean;
     comment?: string;
     allFeedbackPositive?: boolean;
-    rejected?: boolean;
+    feedbackGiven?: boolean;
 }
 export namespace Feedback {
     export type RequiredRoleEnum = 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR';

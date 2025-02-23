@@ -66,13 +66,6 @@ export interface ModuleVersionControllerServiceInterface {
     /**
      * 
      * 
-     * @param id 
-     */
-    getLastRejectReasons(id: number, extraHttpRequestParams?: any): Observable<Array<ModuleVersionViewFeedbackDTO>>;
-
-    /**
-     * 
-     * 
      * @param moduleVersionId 
      */
     getModuleVersionUpdateDtoFromId(moduleVersionId: number, extraHttpRequestParams?: any): Observable<ModuleVersionUpdateResponseDTO>;
@@ -83,6 +76,13 @@ export interface ModuleVersionControllerServiceInterface {
      * @param moduleVersionId 
      */
     getModuleVersionViewDto(moduleVersionId: number, extraHttpRequestParams?: any): Observable<ModuleVersionViewDTO>;
+
+    /**
+     * 
+     * 
+     * @param id 
+     */
+    getPreviousModuleVersionFeedback(id: number, extraHttpRequestParams?: any): Observable<Array<ModuleVersionViewFeedbackDTO>>;
 
     /**
      * 

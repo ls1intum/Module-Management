@@ -140,7 +140,7 @@ public class ModuleVersion {
                 && !StringUtils.isEmpty(lvSwsLecturerEng);
     }
 
-    public boolean isRejected() {
-        return this.getStatus() == ModuleVersionStatus.REJECTED;
+    public boolean isFeedbackGiven() {
+        return this.getStatus() == ModuleVersionStatus.FEEDBACK_GIVEN;
     }
 }

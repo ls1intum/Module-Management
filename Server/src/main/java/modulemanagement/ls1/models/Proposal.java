@@ -84,26 +84,26 @@ public class Proposal {
         newMv.setResponsiblesEng(latestMv.getResponsiblesEng());
         newMv.setLvSwsLecturerEng(latestMv.getLvSwsLecturerEng());
 
-        List<Feedback> requiredFeedbacks = new ArrayList<Feedback>();
+        List<Feedback> requiredFeedbacks = new ArrayList<>();
         ProposalService.createNewFeedbacks(newMv, requiredFeedbacks);
         newMv.setRequiredFeedbacks(requiredFeedbacks);
         addModuleVersion(newMv);
         this.setStatus(ProposalStatus.PENDING_SUBMISSION);
     }
 
-    public List<ModuleVersionViewFeedbackDTO> getLastRejectionReasons() {
+    public List<ModuleVersionViewFeedbackDTO> getPreviousModuleVersionFeedback() {
         List<ModuleVersion> mvs = this.getModuleVersions();
         Collections.reverse(mvs);
         for (ModuleVersion mv : mvs) {
-            if (mv.isRejected()) {
-                List<ModuleVersionViewFeedbackDTO> rejectionFeedback = new ArrayList<>();
+            if (mv.isFeedbackGiven()) {
+                List<ModuleVersionViewFeedbackDTO> previousFeedbacks = new ArrayList<>();
                 List<Feedback> feedbacks = mv.getRequiredFeedbacks();
                 for (Feedback feedback : feedbacks) {
-                    if (feedback.isRejected()) {
-                        rejectionFeedback.add(ModuleVersionViewFeedbackDTO.from(feedback));
+                    if (feedback.isFeedbackGiven()) {
+                        previousFeedbacks.add(ModuleVersionViewFeedbackDTO.from(feedback));
                     }
                 }
-                return rejectionFeedback;
+                return previousFeedbacks;
             }
         }
         return Collections.emptyList();

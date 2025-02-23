@@ -143,22 +143,22 @@ public class ModuleVersionService {
         return ModuleVersionViewDTO.from(mv);
     }
 
-    public List<ModuleVersionViewFeedbackDTO> getLastRejectionReasons(UUID userId, Long moduleVersionId) {
+    public List<SimilarModuleDTO> getSimilarModules(UUID userId, Long moduleVersionId) {
+        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
+        Proposal proposal = mv.getProposal();
+        if (!proposal.getCreatedBy().getUserId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
+        }
+        return this.overlapDetectionService.checkModuleOverlap(OverlapDetectionRequestDTO.from(mv)).block();
+    }
+
+    public List<ModuleVersionViewFeedbackDTO> getPreviousModuleVersionFeedback(UUID userId, Long moduleVersionId) {
         ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
         Proposal proposal = mv.getProposal();
         if (!proposal.getCreatedBy().getUserId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
         }
 
-        return proposal.getLastRejectionReasons();
-    }
-
-    public List<SimilarModuleDTO> getSimilarModules(UUID userId, Long moduleVersionId) {
-        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId). orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
-        Proposal proposal = mv.getProposal();
-        if (!proposal.getCreatedBy().getUserId().equals(userId)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
-        }
-        return this.overlapDetectionService.checkModuleOverlap(OverlapDetectionRequestDTO.from(mv)).block();
+        return proposal.getPreviousModuleVersionFeedback();
     }
 }

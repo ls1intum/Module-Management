@@ -16,7 +16,7 @@ import { provideIcons } from '@ng-icons/core';
 import { lucideInfo } from '@ng-icons/lucide';
 import { ProposalBaseComponent } from '../../components/create-edit-base/create-edit-base.component';
 import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
-import { ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
+import { ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO, ModuleVersionViewDTO, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
 import { ToggleButtonGroupComponent } from '../../components/toggle-button-group/toggle-button-group.component';
 
 @Component({
@@ -47,14 +47,14 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
   override moduleVersionId: number;
   override moduleVersionDto: ModuleVersionUpdateRequestDTO | null = null;
   moduleLoading: boolean = false;
-  override rejectionFeedbacks: ModuleVersionViewFeedbackDTO[] = [];
+  override feedbacks: Array<ModuleVersionViewFeedbackDTO> | undefined = [];
   feedbackLoading: boolean = false;
 
   constructor(route: ActivatedRoute) {
     super();
     this.moduleVersionId = Number(route.snapshot.paramMap.get('id'));
     this.fetchModuleVersion(this.moduleVersionId);
-    this.fetchLastRejectionFeedback(this.moduleVersionId);
+    this.fetchPreviousModuleVersionFeedback(this.moduleVersionId);
   }
 
   async fetchModuleVersion(moduleVersionId: number) {
@@ -72,16 +72,18 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
     });
   }
 
-  async fetchLastRejectionFeedback(moduleVersionId: number) {
+  async fetchPreviousModuleVersionFeedback(previousModuleVersionId: number) {
     this.feedbackLoading = true;
-    this.moduleVersionService.getLastRejectReasons(moduleVersionId).subscribe({
-      next: (response: ModuleVersionViewFeedbackDTO[]) => (this.rejectionFeedbacks = response),
-      error: (err: HttpErrorResponse) => (this.error = err.error),
+    this.moduleVersionService.getPreviousModuleVersionFeedback(previousModuleVersionId).subscribe({
+      next: (response: Array<ModuleVersionViewFeedbackDTO>) => { 
+        this.feedbacks = [...response];
+      },
+      error: (err: HttpErrorResponse) => ( this.error = err.error ),
       complete: () => {
-        this.feedbackLoading = false;
+        this.moduleLoading = false;
         this.loading = this.moduleLoading && this.feedbackLoading;
       }
-    });
+    })
   }
 
   override async onSubmit() {
