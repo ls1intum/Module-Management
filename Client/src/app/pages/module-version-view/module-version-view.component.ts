@@ -1,20 +1,21 @@
-import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ModuleVersion, ModuleVersionControllerService, ModuleVersionViewDTO } from '../../core/modules/openapi';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
-import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
-import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { ModuleVersionStatusPipe } from '../../pipes/moduleVersionStatus.pipe';
-import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
-import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
+import { CommonModule } from "@angular/common";
+import { HttpErrorResponse } from "@angular/common/http";
+import { Component, inject } from "@angular/core";
+import { RouterModule, ActivatedRoute } from "@angular/router";
+import { HlmBadgeDirective } from "@spartan-ng/ui-badge-helm";
+import { HlmButtonDirective } from "@spartan-ng/ui-button-helm";
+import { ModuleVersionControllerService, ModuleVersionViewDTO, ModuleVersion, ModuleVersionViewFeedbackDTO } from "../../core/modules/openapi";
+import { FeedbackDepartmentPipe } from "../../pipes/feedbackDepartment.pipe";
+import { FeedbackStatusPipe } from "../../pipes/feedbackStatus.pipe";
+import { ModuleVersionStatusPipe } from "../../pipes/moduleVersionStatus.pipe";
 
-interface ModuleField {
+export interface ModuleField {
   key: keyof ModuleVersionViewDTO;
   label: string;
   section: 'basic' | 'hours' | 'content';
   isLongText?: boolean;
   hasPrompt?: keyof ModuleVersionViewDTO;
+  feedbackKey?: string;
 }
 
 @Component({
@@ -32,23 +33,24 @@ export class ModuleVersionViewComponent {
   error: string | null = null;
 
   moduleFields: ModuleField[] = [
-    { key: 'titleEng', label: 'Title', section: 'basic' },
-    { key: 'levelEng', label: 'Level', section: 'basic' },
-    { key: 'languageEng', label: 'Language', section: 'basic' },
-    { key: 'frequencyEng', label: 'Frequency', section: 'basic' },
-    { key: 'duration', label: 'Duration', section: 'basic' },
-    { key: 'repetitionEng', label: 'Repetition', section: 'basic' },
-    { key: 'credits', label: 'Credits', section: 'hours' },
-    { key: 'hoursTotal', label: 'Total Hours', section: 'hours' },
-    { key: 'hoursSelfStudy', label: 'Self-Study Hours', section: 'hours' },
-    { key: 'hoursPresence', label: 'Presence Hours', section: 'hours' },
+    { key: 'titleEng', label: 'Title', section: 'basic', feedbackKey: 'titleFeedback' },
+    { key: 'levelEng', label: 'Level', section: 'basic', feedbackKey: 'levelFeedback' },
+    { key: 'languageEng', label: 'Language', section: 'basic', feedbackKey: 'languageFeedback' },
+    { key: 'frequencyEng', label: 'Frequency', section: 'basic', feedbackKey: 'frequencyFeedback' },
+    { key: 'duration', label: 'Duration', section: 'basic', feedbackKey: 'durationFeedback' },
+    { key: 'repetitionEng', label: 'Repetition', section: 'basic', feedbackKey: 'repetitionFeedback' },
+    { key: 'credits', label: 'Credits', section: 'hours', feedbackKey: 'creditsFeedback' },
+    { key: 'hoursTotal', label: 'Total Hours', section: 'hours', feedbackKey: 'hoursTotalFeedback' },
+    { key: 'hoursSelfStudy', label: 'Self-Study Hours', section: 'hours', feedbackKey: 'hoursSelfStudyFeedback' },
+    { key: 'hoursPresence', label: 'Presence Hours', section: 'hours', feedbackKey: 'hoursPresenceFeedback' },
     { key: 'bulletPoints', label: 'Key Points', section: 'content', isLongText: true },
     {
       key: 'examinationAchievementsEng',
       label: 'Examination Achievements',
       section: 'content',
       isLongText: true,
-      hasPrompt: 'examinationAchievementsPromptEng'
+      hasPrompt: 'examinationAchievementsPromptEng',
+      feedbackKey: 'examinationAchievementsFeedback'
     },
     { key: 'recommendedPrerequisitesEng', label: 'Recommended Prerequisites', section: 'content', isLongText: true },
     {
@@ -56,31 +58,53 @@ export class ModuleVersionViewComponent {
       label: 'Module Content',
       section: 'content',
       isLongText: true,
-      hasPrompt: 'contentPromptEng'
+      hasPrompt: 'contentPromptEng',
+      feedbackKey: 'contentFeedback'
     },
     {
       key: 'learningOutcomesEng',
       label: 'Learning Outcomes',
       section: 'content',
       isLongText: true,
-      hasPrompt: 'learningOutcomesPromptEng'
+      hasPrompt: 'learningOutcomesPromptEng',
+      feedbackKey: 'learningOutcomesFeedback'
     },
     {
       key: 'teachingMethodsEng',
       label: 'Teaching Methods',
       section: 'content',
       isLongText: true,
-      hasPrompt: 'teachingMethodsPromptEng'
+      hasPrompt: 'teachingMethodsPromptEng',
+      feedbackKey: 'teachingMethodsFeedback'
     },
     {
       key: 'mediaEng',
       label: 'Media',
       section: 'content',
-      isLongText: true
+      isLongText: true,
+      feedbackKey: 'mediaFeedback'
     },
-    { key: 'literatureEng', label: 'Literature', section: 'content', isLongText: true },
-    { key: 'responsiblesEng', label: 'Responsibles', section: 'content', isLongText: true },
-    { key: 'lvSwsLecturerEng', label: 'Lecturer', section: 'content', isLongText: true }
+    { 
+      key: 'literatureEng', 
+      label: 'Literature', 
+      section: 'content', 
+      isLongText: true,
+      feedbackKey: 'literatureFeedback'
+    },
+    { 
+      key: 'responsiblesEng', 
+      label: 'Responsibles', 
+      section: 'content', 
+      isLongText: true,
+      feedbackKey: 'responsiblesFeedback'
+    },
+    { 
+      key: 'lvSwsLecturerEng', 
+      label: 'Lecturer', 
+      section: 'content', 
+      isLongText: true,
+      feedbackKey: 'lvSwsLecturerFeedback'
+    }
   ];
 
   constructor() {
@@ -108,5 +132,56 @@ export class ModuleVersionViewComponent {
 
   isLatestVersion(): boolean {
     return this.moduleVersionDto?.version === this.moduleVersionDto?.latestVersion;
+  }
+
+  getFeedbackFields(feedback: ModuleVersionViewFeedbackDTO): { key: string; label: string; value: string }[] {
+    const feedbackFields: { key: string; label: string; value: string }[] = [];
+    
+    for (const field of this.moduleFields) {
+      if (!field.feedbackKey) continue;
+      
+      const feedbackValue = feedback[field.feedbackKey as keyof ModuleVersionViewFeedbackDTO];
+      if (feedbackValue) {
+        feedbackFields.push({
+          key: field.feedbackKey,
+          label: field.label,
+          value: String(feedbackValue)
+        });
+      }
+    }
+    
+    return feedbackFields;
+  }
+
+  getFieldFeedbacks(fieldKey: keyof ModuleVersionViewDTO): ModuleVersionViewFeedbackDTO[] {
+    if (!this.moduleVersionDto?.feedbacks) return [];
+    
+    const field = this.moduleFields.find(f => f.key === fieldKey);
+    if (!field?.feedbackKey) return [];
+    
+    return this.moduleVersionDto.feedbacks.filter(feedback => {
+      const feedbackValue = feedback[field.feedbackKey as keyof ModuleVersionViewFeedbackDTO];
+      return feedbackValue !== null && feedbackValue !== undefined && feedbackValue !== '';
+    });
+  }
+
+  getFeedbackContent(feedback: ModuleVersionViewFeedbackDTO, fieldKey: keyof ModuleVersionViewDTO): string {
+    const field = this.moduleFields.find(f => f.key === fieldKey);
+    if (!field?.feedbackKey) return '';
+    
+    return String(feedback[field.feedbackKey as keyof ModuleVersionViewFeedbackDTO] || '');
+  }
+
+  getFeedbackBorderClass(status: ModuleVersionViewFeedbackDTO.FeedbackStatusEnum): string {
+    switch (status) {
+      case 'APPROVED':
+        return 'border-green-500';
+      case 'REJECTED':
+        return 'border-red-500';
+      case 'FEEDBACK_GIVEN':
+        return 'border-yellow-500';
+      default:
+        return 'border-gray-500';
+    }
   }
 }

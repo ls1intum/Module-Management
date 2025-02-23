@@ -35,31 +35,39 @@
   <div class="bg-card rounded-lg shadow-sm">
     <h3 id="feedbacks" class="text-xl font-semibold mb-4">Feedbacks</h3>
     @if (moduleVersionDto.feedbacks?.length) {
-    <div class="space-y-4">
+    <div class="space-y-6">
       @for (feedback of moduleVersionDto.feedbacks; track feedback.feedbackId) {
-      <div>
-        <div class="p-4 bg-muted rounded-md">
-          <h3 class="text-lg font-medium mb-2">
-            {{ (feedback.feedbackRole! | feedbackDepartment).text }}
-          </h3>
-          <div class="flex justify-between items-start">
-            <div>
-              <p class="font-medium">{{ feedback.feedbackFromFirstName }} {{ feedback.feedbackFromLastName }}</p>
-              <div class="mt-1">
-                <div hlmBadge [class]="(feedback.feedbackStatus! | feedbackStatus).colorClass">
-                  {{ (feedback.feedbackStatus! | feedbackStatus).text }}
-                </div>
+      <div class="p-6 bg-muted rounded-md">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <h3 class="text-lg font-medium">
+              {{ (feedback.feedbackRole! | feedbackDepartment).text }}
+            </h3>
+            <p class="font-medium mt-1">{{ feedback.feedbackFromFirstName }} {{ feedback.feedbackFromLastName }}</p>
+            <div class="mt-2">
+              <div hlmBadge [class]="(feedback.feedbackStatus! | feedbackStatus).colorClass">
+                {{ (feedback.feedbackStatus! | feedbackStatus).text }}
               </div>
             </div>
-            <p class="text-sm text-muted-foreground">
-              {{ feedback.submissionDate | date : 'yyyy-MM-dd' }}
-            </p>
           </div>
-          @if (feedback.rejectionComment) {
-          <p class="mt-2 text-muted-foreground">
-            <strong>Comment:</strong>
-            {{ feedback.rejectionComment }}
+          <p class="text-sm text-muted-foreground">
+            {{ feedback.submissionDate | date : 'yyyy-MM-dd' }}
           </p>
+        </div>
+
+        @if (feedback.rejectionComment) {
+        <div class="mb-4 p-4 bg-background rounded-md">
+          <p class="font-medium text-destructive">Rejection Comment:</p>
+          <p class="mt-1">{{ feedback.rejectionComment }}</p>
+        </div>
+        }
+
+        <div class="space-y-3">
+          @for (field of getFeedbackFields(feedback); track field.key) {
+          <div class="p-3 bg-background rounded-md">
+            <p class="font-medium">{{ field.label }}</p>
+            <p class="mt-1 text-muted-foreground">{{ field.value }}</p>
+          </div>
           }
         </div>
       </div>
@@ -83,6 +91,16 @@
           <span class="text-muted-foreground italic">Not specified</span>
           }
         </p>
+        @if (getFieldFeedbacks(field.key).length > 0) {
+        <div class="mt-3 space-y-2">
+          @for (feedback of getFieldFeedbacks(field.key); track feedback.feedbackId) {
+          <div class="p-2 bg-background rounded border-l-4" [class]="getFeedbackBorderClass(feedback.feedbackStatus!)">
+            <p class="text-sm font-medium">{{ (feedback.feedbackRole! | feedbackDepartment).text }}</p>
+            <p class="text-sm text-muted-foreground mt-1">{{ getFeedbackContent(feedback, field.key) }}</p>
+          </div>
+          }
+        </div>
+        }
       </div>
       }
     </div>
@@ -100,6 +118,16 @@
           <span class="text-muted-foreground italic">Not specified</span>
           }
         </p>
+        @if (getFieldFeedbacks(field.key).length > 0) {
+        <div class="mt-3 space-y-2">
+          @for (feedback of getFieldFeedbacks(field.key); track feedback.feedbackId) {
+          <div class="p-2 bg-background rounded border-l-4" [class]="getFeedbackBorderClass(feedback.feedbackStatus!)">
+            <p class="text-sm font-medium">{{ (feedback.feedbackRole! | feedbackDepartment).text }}</p>
+            <p class="text-sm text-muted-foreground mt-1">{{ getFeedbackContent(feedback, field.key) }}</p>
+          </div>
+          }
+        </div>
+        }
       </div>
       }
     </div>
@@ -114,6 +142,15 @@
     <div class="mt-4 p-4 bg-background rounded-md">
       <p class="text-sm font-medium text-muted-foreground">Generation Prompt:</p>
       <p class="text-base italic">{{ getModuleVersionProperty(field.hasPrompt) }}</p>
+    </div>
+    } @if (getFieldFeedbacks(field.key).length > 0) {
+    <div class="mt-4 space-y-2">
+      @for (feedback of getFieldFeedbacks(field.key); track feedback.feedbackId) {
+      <div class="p-3 bg-background rounded border-l-4" [class]="getFeedbackBorderClass(feedback.feedbackStatus!)">
+        <p class="font-medium">{{ (feedback.feedbackRole! | feedbackDepartment).text }}</p>
+        <p class="text-muted-foreground mt-1">{{ getFeedbackContent(feedback, field.key) }}</p>
+      </div>
+      }
     </div>
     } } @else {
     <p class="text-muted-foreground italic">No content provided</p>
