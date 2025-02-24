@@ -28,6 +28,7 @@ export interface ModuleVersionViewFeedbackDTO {
     hoursPresenceFeedback?: string;
     examinationAchievementsFeedback?: string;
     repetitionFeedback?: string;
+    recommendedPrerequisitesFeedback?: string;
     contentFeedback?: string;
     learningOutcomesFeedback?: string;
     teachingMethodsFeedback?: string;

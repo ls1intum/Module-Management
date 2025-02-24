@@ -26,6 +26,8 @@ public class FeedbackDTO {
     private boolean examinationAchievementsAccepted;
     private String repetitionFeedback;
     private boolean repetitionAccepted;
+    private String recommendedPrerequisitesFeedback;
+    private boolean recommendedPrerequisitesAccepted;
     private String contentFeedback;
     private boolean contentAccepted;
     private String learningOutcomesFeedback;

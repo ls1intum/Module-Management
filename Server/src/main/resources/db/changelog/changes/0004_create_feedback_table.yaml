@@ -101,6 +101,12 @@ databaseChangeLog:
                   name: repetition_accepted
                   type: BOOLEAN
               - column:
+                  name: recommended_prerequisites_feedback
+                  type: CLOB
+              - column:
+                  name: recommended_prerequisites_accepted
+                  type: BOOLEAN
+              - column:
                   name: content_feedback
                   type: CLOB
               - column:

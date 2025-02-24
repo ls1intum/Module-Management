@@ -29,6 +29,7 @@ public class ModuleVersionViewFeedbackDTO {
     private String hoursPresenceFeedback;
     private String examinationAchievementsFeedback;
     private String repetitionFeedback;
+    private String recommendedPrerequisitesFeedback;
     private String contentFeedback;
     private String learningOutcomesFeedback;
     private String teachingMethodsFeedback;
@@ -59,6 +60,7 @@ public class ModuleVersionViewFeedbackDTO {
         dto.setHoursPresenceFeedback(f.getHoursPresenceFeedback());
         dto.setExaminationAchievementsFeedback(f.getExaminationAchievementsFeedback());
         dto.setRepetitionFeedback(f.getRepetitionFeedback());
+        dto.setRecommendedPrerequisitesFeedback(f.getRecommendedPrerequisitesFeedback());
         dto.setContentFeedback(f.getContentFeedback());
         dto.setLearningOutcomesFeedback(f.getLearningOutcomesFeedback());
         dto.setTeachingMethodsFeedback(f.getTeachingMethodsFeedback());
