@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c5259616-c1ca-4690-8973-16ab598b722e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/ai.Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/app/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/app/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/app/models/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/app/models/completionModels.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/app/models/moduleModels.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/app/models/overlapModels.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/app/routers/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/app/routers/completions.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/app/routers/overlap_detection.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/app/services/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/app/services/llm_service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/app/services/overlap_service.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/app/settings.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/data/cache/embeddings.npz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/data/cache/metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/data/module-info/Modulhandbuch_Department_Computer_Engineering_15403408_20240910171122.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/data/module-info/Modulhandbuch_Department_Computer_Science_15403403_20240910171028.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/data/module-info/Modulhandbuch_Department_Electrical_Engineering_15403417_20240910171354.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/data/module-info/Modulhandbuch_Department_Mathematics_15403391_20240910170845.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ModuleManagementAI/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/compose.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server.Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/ModuleManagementServerApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/config/AiServiceConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/controllers/FeedbackController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/controllers/ModuleVersionController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/controllers/ProposalController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/dtos/AddModuleVersionDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/dtos/Completion/CompletionServiceRequestDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/dtos/Completion/CompletionServiceResponseDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/dtos/FeedbackListItemDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/dtos/ModuleVersionCompactDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/dtos/ModuleVersionUpdateRequestDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/dtos/ModuleVersionUpdateResponseDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/dtos/ModuleVersionViewDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/dtos/ModuleVersionViewFeedbackDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/dtos/OverlapDetection/OverlapDetectionRequestDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/dtos/OverlapDetection/SimilarModuleDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/dtos/ProposalRequestDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/dtos/ProposalViewDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/dtos/ProposalsCompactDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/dtos/RejectFeedbackDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/enums/CitDepartment.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/enums/FeedbackStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/enums/Language.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/enums/ModuleVersionStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/enums/ProposalStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/enums/UserRole.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/models/Feedback.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/models/ModuleVersion.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/models/Proposal.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/models/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/models/UserGroup.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/models/key/UserGroupId.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/repositories/FeedbackRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/repositories/ModuleVersionRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/repositories/ProposalRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/repositories/UserRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/services/AiCompletionService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/services/AuthenticationService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/services/FeedbackService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/services/ModuleVersionService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/services/OverlapDetectionService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/services/ProposalService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/services/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/shared/JwtAuthConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/shared/JwtAuthConverter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/shared/ResourceNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/modulemanagement/ls1/shared/SecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog/changes/0001_create_user_table.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog/changes/0002_create_proposal_table.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog/changes/0003_create_moduleVersion_table.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog/changes/0004_create_feedback_table.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog/changes/obsolete_modules.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog/initialize/0005_initialize_users.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/db/changelog/master.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/modulemanagement/ls1/ModuleManagementServerApplicationTests.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="ModuleManagementServer" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$/.." value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2p1kQhfQOBaB3zt0SiP1hrI5mpD" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Docker.compose.yaml.keycloak: Compose Deployment.executor": "Run",
+    "Gradle.Build ModuleManagementServer.executor": "Run",
+    "HTTP Request.generated-requests | #4.executor": "Run",
+    "HTTP Request.generated-requests | #5.executor": "Run",
+    "HTTP Request.generated-requests | Get authenticated user.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.ModuleManagementServerApplication.executor": "Run",
+    "extract.method.default.visibility": "private",
+    "git-widget-placeholder": "develop",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/kilia/IdeaProjects/Module-Management/ModuleManagementServer",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "Docker",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "postgresql"
+    ]
+  }
+}]]></component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\kilia\IdeaProjects\Module-Management\ModuleManagementServer" />
+      <recent name="C:\Users\kilia\IdeaProjects\Module-Management\ModuleManagementServer\src\main\java\modulemanagement\ls1\modulemanagementserver" />
+      <recent name="C:\Users\kilia\IdeaProjects\Module-Management\ModuleManagementServer\src\main\resources" />
+      <recent name="C:\Users\kilia\IdeaProjects\Module-Management\ModuleManagementServer\src\main\resources\db\changelog" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\kilia\IdeaProjects\Module-Management\ModuleManagementServer\ai-service" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.ModuleManagementServerApplication">
+    <configuration name="generated-requests | Get authenticated user" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" executionIdentifier="Get authenticated user" index="4" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="generated-requests | #4" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" executionIdentifier="#4" index="4" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="generated-requests | #5" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" executionIdentifier="#5" index="5" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="ModuleManagementServerApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="envFilePaths">
+        <option value="$PROJECT_DIR$/../.env" />
+      </option>
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="ModuleManagementServer.main" />
+      <selectedOptions>
+        <option name="environmentVariables" />
+      </selectedOptions>
+      <option name="SPRING_BOOT_MAIN_CLASS" value="modulemanagement.ls1.ModuleManagementServerApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="compose.yaml.keycloak: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="services">
+            <list>
+              <option value="keycloak" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="compose.yaml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Docker.compose.yaml.keycloak: Compose Deployment" />
+      <item itemvalue="HTTP Request.generated-requests | #4" />
+      <item itemvalue="HTTP Request.generated-requests | #5" />
+      <item itemvalue="HTTP Request.generated-requests | Get authenticated user" />
+      <item itemvalue="Spring Boot.ModuleManagementServerApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Docker.compose.yaml.keycloak: Compose Deployment" />
+        <item itemvalue="HTTP Request.generated-requests | #5" />
+        <item itemvalue="HTTP Request.generated-requests | #4" />
+        <item itemvalue="HTTP Request.generated-requests | Get authenticated user" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.23654.189" />
+        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-IU-243.23654.189" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c5259616-c1ca-4690-8973-16ab598b722e" name="Changes" comment="" />
+      <created>1731940956708</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1731940956708</updated>
+      <workItem from="1731940959385" duration="1569000" />
+      <workItem from="1731942550728" duration="795000" />
+      <workItem from="1732011605539" duration="680000" />
+      <workItem from="1732019666680" duration="4393000" />
+      <workItem from="1732027095908" duration="717000" />
+      <workItem from="1732177430200" duration="350000" />
+      <workItem from="1732265031594" duration="6575000" />
+      <workItem from="1732280455350" duration="2670000" />
+      <workItem from="1732288073829" duration="1553000" />
+      <workItem from="1732518935699" duration="20161000" />
+      <workItem from="1732610358901" duration="7617000" />
+      <workItem from="1732623746992" duration="629000" />
+      <workItem from="1732624395258" duration="6873000" />
+      <workItem from="1732885188048" duration="1896000" />
+      <workItem from="1732958968553" duration="3479000" />
+      <workItem from="1732982276476" duration="4018000" />
+      <workItem from="1733145412209" duration="5731000" />
+      <workItem from="1733226435488" duration="8748000" />
+      <workItem from="1733572481766" duration="1697000" />
+      <workItem from="1733817483968" duration="12622000" />
+      <workItem from="1734082105396" duration="4597000" />
+      <workItem from="1734691633533" duration="17444000" />
+      <workItem from="1734783490655" duration="12411000" />
+      <workItem from="1734812226426" duration="159000" />
+      <workItem from="1734863321679" duration="7092000" />
+      <workItem from="1734944431580" duration="6796000" />
+      <workItem from="1735914942372" duration="766000" />
+      <workItem from="1735924056450" duration="659000" />
+      <workItem from="1735986961521" duration="1208000" />
+      <workItem from="1736006798648" duration="1141000" />
+      <workItem from="1736437112149" duration="2385000" />
+      <workItem from="1736674454647" duration="3837000" />
+      <workItem from="1737295682183" duration="794000" />
+      <workItem from="1737298180157" duration="1191000" />
+      <workItem from="1737613196964" duration="722000" />
+      <workItem from="1737725022932" duration="245000" />
+      <workItem from="1737725328803" duration="7094000" />
+      <workItem from="1737896508511" duration="7341000" />
+      <workItem from="1737970134779" duration="2946000" />
+      <workItem from="1738057552275" duration="5919000" />
+      <workItem from="1738321644673" duration="1451000" />
+      <workItem from="1738324965804" duration="4170000" />
+      <workItem from="1738405948993" duration="3397000" />
+      <workItem from="1738420745849" duration="808000" />
+      <workItem from="1738507389380" duration="3913000" />
+      <workItem from="1738576313805" duration="9600000" />
+      <workItem from="1738658572157" duration="4978000" />
+      <workItem from="1738923977355" duration="1477000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="temp" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

@@ -1,0 +1,102 @@
+<hlm-toaster />
+<div class="max-w-6xl mx-auto">
+  <h2 class="text-2xl mb-10">Module Proposal for '{{ moduleVersion?.titleEng }}'</h2>
+
+  <!-- main content grid -->
+  <div>
+    @for (field of moduleFields; track field.key) {
+    <div class="py-4 border-b">
+      <div class="grid grid-cols-8">
+        <!-- lhs -->
+        <div class="col-span-7">
+          <div class="font-medium text-xl mb-2">{{ field.label }}</div>
+          <div class="text-gray-700">
+            {{ getModuleVersionProperty(field.key) }}
+          </div>
+        </div>
+
+        <!-- rhs -->
+        <div class="flex justify-end items-center">
+          <div class="flex gap-2">
+            <button
+              variant="ghost"
+              hlmBtn
+              class="w-12"
+              [class.bg-green-300]="fieldStates[field.key].accepted === true"
+              [class.text-green-600]="fieldStates[field.key].accepted === true"
+              [class.hover:bg-gray-200]="fieldStates[field.key].accepted !== true"
+              (click)="handleApprove(field.key)"
+            >
+              <hlm-icon name="lucideCheck" />
+            </button>
+            <button
+              hlmBtn
+              variant="ghost"
+              class="w-12"
+              [class.bg-red-300]="fieldStates[field.key].accepted === false"
+              [class.text-red-600]="fieldStates[field.key].accepted === false"
+              [class.hover:bg-gray-200]="fieldStates[field.key].accepted !== false"
+              (click)="handleReject(field.key)"
+            >
+              <hlm-icon name="lucideX" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feedback section - Full width -->
+      @if (fieldStates[field.key].accepted === false) {
+      <div class="mt-4">
+        <textarea
+          hlmInput
+          class="w-full h-24 border rounded-md text-sm"
+          [ngModel]="fieldFeedback[field.key]"
+          (ngModelChange)="updateFeedback(field.key, $event)"
+          placeholder="Required feedback for rejection..."
+          rows="3"
+        ></textarea>
+      </div>
+      }
+    </div>
+    }
+  </div>
+
+  <!-- form controls -->
+  <div class="flex justify-between mt-6 pt-4">
+    <hlm-alert-dialog>
+      <button hlmBtn variant="outline" class="w-32" brnAlertDialogTrigger>Cancel</button>
+      <hlm-alert-dialog-content *brnAlertDialogContent>
+        <hlm-alert-dialog-header>
+          <h3 hlmAlertDialogTitle>Are you sure?</h3>
+          <p hlmAlertDialogDescription>All progress will be lost if you continue.</p>
+        </hlm-alert-dialog-header>
+        <hlm-alert-dialog-footer>
+          <button hlmBtn brnDialogClose variant="outline">No, keep reviewing</button>
+          <button hlmBtn (click)="cancel()">Yes, cancel review</button>
+        </hlm-alert-dialog-footer>
+      </hlm-alert-dialog-content>
+    </hlm-alert-dialog>
+
+    <hlm-alert-dialog>
+      <button hlmBtn variant="destructive" class="w-32" brnAlertDialogTrigger>Reject</button>
+      <hlm-alert-dialog-content *brnAlertDialogContent>
+        <hlm-alert-dialog-header>
+          <h3 hlmAlertDialogTitle>Confirm Rejection?</h3>
+          <p hlmAlertDialogDescription>
+            <span class="font-bold text-red-600">Rejection is final.</span>
+            The user cannot make any modifications to this proposal again. Are you sure you want to reject this proposal?
+          </p>
+        </hlm-alert-dialog-header>
+        <div class="py-4">
+          <textarea hlmInput class="w-full h-32 border rounded-md text-sm" [(ngModel)]="rejectionReason" placeholder="Enter rejection reason..." rows="4"></textarea>
+        </div>
+        <hlm-alert-dialog-footer>
+          <button hlmBtn brnDialogClose>Cancel</button>
+          <button hlmBtn class="bg-red-600" [disabled]="!rejectionReason.trim()" (click)="reject()">Confirm Rejection</button>
+        </hlm-alert-dialog-footer>
+      </hlm-alert-dialog-content>
+    </hlm-alert-dialog>
+
+    <button hlmBtn variant="default" class="w-36 bg-blue-600" (click)="giveFeedback()" [disabled]="!isEveryFieldFilled()">Submit Feedback</button>
+  </div>
+</div>
