@@ -275,12 +275,12 @@
 
     <div>
       <label hlmLabel class="text-xl">Recommended Prerequisites</label>
-      @if (moduleVersionId && hasFeedback('repetitionFeedback')) {
+      @if (moduleVersionId && hasFeedback('recommendedPrerequisitesFeedback')) {
       <div class="mt-2 text-sm text-gray-600">
-        @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.repetitionFeedback) {
+        @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.recommendedPrerequisitesFeedback) {
         <p>
           <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-          {{ feedback.repetitionFeedback }}
+          {{ feedback.recommendedPrerequisitesFeedback }}
         </p>
         } }
       </div>

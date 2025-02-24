@@ -111,6 +111,12 @@ public class Feedback {
     @Column(name = "repetition_accepted")
     private boolean repetitionAccepted;
 
+    @Column(name = "recommended_prerequisites_feedback", columnDefinition = "CLOB")
+    private String recommendedPrerequisitesFeedback;
+
+    @Column(name = "recommended_prerequisites_accepted")
+    private boolean recommendedPrerequisitesAccepted;
+
     @Column(name = "content_feedback", columnDefinition = "CLOB")
     private String contentFeedback;
 
@@ -180,6 +186,8 @@ public class Feedback {
         this.examinationAchievementsAccepted = dto.isExaminationAchievementsAccepted();
         this.repetitionFeedback = dto.getRepetitionFeedback();
         this.repetitionAccepted = dto.isRepetitionAccepted();
+        this.recommendedPrerequisitesFeedback = dto.getRecommendedPrerequisitesFeedback();
+        this.recommendedPrerequisitesAccepted = dto.isRecommendedPrerequisitesAccepted();
         this.contentFeedback = dto.getContentFeedback();
         this.contentAccepted = dto.isContentAccepted();
         this.learningOutcomesFeedback = dto.getLearningOutcomesFeedback();
@@ -208,6 +216,7 @@ public class Feedback {
             && this.hoursPresenceAccepted
             && this.examinationAchievementsAccepted
             && this.repetitionAccepted
+            && this.recommendedPrerequisitesAccepted
             && this.contentAccepted
             && this.learningOutcomesAccepted
             && this.teachingMethodsAccepted

@@ -124,6 +124,8 @@ export class FeedbackViewComponent {
       examinationAchievementsFeedback: [''],
       repetitionAccepted: [null],
       repetitionFeedback: [''],
+      recommendedPrerequisitesAccepted: [null],
+      recommendedPrerequisitesFeedback: [''],
       contentAccepted: [null],
       contentFeedback: [''],
       learningOutcomesAccepted: [null],
@@ -205,6 +207,13 @@ export class FeedbackViewComponent {
 
   cancel() {
     this.router.navigate(['']);
+  }
+
+  pdfExport() {
+    toast('Exporting PDF', {
+      description: 'Creating a PDF file for you to download...',
+      duration: 3000
+    })
   }
 
   reject() {

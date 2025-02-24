@@ -38,6 +38,8 @@ export interface Feedback {
     examinationAchievementsAccepted?: boolean;
     repetitionFeedback?: string;
     repetitionAccepted?: boolean;
+    recommendedPrerequisitesFeedback?: string;
+    recommendedPrerequisitesAccepted?: boolean;
     contentFeedback?: string;
     contentAccepted?: boolean;
     learningOutcomesFeedback?: string;

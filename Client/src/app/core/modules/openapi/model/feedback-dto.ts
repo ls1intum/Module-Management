@@ -32,6 +32,8 @@ export interface FeedbackDTO {
     examinationAchievementsAccepted?: boolean;
     repetitionFeedback?: string;
     repetitionAccepted?: boolean;
+    recommendedPrerequisitesFeedback?: string;
+    recommendedPrerequisitesAccepted?: boolean;
     contentFeedback?: string;
     contentAccepted?: boolean;
     learningOutcomesFeedback?: string;

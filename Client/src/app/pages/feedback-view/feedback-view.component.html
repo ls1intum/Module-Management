@@ -5,18 +5,18 @@
   <!-- main content grid -->
   <div>
     @for (field of moduleFields; track field.key) {
-    <div class="py-4 border-b">
+    <div class="py-4">
       <div class="grid grid-cols-8">
         <!-- lhs -->
         <div class="col-span-7">
           <div class="font-medium text-xl mb-2">{{ field.label }}</div>
-          <div class="text-gray-700">
+          <div class="text-gray-700 text-base whitespace-pre-line bg-gray-100 p-2 rounded-md">
             {{ getModuleVersionProperty(field.key) }}
           </div>
         </div>
 
         <!-- rhs -->
-        <div class="flex justify-end items-center">
+        <div class="flex justify-end items-end">
           <div class="flex gap-2">
             <button
               variant="ghost"
@@ -76,6 +76,8 @@
         </hlm-alert-dialog-footer>
       </hlm-alert-dialog-content>
     </hlm-alert-dialog>
+
+    <button hlmBtn variant="default" class="w-32" (click)="pdfExport()">Export PDF</button>
 
     <hlm-alert-dialog>
       <button hlmBtn variant="destructive" class="w-32" brnAlertDialogTrigger>Reject</button>
