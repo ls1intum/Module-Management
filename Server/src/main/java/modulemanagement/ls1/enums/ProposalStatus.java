@@ -6,5 +6,4 @@ public enum ProposalStatus {
     ACCEPTED,
     REQUIRES_REVIEW,
     REJECTED,
-    CANCELED
 }
