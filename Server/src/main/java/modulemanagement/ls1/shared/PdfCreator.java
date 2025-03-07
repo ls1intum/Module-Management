@@ -97,14 +97,11 @@ public class PdfCreator {
             Document document = new Document(pdf, PageSize.A4);
             document.setMargins(36, 36, 36, 36);
 
-            // Title
             Paragraph title = new Paragraph("Module Description: " + mv.getTitleEng())
                     .setFontSize(18)
-
                     .setTextAlignment(TextAlignment.CENTER);
             document.add(title);
 
-            // Metadata
             Paragraph metadata = new Paragraph(String.format(
                     "Module ID: %s | Version: %d | Status: %s | Created: %s",
                     mv.getModuleId() != null ? mv.getModuleId() : "Not assigned",
@@ -116,75 +113,26 @@ public class PdfCreator {
                     .setTextAlignment(TextAlignment.CENTER)
                     .setMarginBottom(20);
             document.add(metadata);
-
-            // Basic Information
-            document.add(new Paragraph("Basic Information").setFontSize(16).setMarginTop(10));
-
-            // Add fields with specific feedback
             addFieldWithSpecificFeedback(document, "Title", mv.getTitleEng(), mv.getRequiredFeedbacks(), "titleFeedback", "titleAccepted");
             addFieldWithSpecificFeedback(document, "Level", mv.getLevelEng(), mv.getRequiredFeedbacks(), "levelFeedback", "levelAccepted");
-            addFieldWithSpecificFeedback(document, "Language", mv.getLanguageEng() != null ? mv.getLanguageEng().toString() : null,
-                    mv.getRequiredFeedbacks(), "languageFeedback", "languageAccepted");
+            addFieldWithSpecificFeedback(document, "Language", mv.getLanguageEng() != null ? mv.getLanguageEng().toString() : null, mv.getRequiredFeedbacks(), "languageFeedback", "languageAccepted");
             addFieldWithSpecificFeedback(document, "Frequency", mv.getFrequencyEng(), mv.getRequiredFeedbacks(), "frequencyFeedback", "frequencyAccepted");
             addFieldWithSpecificFeedback(document, "Repetition", mv.getRepetitionEng(), mv.getRequiredFeedbacks(), "repetitionFeedback", "repetitionAccepted");
             addFieldWithSpecificFeedback(document, "Duration", mv.getDuration(), mv.getRequiredFeedbacks(), "durationFeedback", "durationAccepted");
-
-            // Hours Section
-            document.add(new Paragraph("Hours").setFontSize(16).setMarginTop(10));
-
-            addFieldWithSpecificFeedback(document, "Credits", mv.getCredits() != null ? mv.getCredits().toString() : null,
-                    mv.getRequiredFeedbacks(), "creditsFeedback", "creditsAccepted");
-            addFieldWithSpecificFeedback(document, "Total Hours", mv.getHoursTotal() != null ? mv.getHoursTotal().toString() : null,
-                    mv.getRequiredFeedbacks(), "hoursTotalFeedback", "hoursTotalAccepted");
-            addFieldWithSpecificFeedback(document, "Self-Study Hours", mv.getHoursSelfStudy() != null ? mv.getHoursSelfStudy().toString() : null,
-                    mv.getRequiredFeedbacks(), "hoursSelfStudyFeedback", "hoursSelfStudyAccepted");
-            addFieldWithSpecificFeedback(document, "Presence Hours", mv.getHoursPresence() != null ? mv.getHoursPresence().toString() : null,
-                    mv.getRequiredFeedbacks(), "hoursPresenceFeedback", "hoursPresenceAccepted");
-
-            // Content Sections
-            document.add(new Paragraph("Content").setFontSize(16).setMarginTop(10));
-
-            if (mv.getBulletPoints() != null && !mv.getBulletPoints().isBlank()) {
-                addTextSection(document, mv.getBulletPoints());
-            }
-
+            addFieldWithSpecificFeedback(document, "Credits", mv.getCredits() != null ? mv.getCredits().toString() : null, mv.getRequiredFeedbacks(), "creditsFeedback", "creditsAccepted");
+            addFieldWithSpecificFeedback(document, "Total Hours", mv.getHoursTotal() != null ? mv.getHoursTotal().toString() : null, mv.getRequiredFeedbacks(), "hoursTotalFeedback", "hoursTotalAccepted");
+            addFieldWithSpecificFeedback(document, "Self-Study Hours", mv.getHoursSelfStudy() != null ? mv.getHoursSelfStudy().toString() : null, mv.getRequiredFeedbacks(), "hoursSelfStudyFeedback", "hoursSelfStudyAccepted");
+            addFieldWithSpecificFeedback(document, "Presence Hours", mv.getHoursPresence() != null ? mv.getHoursPresence().toString() : null, mv.getRequiredFeedbacks(), "hoursPresenceFeedback", "hoursPresenceAccepted");
             addFieldWithSpecificFeedback(document, "Module Content", mv.getContentEng(), mv.getRequiredFeedbacks(), "contentFeedback", "contentAccepted");
-            if (mv.getContentPromptEng() != null && !mv.getContentPromptEng().isBlank()) {
-                addPromptSection(document, "Content Generation Prompt", mv.getContentPromptEng());
-            }
-
-            addFieldWithSpecificFeedback(document, "Learning Outcomes", mv.getLearningOutcomesEng(), mv.getRequiredFeedbacks(),
-                    "learningOutcomesFeedback", "learningOutcomesAccepted");
-            if (mv.getLearningOutcomesPromptEng() != null && !mv.getLearningOutcomesPromptEng().isBlank()) {
-                addPromptSection(document, "Learning Outcomes Generation Prompt", mv.getLearningOutcomesPromptEng());
-            }
-
-            addFieldWithSpecificFeedback(document, "Teaching Methods", mv.getTeachingMethodsEng(), mv.getRequiredFeedbacks(),
-                    "teachingMethodsFeedback", "teachingMethodsAccepted");
-            if (mv.getTeachingMethodsPromptEng() != null && !mv.getTeachingMethodsPromptEng().isBlank()) {
-                addPromptSection(document, "Teaching Methods Generation Prompt", mv.getTeachingMethodsPromptEng());
-            }
-
-            addFieldWithSpecificFeedback(document, "Examination Achievements", mv.getExaminationAchievementsEng(), mv.getRequiredFeedbacks(),
-                    "examinationAchievementsFeedback", "examinationAchievementsAccepted");
-            if (mv.getExaminationAchievementsPromptEng() != null && !mv.getExaminationAchievementsPromptEng().isBlank()) {
-                addPromptSection(document, "Examination Achievements Generation Prompt", mv.getExaminationAchievementsPromptEng());
-            }
-
-            addFieldWithSpecificFeedback(document, "Recommended Prerequisites", mv.getRecommendedPrerequisitesEng(), mv.getRequiredFeedbacks(),
-                    "recommendedPrerequisitesFeedback", "recommendedPrerequisitesAccepted");
+            addFieldWithSpecificFeedback(document, "Learning Outcomes", mv.getLearningOutcomesEng(), mv.getRequiredFeedbacks(), "learningOutcomesFeedback", "learningOutcomesAccepted");
+            addFieldWithSpecificFeedback(document, "Teaching Methods", mv.getTeachingMethodsEng(), mv.getRequiredFeedbacks(), "teachingMethodsFeedback", "teachingMethodsAccepted");
+            addFieldWithSpecificFeedback(document, "Examination Achievements", mv.getExaminationAchievementsEng(), mv.getRequiredFeedbacks(), "examinationAchievementsFeedback", "examinationAchievementsAccepted");
+            addFieldWithSpecificFeedback(document, "Recommended Prerequisites", mv.getRecommendedPrerequisitesEng(), mv.getRequiredFeedbacks(), "recommendedPrerequisitesFeedback", "recommendedPrerequisitesAccepted");
             addFieldWithSpecificFeedback(document, "Media", mv.getMediaEng(), mv.getRequiredFeedbacks(), "mediaFeedback", "mediaAccepted");
             addFieldWithSpecificFeedback(document, "Literature", mv.getLiteratureEng(), mv.getRequiredFeedbacks(), "literatureFeedback", "literatureAccepted");
+            addFieldWithSpecificFeedback(document, "Responsibles", mv.getResponsiblesEng(), mv.getRequiredFeedbacks(), "responsiblesFeedback", "responsiblesAccepted");
+            addFieldWithSpecificFeedback(document, "Lecturer", mv.getLvSwsLecturerEng(), mv.getRequiredFeedbacks(), "lvSwsLecturerFeedback", "lvSwsLecturerAccepted");
 
-            // Responsibility Section
-            document.add(new Paragraph("Responsibility").setFontSize(16).setMarginTop(10));
-
-            addFieldWithSpecificFeedback(document, "Responsibles", mv.getResponsiblesEng(), mv.getRequiredFeedbacks(),
-                    "responsiblesFeedback", "responsiblesAccepted");
-            addFieldWithSpecificFeedback(document, "Lecturer", mv.getLvSwsLecturerEng(), mv.getRequiredFeedbacks(),
-                    "lvSwsLecturerFeedback", "lvSwsLecturerAccepted");
-
-            // Footer
             document.add(new Paragraph("Generated on " + java.time.LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                     .setFontSize(10)
                     .setTextAlignment(TextAlignment.RIGHT)
@@ -199,11 +147,9 @@ public class PdfCreator {
 
     private void addFieldWithSpecificFeedback(Document document, String fieldName, String fieldValue, List<Feedback> feedbacks,
                                               String feedbackFieldName, String acceptedFieldName) {
-        // Add field name and value
-        document.add(new Paragraph(fieldName).setFontSize(12));
+        document.add(new Paragraph(fieldName).setFontSize(14).setFontColor(ColorConstants.BLUE));
         document.add(new Paragraph(fieldValue != null ? fieldValue : "Not specified").setMarginBottom(5));
 
-        // Add specific feedback if any
         if (feedbacks != null && !feedbacks.isEmpty()) {
             boolean hasFeedback = false;
             Table feedbackTable = new Table(UnitValue.createPercentArray(new float[]{30, 70}))
@@ -212,35 +158,24 @@ public class PdfCreator {
 
             for (Feedback feedback : feedbacks) {
                 try {
-                    // Get feedback text using reflection
                     java.lang.reflect.Field feedbackField = Feedback.class.getDeclaredField(feedbackFieldName);
                     feedbackField.setAccessible(true);
                     String feedbackText = (String) feedbackField.get(feedback);
 
-                    // Get accepted status using reflection
                     java.lang.reflect.Field acceptedField = Feedback.class.getDeclaredField(acceptedFieldName);
                     acceptedField.setAccessible(true);
-                    boolean isAccepted = (boolean) acceptedField.get(feedback);
 
                     if (feedbackText != null && !feedbackText.isBlank()) {
                         hasFeedback = true;
                         Cell roleCell = new Cell().add(new Paragraph(feedback.getRequiredRole().toString()));
                         Cell feedbackCell = new Cell().add(new Paragraph(feedbackText));
 
-                        if (!isAccepted) {
-                            roleCell.setBackgroundColor(ColorConstants.LIGHT_GRAY);
-                            feedbackCell.setBackgroundColor(ColorConstants.LIGHT_GRAY);
-                        } else {
-                            roleCell.setBackgroundColor(ColorConstants.LIGHT_GRAY);
-                            feedbackCell.setBackgroundColor(ColorConstants.LIGHT_GRAY);
-                        }
+                        roleCell.setBackgroundColor(ColorConstants.LIGHT_GRAY);
 
                         feedbackTable.addCell(roleCell);
                         feedbackTable.addCell(feedbackCell);
                     }
-                } catch (Exception e) {
-                    // Skip this feedback if there's an issue with reflection
-                    continue;
+                } catch (Exception ignored) {
                 }
             }
 
@@ -251,16 +186,6 @@ public class PdfCreator {
         }
 
         document.add(new Paragraph("").setMarginBottom(10));
-    }
-
-    private void addTextSection(Document document, String content) {
-        document.add(new Paragraph("Key Points").setFontSize(12));
-        document.add(new Paragraph(content != null ? content : "Not specified").setMarginBottom(10));
-    }
-
-    private void addPromptSection(Document document, String promptTitle, String promptContent) {
-        document.add(new Paragraph(promptTitle).setFontSize(10));
-        document.add(new Paragraph(promptContent).setFontSize(10).setMarginBottom(10));
     }
 
     private void addTableRow(Table table, String label, String value) {
