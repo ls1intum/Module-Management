@@ -14,7 +14,9 @@ import modulemanagement.ls1.models.ModuleVersion;
 import modulemanagement.ls1.models.Proposal;
 import modulemanagement.ls1.repositories.ModuleVersionRepository;
 import modulemanagement.ls1.repositories.ProposalRepository;
+import modulemanagement.ls1.shared.PdfCreator;
 import modulemanagement.ls1.shared.ResourceNotFoundException;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -28,11 +30,13 @@ public class ModuleVersionService {
     private final ModuleVersionRepository moduleVersionRepository;
     private final ProposalRepository proposalRepository;
     private final OverlapDetectionService overlapDetectionService;
+    private final PdfCreator pdfCreator;
 
-    public ModuleVersionService(ModuleVersionRepository moduleVersionRepository, ProposalRepository proposalRepository, OverlapDetectionService overlapDetectionService) {
+    public ModuleVersionService(ModuleVersionRepository moduleVersionRepository, ProposalRepository proposalRepository, OverlapDetectionService overlapDetectionService, PdfCreator pdfCreator) {
         this.moduleVersionRepository = moduleVersionRepository;
         this.proposalRepository = proposalRepository;
         this.overlapDetectionService = overlapDetectionService;
+        this.pdfCreator = pdfCreator;
     }
 
     public ModuleVersionUpdateResponseDTO updateModuleVersionFromRequest(UUID userId, Long moduleVersionId, ModuleVersionUpdateRequestDTO request) {
@@ -156,5 +160,12 @@ public class ModuleVersionService {
         }
 
         return proposal.getPreviousModuleVersionFeedback();
+    }
+
+    public Resource generateModuleVersionPdf(Long moduleVersionId, UUID userId) {
+        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Module Version not found"));
+
+        return pdfCreator.createModuleVersionPdf(mv);
     }
 }

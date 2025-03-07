@@ -3,7 +3,7 @@ import { BrnSelectModule } from '@spartan-ng/ui-select-brain';
 import { BrnSeparatorModule } from '@spartan-ng/ui-separator-brain';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, FeedbackDTO, GiveFeedbackDTO } from '../../core/modules/openapi';
+import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, FeedbackDTO, GiveFeedbackDTO, ModuleVersionControllerService } from '../../core/modules/openapi';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
@@ -56,6 +56,7 @@ import { HlmToasterComponent } from '@spartan-ng/ui-sonner-helm';
 export class FeedbackViewComponent {
   router = inject(Router);
   feedbackService = inject(FeedbackControllerService);
+  moduleVersionService = inject(ModuleVersionControllerService)
   feedbackForm: FormGroup;
   feedbackId: number | null = null;
   moduleVersion: ModuleVersionUpdateRequestDTO | null = null;
@@ -214,10 +215,42 @@ export class FeedbackViewComponent {
   }
 
   pdfExport() {
+    const mvid = this.moduleVersion?.moduleVersionId;
+    if (!mvid) {
+      toast('Exporting PDF', {
+        description: 'Failed to create PDF...',
+        duration: 3000
+      })
+      return;
+    }
+    
+    this.moduleVersionService.exportModuleVersionPdf(mvid).subscribe({
+      next: (response: Blob) => {
+        {
+          const fileName = `f${this.feedbackId}_mv${mvid}_${this.moduleVersion?.titleEng}`
+          const blob = new Blob([response], { type: 'application/pdf' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(link.href);
+        }
+      },
+    error: () => {
+      toast('Exporting PDF', {
+        description: 'Failed to create PDF...',
+        duration: 3000
+      });
+    }
+    })
+
     toast('Exporting PDF', {
       description: 'Creating a PDF file for you to download...',
       duration: 3000
     })
+
   }
 
   reject() {
