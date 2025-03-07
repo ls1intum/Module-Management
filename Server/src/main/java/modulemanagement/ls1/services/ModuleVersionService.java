@@ -168,4 +168,14 @@ public class ModuleVersionService {
 
         return pdfCreator.createModuleVersionPdf(mv);
     }
+
+    public Resource generateProfessorModuleVersionPdf(Long moduleVersionId, UUID userId) {
+        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
+        Proposal proposal = mv.getProposal();
+        if (!proposal.getCreatedBy().getUserId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
+        }
+
+        return pdfCreator.createProfessorModuleVersionPdf(mv);
+    }
 }

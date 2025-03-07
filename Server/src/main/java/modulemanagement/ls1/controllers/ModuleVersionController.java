@@ -108,4 +108,15 @@ public class ModuleVersionController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, String.format("inline; filename=module_version_%s.pdf", moduleVersionId))
                 .body(moduleVersionService.generateModuleVersionPdf(moduleVersionId, user.getUserId()));
     }
+
+    @GetMapping(value = "/{moduleVersionId}/export-professor-pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    public ResponseEntity<Resource> exportProfessorModuleVersionPdf(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId) {
+        User user = authenticationService.getAuthenticatedUser(jwt);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, String.format("inline; filename=module_version_%s.pdf", moduleVersionId))
+                .body(moduleVersionService.generateProfessorModuleVersionPdf(moduleVersionId, user.getUserId()));
+    }
 }

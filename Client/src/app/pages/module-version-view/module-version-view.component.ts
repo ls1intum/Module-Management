@@ -26,7 +26,8 @@ export interface ModuleField {
 })
 export class ModuleVersionViewComponent {
   route = inject(ActivatedRoute);
-  moduleVerisionService = inject(ModuleVersionControllerService);
+  moduleVersionService = inject(ModuleVersionControllerService);
+  moduleVersionId: number | null = null;
   loading = true;
   moduleVersionDto: ModuleVersionViewDTO | null = null;
   moduleVersionStatus = ModuleVersion.StatusEnum;
@@ -56,17 +57,41 @@ export class ModuleVersionViewComponent {
   ];
 
   constructor() {
-    const moduleVersionId = Number(this.route.snapshot.paramMap.get('id'));
-    this.fetchModuleVersionViewDto(moduleVersionId);
+    this.moduleVersionId = Number(this.route.snapshot.paramMap.get('id'));
+    this.fetchModuleVersionViewDto(this.moduleVersionId);
   }
 
   private fetchModuleVersionViewDto(moduleVersionId: number) {
     this.loading = true;
-    this.moduleVerisionService.getModuleVersionViewDto(moduleVersionId).subscribe({
+    this.moduleVersionService.getModuleVersionViewDto(moduleVersionId).subscribe({
       next: (data: ModuleVersionViewDTO) => (this.moduleVersionDto = data),
       error: (err: HttpErrorResponse) => (this.error = err.error),
       complete: () => (this.loading = false)
     });
+  }
+
+  pdfExport() {
+    const mvid = this.moduleVersionId;
+    if (!mvid) {
+      return;
+    }
+    
+    this.moduleVersionService.exportProfessorModuleVersionPdf(mvid).subscribe({
+      next: (response: Blob) => {
+        {
+          const fileName = `mv${mvid}_${this.moduleVersionDto!.titleEng}`
+          const blob = new Blob([response], { type: 'application/pdf' });
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(link.href);
+        }
+      },
+    error: (err: HttpErrorResponse) => this.error = err.error
+    })
   }
 
   getModuleVersionProperty(key: keyof ModuleVersionViewDTO): string {

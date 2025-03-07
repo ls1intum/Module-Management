@@ -5,7 +5,8 @@
 } @else if (moduleVersionDto) {
 <div class="max-w-4xl mx-auto space-y-6">
   <h2 class="text-2xl">Overview of '{{ moduleVersionDto.titleEng }}' - Version {{ moduleVersionDto.version }}</h2>
-  <div>
+  <div class="flex justify-between mb-6">
+    <button hlmBtn class="mr-4" (click)="pdfExport()">Export PDF</button>
     @if (isLatestVersion() && moduleVersionDto.status == moduleVersionStatus.PendingSubmission) {
     <button hlmBtn class="mr-4" [routerLink]="['/module-version/edit', moduleVersionDto.moduleVersionId]">Edit Module Version</button>
     }
