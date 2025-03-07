@@ -90,9 +90,8 @@ public class ModuleVersionController {
     }
 
     @PostMapping("/overlap-detection/check-similarity/{moduleVersionId}")
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
-    public ResponseEntity<List<SimilarModuleDTO>> checkSimilarity(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId) {
-        User user = authenticationService.getAuthenticatedUser(jwt);
-        return ResponseEntity.ok(this.moduleVersionService.getSimilarModules(user.getUserId(), moduleVersionId));
+    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter', 'proposal_reviewer')")
+    public ResponseEntity<List<SimilarModuleDTO>> checkSimilarity(@PathVariable Long moduleVersionId) {
+        return ResponseEntity.ok(this.moduleVersionService.getSimilarModules( moduleVersionId));
     }
 }

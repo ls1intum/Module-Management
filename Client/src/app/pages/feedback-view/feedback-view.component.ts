@@ -209,6 +209,10 @@ export class FeedbackViewComponent {
     this.router.navigate(['']);
   }
 
+  checkOverlaps() {
+    
+  }
+
   pdfExport() {
     toast('Exporting PDF', {
       description: 'Creating a PDF file for you to download...',

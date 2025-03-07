@@ -143,12 +143,8 @@ public class ModuleVersionService {
         return ModuleVersionViewDTO.from(mv);
     }
 
-    public List<SimilarModuleDTO> getSimilarModules(UUID userId, Long moduleVersionId) {
+    public List<SimilarModuleDTO> getSimilarModules(Long moduleVersionId) {
         ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
-        Proposal proposal = mv.getProposal();
-        if (!proposal.getCreatedBy().getUserId().equals(userId)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
-        }
         return this.overlapDetectionService.checkModuleOverlap(OverlapDetectionRequestDTO.from(mv)).block();
     }
 
