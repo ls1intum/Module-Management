@@ -278,7 +278,7 @@ export class FeedbackViewComponent {
       }
       this.feedbackService.giveFeedback(this.feedbackId, feedbackDTO).subscribe({
         next: () => {
-          this.router.navigate([''], { queryParams: { given_feedback: true } });
+          this.router.navigate([''], { queryParams: { feedback_given: true } });
         },
         error: (err: HttpErrorResponse) => {
           toast('Sending feedback failed.', {
