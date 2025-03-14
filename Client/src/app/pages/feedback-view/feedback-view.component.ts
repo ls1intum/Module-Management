@@ -9,16 +9,8 @@ import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmSelectModule } from '@spartan-ng/ui-select-helm';
 import { toast } from 'ngx-sonner';
-
 import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
-import {
-  HlmAlertDialogComponent,
-  HlmAlertDialogContentComponent,
-  HlmAlertDialogDescriptionDirective,
-  HlmAlertDialogFooterComponent,
-  HlmAlertDialogHeaderComponent,
-  HlmAlertDialogTitleDirective
-} from '@spartan-ng/ui-alertdialog-helm';
+import { HlmAlertDialogComponent, HlmAlertDialogContentComponent, HlmAlertDialogDescriptionDirective, HlmAlertDialogFooterComponent, HlmAlertDialogHeaderComponent, HlmAlertDialogTitleDirective } from '@spartan-ng/ui-alertdialog-helm';
 import { HttpErrorResponse } from '@angular/common/http';
 import { lucideCheck, lucideX } from '@ng-icons/lucide';
 import { provideIcons } from '@ng-icons/core';
@@ -224,7 +216,7 @@ export class FeedbackViewComponent {
       return;
     }
     
-    this.moduleVersionService.exportModuleVersionPdf(mvid).subscribe({
+    this.feedbackService.exportModuleVersionPdf(mvid).subscribe({
       next: (response: Blob) => {
         {
           const fileName = `f${this.feedbackId}_mv${mvid}_${this.moduleVersion?.titleEng}`

@@ -40,13 +40,6 @@ export interface ModuleVersionControllerServiceInterface {
      * 
      * @param moduleVersionId 
      */
-    exportModuleVersionPdf(moduleVersionId: number, extraHttpRequestParams?: any): Observable<Blob>;
-
-    /**
-     * 
-     * 
-     * @param moduleVersionId 
-     */
     exportProfessorModuleVersionPdf(moduleVersionId: number, extraHttpRequestParams?: any): Observable<Blob>;
 
     /**

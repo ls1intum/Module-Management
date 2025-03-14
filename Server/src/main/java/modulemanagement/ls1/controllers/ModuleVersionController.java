@@ -93,20 +93,10 @@ public class ModuleVersionController {
     }
 
     @PostMapping("/overlap-detection/check-similarity/{moduleVersionId}")
-    @PreAuthorize("hasAnyRole('admin', 'module-submitter', 'proposal_reviewer')")
-    public ResponseEntity<List<SimilarModuleDTO>> checkSimilarity(@PathVariable Long moduleVersionId) {
-        return ResponseEntity.ok(this.moduleVersionService.getSimilarModules(moduleVersionId));
-    }
-
-    @GetMapping(value = "/{moduleVersionId}/export-pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    @PreAuthorize("hasAnyRole('admin', 'module-submitter', 'proposal_reviewer')")
-    public ResponseEntity<Resource> exportModuleVersionPdf(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId) {
+    @PreAuthorize("hasAnyRole('admin', 'module-submitter', 'module-reviewer')")
+    public ResponseEntity<List<SimilarModuleDTO>> checkSimilarity(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId) {
         User user = authenticationService.getAuthenticatedUser(jwt);
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
-                .header(HttpHeaders.CONTENT_DISPOSITION, String.format("inline; filename=module_version_%s.pdf", moduleVersionId))
-                .body(moduleVersionService.generateModuleVersionPdf(moduleVersionId, user.getUserId()));
+        return ResponseEntity.ok(this.moduleVersionService.getSimilarModules(moduleVersionId, user));
     }
 
     @GetMapping(value = "/{moduleVersionId}/export-professor-pdf", produces = MediaType.APPLICATION_PDF_VALUE)

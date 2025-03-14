@@ -59,12 +59,13 @@ export interface Feedback {
     feedbackGiven?: boolean;
 }
 export namespace Feedback {
-    export type RequiredRoleEnum = 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR';
+    export type RequiredRoleEnum = 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR' | 'UNDEFINED';
     export const RequiredRoleEnum = {
         QualityManagement: 'QUALITY_MANAGEMENT' as RequiredRoleEnum,
         AcademicProgramAdvisor: 'ACADEMIC_PROGRAM_ADVISOR' as RequiredRoleEnum,
         ExaminationBoard: 'EXAMINATION_BOARD' as RequiredRoleEnum,
-        Professor: 'PROFESSOR' as RequiredRoleEnum
+        Professor: 'PROFESSOR' as RequiredRoleEnum,
+        Undefined: 'UNDEFINED' as RequiredRoleEnum
     };
     export type StatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'APPROVED' | 'FEEDBACK_GIVEN' | 'REJECTED' | 'OBSOLETE' | 'CANCELLED';
     export const StatusEnum = {

@@ -36,6 +36,13 @@ export interface FeedbackControllerServiceInterface {
     /**
      * 
      * 
+     * @param moduleVersionId 
+     */
+    exportModuleVersionPdf(moduleVersionId: number, extraHttpRequestParams?: any): Observable<Blob>;
+
+    /**
+     * 
+     * 
      */
     getFeedbacksForAuthenticatedUser(extraHttpRequestParams?: any): Observable<Array<FeedbackListItemDto>>;
 

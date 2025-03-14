@@ -10,6 +10,9 @@ import modulemanagement.ls1.services.AuthenticationService;
 import modulemanagement.ls1.services.FeedbackService;
 import modulemanagement.ls1.services.ModuleVersionService;
 import jakarta.validation.Valid;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -72,5 +75,16 @@ public class FeedbackController {
         moduleVersionService.updateStatus(updatedFeedback.getModuleVersion().getModuleVersionId());
 
         return ResponseEntity.ok(updatedFeedback);
+    }
+
+    @GetMapping(value = "/{moduleVersionId}/export-pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    @PreAuthorize("hasAnyRole('admin', 'module-reviewer')")
+    public ResponseEntity<Resource> exportModuleVersionPdf(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId) {
+        User user = authenticationService.getAuthenticatedUser(jwt);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header(HttpHeaders.CONTENT_DISPOSITION, String.format("inline; filename=module_version_%s.pdf", moduleVersionId))
+                .body(moduleVersionService.generateReviewerModuleVersionPdf(moduleVersionId, user));
     }
 }
