@@ -3,14 +3,8 @@ export const environment = {
   redirect: 'https://module-management.ase.cit.tum.de',
   serverUrl: 'https://module-management.ase.cit.tum.de/api',
   keycloak: {
-    url: 'https://module-management.ase.cit.tum.de/auth',
-    realm: 'module-management',
+    url: 'https://keycloak.ase.in.tum.de/',
+    realm: 'Test',
     clientId: 'module-management'
-  },
-  umami: {
-    enabled: false,
-    scriptUrl: '',
-    websiteId: '',
-    domains: ''
   }
 };

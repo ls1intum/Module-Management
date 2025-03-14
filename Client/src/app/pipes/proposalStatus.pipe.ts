@@ -13,8 +13,6 @@ export class StatusDisplayPipe implements PipeTransform {
         return { text: 'Accepted', colorClass: 'bg-green-500' };
       case 'REQUIRES_REVIEW':
         return { text: 'Requires Review', colorClass: 'bg-blue-500' };
-      case 'CANCELED':
-        return { text: 'Canceled', colorClass: 'bg-gray-300' };
       case 'REJECTED':
         return { text: 'Rejected', colorClass: 'bg-red-500' };
       default:
@@ -35,8 +33,6 @@ export class StatusInfoPipeline implements PipeTransform {
         return 'This module is approved.';
       case 'REQUIRES_REVIEW':
         return 'This module proposal requires your review. It was either rejected by a staff member, or you canceled it after a staff member already gave feedback. Please create a new module version and update your proposal by the rejection feedback.';
-      case 'CANCELED':
-        return 'This proposal was canceled.';
       case 'REJECTED':
         return 'This proposal was rejected. You cannot modify this module proposal anymore.';
       default:

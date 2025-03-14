@@ -8,19 +8,19 @@ databaseChangeLog:
             columns:
               - column:
                   name: user_id
-                  value: ab739f99-60ed-4289-a751-1ab11fd62f41
+                  value: 7bb1edd9-02c5-411c-a1e2-9aed33808437
               - column:
                   name: user_name
-                  value: professor1
+                  value: "module_management_test_professor1"
               - column:
                   name: first_name
-                  value: "Peter"
+                  value: "Max"
               - column:
                   name: last_name
-                  value: "Rofessor"
+                  value: "Mustermann"
               - column:
                   name: email
-                  value: "p1@tum.de"
+                  value: "nil@example.com"
               - column:
                   name: role
                   value: "PROFESSOR"
@@ -29,19 +29,19 @@ databaseChangeLog:
             columns:
               - column:
                   name: user_id
-                  value: 8d0f2579-1c0a-4ffb-b531-50ce96a372c0
+                  value: a0442163-c9c0-4542-9b61-3f154091c7ad
               - column:
                   name: user_name
-                  value: professor2
+                  value: module_management_test_professor2
               - column:
                   name: first_name
-                  value: "Agate"
+                  value: "Alice"
               - column:
                   name: last_name
-                  value: "Miker"
+                  value: "Wonderland"
               - column:
                   name: email
-                  value: "p2@tum.de"
+                  value: "prof2@example.com"
               - column:
                   name: role
                   value: "PROFESSOR"
@@ -50,10 +50,10 @@ databaseChangeLog:
             columns:
               - column:
                   name: user_id
-                  value: 60945aae-4d89-4353-8732-d2fecb3eeae6
+                  value: 7ea90bed-95c4-4c3e-8f80-8fb47fbc1bfe
               - column:
                   name: user_name
-                  value: "apa1"
+                  value: "module_management_test_apa1"
               - column:
                   name: first_name
                   value: "Academic"
@@ -62,7 +62,7 @@ databaseChangeLog:
                   value: "Program Advisor"
               - column:
                   name: email
-                  value: "apa1@tum.de"
+                  value: "apa1@example.com"
               - column:
                   name: role
                   value: "ACADEMIC_PROGRAM_ADVISOR"
@@ -71,10 +71,10 @@ databaseChangeLog:
             columns:
               - column:
                   name: user_id
-                  value: 9c999a95-2b3e-4349-a063-0736c4662233
+                  value: d360562d-ddac-450f-afcf-59e4ccf4c7b5
               - column:
                   name: user_name
-                  value: "qm1"
+                  value: "module_management_test_qm1"
               - column:
                   name: first_name
                   value: "Quirin"
@@ -83,7 +83,7 @@ databaseChangeLog:
                   value: "Moos"
               - column:
                   name: email
-                  value: "qm1@tum.de"
+                  value: "nil@example.com"
               - column:
                   name: role
                   value: "QUALITY_MANAGEMENT"
@@ -92,10 +92,10 @@ databaseChangeLog:
             columns:
               - column:
                   name: user_id
-                  value: 7c135fd9-b88b-40e0-90b2-863041fb2979
+                  value: 6300f29a-758c-4cd3-9d00-4da97cda2f6d
               - column:
                   name: user_name
-                  value: "eb1"
+                  value: "module_management_test_eb1"
               - column:
                   name: first_name
                   value: "Erik"
@@ -104,7 +104,7 @@ databaseChangeLog:
                   value: "Bert"
               - column:
                   name: email
-                  value: "eb1@tum.de"
+                  value: nil@example.com"
               - column:
                   name: role
                   value: "EXAMINATION_BOARD"

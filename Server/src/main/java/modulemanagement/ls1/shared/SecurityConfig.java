@@ -1,5 +1,6 @@
 package modulemanagement.ls1.shared;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,20 +46,21 @@ public class SecurityConfig {
         return decoder;
     }
 
+    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+    private String issuerUri;
+
     @Bean
     public OAuth2TokenValidator<Jwt> tokenValidator() {
         return new DelegatingOAuth2TokenValidator<>(
-            new JwtTimestampValidator(),
-            token -> {
-                String issuer = token.getIssuer().toString();
-                if (issuer.equals("http://localhost:8081/realms/module-management") ||
-                    issuer.equals("http://keycloak:8080/realms/module-management") ||
-		            issuer.equals("http://module-management.ase.cit.tum.de/auth/realms/module-management")) {
+                new JwtTimestampValidator(),
+                token -> {
+                    String issuer = token.getIssuer().toString();
+                    if (issuer.equals(issuerUri)) {
                         return OAuth2TokenValidatorResult.success();
+                    }
+                    return OAuth2TokenValidatorResult.failure(
+                            new OAuth2Error("invalid_token", "Invalid issuer: " + issuer + ", expected: " + issuerUri, null));
                 }
-                return OAuth2TokenValidatorResult.failure(
-                    new OAuth2Error("invalid_token", "Invalid issuer: " + issuer, null));
-            }
         );
     }
 
@@ -69,7 +71,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/v3/api-docs.yaml", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers("/api/**").hasAnyRole("proposal-reviewer", "proposal-submitter")
+                        .requestMatchers("/api/**").hasAnyRole("module-reviewer", "module-submitter")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {
                     jwt.jwtAuthenticationConverter(jwtAuthConverter);
@@ -84,7 +86,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost", "http://localhost:80", "http://localhost:4200", "https://module-management.ase.cit.tum.de")
+                        .allowedOrigins("http://localhost:4200", "https://module-management.ase.cit.tum.de")
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .exposedHeaders("*")

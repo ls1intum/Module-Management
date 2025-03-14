@@ -9,12 +9,16 @@ import modulemanagement.ls1.dtos.OverlapDetection.SimilarModuleDTO;
 import modulemanagement.ls1.enums.FeedbackStatus;
 import modulemanagement.ls1.enums.ModuleVersionStatus;
 import modulemanagement.ls1.enums.ProposalStatus;
+import modulemanagement.ls1.enums.UserRole;
 import modulemanagement.ls1.models.Feedback;
 import modulemanagement.ls1.models.ModuleVersion;
 import modulemanagement.ls1.models.Proposal;
+import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.repositories.ModuleVersionRepository;
 import modulemanagement.ls1.repositories.ProposalRepository;
+import modulemanagement.ls1.shared.PdfCreator;
 import modulemanagement.ls1.shared.ResourceNotFoundException;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -28,12 +32,25 @@ public class ModuleVersionService {
     private final ModuleVersionRepository moduleVersionRepository;
     private final ProposalRepository proposalRepository;
     private final OverlapDetectionService overlapDetectionService;
+    private final PdfCreator pdfCreator;
 
-    public ModuleVersionService(ModuleVersionRepository moduleVersionRepository, ProposalRepository proposalRepository, OverlapDetectionService overlapDetectionService) {
+    public ModuleVersionService(ModuleVersionRepository moduleVersionRepository, ProposalRepository proposalRepository, OverlapDetectionService overlapDetectionService, PdfCreator pdfCreator) {
         this.moduleVersionRepository = moduleVersionRepository;
         this.proposalRepository = proposalRepository;
         this.overlapDetectionService = overlapDetectionService;
+        this.pdfCreator = pdfCreator;
     }
+
+    private boolean hasAccessPermission(Proposal proposal, User user) {
+        if (proposal.getCreatedBy().getUserId().equals(user.getUserId())) {
+            return true;
+        }
+
+        return user.getRole() == UserRole.QUALITY_MANAGEMENT ||
+                user.getRole() == UserRole.EXAMINATION_BOARD ||
+                user.getRole() == UserRole.ACADEMIC_PROGRAM_ADVISOR;
+    }
+
 
     public ModuleVersionUpdateResponseDTO updateModuleVersionFromRequest(UUID userId, Long moduleVersionId, ModuleVersionUpdateRequestDTO request) {
         ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("ModuleVersion not found"));
@@ -143,12 +160,13 @@ public class ModuleVersionService {
         return ModuleVersionViewDTO.from(mv);
     }
 
-    public List<SimilarModuleDTO> getSimilarModules(UUID userId, Long moduleVersionId) {
+    public List<SimilarModuleDTO> getSimilarModules(Long moduleVersionId, User user) {
         ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
-        Proposal proposal = mv.getProposal();
-        if (!proposal.getCreatedBy().getUserId().equals(userId)) {
+
+        if (!hasAccessPermission(mv.getProposal(), user)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
         }
+
         return this.overlapDetectionService.checkModuleOverlap(OverlapDetectionRequestDTO.from(mv)).block();
     }
 
@@ -160,5 +178,26 @@ public class ModuleVersionService {
         }
 
         return proposal.getPreviousModuleVersionFeedback();
+    }
+
+    public Resource generateReviewerModuleVersionPdf(Long moduleVersionId, User user) {
+        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Module Version not found"));
+
+        if (!hasAccessPermission(mv.getProposal(), user)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
+        }
+
+        return pdfCreator.createModuleVersionPdf(mv);
+    }
+
+    public Resource generateProfessorModuleVersionPdf(Long moduleVersionId, UUID userId) {
+        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
+        Proposal proposal = mv.getProposal();
+        if (!proposal.getCreatedBy().getUserId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
+        }
+
+        return pdfCreator.createProfessorModuleVersionPdf(mv);
     }
 }

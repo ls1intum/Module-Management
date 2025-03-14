@@ -18,11 +18,11 @@ export class IndexComponent {
 
   isProposalSubmitter = computed(() => {
     const user = this.user();
-    return user && user.roles.includes('proposal-submitter');
+    return user && user.roles.includes('module-submitter');
   });
 
   isProposalReviewer = computed(() => {
     const user = this.user();
-    return user && user.roles.includes('proposal-reviewer');
+    return user && user.roles.includes('module-reviewer');
   });
 }

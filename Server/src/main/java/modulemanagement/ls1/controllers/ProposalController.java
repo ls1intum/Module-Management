@@ -37,7 +37,7 @@ public class ProposalController {
     }
 
     @PostMapping(value = "/submit/{proposalId}")
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
     public ResponseEntity<ProposalViewDTO> submitProposal(@AuthenticationPrincipal Jwt jwt, @PathVariable Long proposalId) {
         User user = authenticationService.getAuthenticatedUser(jwt);
         var proposalDto = proposalService.submitProposal(proposalId, user.getUserId());
@@ -52,7 +52,7 @@ public class ProposalController {
     }
 
     @PostMapping("/add-module-version")
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
     public ResponseEntity<ProposalViewDTO> addModuleVersion(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody AddModuleVersionDTO request) {
         User user = authenticationService.getAuthenticatedUser(jwt);
         ProposalViewDTO proposal = proposalService.addModuleVersion(user.getUserId(), request);
@@ -60,7 +60,7 @@ public class ProposalController {
     }
 
     @GetMapping("/{id}/view")
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
     public ResponseEntity<ProposalViewDTO> getProposalView (@AuthenticationPrincipal Jwt jwt, @PathVariable Long id) {
         User requester = authenticationService.getAuthenticatedUser(jwt);
         ProposalViewDTO p = proposalService.getProposalViewDtoById(requester.getUserId(), id);
@@ -68,7 +68,7 @@ public class ProposalController {
     }
 
     @GetMapping("/compact/from-authenticated-user")
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
     public ResponseEntity<List<ProposalsCompactDTO>> getCompactProposalsFromUser(@AuthenticationPrincipal Jwt jwt) {
         User user = authenticationService.getAuthenticatedUser(jwt);
         List<ProposalsCompactDTO> proposals = proposalService.getCompactProposalsOfUser(user.getUserId());
@@ -76,7 +76,7 @@ public class ProposalController {
     }
 
     @DeleteMapping(value = "/{proposalId}", produces = MediaType.TEXT_PLAIN_VALUE)
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
     public ResponseEntity<String> deleteProposal(@AuthenticationPrincipal Jwt jwt, @PathVariable Long proposalId) {
         try{
             User user = authenticationService.getAuthenticatedUser(jwt);

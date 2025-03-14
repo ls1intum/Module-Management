@@ -10,6 +10,7 @@
 
 
 export interface ModuleVersionUpdateRequestDTO { 
+    moduleVersionId?: number;
     version?: number;
     moduleId?: string;
     status?: ModuleVersionUpdateRequestDTO.StatusEnum;

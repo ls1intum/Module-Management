@@ -1,6 +1,27 @@
 <hlm-toaster />
 <div class="max-w-6xl mx-auto">
-  <h2 class="text-2xl mb-10">Module Proposal for '{{ moduleVersion?.titleEng }}'</h2>
+  <h2 class="text-2xl mb-6">Module Proposal for '{{ moduleVersion?.titleEng }}'</h2>
+
+  <div class="flex justify-between mb-6">
+    <hlm-alert-dialog>
+      <button hlmBtn variant="outline" class="w-32" brnAlertDialogTrigger>Cancel</button>
+      <hlm-alert-dialog-content *brnAlertDialogContent>
+        <hlm-alert-dialog-header>
+          <h3 hlmAlertDialogTitle>Are you sure?</h3>
+          <p hlmAlertDialogDescription>All progress will be lost if you continue.</p>
+        </hlm-alert-dialog-header>
+        <hlm-alert-dialog-footer>
+          <button hlmBtn brnDialogClose variant="outline">No, keep reviewing</button>
+          <button hlmBtn (click)="cancel()">Yes, cancel review</button>
+        </hlm-alert-dialog-footer>
+      </hlm-alert-dialog-content>
+    </hlm-alert-dialog>
+
+    <div>
+      <button hlmBtn class="w-36 mr-6" [routerLink]="['/overlap', moduleVersion?.moduleVersionId]">Check Overlaps</button>
+      <button hlmBtn class="w-32" (click)="pdfExport()">Export PDF</button>
+    </div>
+  </div>
 
   <!-- main content grid -->
   <div>
@@ -63,22 +84,6 @@
 
   <!-- form controls -->
   <div class="flex justify-between mt-6 pt-4">
-    <hlm-alert-dialog>
-      <button hlmBtn variant="outline" class="w-32" brnAlertDialogTrigger>Cancel</button>
-      <hlm-alert-dialog-content *brnAlertDialogContent>
-        <hlm-alert-dialog-header>
-          <h3 hlmAlertDialogTitle>Are you sure?</h3>
-          <p hlmAlertDialogDescription>All progress will be lost if you continue.</p>
-        </hlm-alert-dialog-header>
-        <hlm-alert-dialog-footer>
-          <button hlmBtn brnDialogClose variant="outline">No, keep reviewing</button>
-          <button hlmBtn (click)="cancel()">Yes, cancel review</button>
-        </hlm-alert-dialog-footer>
-      </hlm-alert-dialog-content>
-    </hlm-alert-dialog>
-
-    <button hlmBtn variant="default" class="w-32" (click)="pdfExport()">Export PDF</button>
-
     <hlm-alert-dialog>
       <button hlmBtn variant="destructive" class="w-32" brnAlertDialogTrigger>Reject</button>
       <hlm-alert-dialog-content *brnAlertDialogContent>

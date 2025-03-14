@@ -8,6 +8,7 @@ import modulemanagement.ls1.models.ModuleVersion;
 
 @Data
 public class ModuleVersionUpdateRequestDTO {
+    private Long moduleVersionId;
     private Integer version;
     private String moduleId;
     private ModuleVersionStatus status;
@@ -46,6 +47,7 @@ public class ModuleVersionUpdateRequestDTO {
     }
 
     static void ModuleVersionToRequestDTO(ModuleVersion mv, ModuleVersionUpdateRequestDTO mdto) {
+        mdto.setModuleVersionId(mv.getModuleVersionId());
         mdto.setVersion(mv.getVersion());
         mdto.setModuleId(mv.getModuleId());
         mdto.setStatus(mv.getStatus());

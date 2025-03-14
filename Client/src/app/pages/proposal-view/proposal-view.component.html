@@ -9,35 +9,39 @@
     <h2 class="text-2xl">Module Proposal '{{ proposal.latestModuleVersion?.titleEng }}'</h2>
   </div>
 
-  <div class="grid grid-cols-2 gap-4">
-    <div>
-      <p class="text-sm text-muted-foreground">Proposal ID</p>
-      <p class="text-lg font-medium">{{ proposal.proposalId }}</p>
-    </div>
-    <div>
-      <p class="text-sm text-muted-foreground">Latest Version</p>
-      <p class="text-lg font-medium">{{ proposal.latestVersion }}</p>
-    </div>
-    <div>
-      <p class="text-sm text-muted-foreground">Proposal Status</p>
-      <div hlmBadge [class]="(proposal.status! | statusDisplay).colorClass">
-        {{ (proposal.status! | statusDisplay).text }}
+  <div class="grid grid-cols-4 gap-4">
+    <div class="col-span-2 grid grid-cols-2 gap-4">
+      <div>
+        <p class="text-sm text-muted-foreground">Proposal ID</p>
+        <p class="text-lg font-medium">{{ proposal.proposalId }}</p>
+      </div>
+      <div>
+        <p class="text-sm text-muted-foreground">Latest Version</p>
+        <p class="text-lg font-medium">{{ proposal.latestVersion }}</p>
+      </div>
+      <div>
+        <p class="text-sm text-muted-foreground">Proposal Status</p>
+        <div hlmBadge [class]="(proposal.status! | statusDisplay).colorClass">
+          {{ (proposal.status! | statusDisplay).text }}
+        </div>
+      </div>
+      <div>
+        <p class="text-sm text-muted-foreground">Created On</p>
+        <p class="text-lg font-medium">{{ proposal.creationDate | date : 'yyyy-MM-dd' }}</p>
       </div>
     </div>
-    <div>
-      <p class="text-sm text-muted-foreground">Created On</p>
-      <p class="text-lg font-medium">{{ proposal.creationDate | date : 'yyyy-MM-dd' }}</p>
+
+    <div class="col-span-2">
+      <div hlmAlert class="h-full">
+        <hlm-icon hlmAlertIcon name="lucideInfo" />
+        <h3 hlmAlertTitle>Information</h3>
+        <p hlmAlertDesc>{{ proposal.status! | statusInfo }}</p>
+      </div>
     </div>
   </div>
 </div>
 
-<div hlmAlert class="w-2/5">
-  <hlm-icon hlmAlertIcon name="lucideInfo" />
-  <h3 hlmAlertTitle>Information</h3>
-  <p hlmAlertDesc>{{ proposal.status! | statusInfo }}</p>
-</div>
-
-<h2 class="text-xl mb-8 mt-16">Current Module Versions</h2>
+<h2 class="text-xl mb-8 mt-10">Current Module Versions</h2>
 <hlm-table class="w-full min-w-[400px] mb-8">
   <hlm-trow>
     <hlm-th class="w-24">Version</hlm-th>

@@ -38,6 +38,13 @@ export interface ModuleVersionControllerServiceInterface {
     /**
      * 
      * 
+     * @param moduleVersionId 
+     */
+    exportProfessorModuleVersionPdf(moduleVersionId: number, extraHttpRequestParams?: any): Observable<Blob>;
+
+    /**
+     * 
+     * 
      * @param completionServiceRequestDTO 
      */
     generateContent(completionServiceRequestDTO: CompletionServiceRequestDTO, extraHttpRequestParams?: any): Observable<CompletionServiceResponseDTO>;
