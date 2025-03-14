@@ -14,24 +14,6 @@ services:
       - module-management-network
     restart: unless-stopped
 
-  keycloak:
-    image: quay.io/keycloak/keycloak:26.0.6
-    container_name: module-management-keycloak
-    environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
-      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-    command:
-      - start-dev
-      - --import-realm
-    volumes:
-      - keycloak_data:/opt/keycloak/data
-      - ./module-management-realm.json:/opt/keycloak/data/import/realm.json
-    ports:
-      - "${AUTH_PORT}:8080"
-    networks:
-      - module-management-network
-    restart: unless-stopped
-
   ai-service:
     build:
       context: ./AI
@@ -50,8 +32,8 @@ services:
 
 volumes:
   postgres_data:
-  keycloak_data:
   overlap_data:
+
 
 networks:
   module-management-network:

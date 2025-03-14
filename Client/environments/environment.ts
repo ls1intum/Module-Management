@@ -3,14 +3,8 @@ export const environment = {
   redirect: 'http://localhost:4200',
   serverUrl: 'http://localhost:8080/api',
   keycloak: {
-    url: 'http://localhost:8081',
-    realm: 'module-management',
+    url: 'https://keycloak.ase.in.tum.de/',
+    realm: 'Test',
     clientId: 'module-management'
-  },
-  umami: {
-    enabled: false,
-    scriptUrl: '',
-    websiteId: '',
-    domains: ''
   }
 };

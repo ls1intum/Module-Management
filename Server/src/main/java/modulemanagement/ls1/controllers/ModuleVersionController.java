@@ -37,7 +37,7 @@ public class ModuleVersionController {
     }
 
     @GetMapping("/{moduleVersionId}")
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
     public ResponseEntity<ModuleVersionUpdateResponseDTO> getModuleVersionUpdateDtoFromId(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId) {
         User user = authenticationService.getAuthenticatedUser(jwt);
         ModuleVersionUpdateResponseDTO dto = moduleVersionService.getModuleVersionUpdateDtoFromId(moduleVersionId, user.getUserId());
@@ -45,7 +45,7 @@ public class ModuleVersionController {
     }
 
     @PutMapping("/{moduleVersionId}")
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
     public ResponseEntity<ModuleVersionUpdateResponseDTO> updateModuleVersion(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId, @Valid @RequestBody ModuleVersionUpdateRequestDTO moduleVersion) {
         User user = authenticationService.getAuthenticatedUser(jwt);
         ModuleVersionUpdateResponseDTO updatedModuleVersion = moduleVersionService.updateModuleVersionFromRequest(user.getUserId(), moduleVersionId, moduleVersion);
@@ -53,7 +53,7 @@ public class ModuleVersionController {
     }
 
     @GetMapping("/view/{moduleVersionId}")
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
     public ResponseEntity<ModuleVersionViewDTO> getModuleVersionViewDto(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId) {
         User user = authenticationService.getAuthenticatedUser(jwt);
         ModuleVersionViewDTO dto = moduleVersionService.getModuleVersionViewDto(moduleVersionId, user.getUserId());
@@ -61,7 +61,7 @@ public class ModuleVersionController {
     }
 
     @GetMapping("/{id}/previous-module-version-feedback")
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
     public ResponseEntity<List<ModuleVersionViewFeedbackDTO>> getPreviousModuleVersionFeedback(@AuthenticationPrincipal Jwt jwt, @PathVariable Long id) {
         User user = authenticationService.getAuthenticatedUser(jwt);
         List<ModuleVersionViewFeedbackDTO> lastRejectionReasons = moduleVersionService.getPreviousModuleVersionFeedback(user.getUserId(), id);
@@ -69,37 +69,37 @@ public class ModuleVersionController {
     }
 
     @PostMapping("/generate/content")
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
     public ResponseEntity<CompletionServiceResponseDTO> generateContent(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         return ResponseEntity.ok(new CompletionServiceResponseDTO(aiCompletionService.generateContent(moduleInfoRequestDTO).block()));
     }
 
     @PostMapping("/generate/examination-achievements")
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
     public ResponseEntity<CompletionServiceResponseDTO> generateExaminationAchievements(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         return ResponseEntity.ok(new CompletionServiceResponseDTO(aiCompletionService.generateExaminationAchievements(moduleInfoRequestDTO).block()));
     }
 
     @PostMapping("/generate/learning-outcomes")
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
     public ResponseEntity<CompletionServiceResponseDTO> generateLearningOutcomes(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         return ResponseEntity.ok(new CompletionServiceResponseDTO(aiCompletionService.generateLearningOutcomes(moduleInfoRequestDTO).block()));
     }
 
     @PostMapping("/generate/teaching-methods")
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
     public ResponseEntity<CompletionServiceResponseDTO> generateTeachingMethods(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         return ResponseEntity.ok(new CompletionServiceResponseDTO(aiCompletionService.generateTeachingMethods(moduleInfoRequestDTO).block()));
     }
 
     @PostMapping("/overlap-detection/check-similarity/{moduleVersionId}")
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter', 'proposal_reviewer')")
+    @PreAuthorize("hasAnyRole('admin', 'module-submitter', 'proposal_reviewer')")
     public ResponseEntity<List<SimilarModuleDTO>> checkSimilarity(@PathVariable Long moduleVersionId) {
         return ResponseEntity.ok(this.moduleVersionService.getSimilarModules(moduleVersionId));
     }
 
     @GetMapping(value = "/{moduleVersionId}/export-pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter', 'proposal_reviewer')")
+    @PreAuthorize("hasAnyRole('admin', 'module-submitter', 'proposal_reviewer')")
     public ResponseEntity<Resource> exportModuleVersionPdf(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId) {
         User user = authenticationService.getAuthenticatedUser(jwt);
 
@@ -110,7 +110,7 @@ public class ModuleVersionController {
     }
 
     @GetMapping(value = "/{moduleVersionId}/export-professor-pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    @PreAuthorize("hasAnyRole('admin', 'proposal-submitter')")
+    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
     public ResponseEntity<Resource> exportProfessorModuleVersionPdf(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId) {
         User user = authenticationService.getAuthenticatedUser(jwt);
 

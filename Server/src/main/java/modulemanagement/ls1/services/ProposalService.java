@@ -88,7 +88,7 @@ public class ProposalService {
 
     public static void createNewFeedbacks(ModuleVersion mv, List<Feedback> feedbacks) {
         for (UserRole ad : UserRole.values()) {
-            if (ad.equals(UserRole.PROFESSOR))
+            if (ad.equals(UserRole.PROFESSOR) || ad.equals(UserRole.UNDEFINED))
                 continue;
             Feedback feedback = new Feedback();
             feedback.setStatus(FeedbackStatus.PENDING_SUBMISSION);

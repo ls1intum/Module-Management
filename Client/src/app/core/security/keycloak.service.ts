@@ -35,7 +35,8 @@ export class KeycloakService {
     const authenticated = await this.keycloak.init({
       onLoad: 'check-sso',
       silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
-      silentCheckSsoFallback: false,
+      silentCheckSsoFallback: true,
+      checkLoginIframe: true,
       pkceMethod: 'S256'
     });
 
@@ -45,7 +46,23 @@ export class KeycloakService {
     // Load user profile
     this.profile = (await this.keycloak.loadUserInfo()) as unknown as UserProfile;
     this.profile.token = this.keycloak.token || '';
-    this.profile.roles = this.keycloak.realmAccess?.roles || [];
+
+    // Get realm roles
+    const realmRoles = this.keycloak.realmAccess?.roles || [];
+    
+    // Parse the token to get resource_access roles
+    const tokenParsed = this.keycloak.tokenParsed as any;
+    const resourceAccess = tokenParsed?.resource_access || {};
+    
+    // Collect all resource roles
+    const resourceRoles: string[] = [];
+    Object.keys(resourceAccess).forEach(clientId => {
+      const clientRoles = resourceAccess[clientId]?.roles || [];
+      resourceRoles.push(...clientRoles);
+    });
+  
+    // Combine realm roles and resource roles
+    this.profile.roles = [...realmRoles, ...resourceRoles];
 
     return true;
   }
