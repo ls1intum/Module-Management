@@ -56,5 +56,5 @@ build/
 
 ### VS Code ###
 .vscode/
-*.env
+.env
 *__pycache__
