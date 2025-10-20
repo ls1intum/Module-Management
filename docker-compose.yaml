@@ -32,9 +32,7 @@ services:
     restart: unless-stopped
 
   ai-service:
-    build:
-      context: ./AI
-      dockerfile: ai.Dockerfile
+    image: ghcr.io/ls1intum/module-management/ai:${IMAGE_TAG}
     container_name: module-management-ai
     volumes:
       - overlap_data:/code/data
@@ -48,9 +46,7 @@ services:
     restart: unless-stopped
 
   backend:
-    build:
-      context: ./Server
-      dockerfile: ./server.Dockerfile
+    image: ghcr.io/ls1intum/module-management/server:${IMAGE_TAG}
     container_name: module-management-backend
     depends_on:
       - postgres
@@ -66,9 +62,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    build:
-      context: ./Client
-      dockerfile: ./client.Dockerfile
+    image: ghcr.io/ls1intum/module-management/client:${IMAGE_TAG}
     container_name: module-management-frontend
     environment:
       - KEYCLOAK_URL=${KEYCLOAK_URL}
