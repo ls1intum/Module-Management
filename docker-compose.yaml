@@ -19,7 +19,7 @@ services:
     image: "postgres:latest"
     container_name: module-management-db
     environment:
-      - "POSTGRES_DB={DB_NAME}"
+      - "POSTGRES_DB=${DB_NAME}"
       - "POSTGRES_PASSWORD=${DB_PASSWORD}"
       - "POSTGRES_USER=${DB_USER}"
     ports:

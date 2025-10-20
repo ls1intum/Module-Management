@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
-  redirect: 'http://localhost:4200',
-  serverUrl: 'http://localhost:8080/api',
+  redirect: 'https://module-management.ase.cit.tum.de',
+  serverUrl: 'https://module-management.ase.cit.tum.de/api',
   keycloak: {
     url: 'https://keycloak.ase.in.tum.de/',
     realm: 'Test',
