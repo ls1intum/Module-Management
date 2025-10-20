@@ -4,7 +4,8 @@ services:
     container_name: module-management-nginx
     volumes:
       - ./Client/nginx.conf:/etc/nginx/conf.d/default.conf
-      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/lib/rbg-cert/live/fullchain.pem:/etc/certs/fullchain.pem:ro
+      - /var/lib/rbg-cert/live/privkey.pem:/etc/certs/privkey.pem:ro
     ports:
       - "80:80"
       - "443:443"
