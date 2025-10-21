@@ -86,7 +86,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:4200", "https://module-management.ase.cit.tum.de")
+                        .allowedOrigins("http://localhost:4200", "https://module.aet.cit.tum.de")
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .exposedHeaders("*")

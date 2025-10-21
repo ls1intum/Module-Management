@@ -45,7 +45,7 @@ import {
 })
 export class ModuleVersionControllerService implements ModuleVersionControllerServiceInterface {
 
-    protected basePath = 'https://module-management.ase.cit.tum.de';
+    protected basePath = 'https://module.aet.cit.tum.de';
     public defaultHeaders = new HttpHeaders();
     public configuration = new Configuration();
     public encoder: HttpParameterCodec;
