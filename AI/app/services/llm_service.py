@@ -1,4 +1,4 @@
-from langchain_openai import ChatOpenAI
+from langchain_openai import AzureChatOpenAI
 from langchain.chat_models.base import BaseChatModel
 from app.settings import settings
 
@@ -6,10 +6,11 @@ class LLMService:
     model: BaseChatModel
 
     def __init__(self):
-        self.model = ChatOpenAI(
-            temperature=0.7,
-            model="gpt-4o-mini",
-            api_key=settings.OPENAI_API_KEY
+        self.model = AzureChatOpenAI(
+            api_key=settings.AZURE_API_KEY,
+            azure_endpoint=settings.AZURE_ENDPOINT,
+            azure_deployment=settings.AZURE_DEPLOYMENT_NAME,
+            api_version=settings.AZURE_API_VERSION,
         )
 
     async def generate_content(self, prompt: str) -> str:

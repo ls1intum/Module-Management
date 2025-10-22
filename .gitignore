@@ -58,3 +58,4 @@ build/
 .vscode/
 .env
 *__pycache__
+/AI/.venv
