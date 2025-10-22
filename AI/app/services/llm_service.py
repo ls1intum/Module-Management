@@ -11,6 +11,7 @@ class LLMService:
             azure_endpoint=settings.AZURE_ENDPOINT,
             azure_deployment=settings.AZURE_DEPLOYMENT_NAME,
             api_version=settings.AZURE_API_VERSION,
+            reasoning={"effort": "minimal"}
         )
 
     async def generate_content(self, prompt: str) -> str:
