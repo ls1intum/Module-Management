@@ -7,7 +7,6 @@ class LLMService:
 
     def __init__(self):
         self.model = AzureChatOpenAI(
-            temperature=0.7,
             api_key=settings.AZURE_API_KEY,
             azure_endpoint=settings.AZURE_ENDPOINT,
             azure_deployment=settings.AZURE_DEPLOYMENT_NAME,
