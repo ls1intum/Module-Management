@@ -1,4 +1,4 @@
-from langchain_openai import ChatOpenAI
+from langchain_openai import AzureOpenAI
 from langchain.chat_models.base import BaseChatModel
 from app.settings import settings
 
@@ -6,9 +6,9 @@ class LLMService:
     model: BaseChatModel
 
     def __init__(self):
-        self.model = ChatOpenAI(
+        self.model = AzureOpenAI(
             temperature=0.7,
-            model="gpt-4o-mini",
+            model_name="gpt-5-mini",
             api_key=settings.OPENAI_API_KEY
         )
 
