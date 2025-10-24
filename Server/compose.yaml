@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: 'postgres:latest'
+    image: 'postgres:17.6'
     container_name: module-management-db
     environment:
       - 'POSTGRES_DB=ModuleManagement'
@@ -10,7 +10,7 @@ services:
       - '5432:5432'
 
   keycloak:
-    image: quay.io/keycloak/keycloak:26.0.6
+    image: quay.io/keycloak/keycloak:26.4.1
     container_name: module-management-keycloak
     environment:
       KEYCLOAK_ADMIN: admin
@@ -25,6 +25,6 @@ services:
       dockerfile: Dockerfile
     container_name: module-management-ai
     ports:
-      - "5000:5000"
+      - "5001:5001"
     env_file:
-      - ./ai-service/.env
+      - ../.env

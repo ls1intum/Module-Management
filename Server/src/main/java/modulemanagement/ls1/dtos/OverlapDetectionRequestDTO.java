@@ -1,4 +1,4 @@
-package modulemanagement.ls1.dtos.OverlapDetection;
+package modulemanagement.ls1.dtos;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

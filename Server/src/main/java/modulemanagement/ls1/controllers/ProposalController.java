@@ -6,6 +6,8 @@ import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.services.AuthenticationService;
 import modulemanagement.ls1.services.ProposalService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,8 @@ import java.util.List;
 @RequestMapping("/api/proposals")
 public class ProposalController {
 
+    private static final Logger log = LoggerFactory.getLogger(ProposalController.class);
+
     private final ProposalService proposalService;
     private final AuthenticationService authenticationService;
 
@@ -31,6 +35,7 @@ public class ProposalController {
 
     @PostMapping
     public ResponseEntity<Proposal> createProposal(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody ProposalRequestDTO request) {
+        log.info("createProposal invoked");
         User user = authenticationService.getAuthenticatedUser(jwt);
         Proposal proposal = proposalService.createProposalFromRequest(user, request);
         return ResponseEntity.ok(proposal);

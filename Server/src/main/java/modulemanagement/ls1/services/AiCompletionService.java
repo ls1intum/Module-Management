@@ -1,8 +1,8 @@
 package modulemanagement.ls1.services;
 
 import lombok.RequiredArgsConstructor;
-import modulemanagement.ls1.dtos.Completion.CompletionServiceResponseDTO;
-import modulemanagement.ls1.dtos.Completion.CompletionServiceRequestDTO;
+import modulemanagement.ls1.dtos.CompletionServiceResponseDTO;
+import modulemanagement.ls1.dtos.CompletionServiceRequestDTO;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;

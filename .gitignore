@@ -59,3 +59,4 @@ build/
 .env
 *__pycache__
 /AI/.venv
+/.DS_Store

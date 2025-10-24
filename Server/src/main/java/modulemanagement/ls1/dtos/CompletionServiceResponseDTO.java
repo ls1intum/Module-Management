@@ -1,4 +1,4 @@
-package modulemanagement.ls1.dtos.Completion;
+package modulemanagement.ls1.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
