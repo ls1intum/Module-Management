@@ -9,7 +9,7 @@ _ENV_FILE = os.getenv("ENV_FILE") or (str(_DEFAULT_ENV) if _DEFAULT_ENV.exists()
 logger = logging.getLogger(__name__)
 
 class Settings(BaseSettings):
-    AZURE_OPENAI_API_KEY: str = ""
+    AZURE_API_KEY: str = ""
     AZURE_ENDPOINT: str = ""
     AZURE_DEPLOYMENT_NAME: str = ""
     AZURE_API_VERSION: str = ""

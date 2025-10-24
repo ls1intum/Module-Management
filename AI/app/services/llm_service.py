@@ -22,7 +22,7 @@ class LLMService:
     def __init__(self):
         logger.info("Init AzureChatOpenAI with model %s and endpoint %s ", settings.AZURE_DEPLOYMENT_NAME, settings.AZURE_ENDPOINT)
         self.model = AzureChatOpenAI(
-            api_key = settings.AZURE_OPENAI_API_KEY,
+            api_key = settings.AZURE_API_KEY,
             azure_endpoint = settings.AZURE_ENDPOINT,
             azure_deployment = settings.AZURE_DEPLOYMENT_NAME,
             api_version = settings.AZURE_API_VERSION,
