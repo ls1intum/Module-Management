@@ -1,32 +1,38 @@
-package modulemanagement.ls1.dtos.Completion;
+package modulemanagement.ls1.dtos;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import modulemanagement.ls1.enums.Language;
+import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-public class CompletionServiceRequestDTO {
-    @NotNull private String bulletPoints;
-    private String contextPrompt;
+@NoArgsConstructor
+@AllArgsConstructor
+public class SimilarModuleDTO {
+    private String moduleId;
     private String titleEng;
     private String levelEng;
-    private Language languageEng;
+    // Don't use language in case of different languages of existing modules
+    private String languageEng;
     private String frequencyEng;
     private Integer credits;
-    private String durationEng;
+    private String duration;
     private Integer hoursTotal;
     private Integer hoursSelfStudy;
     private Integer hoursPresence;
     private String examinationAchievementsEng;
+    private String examinationAchievementsPromptEng;
     private String repetitionEng;
     private String recommendedPrerequisitesEng;
     private String contentEng;
+    private String contentPromptEng;
     private String learningOutcomesEng;
+    private String learningOutcomesPromptEng;
     private String teachingMethodsEng;
+    private String teachingMethodsPromptEng;
     private String mediaEng;
     private String literatureEng;
     private String responsiblesEng;
     private String lvSwsLecturerEng;
+    private double similarity;
 }
+
