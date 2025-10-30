@@ -1,6 +1,6 @@
 services:
   nginx:
-    image: nginx:alpine
+    image: nginx:1.29.3
     container_name: module-management-nginx
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
@@ -17,7 +17,7 @@ services:
     restart: unless-stopped
 
   postgres:
-    image: docker.io/library/postgres:17.5-alpine
+    image: postgres:17.6
     container_name: module-management-db
     environment:
       - "POSTGRES_DB=${DB_NAME}"

@@ -6,5 +6,5 @@ RUN npm install --legacy-peer-deps
 COPY . .
 RUN npm run build
 
-FROM nginx:1.29.2
+FROM nginx:1.29.3
 COPY --from=builder /app/dist/module-management-client/browser /usr/share/nginx/html
