@@ -10,8 +10,8 @@ services:
       - "80:80"
       - "443:443"
     depends_on:
-      - frontend
-      - backend
+      - client
+      - server
     networks:
       - module-management-network
     restart: unless-stopped
@@ -47,9 +47,9 @@ services:
       - module-management-network
     restart: unless-stopped
 
-  backend:
+  server:
     image: ghcr.io/ls1intum/module-management/server:${IMAGE_TAG}
-    container_name: module-management-backend
+    container_name: module-management-server
     depends_on:
       - postgres
     environment:
@@ -63,14 +63,14 @@ services:
       - module-management-network
     restart: unless-stopped
 
-  frontend:
+  client:
     image: ghcr.io/ls1intum/module-management/client:${IMAGE_TAG}
-    container_name: module-management-frontend
+    container_name: module-management-client
     environment:
       - KEYCLOAK_URL=${KEYCLOAK_URL}
       - KEYCLOAK_REALM=${KEYCLOAK_REALM}
     depends_on:
-      - backend
+      - server
       - ai-service
     networks:
       - module-management-network
