@@ -60,7 +60,7 @@
           "temporary": true
         }
       ],
-      "realmRoles": ["proposal-submitter"],
+      "realmRoles": ["module-submitter"],
       "emailVerified": true
     },
     {
@@ -77,7 +77,7 @@
           "temporary": true
         }
       ],
-      "realmRoles": ["proposal-submitter"],
+      "realmRoles": ["module-submitter"],
       "emailVerified": true
     },
     {
@@ -94,7 +94,7 @@
           "temporary": true
         }
       ],
-      "realmRoles": ["proposal-reviewer"],
+      "realmRoles": ["module-reviewer"],
       "emailVerified": true
     },
     {
@@ -111,7 +111,7 @@
           "temporary": true
         }
       ],
-      "realmRoles": ["proposal-reviewer"],
+      "realmRoles": ["module-reviewer"],
       "emailVerified": true
     },
     {
@@ -128,7 +128,7 @@
           "temporary": true
         }
       ],
-      "realmRoles": ["proposal-reviewer"],
+      "realmRoles": ["module-reviewer"],
       "emailVerified": true
     }
   ],
@@ -169,7 +169,7 @@
       },
       {
         "id": "44042148-bf67-4b70-86c4-5dc69f0d967d",
-        "name": "proposal-submitter",
+        "name": "module-submitter",
         "description": "",
         "composite": false,
         "clientRole": false,
@@ -178,7 +178,7 @@
       },
       {
         "id": "ba162a99-5d1d-41bd-9b44-8ac08c5b69b7",
-        "name": "proposal-reviewer",
+        "name": "module-reviewer",
         "description": "",
         "composite": false,
         "clientRole": false,
@@ -697,7 +697,7 @@
       "enabled": true,
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
-      "redirectUris": ["https://module.aet.cit.tum.de/*"],
+      "redirectUris": ["http://localhost:4200/*", "https://module.aet.cit.tum.de/*"],
       "webOrigins": ["+"],
       "notBefore": 0,
       "bearerOnly": false,
