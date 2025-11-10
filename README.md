@@ -15,6 +15,37 @@ The Module Management System streamlines the process of creating, reviewing, and
 - **Module Overlap Detection**: Identify potential overlaps between proposed modules and existing curriculum.
 - **PDF Export**: Export module information for offline use.
 
+## Usage Guide
+
+### Proposal State Workflow
+
+![activity_proposal_states](https://github.com/user-attachments/assets/cba90205-be19-4d24-a239-84bd671e611d)
+
+### For Professors
+
+1. **Creating a Module Proposal**:
+
+   - Log in to the system with professor credentials
+   - Navigate to "Create New Proposal"
+   - Fill in all required module information
+   - Save your progress at any time
+   - Use AI-assistance for generating standardized descriptions
+   - Check for potential module overlaps
+   - Submit when ready for review
+
+2. **Handling Feedback**:
+   - Review consolidated feedback from all stakeholders
+   - Create a new module version addressing the feedback
+   - Resubmit for approval
+
+### For Reviewers
+
+1. **Reviewing Module Proposals**:
+   - Log in with reviewer credentials
+   - View list of pending module proposals
+   - Provide specific feedback for each field
+   - Approve, request changes, or reject proposals
+
 ## System Architecture
 
 The system implements a modular client-server architecture with three primary components:
@@ -33,44 +64,96 @@ The system implements a modular client-server architecture with three primary co
 - **Authentication**: Keycloak integration
 - **Deployment**: Docker containerization
 
-## Prerequisites
+## Development Setup
+
+### Prerequisites
+
+Make sure you have the following installed:
 
 - Docker and Docker Compose
-- Node.js 18+ and npm (for development)
-- Java JDK 21 (for development)
-- Python 3.11+ (for development)
-- Configure `.env` file according to your needs
+- Node.js v20.19+ and npm
+- Angular CLI
+- Java JDK 21
+- Python 3.11+
 
-## Usage Guide
+### Environment Configuration
 
-### Proposal State Workflow
+1. **Copy the example environment file** to create your `.env` file:
 
-![activity_proposal_states](https://github.com/user-attachments/assets/cba90205-be19-4d24-a239-84bd671e611d)
+```bash
+cp .example.env .env
+```
 
-### For Professors
+2. **Edit `.env`** and update the values as needed.
 
-1. **Creating a Module Proposal**:
-   - Log in to the system with professor credentials
-   - Navigate to "Create New Proposal"
-   - Fill in all required module information
-   - Save your progress at any time
-   - Use AI-assistance for generating standardized descriptions
-   - Check for potential module overlaps
-   - Submit when ready for review
+### Running the Application
 
-2. **Handling Feedback**:
-   - Review consolidated feedback from all stakeholders
-   - Create a new module version addressing the feedback
-   - Resubmit for approval
+#### 1. Start Docker Services
 
+From the project root directory, start PostgreSQL, Keycloak, and the AI service:
 
-### For Reviewers
+```bash
+docker-compose -f docker/docker-compose.dev.yaml --env-file .env up
+```
 
-1. **Reviewing Module Proposals**:
-   - Log in with reviewer credentials
-   - View list of pending module proposals
-   - Provide specific feedback for each field
-   - Approve, request changes, or reject proposals
+Ports are configured in your `.env` file.
+
+#### 2. Start the Spring Boot Server
+
+From the `Server` directory:
+
+```bash
+cd Server
+./gradlew bootRun
+```
+
+**Note**: Make sure the server has execute permissions on `gradlew`. If not, run:
+
+```bash
+chmod +x gradlew
+```
+
+The server will start on `http://localhost:8080`.
+
+#### 3. Start the Angular Client
+
+From the `Client` directory:
+
+```bash
+cd Client
+npm install --legacy-peer-deps   # First time only
+npm start
+```
+
+The client will start on `http://localhost:4200`.
+
+**Development Mode**: The client uses `environment.development.ts` which points to your local server and Keycloak instances. URLs are configured in the environment file.
+
+### Test Users
+
+The Keycloak realm includes test users (see `module-management-realm.json`):
+
+**Professors (module-submitter role):**
+
+- `professor1` / `test`
+- `professor2` / `test`
+
+**Reviewers (module-reviewer role):**
+
+- `reviewer1` / `test`
+- `reviewer2` / `test`
+- `reviewer3` / `test`
+
+### Generating OpenAPI Client Code
+
+If the API changes, regenerate the TypeScript client:
+
+```bash
+cd Client
+npm run api:update
+```
+
+This requires the Spring Boot server to be running on port 8080.
 
 ## License
 
