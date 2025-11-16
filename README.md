@@ -15,6 +15,37 @@ The Module Management System streamlines the process of creating, reviewing, and
 - **Module Overlap Detection**: Identify potential overlaps between proposed modules and existing curriculum.
 - **PDF Export**: Export module information for offline use.
 
+## Usage Guide
+
+### Proposal State Workflow
+
+![activity_proposal_states](https://github.com/user-attachments/assets/cba90205-be19-4d24-a239-84bd671e611d)
+
+### For Professors
+
+1. **Creating a Module Proposal**:
+
+   - Log in to the system with professor credentials
+   - Navigate to "Create New Proposal"
+   - Fill in all required module information
+   - Save your progress at any time
+   - Use AI-assistance for generating standardized descriptions
+   - Check for potential module overlaps
+   - Submit when ready for review
+
+2. **Handling Feedback**:
+   - Review consolidated feedback from all stakeholders
+   - Create a new module version addressing the feedback
+   - Resubmit for approval
+
+### For Reviewers
+
+1. **Reviewing Module Proposals**:
+   - Log in with reviewer credentials
+   - View list of pending module proposals
+   - Provide specific feedback for each field
+   - Approve, request changes, or reject proposals
+
 ## System Architecture
 
 The system implements a modular client-server architecture with three primary components:
@@ -33,44 +64,172 @@ The system implements a modular client-server architecture with three primary co
 - **Authentication**: Keycloak integration
 - **Deployment**: Docker containerization
 
-## Prerequisites
+## Development Setup
+
+### Prerequisites
+
+Make sure you have the following installed:
 
 - Docker and Docker Compose
-- Node.js 18+ and npm (for development)
-- Java JDK 21 (for development)
-- Python 3.11+ (for development)
-- Configure `.env` file according to your needs
+- Node.js v20.19+ and npm
+- Angular CLI
+- Java JDK 21
+- Python 3.11+
 
-## Usage Guide
+### Environment Configuration
 
-### Proposal State Workflow
+1. **Copy the example environment file** to create your `.env` file:
 
-![activity_proposal_states](https://github.com/user-attachments/assets/cba90205-be19-4d24-a239-84bd671e611d)
+```bash
+cp .example.env .env
+```
 
-### For Professors
+2. **Edit `.env`** and update the values as needed.
 
-1. **Creating a Module Proposal**:
-   - Log in to the system with professor credentials
-   - Navigate to "Create New Proposal"
-   - Fill in all required module information
-   - Save your progress at any time
-   - Use AI-assistance for generating standardized descriptions
-   - Check for potential module overlaps
-   - Submit when ready for review
+### Running the Application
 
-2. **Handling Feedback**:
-   - Review consolidated feedback from all stakeholders
-   - Create a new module version addressing the feedback
-   - Resubmit for approval
+#### 1. Start Docker Services
 
+From the project root directory, start PostgreSQL, Keycloak, and the AI service:
 
-### For Reviewers
+```bash
+docker-compose -f docker/docker-compose.dev.yaml --env-file .env up
+```
 
-1. **Reviewing Module Proposals**:
-   - Log in with reviewer credentials
-   - View list of pending module proposals
-   - Provide specific feedback for each field
-   - Approve, request changes, or reject proposals
+Ports are configured in your `.env` file.
+
+#### 2. Start the Spring Boot Server
+
+From the `Server` directory:
+
+```bash
+cd Server
+./gradlew bootRun
+```
+
+**Note**: Make sure the server has execute permissions on `gradlew`. If not, run:
+
+```bash
+chmod +x gradlew
+```
+
+The server will start on `http://localhost:8080`.
+
+#### 3. Start the Angular Client
+
+From the `Client` directory:
+
+```bash
+cd Client
+npm install --legacy-peer-deps   # First time only
+npm start
+```
+
+The client will start on `http://localhost:4200`.
+
+**Development Mode**: The client uses `environment.development.ts` which points to your local server and Keycloak instances. URLs are configured in the environment file.
+
+### Python AI Service Development
+
+#### Setting Up a Virtual Environment
+
+If you want to run the AI service locally (outside Docker) for development:
+
+1. **Navigate to the AI directory**:
+```bash
+cd AI
+```
+
+2. **Create a virtual environment** (using Python 3.11):
+```bash
+python3.11 -m venv venv
+```
+
+Alternatively, if you have `pyenv` installed and configured (the project includes `.python-version`):
+```bash
+pyenv install 3.11  # If not already installed
+pyenv local 3.11    # Sets local Python version
+python -m venv venv
+```
+
+3. **Activate the virtual environment**:
+
+   On macOS/Linux:
+   ```bash
+   source venv/bin/activate
+   ```
+
+   On Windows:
+   ```bash
+   venv\Scripts\activate
+   ```
+
+4. **Install dependencies**:
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+5. **Run the service locally**:
+```bash
+uvicorn app.main:app --host 0.0.0.0 --port 5001 --reload
+```
+
+The `--reload` flag enables auto-reload on code changes during development.
+
+#### Using a Local LLM (LM Studio)
+
+The AI service supports using local LLMs via LM Studio or other OpenAI-compatible local servers. This is useful for development when you don't want to use Azure OpenAI.
+
+**Prerequisites:**
+- [LM Studio](https://lmstudio.ai/) installed and running
+- A model loaded in LM Studio
+
+**Setup Steps:**
+
+1. **Start LM Studio**:
+   - Open LM Studio
+   - Load a model of your choice
+   - Start the local server (usually runs on `http://localhost:1234`)
+
+2. **Configure Environment Variables**:
+
+   In your `.env` file, set:
+   ```bash
+   USE_LOCAL_LLM=true
+   LOCAL_LLM_BASE_URL=http://host.docker.internal:1234/v1
+   LOCAL_LLM_MODEL=your-model-name
+   ```
+
+   **Important Notes:**
+   - Use `host.docker.internal` instead of `localhost` or `127.0.0.1` when running in Docker, as containers can't access `localhost` on the host machine
+   - If running the AI service locally (not in Docker), you can use `http://localhost:1234/v1`
+
+### Test Users
+
+The Keycloak realm includes test users (see `module-management-realm.json`):
+
+**Professors (module-submitter role):**
+
+- `professor1` / `test`
+- `professor2` / `test`
+
+**Reviewers (module-reviewer role):**
+
+- `reviewer1` / `test`
+- `reviewer2` / `test`
+- `reviewer3` / `test`
+
+### Generating OpenAPI Client Code
+
+If the API changes, regenerate the TypeScript client:
+
+```bash
+cd Client
+npm run api:update
+```
+
+This requires the Spring Boot server to be running on port 8080.
 
 ## License
 
