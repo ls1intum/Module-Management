@@ -136,41 +136,54 @@ The client will start on `http://localhost:4200`.
 If you want to run the AI service locally (outside Docker) for development:
 
 1. **Navigate to the AI directory**:
+
 ```bash
 cd AI
 ```
 
 2. **Create a virtual environment** (using Python 3.11):
-```bash
-python3.11 -m venv venv
-```
 
-Alternatively, if you have `pyenv` installed and configured (the project includes `.python-version`):
-```bash
-pyenv install 3.11  # If not already installed
-pyenv local 3.11    # Sets local Python version
-python -m venv venv
-```
+   **Option A: Using pyenv (Recommended)**
+
+   If you have `pyenv` installed:
+
+   ```bash
+   pyenv install 3.11  # If not already installed
+   pyenv local 3.11    # Sets local Python version for this directory
+   python -m venv .venv   # Creates venv using the pyenv-managed Python
+   ```
+
+   **Option B: Using system Python 3.11**
+
+   If `python3.11` is available on your system:
+
+   ```bash
+   python3.11 -m venv .venv
+   ```
 
 3. **Activate the virtual environment**:
 
    On macOS/Linux:
+
    ```bash
-   source venv/bin/activate
+   source .venv/bin/activate
    ```
 
    On Windows:
+
    ```bash
-   venv\Scripts\activate
+   .venv\Scripts\activate
    ```
 
 4. **Install dependencies**:
+
 ```bash
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
 5. **Run the service locally**:
+
 ```bash
 uvicorn app.main:app --host 0.0.0.0 --port 5001 --reload
 ```
@@ -182,12 +195,14 @@ The `--reload` flag enables auto-reload on code changes during development.
 The AI service supports using local LLMs via LM Studio or other OpenAI-compatible local servers. This is useful for development when you don't want to use Azure OpenAI.
 
 **Prerequisites:**
+
 - [LM Studio](https://lmstudio.ai/) installed and running
 - A model loaded in LM Studio
 
 **Setup Steps:**
 
 1. **Start LM Studio**:
+
    - Open LM Studio
    - Load a model of your choice
    - Start the local server (usually runs on `http://localhost:1234`)
@@ -195,6 +210,7 @@ The AI service supports using local LLMs via LM Studio or other OpenAI-compatibl
 2. **Configure Environment Variables**:
 
    In your `.env` file, set:
+
    ```bash
    USE_LOCAL_LLM=true
    LOCAL_LLM_BASE_URL=http://host.docker.internal:1234/v1
@@ -202,6 +218,7 @@ The AI service supports using local LLMs via LM Studio or other OpenAI-compatibl
    ```
 
    **Important Notes:**
+
    - Use `host.docker.internal` instead of `localhost` or `127.0.0.1` when running in Docker, as containers can't access `localhost` on the host machine
    - If running the AI service locally (not in Docker), you can use `http://localhost:1234/v1`
 
