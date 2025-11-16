@@ -1,10 +1,13 @@
-import logging, httpx, os
+import logging, os
+from sys import api_version
 import traceback
 import time
 from langchain_core.messages import AIMessage
 from typing import Any, Dict, Optional
+from pydantic import SecretStr
 
-from langchain_openai import AzureChatOpenAI
+from langchain_openai import AzureChatOpenAI, ChatOpenAI
+from langchain_core.language_models.chat_models import BaseChatModel
 from app.settings import settings
 
 httpx_logger = logging.getLogger("httpx")
@@ -17,18 +20,29 @@ os.environ["OPENAI_LOG"] = "debug"            # SDK debug logs
 logger = logging.getLogger(__name__)
 
 class LLMService:
-    model: AzureChatOpenAI
+    model: BaseChatModel
 
     def __init__(self):
-        logger.info("Init AzureChatOpenAI with model %s and endpoint %s ", settings.AZURE_DEPLOYMENT_NAME, settings.AZURE_ENDPOINT)
-        self.model = AzureChatOpenAI(
-            api_key = settings.AZURE_API_KEY,
-            azure_endpoint = settings.AZURE_ENDPOINT,
-            azure_deployment = settings.AZURE_DEPLOYMENT_NAME,
-            api_version = settings.AZURE_API_VERSION,
-            reasoning = {"effort": "minimal"},
-            use_responses_api = True,
-        )
+        if settings.USE_LOCAL_LLM:
+            logger.info("Initializing local LLM: %s at %s", settings.LOCAL_LLM_MODEL, settings.LOCAL_LLM_BASE_URL)
+            
+            # Use OpenAI-compatible local server (e.g. LM Studio)
+            self.model = ChatOpenAI(
+                model=settings.LOCAL_LLM_MODEL,
+                base_url=settings.LOCAL_LLM_BASE_URL,
+                api_key=SecretStr("not-needed"),       
+            )
+        else:
+            logger.info("Initializing AzureChatOpenAI with model %s and endpoint %s", 
+                       settings.AZURE_DEPLOYMENT_NAME, settings.AZURE_ENDPOINT)
+            self.model = AzureChatOpenAI(
+                api_key=SecretStr(settings.AZURE_API_KEY),
+                azure_endpoint=settings.AZURE_ENDPOINT,
+                azure_deployment=settings.AZURE_DEPLOYMENT_NAME,
+                api_version=settings.AZURE_API_VERSION,
+                reasoning={"effort": "minimal"},
+                use_responses_api=True,
+            )
 
     async def generate_content(self, prompt: str) -> str:
         logger.debug("Generating content from LLM for prompt: %s", prompt)
