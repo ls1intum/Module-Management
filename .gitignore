@@ -60,3 +60,4 @@ build/
 *__pycache__
 /AI/.venv
 /.DS_Store
+/AI/data/cache/
