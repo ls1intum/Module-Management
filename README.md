@@ -58,8 +58,8 @@ The system implements a modular client-server architecture with three primary co
 
 ### Technology Stack
 
-- **Frontend**: Angular 19, TypeScript, Tailwind CSS
-- **Backend**: Java Spring Boot, Hibernate, PostgreSQL
+- **Client-side**: Angular 19, TypeScript, Tailwind CSS
+- **Server-side**: Java Spring Boot, Hibernate, PostgreSQL
 - **AI Service**: Python FastAPI, LangChain, Sentence Transformers
 - **Authentication**: Keycloak integration
 - **Deployment**: Docker containerization
