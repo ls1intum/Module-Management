@@ -9,9 +9,9 @@ import modulemanagement.ls1.dtos.ModuleVersionViewFeedbackDTO;
 import modulemanagement.ls1.dtos.SimilarModuleDTO;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.services.AiCompletionService;
-import modulemanagement.ls1.services.AuthenticationService;
 import modulemanagement.ls1.services.ModuleVersionService;
 import jakarta.validation.Valid;
+import modulemanagement.ls1.shared.CurrentUser;
 import modulemanagement.ls1.shared.TimeLogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +20,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,50 +31,53 @@ public class ModuleVersionController {
     private static final Logger log = LoggerFactory.getLogger(ModuleVersionController.class);
 
     private final ModuleVersionService moduleVersionService;
-    private final AuthenticationService authenticationService;
     private final AiCompletionService aiCompletionService;
 
-    public ModuleVersionController(ModuleVersionService moduleVersionService, AuthenticationService authenticationService, AiCompletionService aiCompletionService) {
+    public ModuleVersionController(ModuleVersionService moduleVersionService,
+            AiCompletionService aiCompletionService) {
         this.moduleVersionService = moduleVersionService;
-        this.authenticationService = authenticationService;
         this.aiCompletionService = aiCompletionService;
     }
 
     @GetMapping("/{moduleVersionId}")
-    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
-    public ResponseEntity<ModuleVersionUpdateResponseDTO> getModuleVersionUpdateDtoFromId(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId) {
-        User user = authenticationService.getAuthenticatedUser(jwt);
-        ModuleVersionUpdateResponseDTO dto = moduleVersionService.getModuleVersionUpdateDtoFromId(moduleVersionId, user.getUserId());
+    @PreAuthorize("hasAnyRole('PROFESSOR')")
+    public ResponseEntity<ModuleVersionUpdateResponseDTO> getModuleVersionUpdateDtoFromId(
+            @CurrentUser User user, @PathVariable Long moduleVersionId) {
+        ModuleVersionUpdateResponseDTO dto = moduleVersionService.getModuleVersionUpdateDtoFromId(moduleVersionId,
+                user.getUserId());
         return ResponseEntity.ok(dto);
     }
 
     @PutMapping("/{moduleVersionId}")
-    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
-    public ResponseEntity<ModuleVersionUpdateResponseDTO> updateModuleVersion(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId, @Valid @RequestBody ModuleVersionUpdateRequestDTO moduleVersion) {
-        User user = authenticationService.getAuthenticatedUser(jwt);
-        ModuleVersionUpdateResponseDTO updatedModuleVersion = moduleVersionService.updateModuleVersionFromRequest(user.getUserId(), moduleVersionId, moduleVersion);
+    @PreAuthorize("hasAnyRole('PROFESSOR')")
+    public ResponseEntity<ModuleVersionUpdateResponseDTO> updateModuleVersion(@CurrentUser User user,
+            @PathVariable Long moduleVersionId, @Valid @RequestBody ModuleVersionUpdateRequestDTO moduleVersion) {
+        ModuleVersionUpdateResponseDTO updatedModuleVersion = moduleVersionService
+                .updateModuleVersionFromRequest(user.getUserId(), moduleVersionId, moduleVersion);
         return ResponseEntity.ok(updatedModuleVersion);
     }
 
     @GetMapping("/view/{moduleVersionId}")
-    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
-    public ResponseEntity<ModuleVersionViewDTO> getModuleVersionViewDto(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId) {
-        User user = authenticationService.getAuthenticatedUser(jwt);
+    @PreAuthorize("hasAnyRole('PROFESSOR')")
+    public ResponseEntity<ModuleVersionViewDTO> getModuleVersionViewDto(@CurrentUser User user,
+            @PathVariable Long moduleVersionId) {
         ModuleVersionViewDTO dto = moduleVersionService.getModuleVersionViewDto(moduleVersionId, user.getUserId());
         return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/{id}/previous-module-version-feedback")
-    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
-    public ResponseEntity<List<ModuleVersionViewFeedbackDTO>> getPreviousModuleVersionFeedback(@AuthenticationPrincipal Jwt jwt, @PathVariable Long id) {
-        User user = authenticationService.getAuthenticatedUser(jwt);
-        List<ModuleVersionViewFeedbackDTO> lastRejectionReasons = moduleVersionService.getPreviousModuleVersionFeedback(user.getUserId(), id);
+    @PreAuthorize("hasAnyRole('PROFESSOR')")
+    public ResponseEntity<List<ModuleVersionViewFeedbackDTO>> getPreviousModuleVersionFeedback(
+            @CurrentUser User user, @PathVariable Long id) {
+        List<ModuleVersionViewFeedbackDTO> lastRejectionReasons = moduleVersionService
+                .getPreviousModuleVersionFeedback(user.getUserId(), id);
         return ResponseEntity.ok(lastRejectionReasons);
     }
 
     @PostMapping("/generate/content")
-    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
-    public ResponseEntity<CompletionServiceResponseDTO> generateContent(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
+    @PreAuthorize("hasAnyRole('PROFESSOR')")
+    public ResponseEntity<CompletionServiceResponseDTO> generateContent(
+            @Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         long start = System.nanoTime();
         log.info("generateContent invoked with {}", moduleInfoRequestDTO);
         var response = aiCompletionService.generateContent(moduleInfoRequestDTO).block();
@@ -85,8 +86,9 @@ public class ModuleVersionController {
     }
 
     @PostMapping("/generate/examination-achievements")
-    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
-    public ResponseEntity<CompletionServiceResponseDTO> generateExaminationAchievements(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
+    @PreAuthorize("hasAnyRole('PROFESSOR')")
+    public ResponseEntity<CompletionServiceResponseDTO> generateExaminationAchievements(
+            @Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         long start = System.nanoTime();
         log.info("generateExaminationAchievements invoked with {} ", moduleInfoRequestDTO);
         var response = aiCompletionService.generateExaminationAchievements(moduleInfoRequestDTO).block();
@@ -95,8 +97,9 @@ public class ModuleVersionController {
     }
 
     @PostMapping("/generate/learning-outcomes")
-    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
-    public ResponseEntity<CompletionServiceResponseDTO> generateLearningOutcomes(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
+    @PreAuthorize("hasAnyRole('PROFESSOR')")
+    public ResponseEntity<CompletionServiceResponseDTO> generateLearningOutcomes(
+            @Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         long start = System.nanoTime();
         log.info("generateLearningOutcomes invoked with {}", moduleInfoRequestDTO);
         var response = aiCompletionService.generateLearningOutcomes(moduleInfoRequestDTO).block();
@@ -105,8 +108,9 @@ public class ModuleVersionController {
     }
 
     @PostMapping("/generate/teaching-methods")
-    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
-    public ResponseEntity<CompletionServiceResponseDTO> generateTeachingMethods(@Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
+    @PreAuthorize("hasAnyRole('PROFESSOR')")
+    public ResponseEntity<CompletionServiceResponseDTO> generateTeachingMethods(
+            @Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         long start = System.nanoTime();
         log.info("generateTeachingMethods invoked with {}", moduleInfoRequestDTO);
         var response = aiCompletionService.generateTeachingMethods(moduleInfoRequestDTO).block();
@@ -115,24 +119,25 @@ public class ModuleVersionController {
     }
 
     @PostMapping("/overlap-detection/check-similarity/{moduleVersionId}")
-    @PreAuthorize("hasAnyRole('admin', 'module-submitter', 'module-reviewer')")
-    public ResponseEntity<List<SimilarModuleDTO>> checkSimilarity(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId) {
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'QUALITY_MANAGEMENT', 'ACADEMIC_PROGRAM_ADVISOR', 'EXAMINATION_BOARD')")
+    public ResponseEntity<List<SimilarModuleDTO>> checkSimilarity(@CurrentUser User user,
+            @PathVariable Long moduleVersionId) {
         long start = System.nanoTime();
         log.info("checkSimilarity invoked for module {}", moduleVersionId);
-        User user = authenticationService.getAuthenticatedUser(jwt);
         var similarModules = this.moduleVersionService.getSimilarModules(moduleVersionId, user);
         log.info("checkSimilarity took {}", TimeLogUtil.formatDurationFrom(start));
         return ResponseEntity.ok(similarModules);
     }
 
     @GetMapping(value = "/{moduleVersionId}/export-professor-pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    @PreAuthorize("hasAnyRole('admin', 'module-submitter')")
-    public ResponseEntity<Resource> exportProfessorModuleVersionPdf(@AuthenticationPrincipal Jwt jwt, @PathVariable Long moduleVersionId) {
-        User user = authenticationService.getAuthenticatedUser(jwt);
+    @PreAuthorize("hasAnyRole('PROFESSOR')")
+    public ResponseEntity<Resource> exportProfessorModuleVersionPdf(@CurrentUser User user,
+            @PathVariable Long moduleVersionId) {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
-                .header(HttpHeaders.CONTENT_DISPOSITION, String.format("inline; filename=module_version_%s.pdf", moduleVersionId))
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        String.format("inline; filename=module_version_%s.pdf", moduleVersionId))
                 .body(moduleVersionService.generateProfessorModuleVersionPdf(moduleVersionId, user.getUserId()));
     }
 }

@@ -36,8 +36,6 @@ public class ProposalService {
     }
 
     public Proposal createProposalFromRequest(User user, ProposalRequestDTO request) {
-        if (!user.getRole().equals(UserRole.PROFESSOR))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You must be a professor in order to propose a module.");
         Proposal p = new Proposal();
         p.setCreatedBy(user);
         p.setCreationDate(LocalDateTime.now());
