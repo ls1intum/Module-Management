@@ -226,12 +226,12 @@ The AI service supports using local LLMs via LM Studio or other OpenAI-compatibl
 
 The Keycloak realm includes test users (see `module-management-realm.json`):
 
-**Professors (module-submitter role):**
+**Professors:**
 
 - `professor1` / `test`
 - `professor2` / `test`
 
-**Reviewers (module-reviewer role):**
+**Reviewers:**
 
 - `reviewer1` / `test`
 - `reviewer2` / `test`
