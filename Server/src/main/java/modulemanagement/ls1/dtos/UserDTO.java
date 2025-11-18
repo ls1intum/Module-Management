@@ -6,9 +6,11 @@ import modulemanagement.ls1.models.User;
 
 import java.util.UUID;
 
+import jakarta.validation.constraints.NotNull;
+
 @Data
 public class UserDTO {
-    private UUID userId;
+    @NotNull private UUID userId;
     private String userName;
     private String firstName;
     private String lastName;
