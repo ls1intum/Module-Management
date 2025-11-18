@@ -11,11 +11,20 @@ import { lucideInfo } from '@ng-icons/lucide';
 @Component({
   selector: 'professor-home-page',
   standalone: true,
-  imports: [RouterModule, HlmButtonDirective, ProposalListTableComponent, HlmAlertDescriptionDirective, HlmAlertDirective, HlmAlertIconDirective, HlmAlertTitleDirective, HlmIconComponent],
-  providers: [provideIcons({lucideInfo})],
+  imports: [
+    RouterModule,
+    HlmButtonDirective,
+    ProposalListTableComponent,
+    HlmAlertDescriptionDirective,
+    HlmAlertDirective,
+    HlmAlertIconDirective,
+    HlmAlertTitleDirective,
+    HlmIconComponent
+  ],
+  providers: [provideIcons({ lucideInfo })],
   templateUrl: './professor-home-page.component.html'
 })
 export class ProfessorHomePageComponent {
   securityStore = inject(SecurityStore);
-  user = this.securityStore.loadedUser;
+  user = this.securityStore.user;
 }

@@ -23,7 +23,6 @@ import { lucideLogOut } from '@ng-icons/lucide';
 export class HeaderComponent {
   securityStore = inject(SecurityStore);
 
-  signedIn = this.securityStore.signedIn;
   user = this.securityStore.user;
 
   signIn() {

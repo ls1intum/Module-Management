@@ -184,10 +184,6 @@ public class ModuleVersionService {
         ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Module Version not found"));
 
-        if (!hasAccessPermission(mv.getProposal(), user)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
-        }
-
         return pdfCreator.createModuleVersionPdf(mv);
     }
 

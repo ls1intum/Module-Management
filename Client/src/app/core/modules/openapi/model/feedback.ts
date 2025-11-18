@@ -54,13 +54,14 @@ export interface Feedback {
     responsiblesAccepted?: boolean;
     lvSwsLecturerFeedback?: string;
     lvSwsLecturerAccepted?: boolean;
-    comment?: string;
     allFeedbackPositive?: boolean;
     feedbackGiven?: boolean;
+    comment?: string;
 }
 export namespace Feedback {
-    export type RequiredRoleEnum = 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR' | 'UNDEFINED';
+    export type RequiredRoleEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR' | 'UNDEFINED';
     export const RequiredRoleEnum = {
+        Admin: 'ADMIN' as RequiredRoleEnum,
         QualityManagement: 'QUALITY_MANAGEMENT' as RequiredRoleEnum,
         AcademicProgramAdvisor: 'ACADEMIC_PROGRAM_ADVISOR' as RequiredRoleEnum,
         ExaminationBoard: 'EXAMINATION_BOARD' as RequiredRoleEnum,

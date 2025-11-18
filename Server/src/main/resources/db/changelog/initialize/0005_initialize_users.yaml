@@ -20,7 +20,7 @@ databaseChangeLog:
                   value: "Mustermann"
               - column:
                   name: email
-                  value: "nil@example.com"
+                  value: "professor1@example.com"
               - column:
                   name: role
                   value: "PROFESSOR"
@@ -83,7 +83,7 @@ databaseChangeLog:
                   value: "Moos"
               - column:
                   name: email
-                  value: "nil@example.com"
+                  value: "qm1@example.com"
               - column:
                   name: role
                   value: "QUALITY_MANAGEMENT"
@@ -104,7 +104,7 @@ databaseChangeLog:
                   value: "Bert"
               - column:
                   name: email
-                  value: nil@example.com"
+                  value: "eb1@example.com"
               - column:
                   name: role
                   value: "EXAMINATION_BOARD"
