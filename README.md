@@ -233,9 +233,9 @@ The Keycloak realm includes test users (see `module-management-realm.json`):
 
 **Reviewers (module-reviewer role):**
 
-- `reviewer1` / `test`
-- `reviewer2` / `test`
-- `reviewer3` / `test`
+- `apa1` / `test`
+- `qm1` / `test`
+- `eb1` / `test`
 
 ### Generating OpenAPI Client Code
 
