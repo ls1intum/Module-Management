@@ -224,18 +224,24 @@ The AI service supports using local LLMs via LM Studio or other OpenAI-compatibl
 
 ### Test Users
 
-The Keycloak realm includes test users (see `module-management-realm.json`):
+The Keycloak realm includes test users (see `module-management-realm.json`), which are also seeded to the database when you run the server:
 
-**Professors (module-submitter role):**
+**Professors:**
 
-- `professor1` / `test`
-- `professor2` / `test`
+- `module_management_test_professor1` / `test` - Role: PROFESSOR (Max Mustermann)
+- `module_management_test_professor2` / `test` - Role: PROFESSOR (Alice Wonderland)
 
-**Reviewers (module-reviewer role):**
+**Academic Program Advisor:**
 
-- `apa1` / `test`
-- `qm1` / `test`
-- `eb1` / `test`
+- `module_management_test_apa1` / `test` - Role: ACADEMIC_PROGRAM_ADVISOR (Academic Program Advisor)
+
+**Quality Management:**
+
+- `module_management_test_qm1` / `test` - Role: QUALITY_MANAGEMENT (Quirin Moos)
+
+**Examination Board:**
+
+- `module_management_test_eb1` / `test` - Role: EXAMINATION_BOARD (Erik Bert)
 
 ### Generating OpenAPI Client Code
 

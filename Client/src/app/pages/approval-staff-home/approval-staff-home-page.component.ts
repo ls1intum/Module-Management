@@ -26,17 +26,17 @@ export class ApprovalStaffHomePageComponent implements OnInit {
   error: string | null = null;
   feedbacks: FeedbackListItemDto[] = [];
   feedbackStatusEnum = Feedback.StatusEnum;
-  user = this.securityStore.loadedUser;
+  user = this.securityStore.user;
 
   constructor(private route: ActivatedRoute) {
     this.fetchFeedbacksForUser();
   }
 
-    ngOnInit() {
-    this.route.queryParams.subscribe(params => {
+  ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
       if (params['feedback_given'] === 'true') {
-      toast.success('Feedback Submitted', {
-        description: 'Your feedback has been submitted successfully'
+        toast.success('Feedback Submitted', {
+          description: 'Your feedback has been submitted successfully'
         });
       }
       if (params['rejected'] === 'true') {

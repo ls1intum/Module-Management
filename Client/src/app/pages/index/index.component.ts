@@ -4,6 +4,7 @@ import { ProfessorHomePageComponent } from '../professor-home/professor-home-pag
 import { ApprovalStaffHomePageComponent } from '../approval-staff-home/approval-staff-home-page.component';
 import { SecurityStore } from '../../core/security/security-store.service';
 import { LoginRequiredComponent } from '../../components/login-required/login-required.component';
+import { User } from '../../core/modules/openapi';
 
 @Component({
   selector: 'index-component',
@@ -14,15 +15,14 @@ import { LoginRequiredComponent } from '../../components/login-required/login-re
 export class IndexComponent {
   securityStore = inject(SecurityStore);
   user = this.securityStore.user;
-  userLoaded = this.securityStore.loaded;
 
   isProposalSubmitter = computed(() => {
     const user = this.user();
-    return user && user.roles.includes('module-submitter');
+    return user && user.role === User.RoleEnum.Professor;
   });
 
   isProposalReviewer = computed(() => {
     const user = this.user();
-    return user && user.roles.includes('module-reviewer');
+    return user && user.role && [User.RoleEnum.QualityManagement, User.RoleEnum.AcademicProgramAdvisor, User.RoleEnum.ExaminationBoard].includes(user.role);
   });
 }

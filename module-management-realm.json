@@ -47,12 +47,12 @@
   "failureFactor": 30,
   "users": [
     {
-      "id": "ab739f99-60ed-4289-a751-1ab11fd62f41",
-      "username": "professor1",
+      "id": "7bb1edd9-02c5-411c-a1e2-9aed33808437",
+      "username": "module_management_test_professor1",
       "enabled": true,
-      "firstName": "Peter",
-      "lastName": "Rofessor",
-      "email": "p1@tum.de",
+      "firstName": "Max",
+      "lastName": "Mustermann",
+      "email": "professor1@example.com",
       "credentials": [
         {
           "type": "password",
@@ -60,16 +60,15 @@
           "temporary": true
         }
       ],
-      "realmRoles": ["module-submitter"],
       "emailVerified": true
     },
     {
-      "id": "8d0f2579-1c0a-4ffb-b531-50ce96a372c0",
-      "username": "professor2",
+      "id": "a0442163-c9c0-4542-9b61-3f154091c7ad",
+      "username": "module_management_test_professor2",
       "enabled": true,
-      "firstName": "Agate",
-      "lastName": "Miker",
-      "email": "p2@tum.de",
+      "firstName": "Alice",
+      "lastName": "Wonderland",
+      "email": "prof2@example.com",
       "credentials": [
         {
           "type": "password",
@@ -77,16 +76,15 @@
           "temporary": true
         }
       ],
-      "realmRoles": ["module-submitter"],
       "emailVerified": true
     },
     {
-      "id": "60945aae-4d89-4353-8732-d2fecb3eeae6",
-      "username": "apa1",
+      "id": "7ea90bed-95c4-4c3e-8f80-8fb47fbc1bfe",
+      "username": "module_management_test_apa1",
       "enabled": true,
       "firstName": "Academic",
       "lastName": "Program Advisor",
-      "email": "apa1@tum.de",
+      "email": "apa1@example.com",
       "credentials": [
         {
           "type": "password",
@@ -94,16 +92,15 @@
           "temporary": true
         }
       ],
-      "realmRoles": ["module-reviewer"],
       "emailVerified": true
     },
     {
-      "id": "9c999a95-2b3e-4349-a063-0736c4662233",
-      "username": "qm1",
+      "id": "d360562d-ddac-450f-afcf-59e4ccf4c7b5",
+      "username": "module_management_test_qm1",
       "enabled": true,
       "firstName": "Quirin",
       "lastName": "Moos",
-      "email": "qm1@tum.de",
+      "email": "qm1@example.com",
       "credentials": [
         {
           "type": "password",
@@ -111,16 +108,15 @@
           "temporary": true
         }
       ],
-      "realmRoles": ["module-reviewer"],
       "emailVerified": true
     },
     {
-      "id": "7c135fd9-b88b-40e0-90b2-863041fb2979",
-      "username": "eb1",
+      "id": "6300f29a-758c-4cd3-9d00-4da97cda2f6d",
+      "username": "module_management_test_eb1",
       "enabled": true,
       "firstName": "Erik",
       "lastName": "Bert",
-      "email": "eb1@tum.de",
+      "email": "eb1@example.com",
       "credentials": [
         {
           "type": "password",
@@ -128,7 +124,6 @@
           "temporary": true
         }
       ],
-      "realmRoles": ["module-reviewer"],
       "emailVerified": true
     }
   ],
@@ -163,24 +158,6 @@
             "account": ["view-profile", "manage-account"]
           }
         },
-        "clientRole": false,
-        "containerId": "4fffd339-a89a-451f-a533-d836ce870b80",
-        "attributes": {}
-      },
-      {
-        "id": "44042148-bf67-4b70-86c4-5dc69f0d967d",
-        "name": "module-submitter",
-        "description": "",
-        "composite": false,
-        "clientRole": false,
-        "containerId": "4fffd339-a89a-451f-a533-d836ce870b80",
-        "attributes": {}
-      },
-      {
-        "id": "ba162a99-5d1d-41bd-9b44-8ac08c5b69b7",
-        "name": "module-reviewer",
-        "description": "",
-        "composite": false,
         "clientRole": false,
         "containerId": "4fffd339-a89a-451f-a533-d836ce870b80",
         "attributes": {}

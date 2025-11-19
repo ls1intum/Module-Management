@@ -4,8 +4,6 @@ import modulemanagement.ls1.enums.Language;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import java.util.UUID;
-
 @Data
 public class ProposalRequestDTO {
     private String bulletPoints;
