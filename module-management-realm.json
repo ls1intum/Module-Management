@@ -2284,7 +2284,7 @@
       "name": "Webauthn Register Passwordless",
       "providerId": "webauthn-register-passwordless",
       "enabled": true,
-      "defaultAction": false,
+      "defaultAction": true,
       "priority": 80,
       "config": {}
     },
