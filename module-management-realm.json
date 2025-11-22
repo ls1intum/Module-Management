@@ -60,7 +60,10 @@
           "temporary": true
         }
       ],
-      "emailVerified": true
+      "emailVerified": true,
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      }
     },
     {
       "id": "a0442163-c9c0-4542-9b61-3f154091c7ad",
@@ -76,7 +79,10 @@
           "temporary": true
         }
       ],
-      "emailVerified": true
+      "emailVerified": true,
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      }
     },
     {
       "id": "7ea90bed-95c4-4c3e-8f80-8fb47fbc1bfe",
@@ -92,7 +98,10 @@
           "temporary": true
         }
       ],
-      "emailVerified": true
+      "emailVerified": true,
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      }
     },
     {
       "id": "d360562d-ddac-450f-afcf-59e4ccf4c7b5",
@@ -108,7 +117,10 @@
           "temporary": true
         }
       ],
-      "emailVerified": true
+      "emailVerified": true,
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      }
     },
     {
       "id": "6300f29a-758c-4cd3-9d00-4da97cda2f6d",
@@ -124,7 +136,10 @@
           "temporary": true
         }
       ],
-      "emailVerified": true
+      "emailVerified": true,
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      }
     }
   ],
   "roles": {
@@ -513,6 +528,7 @@
   "webAuthnPolicyPasswordlessAvoidSameAuthenticatorRegister": false,
   "webAuthnPolicyPasswordlessAcceptableAaguids": [],
   "webAuthnPolicyPasswordlessExtraOrigins": [],
+  "webAuthnPolicyPasswordlessPasskeysEnabled": true,
   "scopeMappings": [
     {
       "clientScope": "offline_access",

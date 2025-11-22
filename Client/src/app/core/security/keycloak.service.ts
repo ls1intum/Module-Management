@@ -52,7 +52,7 @@ export class KeycloakService {
   }
 
   login(returnUrl?: string) {
-    return this.keycloak.login({ redirectUri: window.location.origin + (returnUrl || '') });
+    return this.keycloak.login({ redirectUri: window.location.origin + (returnUrl || ''), action: 'webauthn-register-passwordless:skip_if_exists' });
   }
 
   logout() {
