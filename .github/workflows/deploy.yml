@@ -20,13 +20,11 @@ on:
         type: string
 
 concurrency: ${{ github.event.inputs.environment_name }}
-
 env:
   CI: true
 
 jobs:
   deploy:
-    timeout-minutes: 30
     uses: ls1intum/.github/.github/workflows/deploy-docker-compose.yml@main
     with:
       environment: ${{ inputs.environment_name }}
