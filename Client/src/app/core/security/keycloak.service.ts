@@ -51,6 +51,10 @@ export class KeycloakService {
     }
   }
 
+  registerPasskey(returnUrl?: string) {
+    return this.keycloak.login({ redirectUri: window.location.origin + (returnUrl || ''), action: 'webauthn-register-passwordless' });
+  }
+
   login(returnUrl?: string) {
     return this.keycloak.login({ redirectUri: window.location.origin + (returnUrl || ''), action: 'webauthn-register-passwordless:skip_if_exists' });
   }

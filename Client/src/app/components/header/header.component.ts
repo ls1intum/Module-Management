@@ -7,7 +7,7 @@ import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
 import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { provideIcons } from '@ng-icons/core';
-import { lucideLogOut } from '@ng-icons/lucide';
+import { lucideLogOut, lucideSettings } from '@ng-icons/lucide';
 
 @Component({
   selector: 'app-header',
@@ -16,7 +16,8 @@ import { lucideLogOut } from '@ng-icons/lucide';
   imports: [RouterLink, HlmButtonModule, HlmAvatarModule, HlmMenuModule, BrnMenuTriggerDirective, HlmIconComponent],
   providers: [
     provideIcons({
-      lucideLogOut
+      lucideLogOut,
+      lucideSettings
     })
   ]
 })
