@@ -21,8 +21,6 @@ on:
 
 concurrency: ${{ github.event.inputs.environment_name }}
 
-timeout-minutes: 30
-
 env:
   CI: true
 
