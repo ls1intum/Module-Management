@@ -1,9 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import Keycloak from 'keycloak-js';
+import { KeycloakCredentialType } from './keycloak-credentials.types';
 
 @Injectable({ providedIn: 'root' })
 export class KeycloakService {
+  private http = inject(HttpClient);
   _keycloak: Keycloak | undefined;
 
   get keycloak() {
@@ -51,15 +54,25 @@ export class KeycloakService {
     }
   }
 
-  registerPasskey(returnUrl?: string) {
-    return this.keycloak.login({ redirectUri: window.location.origin + (returnUrl || ''), action: 'webauthn-register-passwordless' });
-  }
-
   login(returnUrl?: string) {
     return this.keycloak.login({ redirectUri: window.location.origin + (returnUrl || ''), action: 'webauthn-register-passwordless:skip_if_exists' });
   }
 
   logout() {
     return this.keycloak.logout({ redirectUri: environment.redirect });
+  }
+
+  registerPasskey(returnUrl?: string) {
+    return this.keycloak.login({ redirectUri: window.location.origin + (returnUrl || ''), action: 'webauthn-register-passwordless' });
+  }
+
+  getCredentials() {
+    const url = `${environment.keycloak.url}/realms/${environment.keycloak.realm}/account/credentials`;
+    return this.http.get<KeycloakCredentialType[]>(url);
+  }
+
+  deleteCredential(credentialId: string) {
+    const url = `${environment.keycloak.url}/realms/${environment.keycloak.realm}/account/credentials/${credentialId}`;
+    return this.http.delete<any[]>(url);
   }
 }

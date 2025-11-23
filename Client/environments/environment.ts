@@ -3,7 +3,7 @@ export const environment = {
   redirect: 'https://module.aet.cit.tum.de',
   serverUrl: 'https://module.aet.cit.tum.de/api',
   keycloak: {
-    url: 'https://keycloak.ase.in.tum.de/',
+    url: 'https://keycloak.ase.in.tum.de',
     realm: 'Test',
     clientId: 'module-management'
   }

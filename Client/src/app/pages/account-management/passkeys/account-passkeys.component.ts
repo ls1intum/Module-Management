@@ -1,13 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { KeycloakService } from '../../../core/security/keycloak.service';
+import { SecurityStore } from '../../../core/security/security-store.service';
 import { HlmCardDirective, HlmCardContentDirective, HlmCardDescriptionDirective, HlmCardHeaderDirective, HlmCardTitleDirective } from '@spartan-ng/ui-card-helm';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { provideIcons } from '@ng-icons/core';
 import { lucidePlus, lucideTrash2, lucideKey } from '@ng-icons/lucide';
-
 
 @Component({
   selector: 'account-passkeys',
@@ -32,15 +30,15 @@ import { lucidePlus, lucideTrash2, lucideKey } from '@ng-icons/lucide';
   templateUrl: './account-passkeys.component.html'
 })
 export class AccountPasskeysComponent {
-  keycloakService = inject(KeycloakService);
-  http = inject(HttpClient);
+  securityStore = inject(SecurityStore);
 
-  passkeys: any[] = [];
+  passkeys = this.securityStore.passkeys;
 
   async addPasskey() {
-    await this.keycloakService.registerPasskey(window.location.pathname);
+    await this.securityStore.registerPasskey(window.location.pathname);
   }
 
   async deletePasskey(passkeyId: string) {
+      await this.securityStore.deletePasskey(passkeyId);
   }
 }
