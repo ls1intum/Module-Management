@@ -8,10 +8,6 @@ on:
     types:
       - created
 
-permissions:
-  contents: read
-  packages: write
-  
 jobs:
   build-ai:
     uses: ls1intum/.github/.github/workflows/build-and-push-docker-image.yml@main
