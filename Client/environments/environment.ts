@@ -3,8 +3,8 @@ export const environment = {
   redirect: 'https://module.aet.cit.tum.de',
   serverUrl: 'https://module.aet.cit.tum.de',
   keycloak: {
-    url: 'https://keycloak.ase.in.tum.de',
-    realm: 'Test',
+    url: 'https://module.aet.cit.tum.de/auth',
+    realm: 'module-management',
     clientId: 'module-management'
   }
 };
