@@ -1,9 +1,9 @@
 export const environment = {
-  production: false,
+  production: true,
   redirect: 'https://module.aet.cit.tum.de',
   serverUrl: 'https://module.aet.cit.tum.de',
   keycloak: {
-    url: 'https://module.aet.cit.tum.de/auth',
+    url: 'https://module.aet.cit.tum.de/keycloak',
     realm: 'module-management',
     clientId: 'module-management'
   }
