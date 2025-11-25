@@ -3,7 +3,7 @@ services:
     image: nginx:1.29.3
     container_name: module-management-nginx
     volumes:
-      - ../nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - /var/lib/rbg-cert/live/fullchain.pem:/etc/certs/fullchain.pem:ro
       - /var/lib/rbg-cert/live/privkey.pem:/etc/certs/privkey.pem:ro
     ports:
