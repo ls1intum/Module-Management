@@ -17,3 +17,4 @@ export * from './proposal-view-dto';
 export * from './proposals-compact-dto';
 export * from './similar-module-dto';
 export * from './user';
+export * from './user-dto';

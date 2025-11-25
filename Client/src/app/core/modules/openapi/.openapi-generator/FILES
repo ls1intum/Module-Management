@@ -9,6 +9,8 @@ api/module-version-controller.service.ts
 api/module-version-controller.serviceInterface.ts
 api/proposal-controller.service.ts
 api/proposal-controller.serviceInterface.ts
+api/user-controller.service.ts
+api/user-controller.serviceInterface.ts
 configuration.ts
 encoder.ts
 git_push.sh
@@ -32,6 +34,7 @@ model/proposal-view-dto.ts
 model/proposal.ts
 model/proposals-compact-dto.ts
 model/similar-module-dto.ts
+model/user-dto.ts
 model/user.ts
 param.ts
 variables.ts

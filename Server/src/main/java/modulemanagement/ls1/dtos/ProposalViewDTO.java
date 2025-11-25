@@ -1,6 +1,5 @@
 package modulemanagement.ls1.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import modulemanagement.ls1.enums.ProposalStatus;
 import lombok.Data;
 import modulemanagement.ls1.models.ModuleVersion;

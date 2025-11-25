@@ -37,10 +37,10 @@ export class ProposalListTableComponent {
   error: string | null = null;
   proposals: ProposalsCompactDTO[] = [];
   proposalEnum = Proposal.StatusEnum;
-  user = this.securityStore.loadedUser;
+  user = this.securityStore.user;
 
   constructor() {
-    if (this.securityStore.signedIn()) {
+    if (this.user !== undefined) {
       this.fetchProposalsForUser();
     } else {
       this.securityStore.signIn();

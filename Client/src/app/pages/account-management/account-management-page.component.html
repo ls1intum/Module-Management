@@ -1,0 +1,23 @@
+<div>
+  <h1 class="text-3xl font-bold mb-6">Account Settings</h1>
+
+  <hlm-tabs tab="account-info" class="w-full">
+
+    <div class="flex gap-6">
+
+      <hlm-tabs-list orientation="vertical">
+        <button hlmTabsTrigger="account-info" class="w-full justify-start">Account Information</button>
+        <button hlmTabsTrigger="passkeys" class="w-full justify-start">Passkeys</button>
+      </hlm-tabs-list>
+
+      <div class="flex-1">
+        <account-information hlmTabsContent="account-info"/>
+        <account-passkeys hlmTabsContent="passkeys"/>
+      </div>
+
+    </div>
+
+  </hlm-tabs>
+
+</div>
+

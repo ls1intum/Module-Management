@@ -36,8 +36,6 @@ public class ProposalService {
     }
 
     public Proposal createProposalFromRequest(User user, ProposalRequestDTO request) {
-        if (!user.getRole().equals(UserRole.PROFESSOR))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You must be a professor in order to propose a module.");
         Proposal p = new Proposal();
         p.setCreatedBy(user);
         p.setCreationDate(LocalDateTime.now());
@@ -88,7 +86,7 @@ public class ProposalService {
 
     public static void createNewFeedbacks(ModuleVersion mv, List<Feedback> feedbacks) {
         for (UserRole ad : UserRole.values()) {
-            if (ad.equals(UserRole.PROFESSOR) || ad.equals(UserRole.UNDEFINED))
+            if (ad.equals(UserRole.PROFESSOR) || ad.equals(UserRole.UNDEFINED) || ad.equals(UserRole.ADMIN))
                 continue;
             Feedback feedback = new Feedback();
             feedback.setStatus(FeedbackStatus.PENDING_SUBMISSION);

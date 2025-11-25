@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2Res
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -20,18 +21,26 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
     private final JwtAuthConverter jwtAuthConverter;
     private final OAuth2ResourceServerProperties properties;
+    private final CurrentUserArgumentResolver currentUserArgumentResolver;
 
-    public SecurityConfig(JwtAuthConverter jwtAuthConverter, OAuth2ResourceServerProperties properties) {
+    public SecurityConfig(JwtAuthConverter jwtAuthConverter,
+            OAuth2ResourceServerProperties properties,
+            CurrentUserArgumentResolver currentUserArgumentResolver) {
         this.jwtAuthConverter = jwtAuthConverter;
         this.properties = properties;
+        this.currentUserArgumentResolver = currentUserArgumentResolver;
     }
 
     @Bean
@@ -59,9 +68,9 @@ public class SecurityConfig {
                         return OAuth2TokenValidatorResult.success();
                     }
                     return OAuth2TokenValidatorResult.failure(
-                            new OAuth2Error("invalid_token", "Invalid issuer: " + issuer + ", expected: " + issuerUri, null));
-                }
-        );
+                            new OAuth2Error("invalid_token", "Invalid issuer: " + issuer + ", expected: " + issuerUri,
+                                    null));
+                });
     }
 
     @Bean
@@ -71,7 +80,6 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/v3/api-docs.yaml", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .requestMatchers("/api/**").hasAnyRole("module-reviewer", "module-submitter")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {
                     jwt.jwtAuthenticationConverter(jwtAuthConverter);
@@ -81,7 +89,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
+    public WebMvcConfigurer webMvcConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
@@ -91,6 +99,11 @@ public class SecurityConfig {
                         .allowedHeaders("*")
                         .exposedHeaders("*")
                         .allowCredentials(true);
+            }
+
+            @Override
+            public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+                resolvers.add(currentUserArgumentResolver);
             }
         };
     }

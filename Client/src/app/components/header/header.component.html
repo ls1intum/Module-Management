@@ -10,18 +10,22 @@
   <!-- Right Side: Sign In/Out -->
   <div>
     <!-- If the user is signed in -->
-    @if(signedIn()){
+    @if(user() !== undefined){
     <ng-container>
       <button hlmBtn [brnMenuTriggerFor]="usermenu" variant="outline" class="ml-2">
-        {{ user()?.name }}
+        {{ user()?.firstName }} {{ user()?.lastName }}
       </button>
 
       <!-- User Menu -->
       <ng-template #usermenu>
         <hlm-menu>
-          <hlm-menu-label>{{ user()?.name }}</hlm-menu-label>
+          <hlm-menu-label>{{ user()?.firstName }} {{ user()?.lastName }}</hlm-menu-label>
           <hlm-menu-separator />
           <hlm-menu-group>
+            <a hlmMenuItem routerLink="/account" class="cursor-pointer">
+              <hlm-icon name="lucideSettings" hlmMenuIcon></hlm-icon>
+              <span>Settings</span>
+            </a>
             <button hlmMenuItem (click)="signOut()" class="cursor-pointer">
               <hlm-icon name="lucideLogOut" hlmMenuIcon></hlm-icon>
               <span>Sign Out</span>

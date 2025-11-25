@@ -1,4 +1,4 @@
-@if (userLoaded()) { @if (isProposalSubmitter()) {
+@if (user() !== undefined) { @if (isProposalSubmitter()) {
 <ng-container>
   <professor-home-page />
 </ng-container>

@@ -7,4 +7,7 @@ export * from './module-version-controller.serviceInterface';
 export * from './proposal-controller.service';
 import { ProposalControllerService } from './proposal-controller.service';
 export * from './proposal-controller.serviceInterface';
-export const APIS = [FeedbackControllerService, ModuleVersionControllerService, ProposalControllerService];
+export * from './user-controller.service';
+import { UserControllerService } from './user-controller.service';
+export * from './user-controller.serviceInterface';
+export const APIS = [FeedbackControllerService, ModuleVersionControllerService, ProposalControllerService, UserControllerService];
