@@ -1,0 +1,22 @@
+:root {
+        --keycloak-bg-logo-url: url('../img/bgimageundefined');
+        --keycloak-logo-url: url('../img/logoundefined');
+        --keycloak-logo-height: 63px;
+        --keycloak-logo-width: 300px;
+        --pf-v5-global--danger-color--100: #c9190b;
+--pf-v5-global--success-color--100: #3e8635;
+--pf-v5-global--active-color--100: #0066cc;
+--pf-v5-global--primary-color--100: #0066cc;
+--pf-v5-global--link--Color: #0066cc;
+--pf-v5-global--link--Color--hover: #004080;
+--pf-v5-global--BackgroundColor--light-100: #ffffff;
+--pf-v5-global--BackgroundColor--dark-300: #212427;
+--pf-v5-global--BackgroundColor--dark-100: #151515;
+--pf-v5-global--Color--100: #151515;
+--pf-v5-global--Color--light-100: #ffffff;
+--pf-v5-global--Color--dark-100: #151515;
+      }
+      .pf-v5-theme-dark {
+        
+      }
+      

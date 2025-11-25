@@ -23,6 +23,7 @@ services:
     command: start-dev --import-realm
     volumes:
       - ../module-management-realm.json:/opt/keycloak/data/import/module-management-realm.json
+      - ../keycloak-themes:/opt/keycloak/themes
     ports:
       - "${AUTH_PORT:-8081}:8080"
     networks:

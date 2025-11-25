@@ -26,6 +26,7 @@
   "oauth2DeviceCodeLifespan": 600,
   "oauth2DevicePollingInterval": 5,
   "enabled": true,
+  "loginTheme": "white-theme",
   "sslRequired": "external",
   "registrationAllowed": false,
   "registrationEmailAsUsername": false,
