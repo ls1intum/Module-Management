@@ -36,8 +36,8 @@ services:
     image: quay.io/keycloak/keycloak:26.4.5
     container_name: module-management-keycloak
     environment:
-      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
-      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+      - KC_BOOTSTRAP_ADMIN_USERNAME=${KEYCLOAK_ADMIN_USERNAME}
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
       - KC_DB=postgres
       - KC_DB_URL_HOST=postgres
       - KC_DB_URL_DATABASE=keycloak
@@ -97,9 +97,6 @@ services:
   client:
     image: ghcr.io/ls1intum/module-management/client:${IMAGE_TAG}
     container_name: module-management-client
-    environment:
-      - KEYCLOAK_URL=${KEYCLOAK_URL}
-      - KEYCLOAK_REALM=${KEYCLOAK_REALM}
     depends_on:
       - server
       - ai-service
