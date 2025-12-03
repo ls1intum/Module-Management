@@ -1,16 +1,16 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { SecurityStore } from './security-store.service';
 import { from, switchMap } from 'rxjs';
+import { KeycloakService } from './keycloak.service';
 
 export const securityInterceptor: HttpInterceptorFn = (req, next) => {
-  const keycloakService = inject(SecurityStore);
+  const keycloakService = inject(KeycloakService);
 
   // update access token to prevent 401s
   return from(keycloakService.updateToken()).pipe(
     switchMap(() => {
       // add bearer token to request
-      const bearer = keycloakService.user()?.bearer;
+      const bearer = keycloakService.bearer;
 
       if (!bearer) {
         return next(req);

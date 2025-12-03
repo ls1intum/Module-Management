@@ -1,10 +1,10 @@
 export const environment = {
-  production: false,
+  production: true,
   redirect: 'https://module.aet.cit.tum.de',
-  serverUrl: 'https://module.aet.cit.tum.de/api',
+  serverUrl: 'https://module.aet.cit.tum.de',
   keycloak: {
-    url: 'https://keycloak.ase.in.tum.de/',
-    realm: 'Test',
+    url: 'https://module.aet.cit.tum.de/keycloak',
+    realm: 'module-management',
     clientId: 'module-management'
   }
 };

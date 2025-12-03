@@ -1,0 +1,50 @@
+<div hlmCard>
+  <div hlmCardHeader>
+    <h3 hlmCardTitle>Passkeys</h3>
+    <p hlmCardDescription>
+      Manage your passkeys for passwordless authentication
+    </p>
+  </div>
+  <div hlmCardContent class="py-8">
+      @if (passkeys().length === 0) {
+        <div class="flex flex-col items-center">
+          <hlm-icon name="lucideKey" class="h-12 w-12 text-muted-foreground mb-4" />
+          <p class="text-muted-foreground mb-4">No passkeys registered yet.</p>
+          <p class="text-sm text-muted-foreground mb-6">
+            Passkeys allow you to sign in securely without a password using your device's biometric authentication or security key.
+          </p>
+          <button hlmBtn (click)="addPasskey()" class="flex items-center gap-2">
+            <hlm-icon name="lucidePlus" class="h-4 w-4"></hlm-icon>
+            <span>Add Passkey</span>
+          </button>
+        </div>
+      } @else {
+        <div class="space-y-4">
+          @for (passkey of passkeys(); track passkey.id) {
+            <div class="flex justify-between p-4 border rounded-lg">
+              <div class="flex items-center gap-4">
+                <hlm-icon name="lucideKey" class="h-5 w-5 text-muted-foreground" />
+                <div>
+                  <p class="font-medium">{{ passkey.name || 'Unnamed Passkey' }}</p>
+                  <p class="text-sm text-muted-foreground">{{ passkey.createdAt | date }}</p>
+                </div>
+              </div>
+              <button hlmBtn variant="ghost" size="sm" (click)="deletePasskey(passkey.id)" class="flex items-center gap-2">
+                <hlm-icon name="lucideTrash2" class="h-4 w-4"></hlm-icon>
+                <span>Delete</span>
+              </button>
+            </div>
+          }
+        </div>
+        <div class="pt-6">
+          <button hlmBtn variant="outline" (click)="addPasskey()" class="flex items-center gap-2">
+            <hlm-icon name="lucidePlus" class="h-4 w-4"></hlm-icon>
+            <span>Add Another Passkey</span>
+          </button>
+        </div>
+      }
+      
+      
+  </div>
+</div>
+

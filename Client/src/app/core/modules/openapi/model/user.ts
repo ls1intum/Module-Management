@@ -18,8 +18,9 @@ export interface User {
     role?: User.RoleEnum;
 }
 export namespace User {
-    export type RoleEnum = 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR' | 'UNDEFINED';
+    export type RoleEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR' | 'UNDEFINED';
     export const RoleEnum = {
+        Admin: 'ADMIN' as RoleEnum,
         QualityManagement: 'QUALITY_MANAGEMENT' as RoleEnum,
         AcademicProgramAdvisor: 'ACADEMIC_PROGRAM_ADVISOR' as RoleEnum,
         ExaminationBoard: 'EXAMINATION_BOARD' as RoleEnum,

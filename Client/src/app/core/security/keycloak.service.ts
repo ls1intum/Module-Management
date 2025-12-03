@@ -1,24 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import Keycloak from 'keycloak-js';
-
-export interface UserProfile {
-  email: string;
-  email_verified: boolean;
-  given_name: string;
-  family_name: string;
-  name: string;
-  preferred_username: string;
-  realmAccess: { roles: string[] };
-  roles: string[];
-  sub: string;
-  token: string;
-}
+import { KeycloakCredentialType } from './keycloak-credentials.types';
 
 @Injectable({ providedIn: 'root' })
 export class KeycloakService {
+  private http = inject(HttpClient);
   _keycloak: Keycloak | undefined;
-  profile: UserProfile | undefined;
 
   get keycloak() {
     if (!this._keycloak) {
@@ -32,39 +21,17 @@ export class KeycloakService {
   }
 
   async init() {
-    const authenticated = await this.keycloak.init({
+    return await this.keycloak.init({
       onLoad: 'check-sso',
       silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
       silentCheckSsoFallback: true,
       checkLoginIframe: true,
       pkceMethod: 'S256'
     });
+  }
 
-    if (!authenticated) {
-      return authenticated;
-    }
-    // Load user profile
-    this.profile = (await this.keycloak.loadUserInfo()) as unknown as UserProfile;
-    this.profile.token = this.keycloak.token || '';
-
-    // Get realm roles
-    const realmRoles = this.keycloak.realmAccess?.roles || [];
-    
-    // Parse the token to get resource_access roles
-    const tokenParsed = this.keycloak.tokenParsed as any;
-    const resourceAccess = tokenParsed?.resource_access || {};
-    
-    // Collect all resource roles
-    const resourceRoles: string[] = [];
-    Object.keys(resourceAccess).forEach(clientId => {
-      const clientRoles = resourceAccess[clientId]?.roles || [];
-      resourceRoles.push(...clientRoles);
-    });
-  
-    // Combine realm roles and resource roles
-    this.profile.roles = [...realmRoles, ...resourceRoles];
-
-    return true;
+  get bearer() {
+    return this.keycloak.token;
   }
 
   /**
@@ -78,11 +45,7 @@ export class KeycloakService {
     }
     try {
       // Try to refresh token
-      const refreshed = await this.keycloak.updateToken(60);
-      if (refreshed) {
-        this.profile!.token = this.keycloak.token || '';
-      }
-      return refreshed;
+      return await this.keycloak.updateToken(60);
     } catch (error) {
       console.error('Failed to refresh token:', error);
       // Redirect to login if refresh fails
@@ -92,10 +55,24 @@ export class KeycloakService {
   }
 
   login(returnUrl?: string) {
-    return this.keycloak.login({ redirectUri: window.location.origin + (returnUrl || '') });
+    return this.keycloak.login({ redirectUri: window.location.origin + (returnUrl || ''), action: 'webauthn-register-passwordless:skip_if_exists' });
   }
 
   logout() {
     return this.keycloak.logout({ redirectUri: environment.redirect });
+  }
+
+  registerPasskey(returnUrl?: string) {
+    return this.keycloak.login({ redirectUri: window.location.origin + (returnUrl || ''), action: 'webauthn-register-passwordless' });
+  }
+
+  getCredentials() {
+    const url = `${environment.keycloak.url}/realms/${environment.keycloak.realm}/account/credentials`;
+    return this.http.get<KeycloakCredentialType[]>(url);
+  }
+
+  deleteCredential(credentialId: string) {
+    const url = `${environment.keycloak.url}/realms/${environment.keycloak.realm}/account/credentials/${credentialId}`;
+    return this.http.delete<any[]>(url);
   }
 }
