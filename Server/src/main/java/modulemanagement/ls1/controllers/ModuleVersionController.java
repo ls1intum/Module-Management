@@ -8,7 +8,8 @@ import modulemanagement.ls1.dtos.CompletionServiceRequestDTO;
 import modulemanagement.ls1.dtos.ModuleVersionViewFeedbackDTO;
 import modulemanagement.ls1.dtos.SimilarModuleDTO;
 import modulemanagement.ls1.models.User;
-import modulemanagement.ls1.services.AiCompletionService;
+import modulemanagement.ls1.services.LlmGenerationService;
+import modulemanagement.ls1.services.PromptBuilderService;
 import modulemanagement.ls1.services.ModuleVersionService;
 import jakarta.validation.Valid;
 import modulemanagement.ls1.shared.CurrentUser;
@@ -31,12 +32,15 @@ public class ModuleVersionController {
     private static final Logger log = LoggerFactory.getLogger(ModuleVersionController.class);
 
     private final ModuleVersionService moduleVersionService;
-    private final AiCompletionService aiCompletionService;
+    private final PromptBuilderService promptBuilderService;
+    private final LlmGenerationService llmGenerationService;
 
     public ModuleVersionController(ModuleVersionService moduleVersionService,
-            AiCompletionService aiCompletionService) {
+            PromptBuilderService promptBuilderService,
+            LlmGenerationService llmGenerationService) {
         this.moduleVersionService = moduleVersionService;
-        this.aiCompletionService = aiCompletionService;
+        this.promptBuilderService = promptBuilderService;
+        this.llmGenerationService = llmGenerationService;
     }
 
     @GetMapping("/{moduleVersionId}")
@@ -78,10 +82,9 @@ public class ModuleVersionController {
     @PreAuthorize("hasAnyRole('PROFESSOR')")
     public ResponseEntity<CompletionServiceResponseDTO> generateContent(
             @Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
-        long start = System.nanoTime();
         log.info("generateContent invoked with {}", moduleInfoRequestDTO);
-        var response = aiCompletionService.generateContent(moduleInfoRequestDTO);
-        log.info("generateContent took {}", TimeLogUtil.formatDurationFrom(start));
+        String prompt = promptBuilderService.buildPrompt("content", moduleInfoRequestDTO);
+        String response = llmGenerationService.generate(prompt, "content");
         return ResponseEntity.ok(new CompletionServiceResponseDTO(response));
     }
 
@@ -89,10 +92,9 @@ public class ModuleVersionController {
     @PreAuthorize("hasAnyRole('PROFESSOR')")
     public ResponseEntity<CompletionServiceResponseDTO> generateExaminationAchievements(
             @Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
-        long start = System.nanoTime();
         log.info("generateExaminationAchievements invoked with {} ", moduleInfoRequestDTO);
-        var response = aiCompletionService.generateExaminationAchievements(moduleInfoRequestDTO);
-        log.info("generateExaminationAchievements took {}", TimeLogUtil.formatDurationFrom(start));
+        String prompt = promptBuilderService.buildPrompt("examination-achievements", moduleInfoRequestDTO);
+        String response = llmGenerationService.generate(prompt, "examination-achievements");
         return ResponseEntity.ok(new CompletionServiceResponseDTO(response));
     }
 
@@ -100,10 +102,9 @@ public class ModuleVersionController {
     @PreAuthorize("hasAnyRole('PROFESSOR')")
     public ResponseEntity<CompletionServiceResponseDTO> generateLearningOutcomes(
             @Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
-        long start = System.nanoTime();
         log.info("generateLearningOutcomes invoked with {}", moduleInfoRequestDTO);
-        var response = aiCompletionService.generateLearningOutcomes(moduleInfoRequestDTO);
-        log.info("generateLearningOutcomes took {}", TimeLogUtil.formatDurationFrom(start));
+        String prompt = promptBuilderService.buildPrompt("learning-outcomes", moduleInfoRequestDTO);
+        String response = llmGenerationService.generate(prompt, "learning-outcomes");
         return ResponseEntity.ok(new CompletionServiceResponseDTO(response));
     }
 
@@ -111,10 +112,9 @@ public class ModuleVersionController {
     @PreAuthorize("hasAnyRole('PROFESSOR')")
     public ResponseEntity<CompletionServiceResponseDTO> generateTeachingMethods(
             @Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
-        long start = System.nanoTime();
         log.info("generateTeachingMethods invoked with {}", moduleInfoRequestDTO);
-        var response = aiCompletionService.generateTeachingMethods(moduleInfoRequestDTO);
-        log.info("generateTeachingMethods took {}", TimeLogUtil.formatDurationFrom(start));
+        String prompt = promptBuilderService.buildPrompt("teaching-methods", moduleInfoRequestDTO);
+        String response = llmGenerationService.generate(prompt, "teaching-methods");
         return ResponseEntity.ok(new CompletionServiceResponseDTO(response));
     }
 
