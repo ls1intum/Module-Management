@@ -80,7 +80,7 @@ public class ModuleVersionController {
             @Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         long start = System.nanoTime();
         log.info("generateContent invoked with {}", moduleInfoRequestDTO);
-        var response = aiCompletionService.generateContent(moduleInfoRequestDTO).block();
+        var response = aiCompletionService.generateContent(moduleInfoRequestDTO);
         log.info("generateContent took {}", TimeLogUtil.formatDurationFrom(start));
         return ResponseEntity.ok(new CompletionServiceResponseDTO(response));
     }
@@ -91,7 +91,7 @@ public class ModuleVersionController {
             @Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         long start = System.nanoTime();
         log.info("generateExaminationAchievements invoked with {} ", moduleInfoRequestDTO);
-        var response = aiCompletionService.generateExaminationAchievements(moduleInfoRequestDTO).block();
+        var response = aiCompletionService.generateExaminationAchievements(moduleInfoRequestDTO);
         log.info("generateExaminationAchievements took {}", TimeLogUtil.formatDurationFrom(start));
         return ResponseEntity.ok(new CompletionServiceResponseDTO(response));
     }
@@ -102,7 +102,7 @@ public class ModuleVersionController {
             @Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         long start = System.nanoTime();
         log.info("generateLearningOutcomes invoked with {}", moduleInfoRequestDTO);
-        var response = aiCompletionService.generateLearningOutcomes(moduleInfoRequestDTO).block();
+        var response = aiCompletionService.generateLearningOutcomes(moduleInfoRequestDTO);
         log.info("generateLearningOutcomes took {}", TimeLogUtil.formatDurationFrom(start));
         return ResponseEntity.ok(new CompletionServiceResponseDTO(response));
     }
@@ -113,7 +113,7 @@ public class ModuleVersionController {
             @Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         long start = System.nanoTime();
         log.info("generateTeachingMethods invoked with {}", moduleInfoRequestDTO);
-        var response = aiCompletionService.generateTeachingMethods(moduleInfoRequestDTO).block();
+        var response = aiCompletionService.generateTeachingMethods(moduleInfoRequestDTO);
         log.info("generateTeachingMethods took {}", TimeLogUtil.formatDurationFrom(start));
         return ResponseEntity.ok(new CompletionServiceResponseDTO(response));
     }
