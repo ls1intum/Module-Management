@@ -24,6 +24,21 @@ spring:
         jwt:
           jwk-set-uri: ${KEYCLOAK_URL:http://localhost:${KEYCLOAK_PORT:8081}}/realms/${KEYCLOAK_REALM:module-management}/protocol/openid-connect/certs
           issuer-uri: ${KEYCLOAK_URL:http://localhost:${KEYCLOAK_PORT:8081}}/realms/${KEYCLOAK_REALM:module-management}
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:not-needed}
+      base-url: ${LOCAL_LLM_BASE_URL:http://localhost:1234}
+      chat:
+        options:
+          model: ${LOCAL_LLM_MODEL:}
+
+    # azure:
+    #   openai:
+    #     api-key: ${AZURE_API_KEY:}
+    #     endpoint: ${AZURE_ENDPOINT:}
+    #     chat:
+    #       options:
+    #         deployment-name: ${AZURE_DEPLOYMENT_NAME:}
 
 logging:
   level:

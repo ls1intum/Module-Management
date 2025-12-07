@@ -1,7 +1,6 @@
 package modulemanagement.ls1.shared;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -32,14 +31,17 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig {
     private final JwtAuthConverter jwtAuthConverter;
-    private final OAuth2ResourceServerProperties properties;
     private final CurrentUserArgumentResolver currentUserArgumentResolver;
 
+    @Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
+    private String jwkSetUri;
+
+    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+    private String issuerUri;
+
     public SecurityConfig(JwtAuthConverter jwtAuthConverter,
-            OAuth2ResourceServerProperties properties,
             CurrentUserArgumentResolver currentUserArgumentResolver) {
         this.jwtAuthConverter = jwtAuthConverter;
-        this.properties = properties;
         this.currentUserArgumentResolver = currentUserArgumentResolver;
     }
 
@@ -50,13 +52,10 @@ public class SecurityConfig {
 
     @Bean
     public JwtDecoder jwtDecoder() {
-        NimbusJwtDecoder decoder = NimbusJwtDecoder.withJwkSetUri(properties.getJwt().getJwkSetUri()).build();
+        NimbusJwtDecoder decoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
         decoder.setJwtValidator(tokenValidator());
         return decoder;
     }
-
-    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
-    private String issuerUri;
 
     @Bean
     public OAuth2TokenValidator<Jwt> tokenValidator() {
@@ -80,7 +79,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/v3/api-docs.yaml", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll()
+                    )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {
                     jwt.jwtAuthenticationConverter(jwtAuthConverter);
                     jwt.decoder(jwtDecoder());
