@@ -51,7 +51,6 @@ services:
     container_name: module-management-server
     depends_on:
       - postgres
-      - keycloak
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/ModuleManagement
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
