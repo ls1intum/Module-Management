@@ -4,7 +4,7 @@ export const environment = {
   serverUrl: 'https://module.aet.cit.tum.de',
   keycloak: {
     url: ' https://keycloak.ase.in.tum.de/',
-    realm: 'Test',
+    realm: 'tum',
     clientId: 'module-management'
   }
 };
