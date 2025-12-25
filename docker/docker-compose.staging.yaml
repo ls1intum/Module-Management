@@ -12,6 +12,7 @@ services:
     depends_on:
       - client
       - server
+      - keycloak
     networks:
       - module-management-network
     restart: unless-stopped
@@ -30,6 +31,36 @@ services:
     networks:
       - module-management-network
     restart: unless-stopped
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.4.5
+    container_name: module-management-keycloak
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=${KEYCLOAK_ADMIN_USERNAME}
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+      - KC_DB=postgres
+      - KC_DB_URL_HOST=postgres
+      - KC_DB_URL_DATABASE=keycloak
+      - KC_DB_USERNAME=${DB_USER}
+      - KC_DB_PASSWORD=${DB_PASSWORD}
+      - KC_HOSTNAME=module.aet.cit.tum.de
+      - KC_HOSTNAME_STRICT=false
+      - KC_HOSTNAME_STRICT_HTTPS=false
+      - KC_HTTP_ENABLED=true
+      - KC_HTTP_RELATIVE_PATH=/keycloak
+      - KC_PROXY=edge
+      - KC_PROXY_HEADERS=xforwarded
+      - KC_HOSTNAME_STRICT_BACKCHANNEL=false
+    command: start
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+      - ./keycloak-themes:/opt/keycloak/themes
+    depends_on:
+      - postgres
+    networks:
+      - module-management-network
+    restart: unless-stopped
+
   ai-service:
     image: ghcr.io/ls1intum/module-management/ai:${IMAGE_TAG}
     container_name: module-management-ai
@@ -51,11 +82,12 @@ services:
     container_name: module-management-server
     depends_on:
       - postgres
+      - keycloak
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/ModuleManagement
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
-      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/certs
+      - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/certs'
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}
       - AI_SERVICE_URL=http://ai-service:5000
     networks:
@@ -75,6 +107,7 @@ services:
 volumes:
   postgres_data:
   overlap_data:
+  keycloak_data:
 
 
 networks:
