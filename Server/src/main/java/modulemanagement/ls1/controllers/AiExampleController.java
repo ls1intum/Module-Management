@@ -2,7 +2,7 @@ package modulemanagement.ls1.controllers;
 
 import modulemanagement.ls1.dtos.PromptRequestDTO;
 import modulemanagement.ls1.dtos.PromptResponseDTO;
-import modulemanagement.ls1.services.SpringAiService;
+import modulemanagement.ls1.services.LLMGenerationService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,17 +11,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/ai-example")
 public class AiExampleController {
 
-    private final SpringAiService springAiService;
+    private final LLMGenerationService llmGenerationService;
 
-    public AiExampleController(SpringAiService springAiService) {
-        this.springAiService = springAiService;
+    public AiExampleController(LLMGenerationService llmGenerationService) {
+        this.llmGenerationService = llmGenerationService;
     }
 
     @PostMapping("/prompt")
     public ResponseEntity<PromptResponseDTO> generateResponse(
             @Valid @RequestBody PromptRequestDTO request) {
 
-        String response = springAiService.generateResponse(request.getPrompt());
+        String response = llmGenerationService.generate(request.getPrompt(), "Test");
 
         return ResponseEntity.ok(new PromptResponseDTO(response));
     }

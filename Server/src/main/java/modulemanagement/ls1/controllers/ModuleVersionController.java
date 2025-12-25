@@ -8,7 +8,7 @@ import modulemanagement.ls1.dtos.CompletionServiceRequestDTO;
 import modulemanagement.ls1.dtos.ModuleVersionViewFeedbackDTO;
 import modulemanagement.ls1.dtos.SimilarModuleDTO;
 import modulemanagement.ls1.models.User;
-import modulemanagement.ls1.services.LlmGenerationService;
+import modulemanagement.ls1.services.LLMGenerationService;
 import modulemanagement.ls1.services.PromptBuilderService;
 import modulemanagement.ls1.services.ModuleVersionService;
 import jakarta.validation.Valid;
@@ -33,11 +33,11 @@ public class ModuleVersionController {
 
     private final ModuleVersionService moduleVersionService;
     private final PromptBuilderService promptBuilderService;
-    private final LlmGenerationService llmGenerationService;
+    private final LLMGenerationService llmGenerationService;
 
     public ModuleVersionController(ModuleVersionService moduleVersionService,
             PromptBuilderService promptBuilderService,
-            LlmGenerationService llmGenerationService) {
+            LLMGenerationService llmGenerationService) {
         this.moduleVersionService = moduleVersionService;
         this.promptBuilderService = promptBuilderService;
         this.llmGenerationService = llmGenerationService;

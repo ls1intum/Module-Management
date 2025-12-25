@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class LlmGenerationService {
+public class LLMGenerationService {
 
-    private static final Logger log = LoggerFactory.getLogger(LlmGenerationService.class);
+    private static final Logger log = LoggerFactory.getLogger(LLMGenerationService.class);
     private final ChatModel chatModel;
-    private final UsageTrackingService usageTrackingService;
+    private final LLMUsageTrackingService usageTrackingService;
 
     public String generate(String prompt, String field) {
         try {
@@ -36,4 +36,3 @@ public class LlmGenerationService {
         }
     }
 }
-

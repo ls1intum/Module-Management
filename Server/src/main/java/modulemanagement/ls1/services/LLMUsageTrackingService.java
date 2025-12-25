@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UsageTrackingService {
+public class LLMUsageTrackingService {
 
-    private static final Logger log = LoggerFactory.getLogger(UsageTrackingService.class);
+    private static final Logger log = LoggerFactory.getLogger(LLMUsageTrackingService.class);
 
     public UsageInfo extractUsage(ChatResponse chatResponse) {
         try {
@@ -95,7 +95,6 @@ public class UsageTrackingService {
                 String.format("%.6f", costUsd));
     }
 
-
     public void extractAndLogUsage(ChatResponse chatResponse, long duration) {
         UsageInfo usage = extractUsage(chatResponse);
         logUsage(usage, duration);
@@ -115,4 +114,3 @@ public class UsageTrackingService {
         }
     }
 }
-
