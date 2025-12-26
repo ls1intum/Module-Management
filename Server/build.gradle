@@ -26,8 +26,6 @@ configurations {
 
 repositories {
     mavenCentral()
-    maven { url 'https://jcenter.bintray.com/' }
-    maven { url 'https://plugins.gradle.org/m2/' }
 }
 
 
@@ -54,7 +52,7 @@ dependencies {
 
     // Spring AI dependencies
     implementation platform('org.springframework.ai:spring-ai-bom:2.0.0-M1')
-    // implementation 'org.springframework.ai:spring-ai-starter-model-azure-openai'
+    implementation 'org.springframework.ai:spring-ai-starter-model-azure-openai'
     implementation 'org.springframework.ai:spring-ai-starter-model-openai'
     
     // EJML for efficient matrix operations
