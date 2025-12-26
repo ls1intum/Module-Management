@@ -27,10 +27,13 @@ spring:
   ai:
     openai:
       api-key: ${OPENAI_API_KEY:not-needed}
-      base-url: ${LOCAL_LLM_BASE_URL:http://localhost:1234}
+      base-url: ${LOCAL_OPENAI_BASE_URL:http://localhost:1234}
       chat:
         options:
           model: ${LOCAL_LLM_MODEL:}
+      embedding:
+        options:
+          model: ${LOCAL_EMBEDDING_MODEL:}
 
     # azure:
     #   openai:
@@ -39,6 +42,14 @@ spring:
     #     chat:
     #       options:
     #         deployment-name: ${AZURE_DEPLOYMENT_NAME:}
+    #     embedding:
+    #       options:
+    #         deployment-name: ${AZURE_EMBEDDING_DEPLOYMENT_NAME:}
+
+overlap-detection:
+  threshold: 0.6
+  module-info-dir: classpath:data/module-info/modules.json
+  cache-dir: data/cache
 
 logging:
   level:

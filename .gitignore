@@ -59,5 +59,13 @@ build/
 .env
 *__pycache__
 /AI/.venv
-/.DS_Store
+
+### macOS ###
+.DS_Store
+**/.DS_Store
 /AI/data/cache/
+
+### Embedding Cache ###
+# Overlap detection embedding cache (generated at runtime)
+Server/data/cache/
+

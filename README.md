@@ -213,8 +213,9 @@ The AI service supports using local LLMs via LM Studio or other OpenAI-compatibl
 
    ```bash
    USE_LOCAL_LLM=true
-   LOCAL_LLM_BASE_URL=http://host.docker.internal:1234/v1
+   LOCAL_OPENAI_BASE_URL=http://host.docker.internal:1234/v1
    LOCAL_LLM_MODEL=your-model-name
+   LOCAL_EMBEDDING_MODEL=your-mode-name
    ```
 
    **Important Notes:**
