@@ -26,7 +26,7 @@ import java.util.*;
 public class ModuleDataService {
 
     private final ResourceLoader resourceLoader;
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Value("${overlap-detection.module-info-dir:classpath:data/module-info/modules.json}")
     private String moduleInfoFile;
