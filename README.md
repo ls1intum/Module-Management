@@ -52,15 +52,13 @@ The system implements a modular client-server architecture with three primary co
 
 1. **Angular Client**: Provides role-specific user interfaces with responsive design
 2. **Spring Boot Server**: Implements core business logic, workflow, and data persistence
-3. **Python AI Service**: Delivers module description generation and overlap detection capabilities
 
 ![subsystem_diagram_v2](https://github.com/user-attachments/assets/1fa569ac-c179-4dea-9b04-e7141031f161)
 
 ### Technology Stack
 
 - **Client-side**: Angular 19, TypeScript, Tailwind CSS
-- **Server-side**: Java Spring Boot, Hibernate, PostgreSQL
-- **AI Service**: Python FastAPI, LangChain, Sentence Transformers
+- **Server-side**: Java Spring Boot, Hibernate, PostgreSQL, SpringAI
 - **Authentication**: Keycloak integration
 - **Deployment**: Docker containerization
 
@@ -74,7 +72,6 @@ Make sure you have the following installed:
 - Node.js v20.19+ and npm
 - Angular CLI
 - Java JDK 21
-- Python 3.11+
 
 ### Environment Configuration
 
@@ -90,7 +87,7 @@ cp .example.env .env
 
 #### 1. Start Docker Services
 
-From the project root directory, start PostgreSQL, Keycloak, and the AI service:
+From the project root directory, start PostgreSQL and Keycloak:
 
 ```bash
 docker-compose -f docker/docker-compose.dev.yaml --env-file .env up
@@ -129,70 +126,9 @@ The client will start on `http://localhost:4200`.
 
 **Development Mode**: The client uses `environment.development.ts` which points to your local server and Keycloak instances. URLs are configured in the environment file.
 
-### Python AI Service Development
-
-#### Setting Up a Virtual Environment
-
-If you want to run the AI service locally (outside Docker) for development:
-
-1. **Navigate to the AI directory**:
-
-```bash
-cd AI
-```
-
-2. **Create a virtual environment** (using Python 3.11):
-
-   **Option A: Using pyenv (Recommended)**
-
-   If you have `pyenv` installed:
-
-   ```bash
-   pyenv install 3.11  # If not already installed
-   pyenv local 3.11    # Sets local Python version for this directory
-   python -m venv .venv   # Creates venv using the pyenv-managed Python
-   ```
-
-   **Option B: Using system Python 3.11**
-
-   If `python3.11` is available on your system:
-
-   ```bash
-   python3.11 -m venv .venv
-   ```
-
-3. **Activate the virtual environment**:
-
-   On macOS/Linux:
-
-   ```bash
-   source .venv/bin/activate
-   ```
-
-   On Windows:
-
-   ```bash
-   .venv\Scripts\activate
-   ```
-
-4. **Install dependencies**:
-
-```bash
-pip install --upgrade pip
-pip install -r requirements.txt
-```
-
-5. **Run the service locally**:
-
-```bash
-uvicorn app.main:app --host 0.0.0.0 --port 5001 --reload
-```
-
-The `--reload` flag enables auto-reload on code changes during development.
-
 #### Using a Local LLM (LM Studio)
 
-The AI service supports using local LLMs via LM Studio or other OpenAI-compatible local servers. This is useful for development when you don't want to use Azure OpenAI.
+SpringAI supports using local LLMs via LM Studio or other OpenAI-compatible local servers. This is useful for development when you don't want to use Azure OpenAI.
 
 **Prerequisites:**
 

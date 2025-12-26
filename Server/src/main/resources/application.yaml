@@ -57,9 +57,6 @@ logging:
     org.springframework.security.oauth2: DEBUG
     org.springframework.security.jwt: DEBUG
 
-ai-service:
-  url: http://localhost:${AI_SERVICE_PORT}
-
 module-management:
   keycloak:
     url: http://localhost:${AUTH_PORT}/auth

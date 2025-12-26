@@ -30,34 +30,9 @@ services:
       - module-management-network
     restart: unless-stopped
 
-  ai-service:
-    build:
-      context: ../AI
-      dockerfile: ai.Dockerfile
-    container_name: module-management-ai
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    volumes:
-      - overlap_data:/code/data
-      - ../AI/app:/code/app
-      - ../AI/requirements.txt:/code/requirements.txt
-    environment:
-      AZURE_API_KEY: ${AZURE_API_KEY}
-      AZURE_ENDPOINT: ${AZURE_ENDPOINT}
-      AZURE_DEPLOYMENT_NAME: ${AZURE_DEPLOYMENT_NAME}
-      AZURE_API_VERSION: ${AZURE_API_VERSION}
-      USE_LOCAL_LLM: ${USE_LOCAL_LLM}
-      LOCAL_OPENAI_BASE_URL: ${LOCAL_OPENAI_BASE_URL}
-      LOCAL_LLM_MODEL: ${LOCAL_LLM_MODEL}
-    ports:
-      - "${AI_SERVICE_PORT}:5000"
-    networks:
-      - module-management-network
-    restart: unless-stopped
 
 volumes:
   postgres_data:
-  overlap_data:
 
 
 networks:
