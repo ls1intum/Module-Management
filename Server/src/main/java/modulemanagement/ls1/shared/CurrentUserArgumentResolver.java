@@ -2,7 +2,7 @@ package modulemanagement.ls1.shared;
 
 import modulemanagement.ls1.models.User;
 import org.springframework.core.MethodParameter;
-import org.springframework.lang.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -19,26 +19,25 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(CurrentUser.class) 
+        return parameter.hasParameterAnnotation(CurrentUser.class)
                 && parameter.getParameterType().equals(User.class);
     }
 
     @Override
     public Object resolveArgument(@NonNull MethodParameter parameter,
-                                  ModelAndViewContainer mavContainer,
-                                  @NonNull NativeWebRequest webRequest,
-                                  WebDataBinderFactory binderFactory) throws AuthException {
+            ModelAndViewContainer mavContainer,
+            @NonNull NativeWebRequest webRequest,
+            WebDataBinderFactory binderFactory) throws AuthException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
+
         if (authentication instanceof JwtAuthenticationToken jwtAuth) {
             Object details = jwtAuth.getDetails();
             if (details instanceof User user) {
                 return user;
             }
         }
-        
+
         throw new AuthException(
-            "Could not resolve current user."
-        );
+                "Could not resolve current user.");
     }
 }
