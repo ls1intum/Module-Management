@@ -30,21 +30,6 @@ services:
     networks:
       - module-management-network
     restart: unless-stopped
-  ai-service:
-    image: ghcr.io/ls1intum/module-management/ai:${IMAGE_TAG}
-    container_name: module-management-ai
-    volumes:
-      - overlap_data:/code/data
-    environment:
-      AZURE_API_KEY: ${AZURE_API_KEY}
-      AZURE_ENDPOINT: ${AZURE_ENDPOINT}
-      AZURE_DEPLOYMENT_NAME: ${AZURE_DEPLOYMENT_NAME}
-      AZURE_API_VERSION: ${AZURE_API_VERSION}
-    ports:
-      - "${AI_SERVICE_PORT}:5000"
-    networks:
-      - module-management-network
-    restart: unless-stopped
 
   server:
     image: ghcr.io/ls1intum/module-management/server:${IMAGE_TAG}
@@ -57,7 +42,6 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/certs
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}
-      - AI_SERVICE_URL=http://ai-service:5000
     networks:
       - module-management-network
     restart: unless-stopped
@@ -67,14 +51,12 @@ services:
     container_name: module-management-client
     depends_on:
       - server
-      - ai-service
     networks:
       - module-management-network
     restart: unless-stopped
 
 volumes:
   postgres_data:
-  overlap_data:
 
 
 networks:

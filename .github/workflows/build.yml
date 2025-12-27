@@ -3,19 +3,12 @@ name: Build and Push Docker Image
 on:
   pull_request:
   push:
-    branches: [ main ] 
+    branches: [main]
   release:
     types:
       - created
 
 jobs:
-  build-ai:
-    uses: ls1intum/.github/.github/workflows/build-and-push-docker-image.yml@main
-    with:
-      image-name: ghcr.io/ls1intum/module-management/ai
-      docker-file: ./AI/ai.Dockerfile
-      docker-context: ./AI
-    secrets: inherit
   build-server:
     uses: ls1intum/.github/.github/workflows/build-and-push-docker-image.yml@main
     with:

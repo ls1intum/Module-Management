@@ -1,12 +1,16 @@
 package modulemanagement.ls1.dtos;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import modulemanagement.ls1.enums.Language;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CompletionServiceRequestDTO {
     @NotNull private String bulletPoints;
     private String contextPrompt;
