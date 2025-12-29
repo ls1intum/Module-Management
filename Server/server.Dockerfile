@@ -9,7 +9,9 @@ FROM eclipse-temurin:21
 
 EXPOSE 8080
 
-RUN mkdir /app
+RUN mkdir -p /app/data/cache
+
+WORKDIR /app
 
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/spring-boot-application.jar
 

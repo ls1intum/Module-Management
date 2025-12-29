@@ -17,8 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmbeddingSimilarityService {
 
-    private static final int MAX_RETRIES = 3;
-    private static final long INITIAL_RETRY_DELAY_MS = 1000;
     private static final int BATCH_SIZE = 32;
 
     private final EmbeddingModel embeddingModel;

@@ -49,6 +49,8 @@ public class ModuleDataService {
                 log.info("Loaded {} modules from {}", fileModules.size(), resource.getFilename());
                 return allModules;
 
+            } else {
+                log.warn("Resource does not exist or is not readable: {}", moduleInfoFile);
             }
 
         } catch (Exception e) {
@@ -128,7 +130,13 @@ public class ModuleDataService {
     public DMatrixRMaj loadCache(String dataHash) {
         try {
             Path cachePath = Paths.get(cacheDir);
+            if (!cachePath.isAbsolute()) {
+                cachePath = cachePath.toAbsolutePath();
+            }
+            log.info("Loading cache from: {}", cachePath);
+            
             if (!Files.exists(cachePath)) {
+                log.warn("Cache directory does not exist: {}, creating it", cachePath);
                 Files.createDirectories(cachePath);
                 return null;
             }
@@ -137,6 +145,8 @@ public class ModuleDataService {
             Path metadataFile = cachePath.resolve("metadata.json");
 
             if (!Files.exists(embeddingsFile) || !Files.exists(metadataFile)) {
+                log.warn("Cache files not found. Embeddings exists: {}, Metadata exists: {}", 
+                        Files.exists(embeddingsFile), Files.exists(metadataFile));
                 return null;
             }
 
@@ -177,6 +187,9 @@ public class ModuleDataService {
     public void saveCache(String dataHash, int numModules, DMatrixRMaj embeddings) {
         try {
             Path cachePath = Paths.get(cacheDir);
+            if (!cachePath.isAbsolute()) {
+                cachePath = cachePath.toAbsolutePath();
+            }
             Files.createDirectories(cachePath);
 
             // Save metadata
