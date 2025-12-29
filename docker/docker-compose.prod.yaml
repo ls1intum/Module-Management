@@ -31,17 +31,47 @@ services:
       - module-management-network
     restart: unless-stopped
 
+  text-embeddings-inference:
+    image: ghcr.io/huggingface/text-embeddings-inference:cpu-latest
+    container_name: module-management-tei
+    pull_policy: always
+    command:
+      - --model-id
+      - sentence-transformers/all-mpnet-base-v2
+      - --pooling
+      - mean
+      - --dtype
+      - float32
+      - --auto-truncate
+    volumes:
+      - hf_cache:/data
+    ports:
+      - "1234:80"
+    networks:
+      - module-management-network
+    restart: unless-stopped
+
   server:
     image: ghcr.io/ls1intum/module-management/server:${IMAGE_TAG}
     container_name: module-management-server
     depends_on:
       - postgres
+      - text-embeddings-inference
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/ModuleManagement
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI=${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}/protocol/openid-connect/certs
       - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI=${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}
+      - AZURE_API_KEY=${AZURE_API_KEY}
+      - AZURE_ENDPOINT=${AZURE_ENDPOINT}
+      - AZURE_DEPLOYMENT_NAME=${AZURE_DEPLOYMENT_NAME}
+      - OPENAI_BASE_URL=http://text-embeddings-inference:80
+      - EMBEDDING_MODEL_NAME=sentence-transformers/all-mpnet-base-v2
+      - CHAT_MODEL_SOURCE=AzureOpenAiChatModel
+      - EMBEDDING_MODEL_SOURCE=OpenAiEmbeddingModel
+    volumes:
+      - embeddings_cache:/app/data/cache
     networks:
       - module-management-network
     restart: unless-stopped
@@ -57,7 +87,8 @@ services:
 
 volumes:
   postgres_data:
-
+  hf_cache:
+  embeddings_cache:
 
 networks:
   module-management-network:

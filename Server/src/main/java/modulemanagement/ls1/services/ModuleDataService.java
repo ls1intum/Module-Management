@@ -40,7 +40,7 @@ public class ModuleDataService {
         try {
             Resource resource = resourceLoader.getResource(moduleInfoFile);
 
-            if (resource.exists() && resource.isFile()) {
+            if (resource.exists() && resource.isReadable()) {
                 List<Map<String, Object>> fileModules = objectMapper.readValue(
                         resource.getInputStream(),
                         new TypeReference<List<Map<String, Object>>>() {
