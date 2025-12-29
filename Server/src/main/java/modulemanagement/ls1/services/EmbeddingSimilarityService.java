@@ -42,32 +42,15 @@ public class EmbeddingSimilarityService {
             int end = Math.min(i + BATCH_SIZE, texts.size());
             List<String> batch = texts.subList(i, end);
 
-            boolean success = false;
-
-            for (int attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-                try {
-                    if (attempt > 0) {
-                        long delayMs = INITIAL_RETRY_DELAY_MS * (1L << (attempt - 1)); // Exponential backoff
-                        log.warn("Retrying embedding batch {}-{} (attempt {}/{}) after {}ms",
-                                i + 1, end, attempt + 1, MAX_RETRIES + 1, delayMs);
-                        Thread.sleep(delayMs);
-                    } else {
-                        log.info("Processing embedding batch {}-{} of {}", i + 1, end, texts.size());
-                    }
-
-                    EmbeddingResponse response = embeddingModel.embedForResponse(batch);
-                    response.getResults().forEach(e -> allEmbeddings.add(e.getOutput()));
-                    success = true;
-                    break;
-                } catch (Exception e) {
-                    log.warn("Failed to generate embeddings for batch {}-{} (attempt {}/{}): {}",
-                            i + 1, end, attempt + 1, MAX_RETRIES + 1, e.getMessage());
-                }
+            try {
+                EmbeddingResponse response = embeddingModel.embedForResponse(batch);
+                response.getResults().forEach(e -> allEmbeddings.add(e.getOutput()));
+                log.info("Generated embeddings for batch {}-{}", i + 1, end);
+            } catch (Exception e) {
+                log.warn("Failed to generate embeddings for batch {}-{}: {}",
+                        i + 1, end, e.getMessage());
             }
 
-            if (!success) {
-                log.error("Skipping batch {}-{} after all retry attempts failed", i + 1, end);
-            }
         }
 
         if (allEmbeddings.isEmpty()) {
