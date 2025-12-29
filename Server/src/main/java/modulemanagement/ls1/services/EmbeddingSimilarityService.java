@@ -17,6 +17,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmbeddingSimilarityService {
 
+    private static final int MAX_RETRIES = 3;
+    private static final long INITIAL_RETRY_DELAY_MS = 1000;
+    private static final int BATCH_SIZE = 32;
+
     private final EmbeddingModel embeddingModel;
 
     public DMatrixRMaj generateEmbedding(String text) {
@@ -34,17 +38,35 @@ public class EmbeddingSimilarityService {
     public DMatrixRMaj generateEmbeddings(List<String> texts) {
         List<float[]> allEmbeddings = new ArrayList<>();
 
-        int batchSize = 32;
-        for (int i = 0; i < texts.size(); i += batchSize) {
-            int end = Math.min(i + batchSize, texts.size());
+        for (int i = 0; i < texts.size(); i += BATCH_SIZE) {
+            int end = Math.min(i + BATCH_SIZE, texts.size());
             List<String> batch = texts.subList(i, end);
 
-            try {
-                log.info("Processing embedding batch {}-{} of {}", i + 1, end, texts.size());
-                EmbeddingResponse response = embeddingModel.embedForResponse(batch);
-                response.getResults().forEach(e -> allEmbeddings.add(e.getOutput()));
-            } catch (Exception e) {
-                log.error("Failed to generate embeddings for batch {}-{}", i + 1, end, e);
+            boolean success = false;
+
+            for (int attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+                try {
+                    if (attempt > 0) {
+                        long delayMs = INITIAL_RETRY_DELAY_MS * (1L << (attempt - 1)); // Exponential backoff
+                        log.warn("Retrying embedding batch {}-{} (attempt {}/{}) after {}ms",
+                                i + 1, end, attempt + 1, MAX_RETRIES + 1, delayMs);
+                        Thread.sleep(delayMs);
+                    } else {
+                        log.info("Processing embedding batch {}-{} of {}", i + 1, end, texts.size());
+                    }
+
+                    EmbeddingResponse response = embeddingModel.embedForResponse(batch);
+                    response.getResults().forEach(e -> allEmbeddings.add(e.getOutput()));
+                    success = true;
+                    break;
+                } catch (Exception e) {
+                    log.warn("Failed to generate embeddings for batch {}-{} (attempt {}/{}): {}",
+                            i + 1, end, attempt + 1, MAX_RETRIES + 1, e.getMessage());
+                }
+            }
+
+            if (!success) {
+                log.error("Skipping batch {}-{} after all retry attempts failed", i + 1, end);
             }
         }
 
