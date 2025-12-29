@@ -34,9 +34,19 @@ public class EmbeddingSimilarityService {
     public DMatrixRMaj generateEmbeddings(List<String> texts) {
         List<float[]> allEmbeddings = new ArrayList<>();
 
-        EmbeddingResponse response = embeddingModel.embedForResponse(texts);
+        int batchSize = 32;
+        for (int i = 0; i < texts.size(); i += batchSize) {
+            int end = Math.min(i + batchSize, texts.size());
+            List<String> batch = texts.subList(i, end);
 
-        response.getResults().forEach(e -> allEmbeddings.add(e.getOutput()));
+            try {
+                log.info("Processing embedding batch {}-{} of {}", i + 1, end, texts.size());
+                EmbeddingResponse response = embeddingModel.embedForResponse(batch);
+                response.getResults().forEach(e -> allEmbeddings.add(e.getOutput()));
+            } catch (Exception e) {
+                log.error("Failed to generate embeddings for batch {}-{}", i + 1, end, e);
+            }
+        }
 
         if (allEmbeddings.isEmpty()) {
             return new DMatrixRMaj(0, 0);

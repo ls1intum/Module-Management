@@ -30,9 +30,31 @@ services:
       - module-management-network
     restart: unless-stopped
 
+  text-embeddings-inference:
+    image: ghcr.io/huggingface/text-embeddings-inference:cpu-latest
+    container_name: module-management-tei
+    platform: linux/amd64
+    pull_policy: always
+    command:
+      - --model-id
+      - sentence-transformers/all-mpnet-base-v2
+      - --pooling
+      - mean
+      - --dtype
+      - float32
+      - --auto-truncate
+    volumes:
+      - hf_cache:/data
+    ports:
+      - "1234:80"
+    networks:
+      - module-management-network
+    restart: unless-stopped
+
 
 volumes:
   postgres_data:
+  hf_cache:
 
 
 networks:
