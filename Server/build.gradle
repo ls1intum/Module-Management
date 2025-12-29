@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.7'
+    id 'org.springframework.boot' version '4.0.1'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'org.springdoc.openapi-gradle-plugin' version '1.9.0'
 }
@@ -26,19 +26,14 @@ configurations {
 
 repositories {
     mavenCentral()
-    maven { url 'https://jcenter.bintray.com/' }
-    maven { url 'https://plugins.gradle.org/m2/' }
 }
 
-ext {
-    set('springModulithVersion', "1.4.3")
-}
 
 dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    implementation 'org.liquibase:liquibase-core'
+    implementation 'org.springframework.boot:spring-boot-starter-liquibase'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
@@ -49,26 +44,26 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
-    implementation 'org.springframework.modulith:spring-modulith-starter-core'
-    implementation 'org.springframework.modulith:spring-modulith-starter-jpa'
     implementation "com.itextpdf:itext-core:9.1.0"
     implementation "com.itextpdf:html2pdf:6.1.0"
 
     implementation "ch.qos.logback:logback-classic:1.5.19"
     implementation "ch.qos.logback:logback-core:1.5.19"
 
+    // Spring AI dependencies
+    implementation platform('org.springframework.ai:spring-ai-bom:2.0.0-M1')
+    implementation 'org.springframework.ai:spring-ai-starter-model-azure-openai'
+    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+    
+    // EJML for efficient matrix operations
+    implementation 'org.ejml:ejml-all:0.43.1'
+
     runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.modulith:spring-modulith-bom:${springModulithVersion}"
-    }
-}
 
 openApi {
     apiDocsUrl = "http://localhost:8080/v3/api-docs.yaml"

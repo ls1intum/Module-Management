@@ -4,7 +4,6 @@ import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
 import modulemanagement.ls1.dtos.ModuleVersionUpdateResponseDTO;
 import modulemanagement.ls1.dtos.ModuleVersionViewDTO;
 import modulemanagement.ls1.dtos.ModuleVersionViewFeedbackDTO;
-import modulemanagement.ls1.dtos.OverlapDetectionRequestDTO;
 import modulemanagement.ls1.dtos.SimilarModuleDTO;
 import modulemanagement.ls1.enums.FeedbackStatus;
 import modulemanagement.ls1.enums.ModuleVersionStatus;
@@ -34,7 +33,8 @@ public class ModuleVersionService {
     private final OverlapDetectionService overlapDetectionService;
     private final PdfCreator pdfCreator;
 
-    public ModuleVersionService(ModuleVersionRepository moduleVersionRepository, ProposalRepository proposalRepository, OverlapDetectionService overlapDetectionService, PdfCreator pdfCreator) {
+    public ModuleVersionService(ModuleVersionRepository moduleVersionRepository, ProposalRepository proposalRepository,
+            OverlapDetectionService overlapDetectionService, PdfCreator pdfCreator) {
         this.moduleVersionRepository = moduleVersionRepository;
         this.proposalRepository = proposalRepository;
         this.overlapDetectionService = overlapDetectionService;
@@ -51,9 +51,10 @@ public class ModuleVersionService {
                 user.getRole() == UserRole.ACADEMIC_PROGRAM_ADVISOR;
     }
 
-
-    public ModuleVersionUpdateResponseDTO updateModuleVersionFromRequest(UUID userId, Long moduleVersionId, ModuleVersionUpdateRequestDTO request) {
-        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("ModuleVersion not found"));
+    public ModuleVersionUpdateResponseDTO updateModuleVersionFromRequest(UUID userId, Long moduleVersionId,
+            ModuleVersionUpdateRequestDTO request) {
+        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId)
+                .orElseThrow(() -> new ResourceNotFoundException("ModuleVersion not found"));
         if (!mv.getProposal().getCreatedBy().getUserId().equals(userId))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
 
@@ -95,10 +96,10 @@ public class ModuleVersionService {
     }
 
     public void updateStatus(Long moduleVersionId) {
-        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).
-                orElseThrow(() -> new ResourceNotFoundException("Could not update corresponding module version status"));
+        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(
+                () -> new ResourceNotFoundException("Could not update corresponding module version status"));
         if (mv.getStatus().equals(ModuleVersionStatus.CANCELLED)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT,"Proposal was cancelled by the submitter.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Proposal was cancelled by the submitter.");
         }
         Proposal p = mv.getProposal();
         if (!mv.equals(p.getLatestModuleVersionWithContent())) {
@@ -108,7 +109,7 @@ public class ModuleVersionService {
         boolean allFeedbackPositive = true;
         boolean oneFeedbackNegative = false;
         boolean oneFeedbackRejected = false;
-        for (Feedback feedback: mv.getRequiredFeedbacks()) {
+        for (Feedback feedback : mv.getRequiredFeedbacks()) {
             if (!feedback.getStatus().equals(FeedbackStatus.APPROVED)) {
                 allFeedbackPositive = false;
             }
@@ -138,9 +139,10 @@ public class ModuleVersionService {
     }
 
     public ModuleVersionUpdateResponseDTO getModuleVersionUpdateDtoFromId(Long moduleVersionId, UUID userId) {
-        var mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("Module Version not found"));
+        var mv = moduleVersionRepository.findById(moduleVersionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Module Version not found"));
         Proposal p = mv.getProposal();
-        if (!p.getCreatedBy().getUserId().equals(userId)){
+        if (!p.getCreatedBy().getUserId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
         }
 
@@ -152,8 +154,8 @@ public class ModuleVersionService {
     }
 
     public ModuleVersionViewDTO getModuleVersionViewDto(Long moduleVersionId, UUID userId) {
-        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).
-                orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
+        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
         Proposal p = mv.getProposal();
         if (!p.getCreatedBy().getUserId().equals(userId))
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access.");
@@ -161,17 +163,19 @@ public class ModuleVersionService {
     }
 
     public List<SimilarModuleDTO> getSimilarModules(Long moduleVersionId, User user) {
-        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
+        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
 
         if (!hasAccessPermission(mv.getProposal(), user)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
         }
 
-        return this.overlapDetectionService.checkModuleOverlap(OverlapDetectionRequestDTO.from(mv)).block();
+        return this.overlapDetectionService.checkModuleOverlap(mv);
     }
 
     public List<ModuleVersionViewFeedbackDTO> getPreviousModuleVersionFeedback(UUID userId, Long moduleVersionId) {
-        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
+        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
         Proposal proposal = mv.getProposal();
         if (!proposal.getCreatedBy().getUserId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
@@ -188,7 +192,8 @@ public class ModuleVersionService {
     }
 
     public Resource generateProfessorModuleVersionPdf(Long moduleVersionId, UUID userId) {
-        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId).orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
+        ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId)
+                .orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
         Proposal proposal = mv.getProposal();
         if (!proposal.getCreatedBy().getUserId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
