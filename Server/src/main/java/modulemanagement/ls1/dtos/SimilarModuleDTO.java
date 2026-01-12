@@ -41,33 +41,43 @@ public class SimilarModuleDTO {
         SimilarModuleDTO dto = new SimilarModuleDTO();
         dto.setModuleId(toStringOrNull(module.get("module_id")));
         dto.setTitleEng(toStringOrNull(module.get("title")));
-        dto.setLevelEng("");
-        dto.setLanguageEng("");
-        dto.setFrequencyEng("");
-        dto.setCredits(0);
-        dto.setDuration("");
-        dto.setHoursTotal(0);
-        dto.setHoursSelfStudy(0);
-        dto.setHoursPresence(0);
+        dto.setLevelEng(toStringOrNull(module.get("level")));
+        dto.setLanguageEng(toStringOrNull(module.get("language")));
+        dto.setFrequencyEng(toStringOrNull(module.get("frequency")));
+        dto.setCredits(toIntOrZero(module.get("credits")));
+        dto.setDuration(toStringOrNull(module.get("semester_duration")));
+        dto.setHoursTotal(toIntOrZero(module.get("hours_total")));
+        dto.setHoursSelfStudy(toIntOrZero(module.get("hours_self_study")));
+        dto.setHoursPresence(toIntOrZero(module.get("hours_presence")));
         dto.setContentEng(toStringOrNull(module.get("content")));
         dto.setContentPromptEng("");
         dto.setLearningOutcomesEng(toStringOrNull(module.get("learning_outcomes")));
         dto.setLearningOutcomesPromptEng("");
         dto.setExaminationAchievementsEng(toStringOrNull(module.get("examination_achievements")));
         dto.setExaminationAchievementsPromptEng("");
-        dto.setRepetitionEng("");
-        dto.setRecommendedPrerequisitesEng("");
+        dto.setRepetitionEng(toStringOrNull(module.get("repetition")));
+        dto.setRecommendedPrerequisitesEng(toStringOrNull(module.get("recommended_prerequisites")));
         dto.setTeachingMethodsEng(toStringOrNull(module.get("teaching_methods")));
         dto.setTeachingMethodsPromptEng("");
-        dto.setMediaEng("");
+        dto.setMediaEng(toStringOrNull(module.get("media")));
         dto.setLiteratureEng(toStringOrNull(module.get("literature")));
         dto.setResponsiblesEng("");
-        dto.setLvSwsLecturerEng("");
+        dto.setLvSwsLecturerEng(toStringOrNull(module.get("lv_sws_lecturer")));
         dto.setSimilarity(similarity);
         return dto;
     }
 
     private static String toStringOrNull(Object value) {
         return value != null ? value.toString() : null;
+    }
+
+    private static Integer toIntOrZero(Object value) {
+        if (value == null) return 0;
+        if (value instanceof Number) return ((Number) value).intValue();
+        try {
+            return Integer.parseInt(value.toString());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
     }
 }
