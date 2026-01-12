@@ -66,8 +66,8 @@ services:
       - AZURE_API_KEY=${AZURE_API_KEY}
       - AZURE_ENDPOINT=${AZURE_ENDPOINT}
       - AZURE_DEPLOYMENT_NAME=${AZURE_DEPLOYMENT_NAME}
-      - OPENAI_BASE_URL=http://text-embeddings-inference:80
-      - EMBEDDING_MODEL_NAME=sentence-transformers/all-mpnet-base-v2
+      - EMBEDDING_MODEL_URL=http://text-embeddings-inference:80
+      - EMBEDDING_MODEL_NAME=onnx-community/embeddinggemma-300M-ONNX
       - CHAT_MODEL_SOURCE=AzureOpenAiChatModel
       - EMBEDDING_MODEL_SOURCE=OpenAiEmbeddingModel
     volumes:

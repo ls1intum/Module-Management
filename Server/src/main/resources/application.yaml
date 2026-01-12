@@ -27,11 +27,12 @@ spring:
   ai:
     openai:
       api-key: ${OPENAI_API_KEY:not-needed}
-      base-url: ${OPENAI_BASE_URL:http://localhost:1234}
       chat:
+        base-url: ${CHAT_MODEL_URL:http://localhost:1234}
         options:
           model: ${CHAT_MODEL_NAME:}
       embedding:
+        base-url: ${EMBEDDING_MODEL_URL:http://localhost:1235}
         options:
           model: ${EMBEDDING_MODEL_NAME:}
 

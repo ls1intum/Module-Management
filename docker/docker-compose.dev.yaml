@@ -46,7 +46,7 @@ services:
     volumes:
       - hf_cache:/data
     ports:
-      - "1234:80"
+      - "1235:80"
     networks:
       - module-management-network
     restart: unless-stopped
