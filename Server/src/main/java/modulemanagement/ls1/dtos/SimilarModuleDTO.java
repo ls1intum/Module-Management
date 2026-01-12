@@ -72,8 +72,10 @@ public class SimilarModuleDTO {
     }
 
     private static Integer toIntOrZero(Object value) {
-        if (value == null) return 0;
-        if (value instanceof Number) return ((Number) value).intValue();
+        if (value == null)
+            return 0;
+        if (value instanceof Number)
+            return ((Number) value).intValue();
         try {
             return Integer.parseInt(value.toString());
         } catch (NumberFormatException e) {
