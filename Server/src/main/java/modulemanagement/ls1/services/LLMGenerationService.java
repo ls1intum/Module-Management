@@ -1,21 +1,19 @@
 package modulemanagement.ls1.services;
 
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import modulemanagement.ls1.shared.LLMUsageUtil;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LLMGenerationService {
-
-    private static final Logger log = LoggerFactory.getLogger(LLMGenerationService.class);
     private final ChatModel chatModel;
-    private final LLMUsageTrackingService usageTrackingService;
 
     public String generate(String prompt, String field) {
         try {
@@ -27,7 +25,7 @@ public class LLMGenerationService {
             String response = chatResponse.getResult().getOutput().getText();
             long duration = System.currentTimeMillis() - startTime;
 
-            usageTrackingService.extractAndLogUsage(chatResponse, duration);
+            LLMUsageUtil.extractAndLogUsage(chatResponse, duration);
 
             return response;
         } catch (Exception e) {

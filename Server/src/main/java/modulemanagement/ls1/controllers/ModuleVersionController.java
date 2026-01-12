@@ -9,7 +9,7 @@ import modulemanagement.ls1.dtos.ModuleVersionViewFeedbackDTO;
 import modulemanagement.ls1.dtos.SimilarModuleDTO;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.services.LLMGenerationService;
-import modulemanagement.ls1.services.PromptBuilderService;
+import modulemanagement.ls1.shared.LLMPromptUtil;
 import modulemanagement.ls1.services.ModuleVersionService;
 import jakarta.validation.Valid;
 import modulemanagement.ls1.shared.CurrentUser;
@@ -32,14 +32,11 @@ public class ModuleVersionController {
     private static final Logger log = LoggerFactory.getLogger(ModuleVersionController.class);
 
     private final ModuleVersionService moduleVersionService;
-    private final PromptBuilderService promptBuilderService;
     private final LLMGenerationService llmGenerationService;
 
     public ModuleVersionController(ModuleVersionService moduleVersionService,
-            PromptBuilderService promptBuilderService,
             LLMGenerationService llmGenerationService) {
         this.moduleVersionService = moduleVersionService;
-        this.promptBuilderService = promptBuilderService;
         this.llmGenerationService = llmGenerationService;
     }
 
@@ -83,7 +80,7 @@ public class ModuleVersionController {
     public ResponseEntity<CompletionServiceResponseDTO> generateContent(
             @Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         log.info("generateContent invoked with {}", moduleInfoRequestDTO);
-        String prompt = promptBuilderService.buildPrompt("content", moduleInfoRequestDTO);
+        String prompt = LLMPromptUtil.buildPrompt("content", moduleInfoRequestDTO);
         String response = llmGenerationService.generate(prompt, "content");
         return ResponseEntity.ok(new CompletionServiceResponseDTO(response));
     }
@@ -93,7 +90,7 @@ public class ModuleVersionController {
     public ResponseEntity<CompletionServiceResponseDTO> generateExaminationAchievements(
             @Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         log.info("generateExaminationAchievements invoked with {} ", moduleInfoRequestDTO);
-        String prompt = promptBuilderService.buildPrompt("examination-achievements", moduleInfoRequestDTO);
+        String prompt = LLMPromptUtil.buildPrompt("examination-achievements", moduleInfoRequestDTO);
         String response = llmGenerationService.generate(prompt, "examination-achievements");
         return ResponseEntity.ok(new CompletionServiceResponseDTO(response));
     }
@@ -103,7 +100,7 @@ public class ModuleVersionController {
     public ResponseEntity<CompletionServiceResponseDTO> generateLearningOutcomes(
             @Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         log.info("generateLearningOutcomes invoked with {}", moduleInfoRequestDTO);
-        String prompt = promptBuilderService.buildPrompt("learning-outcomes", moduleInfoRequestDTO);
+        String prompt = LLMPromptUtil.buildPrompt("learning-outcomes", moduleInfoRequestDTO);
         String response = llmGenerationService.generate(prompt, "learning-outcomes");
         return ResponseEntity.ok(new CompletionServiceResponseDTO(response));
     }
@@ -113,7 +110,7 @@ public class ModuleVersionController {
     public ResponseEntity<CompletionServiceResponseDTO> generateTeachingMethods(
             @Valid @RequestBody CompletionServiceRequestDTO moduleInfoRequestDTO) {
         log.info("generateTeachingMethods invoked with {}", moduleInfoRequestDTO);
-        String prompt = promptBuilderService.buildPrompt("teaching-methods", moduleInfoRequestDTO);
+        String prompt = LLMPromptUtil.buildPrompt("teaching-methods", moduleInfoRequestDTO);
         String response = llmGenerationService.generate(prompt, "teaching-methods");
         return ResponseEntity.ok(new CompletionServiceResponseDTO(response));
     }

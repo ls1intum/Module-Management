@@ -1,23 +1,21 @@
-package modulemanagement.ls1.services;
+package modulemanagement.ls1.shared;
 
-import lombok.RequiredArgsConstructor;
 import modulemanagement.ls1.dtos.CompletionServiceRequestDTO;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class PromptBuilderService {
+public final class LLMPromptUtil {
 
-    public String buildPrompt(String field, CompletionServiceRequestDTO request) {
+    public static String buildPrompt(String field, CompletionServiceRequestDTO request) {
         String context = accumulateModuleInfoFor(field, request);
-        return getPromptFor(field, request.getBulletPoints(),
-                request.getContextPrompt() != null ? request.getContextPrompt() : "", context);
+        return getPromptFor(field,
+                request.getBulletPoints(),
+                request.getContextPrompt() != null ? request.getContextPrompt() : "",
+                context);
     }
 
-    private String accumulateModuleInfoFor(String field, CompletionServiceRequestDTO moduleInfo) {
+    public static String accumulateModuleInfoFor(String field, CompletionServiceRequestDTO moduleInfo) {
         List<String> contextParts = new ArrayList<>();
 
         if (moduleInfo.getTitleEng() != null && !moduleInfo.getTitleEng().isEmpty()) {
@@ -92,7 +90,7 @@ public class PromptBuilderService {
         return String.join(" | ", contextParts);
     }
 
-    private String getPromptFor(String field, String bulletPoints, String contextPrompt, String context) {
+    public static String getPromptFor(String field, String bulletPoints, String contextPrompt, String context) {
         return String.format(
                 "You are a professor at the Technical University of Munich and an expert in creating academic module descriptions.\n"
                         +
@@ -121,4 +119,3 @@ public class PromptBuilderService {
                 field);
     }
 }
-
