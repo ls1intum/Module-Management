@@ -37,7 +37,7 @@ services:
     pull_policy: always
     command:
       - --model-id
-      - sentence-transformers/all-mpnet-base-v2
+      - onnx-community/embeddinggemma-300M-ONNX
       - --pooling
       - mean
       - --dtype

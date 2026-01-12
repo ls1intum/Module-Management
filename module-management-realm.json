@@ -27,7 +27,7 @@
   "oauth2DevicePollingInterval": 5,
   "enabled": true,
   "loginTheme": "white-theme",
-  "sslRequired": "external",
+  "sslRequired": "none",
   "registrationAllowed": false,
   "registrationEmailAsUsername": false,
   "rememberMe": false,
