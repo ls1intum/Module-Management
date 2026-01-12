@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import modulemanagement.ls1.models.ModuleVersion;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -23,7 +22,7 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ModuleDataService {
+public class ModuleDataCacheService {
 
     private final ResourceLoader resourceLoader;
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -83,50 +82,6 @@ public class ModuleDataService {
         return result.toString();
     }
 
-    public String getString(Map<String, Object> map, String key) {
-        Object value = map.get(key);
-        return value != null ? value.toString() : null;
-    }
-
-    private void addIfNotEmpty(List<String> list, String value) {
-        if (value != null && !value.isEmpty()) {
-            list.add(value);
-        }
-    }
-
-    public String createModuleText(Map<String, Object> module) {
-        List<String> fields = new ArrayList<>();
-
-        String title = getString(module, "title");
-        if (title != null && !title.isEmpty()) {
-            fields.add(title + title);
-        }
-
-        addIfNotEmpty(fields, getString(module, "content"));
-        addIfNotEmpty(fields, getString(module, "learning_outcomes"));
-        addIfNotEmpty(fields, getString(module, "examination_achievements"));
-        addIfNotEmpty(fields, getString(module, "teaching_methods"));
-        addIfNotEmpty(fields, getString(module, "literature"));
-
-        return String.join(" ", fields);
-    }
-
-    public String createModuleText(ModuleVersion module) {
-        List<String> fields = new ArrayList<>();
-
-        if (module.getTitleEng() != null && !module.getTitleEng().isEmpty()) {
-            fields.add(module.getTitleEng() + module.getTitleEng());
-        }
-
-        addIfNotEmpty(fields, module.getContentEng());
-        addIfNotEmpty(fields, module.getLearningOutcomesEng());
-        addIfNotEmpty(fields, module.getExaminationAchievementsEng());
-        addIfNotEmpty(fields, module.getTeachingMethodsEng());
-        addIfNotEmpty(fields, module.getLiteratureEng());
-
-        return String.join(" ", fields);
-    }
-
     public DMatrixRMaj loadCache(String dataHash) {
         try {
             Path cachePath = Paths.get(cacheDir);
@@ -134,7 +89,7 @@ public class ModuleDataService {
                 cachePath = cachePath.toAbsolutePath();
             }
             log.info("Loading cache from: {}", cachePath);
-            
+
             if (!Files.exists(cachePath)) {
                 log.warn("Cache directory does not exist: {}, creating it", cachePath);
                 Files.createDirectories(cachePath);
@@ -145,7 +100,7 @@ public class ModuleDataService {
             Path metadataFile = cachePath.resolve("metadata.json");
 
             if (!Files.exists(embeddingsFile) || !Files.exists(metadataFile)) {
-                log.warn("Cache files not found. Embeddings exists: {}, Metadata exists: {}", 
+                log.warn("Cache files not found. Embeddings exists: {}, Metadata exists: {}",
                         Files.exists(embeddingsFile), Files.exists(metadataFile));
                 return null;
             }
