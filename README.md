@@ -148,16 +148,9 @@ SpringAI supports using local LLMs via LM Studio or other OpenAI-compatible loca
    In your `.env` file, set:
 
    ```bash
-   USE_LOCAL_LLM=true
-   LOCAL_OPENAI_BASE_URL=http://host.docker.internal:1234/v1
-   LOCAL_LLM_MODEL=your-model-name
-   LOCAL_EMBEDDING_MODEL=your-mode-name
+   CHAT_MODEL_URL=http://localhost:1234
+   CHAT_MODEL_NAME=your-model-name
    ```
-
-   **Important Notes:**
-
-   - Use `host.docker.internal` instead of `localhost` or `127.0.0.1` when running in Docker, as containers can't access `localhost` on the host machine
-   - If running the AI service locally (not in Docker), you can use `http://localhost:1234/v1`
 
 ### Test Users
 
