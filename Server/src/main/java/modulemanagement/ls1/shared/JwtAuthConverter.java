@@ -3,8 +3,8 @@ package modulemanagement.ls1.shared;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.services.AuthenticationService;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,17 +27,18 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
     @Nullable
     public AbstractAuthenticationToken convert(@NonNull Jwt jwt) {
         User user = authenticationService.getAuthenticatedUser(jwt);
-        
+
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-    
+
         // Convert UserRole enum to Spring Security role format
         authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
 
         JwtAuthenticationToken token = new JwtAuthenticationToken(jwt, authorities, jwt.getClaim("preferred_username"));
-        
-        // Store the User object in the authentication token's details for later retrieval
+
+        // Store the User object in the authentication token's details for later
+        // retrieval
         token.setDetails(user);
-        
+
         return token;
     }
 

@@ -77,17 +77,10 @@ export abstract class ProposalBaseComponent {
     });
   }
 
-  private getCompletionServiceRequestDTO(field: string): CompletionServiceRequestDTO {
-    const promptFieldMapping: { [key: string]: string } = {
-      examination: 'examinationAchievementsPromptEng',
-      content: 'contentPromptEng',
-      learning: 'learningOutcomesPromptEng',
-      teaching: 'teachingMethodsPromptEng'
-    };
-
+  private getCompletionServiceRequestDTO(promptFieldName: string): CompletionServiceRequestDTO {
     const data: CompletionServiceRequestDTO = {
       bulletPoints: this.proposalForm.get('bulletPoints')?.value || 'New Module',
-      contextPrompt: this.proposalForm.get(promptFieldMapping[field])?.value || '',
+      contextPrompt: this.proposalForm.get(promptFieldName)?.value || '',
       ...this.proposalForm.value
     };
     return data;
@@ -99,7 +92,7 @@ export abstract class ProposalBaseComponent {
 
   protected async generateContent() {
     this.loading = true;
-    const data = this.getCompletionServiceRequestDTO('content');
+    const data = this.getCompletionServiceRequestDTO('contentPromptEng');
     this.moduleVersionService.generateContent(data).subscribe({
       next: (response: CompletionServiceResponseDTO) => {
         this.proposalForm.patchValue({ contentEng: response.responseData });
@@ -115,7 +108,7 @@ export abstract class ProposalBaseComponent {
 
   protected async generateExaminationAchievements() {
     this.loading = true;
-    const data = this.getCompletionServiceRequestDTO('examinationAchievementsEng');
+    const data = this.getCompletionServiceRequestDTO('examinationAchievementsPromptEng');
     this.moduleVersionService.generateExaminationAchievements(data).subscribe({
       next: (response: CompletionServiceResponseDTO) => {
         this.proposalForm.patchValue({ examinationAchievementsEng: response.responseData });
@@ -131,7 +124,7 @@ export abstract class ProposalBaseComponent {
 
   protected async generateLearningOutcomes() {
     this.loading = true;
-    const data = this.getCompletionServiceRequestDTO('learningOutcomesEng');
+    const data = this.getCompletionServiceRequestDTO('learningOutcomesPromptEng');
     this.moduleVersionService.generateLearningOutcomes(data).subscribe({
       next: (response: CompletionServiceResponseDTO) => {
         this.proposalForm.patchValue({ learningOutcomesEng: response.responseData });
@@ -147,7 +140,7 @@ export abstract class ProposalBaseComponent {
 
   protected async generateTeachingMethods() {
     this.loading = true;
-    const data = this.getCompletionServiceRequestDTO('teachingMethodsEng');
+    const data = this.getCompletionServiceRequestDTO('teachingMethodsPromptEng');
     this.moduleVersionService.generateTeachingMethods(data).subscribe({
       next: (response: CompletionServiceResponseDTO) => {
         this.proposalForm.patchValue({ teachingMethodsEng: response.responseData });

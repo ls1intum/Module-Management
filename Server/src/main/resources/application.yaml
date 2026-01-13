@@ -24,15 +24,36 @@ spring:
         jwt:
           jwk-set-uri: ${KEYCLOAK_URL:http://localhost:${KEYCLOAK_PORT:8081}}/realms/${KEYCLOAK_REALM:module-management}/protocol/openid-connect/certs
           issuer-uri: ${KEYCLOAK_URL:http://localhost:${KEYCLOAK_PORT:8081}}/realms/${KEYCLOAK_REALM:module-management}
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:not-needed}
+      chat:
+        base-url: ${CHAT_MODEL_URL:http://localhost:1234}
+        options:
+          model: ${CHAT_MODEL_NAME:}
+      embedding:
+        base-url: ${EMBEDDING_MODEL_URL:http://localhost:1235}
+        options:
+          model: ${EMBEDDING_MODEL_NAME:}
+
+    azure:
+      openai:
+        api-key: ${AZURE_API_KEY:}
+        endpoint: ${AZURE_ENDPOINT:}
+        chat:
+          options:
+            deployment-name: ${AZURE_DEPLOYMENT_NAME:}
+
+overlap-detection:
+  threshold: 0.6
+  module-info-dir: classpath:data/module-info/modules.json
+  cache-dir: data/cache
 
 logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.security.oauth2: DEBUG
     org.springframework.security.jwt: DEBUG
-
-ai-service:
-  url: http://localhost:${AI_SERVICE_PORT}
 
 module-management:
   keycloak:

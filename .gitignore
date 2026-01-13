@@ -57,7 +57,12 @@ build/
 ### VS Code ###
 .vscode/
 .env
-*__pycache__
-/AI/.venv
-/.DS_Store
-/AI/data/cache/
+
+### macOS ###
+.DS_Store
+**/.DS_Store
+
+### Embedding Cache ###
+# Overlap detection embedding cache (generated at runtime)
+Server/data/cache/
+
