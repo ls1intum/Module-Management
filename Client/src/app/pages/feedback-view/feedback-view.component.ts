@@ -10,13 +10,21 @@ import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
 import { HlmSelectModule } from '@spartan-ng/ui-select-helm';
 import { toast } from 'ngx-sonner';
 import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
-import { HlmAlertDialogComponent, HlmAlertDialogContentComponent, HlmAlertDialogDescriptionDirective, HlmAlertDialogFooterComponent, HlmAlertDialogHeaderComponent, HlmAlertDialogTitleDirective } from '@spartan-ng/ui-alertdialog-helm';
+import {
+  HlmAlertDialogComponent,
+  HlmAlertDialogContentComponent,
+  HlmAlertDialogDescriptionDirective,
+  HlmAlertDialogFooterComponent,
+  HlmAlertDialogHeaderComponent,
+  HlmAlertDialogTitleDirective
+} from '@spartan-ng/ui-alertdialog-helm';
 import { HttpErrorResponse } from '@angular/common/http';
 import { lucideCheck, lucideX } from '@ng-icons/lucide';
 import { provideIcons } from '@ng-icons/core';
-import { HlmIconComponent } from "../../../spartan-components/ui-icon-helm/src/lib/hlm-icon.component";
+import { HlmIconComponent } from '../../../spartan-components/ui-icon-helm/src/lib/hlm-icon.component';
 import { BrnDialogCloseDirective } from '@spartan-ng/ui-dialog-brain';
 import { HlmToasterComponent } from '@spartan-ng/ui-sonner-helm';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-feedback-view',
@@ -41,14 +49,15 @@ import { HlmToasterComponent } from '@spartan-ng/ui-sonner-helm';
     HlmAlertDialogContentComponent,
     HlmIconComponent,
     HlmToasterComponent
-],
+  ],
   providers: [provideIcons({ lucideCheck, lucideX })],
   templateUrl: './feedback-view.component.html'
 })
 export class FeedbackViewComponent {
   router = inject(Router);
   feedbackService = inject(FeedbackControllerService);
-  moduleVersionService = inject(ModuleVersionControllerService)
+  messageService = inject(MessageService);
+  moduleVersionService = inject(ModuleVersionControllerService);
   feedbackForm: FormGroup;
   feedbackId: number | null = null;
   moduleVersion: ModuleVersionUpdateRequestDTO | null = null;
@@ -90,7 +99,7 @@ export class FeedbackViewComponent {
   ] as const;
 
   constructor(formBulider: FormBuilder, route: ActivatedRoute) {
-    this.moduleFields.forEach(field => {
+    this.moduleFields.forEach((field) => {
       this.fieldStates[field.key] = { accepted: null };
       this.fieldFeedback[field.key] = '';
     });
@@ -132,7 +141,7 @@ export class FeedbackViewComponent {
       responsiblesAccepted: [null],
       responsiblesFeedback: [''],
       lvSwsLecturerAccepted: [null],
-      lvSwsLecturerFeedback: [''],
+      lvSwsLecturerFeedback: ['']
     });
     this.feedbackId = Number(route.snapshot.paramMap.get('id'));
     this.fetchModuleVersion(this.feedbackId);
@@ -154,7 +163,7 @@ export class FeedbackViewComponent {
   // field methods
 
   handleApprove(key: string) {
-    const formField = key.replace('Eng', ''); 
+    const formField = key.replace('Eng', '');
     this.fieldStates[key] = { accepted: true };
     this.fieldFeedback[key] = '';
     const acceptedField = `${formField}Accepted`;
@@ -164,14 +173,14 @@ export class FeedbackViewComponent {
   }
 
   handleReject(key: string) {
-    const formField = key.replace('Eng', ''); 
+    const formField = key.replace('Eng', '');
     this.fieldStates[key] = { accepted: false };
     const acceptedField = `${formField}Accepted`;
     this.feedbackForm.get(acceptedField)?.setValue(false);
   }
 
   updateFeedback(key: string, value: string) {
-    const formField = key.replace('Eng', ''); 
+    const formField = key.replace('Eng', '');
     this.fieldFeedback[key] = value;
     this.feedbackForm.patchValue({
       [`${formField}Feedback`]: value
@@ -181,30 +190,28 @@ export class FeedbackViewComponent {
   // form methods
 
   isEveryFieldFilled(): boolean {
-  const formValues = this.feedbackForm.value;
-  return Object.keys(formValues)
-    .filter(key => key.endsWith('Accepted'))
-    .every(acceptedKey => {
-      const isAccepted = formValues[acceptedKey];
-      if (isAccepted === true) {
-        return true;
-      }
-      if (isAccepted === false) {
-        const feedbackKey = acceptedKey.replace('Accepted', 'Feedback');
-        const feedback = formValues[feedbackKey];
-        return feedback && feedback.trim().length > 0;
-      }
-      return false;
-    });
+    const formValues = this.feedbackForm.value;
+    return Object.keys(formValues)
+      .filter((key) => key.endsWith('Accepted'))
+      .every((acceptedKey) => {
+        const isAccepted = formValues[acceptedKey];
+        if (isAccepted === true) {
+          return true;
+        }
+        if (isAccepted === false) {
+          const feedbackKey = acceptedKey.replace('Accepted', 'Feedback');
+          const feedback = formValues[feedbackKey];
+          return feedback && feedback.trim().length > 0;
+        }
+        return false;
+      });
   }
 
   cancel() {
     this.router.navigate(['']);
   }
 
-  checkOverlaps() {
-    
-  }
+  checkOverlaps() {}
 
   pdfExport() {
     const mvid = this.moduleVersion?.moduleVersionId;
@@ -212,14 +219,14 @@ export class FeedbackViewComponent {
       toast('Exporting PDF', {
         description: 'Failed to create PDF...',
         duration: 3000
-      })
+      });
       return;
     }
-    
+
     this.feedbackService.exportModuleVersionPdf(mvid).subscribe({
       next: (response: Blob) => {
         {
-          const fileName = `f${this.feedbackId}_mv${mvid}_${this.moduleVersion?.titleEng}`
+          const fileName = `f${this.feedbackId}_mv${mvid}_${this.moduleVersion?.titleEng}`;
           const blob = new Blob([response], { type: 'application/pdf' });
           const link = document.createElement('a');
           link.href = URL.createObjectURL(blob);
@@ -230,19 +237,18 @@ export class FeedbackViewComponent {
           URL.revokeObjectURL(link.href);
         }
       },
-    error: () => {
-      toast('Exporting PDF', {
-        description: 'Failed to create PDF...',
-        duration: 3000
-      });
-    }
-    })
+      error: () => {
+        toast('Exporting PDF', {
+          description: 'Failed to create PDF...',
+          duration: 3000
+        });
+      }
+    });
 
     toast('Exporting PDF', {
       description: 'Creating a PDF file for you to download...',
       duration: 3000
-    })
-
+    });
   }
 
   reject() {
@@ -250,7 +256,8 @@ export class FeedbackViewComponent {
       const giveFeedbackDTO: GiveFeedbackDTO = { comment: this.rejectionReason };
       this.feedbackService.rejectFeedback(this.feedbackId, giveFeedbackDTO).subscribe({
         next: () => {
-          this.router.navigate([''], { queryParams: { rejected: true } });
+          this.messageService.add({ severity: 'success', summary: 'Module Proposal Rejected', detail: 'You successfully rejected this Module Proposal' });
+          this.router.navigate(['']);
         },
         error: (err: HttpErrorResponse) => {
           toast('Rejection failed.', {
@@ -266,11 +273,13 @@ export class FeedbackViewComponent {
   giveFeedback() {
     if (this.feedbackId) {
       const feedbackDTO: FeedbackDTO = {
-        ...this.feedbackForm.value,
-      }
+        ...this.feedbackForm.value
+      };
       this.feedbackService.giveFeedback(this.feedbackId, feedbackDTO).subscribe({
         next: () => {
-          this.router.navigate([''], { queryParams: { feedback_given: true } });
+          this.messageService.add({ severity: 'success', summary: 'Feedback Submitted', detail: 'Your feedback has been submitted successfully' });
+
+          this.router.navigate(['']);
         },
         error: (err: HttpErrorResponse) => {
           toast('Sending feedback failed.', {
