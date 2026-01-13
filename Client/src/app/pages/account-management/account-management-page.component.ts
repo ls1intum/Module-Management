@@ -1,21 +1,19 @@
-import { Component } from '@angular/core';
-import { HlmTabsComponent, HlmTabsListComponent, HlmTabsTriggerDirective, HlmTabsContentDirective } from '@spartan-ng/ui-tabs-helm';
-import { AccountInformationComponent } from './account-information/account-information.component';
-import { AccountPasskeysComponent } from './passkeys/account-passkeys.component';
+import { Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { PanelModule } from 'primeng/panel';
+import { ButtonModule } from 'primeng/button';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'account-management-page',
   standalone: true,
-  imports: [
-    HlmTabsComponent,
-    HlmTabsListComponent,
-    HlmTabsTriggerDirective,
-    HlmTabsContentDirective,
-    AccountInformationComponent,
-    AccountPasskeysComponent
-  ],
+  imports: [PanelModule, ButtonModule, RouterModule],
   templateUrl: './account-management-page.component.html'
 })
 export class AccountManagementPageComponent {
-}
+  private router = inject(Router);
 
+  isActive(path: string): boolean {
+    return this.router.url === path;
+  }
+}
