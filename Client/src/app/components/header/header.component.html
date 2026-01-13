@@ -11,37 +11,17 @@
   <div>
     <!-- If the user is signed in -->
     @if(user() !== undefined){
-    <ng-container>
-      <button hlmBtn [brnMenuTriggerFor]="usermenu" variant="outline" class="ml-2">
-        {{ user()?.firstName }} {{ user()?.lastName }}
-      </button>
 
-      <!-- User Menu -->
-      <ng-template #usermenu>
-        <hlm-menu>
-          <hlm-menu-label>{{ user()?.firstName }} {{ user()?.lastName }}</hlm-menu-label>
-          <hlm-menu-separator />
-          <hlm-menu-group>
-            <a hlmMenuItem routerLink="/account" class="cursor-pointer">
-              <hlm-icon name="lucideSettings" hlmMenuIcon></hlm-icon>
-              <span>Settings</span>
-            </a>
-            <button hlmMenuItem (click)="signOut()" class="cursor-pointer">
-              <hlm-icon name="lucideLogOut" hlmMenuIcon></hlm-icon>
-              <span>Sign Out</span>
-            </button>
-          </hlm-menu-group>
-        </hlm-menu>
-      </ng-template>
-    </ng-container>
+    <p-button #userButton [label]="user()?.firstName + ' ' + user()?.lastName" severity="contrast" [outlined]="true" (onClick)="menu.toggle($event)" />
+
+    <!-- User Menu -->
+    <p-menu #menu [model]="menuItems" [popup]="true" [style]="{ 'min-width': userButton.el.nativeElement.offsetWidth + 'px' }" />
 
     }
 
     <!-- If the user is not signed in -->
     @else {
-    <ng-container>
-      <button hlmBtn (click)="signIn()">Sign In</button>
-    </ng-container>
+    <p-button label="Sign In" severity="contrast" (onClick)="signIn()" />
     }
   </div>
 </header>
