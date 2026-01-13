@@ -1,19 +1,20 @@
-<div>
-  <h3 class="text-2xl">Welcome, {{ user()?.firstName }} {{ user()?.lastName }}!</h3>
-  <div class="flex justify-between items-end my-4">
-    <div hlmAlert class="w-2/5">
-      <hlm-icon hlmAlertIcon name="lucideInfo" />
-      <h4 hlmAlertTitle>Information</h4>
-      <p hlmAlertDesc>
-        To offer a new module, please create a new Module Proposal.
-        <br />
-        After submitting the proposal the necessary entities will be notified and evaluate your proposal.
-      </p>
+<h3 class="text-2xl">Welcome, {{ user()?.firstName }} {{ user()?.lastName }}!</h3>
+<div class="flex justify-between items-end mt-6 mb-12">
+  <p-message severity="secondary" class="w-1/2">
+    <div class="flex flex-row">
+      <i class="pi pi-info-circle mt-1" style="font-size: 1.2rem"></i>
+
+      <div class="ml-3">
+        <p class="font-bold">Information</p>
+        <p>
+          To offer a new module, please create a new Module Proposal.
+          <br />
+          After submitting the proposal the necessary entities will be notified and evaluate your proposal.
+        </p>
+      </div>
     </div>
-    <button hlmBtn variant="default" class="mt-4" [routerLink]="['/proposals/create']">Create a new Module Proposal</button>
-  </div>
-  <div>
-    <h3 class="text-xl mt-8">Here are your module proposals:</h3>
-  </div>
-  <proposal-list-table class="p-12"></proposal-list-table>
+  </p-message>
+  <p-button severity="contrast" label="Create a new Module Proposal" [routerLink]="['/proposals/create']" />
 </div>
+<p class="text-xl mb-4">Here are your module proposals:</p>
+<proposal-list-table />

@@ -7,9 +7,16 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { securityInterceptor } from './core/security/security-interceptor';
 import { BASE_PATH } from './core/modules/openapi/variables';
 import { environment } from '../../environments/environment';
+import { providePrimeNG } from 'primeng/config';
+import Aura from '@primeuix/themes/aura';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    providePrimeNG({
+      theme: {
+        preset: Aura
+      }
+    }),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withInterceptors([securityInterceptor])),

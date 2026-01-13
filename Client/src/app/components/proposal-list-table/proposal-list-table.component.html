@@ -1,34 +1,33 @@
-<hlm-table class="w-full min-w-[400px]">
-  <hlm-caption>All Proposals you created</hlm-caption>
-  <hlm-trow>
-    <hlm-th class="w-40">Proposal ID</hlm-th>
-    <hlm-th class="flex-1">Latest Title</hlm-th>
-    <hlm-th class="w-50">Status</hlm-th>
-    <hlm-th class="justify-end w-40">Actions</hlm-th>
-  </hlm-trow>
-  @for (proposal of proposals; track proposal.proposalId) {
-  <hlm-trow>
-    <hlm-td truncate class="font-medium w-40 text-center">{{ proposal.proposalId }}</hlm-td>
-    <hlm-td class="flex-1">
-      <button hlmBtn variant="link" class="text-left px-0" [routerLink]="['/proposals/view', proposal.proposalId]">
+<p-table [value]="proposals" selectionMode="single">
+  <ng-template #header>
+    <tr>
+      <th>Proposal ID</th>
+      <th style="width: 50%">Latest Title</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template #body let-proposal>
+    <tr [pSelectableRow]="proposal" [routerLink]="['/proposals/view', proposal.proposalId]">
+      <td>{{ proposal.proposalId }}</td>
+      <td>
         {{ proposal.latestTitle }}
-      </button>
-    </hlm-td>
-    <hlm-td class="w-50">
-      <div hlmBadge [class]="(proposal.status! | statusDisplay).colorClass">
-        {{ (proposal.status! | statusDisplay).text }}
-      </div>
-    </hlm-td>
-    <hlm-td class="justify-end w-40">
-      <button hlmBtn variant="outline" [routerLink]="['/proposals/view', proposal.proposalId]">View</button>
-    </hlm-td>
-  </hlm-trow>
-  } @empty {
-  <hlm-trow>
-    <hlm-td class="text-center flex-1 block mt-4 text-sm text-muted-foreground">
-      You do not have any created module proposals.
-      <a class="text-blue-600" [routerLink]="['/proposals/create']">Create one here.</a>
-    </hlm-td>
-  </hlm-trow>
-  }
-</hlm-table>
+      </td>
+      <td>
+        <p-tag [value]="(proposal.status! | statusDisplayTag).text" [severity]="(proposal.status! | statusDisplayTag).severity" />
+      </td>
+      <td>
+        <p-button severity="contrast" label="View" styleClass="p-button-outlined" [routerLink]="['/proposals/view', proposal.proposalId]" />
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template #emptymessage>
+    <tr>
+      <td class="text-sm text-muted-foreground">
+        @if (error) {
+        {{ error }}
+        } @else { No proposals found.}
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

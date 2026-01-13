@@ -1,18 +1,18 @@
 import { Component, inject } from '@angular/core';
-import { HlmTableComponent, HlmTrowComponent, HlmThComponent, HlmTdComponent } from '@spartan-ng/ui-table-helm';
 import { Feedback, FeedbackControllerService } from '../../core/modules/openapi';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
-import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
+import { FeedbackStatusTagPipe } from '../../pipes/feedbackStatus.pipe';
 import { SecurityStore } from '../../core/security/security-store.service';
+import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'feedback-list-table',
   standalone: true,
-  imports: [HlmTableComponent, HlmTrowComponent, HlmThComponent, HlmTdComponent, HlmButtonDirective, RouterModule, CommonModule, HlmBadgeDirective, FeedbackStatusPipe],
+  imports: [RouterModule, CommonModule, TableModule, FeedbackStatusTagPipe, TagModule, ButtonModule],
   host: {
     class: 'w-full overflow-x-auto'
   },
@@ -21,14 +21,14 @@ import { SecurityStore } from '../../core/security/security-store.service';
 export class FeedbackListTableComponent {
   feedbackService = inject(FeedbackControllerService);
   securityStore = inject(SecurityStore);
-  user = this.securityStore.loadedUser;
+  user = this.securityStore.user;
   loading: boolean = true;
   error: string | null = null;
   feedbacks: Feedback[] = [];
   feedbackStatusEnum = Feedback.StatusEnum;
 
   constructor() {
-    if (this.securityStore.signedIn()) {
+    if (this.user !== undefined) {
       this.fetchFeedbacksForUser();
     } else {
       this.securityStore.signIn();

@@ -1,4 +1,5 @@
 @import '@angular/cdk/overlay-prebuilt.css';
+@import 'primeicons/primeicons.css';
 
 /* You can add global styles to this file, and also import other style files */
 @tailwind base;

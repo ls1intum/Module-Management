@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Feedback } from '../core/modules/openapi';
+import { Tag } from 'primeng/tag';
 
 @Pipe({ name: 'feedbackStatus', standalone: true })
 export class FeedbackStatusPipe implements PipeTransform {
@@ -45,6 +46,30 @@ export class FadedFeedbackStatusPipe implements PipeTransform {
         return { text: 'Cancelled', colorClass: 'bg-gray-300 text-white' };
       default:
         return { text: status, colorClass: 'bg-gray-300 text-white' };
+    }
+  }
+}
+
+@Pipe({ name: 'feedbackStatusTag', standalone: true })
+export class FeedbackStatusTagPipe implements PipeTransform {
+  transform(status: Feedback.StatusEnum): { text: string; severity: Tag['severity'] } {
+    switch (status) {
+      case 'PENDING_SUBMISSION':
+        return { text: 'Pending Submission', severity: null };
+      case 'PENDING_FEEDBACK':
+        return { text: 'Pending Feedback', severity: 'warn' };
+      case 'APPROVED':
+        return { text: 'Approved', severity: 'success' };
+      case 'FEEDBACK_GIVEN':
+        return { text: 'Feedback given', severity: 'info' };
+      case 'REJECTED':
+        return { text: 'Rejected', severity: 'danger' };
+      case 'OBSOLETE':
+        return { text: 'Obsolete', severity: 'secondary' };
+      case 'CANCELLED':
+        return { text: 'Cancelled', severity: 'secondary' };
+      default:
+        return { text: status, severity: 'secondary' };
     }
   }
 }
