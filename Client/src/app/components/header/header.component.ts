@@ -1,21 +1,25 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SecurityStore } from '../../core/security/security-store.service';
+import { ThemeService } from '../../core/theme/theme.service';
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
 import { MenuModule } from 'primeng/menu';
+import { TooltipModule } from 'primeng/tooltip';
 import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   standalone: true,
-  imports: [RouterLink, ButtonModule, AvatarModule, MenuModule]
+  imports: [RouterLink, ButtonModule, AvatarModule, MenuModule, TooltipModule]
 })
 export class HeaderComponent {
   securityStore = inject(SecurityStore);
+  themeService = inject(ThemeService);
 
   user = this.securityStore.user;
+  isDarkMode = this.themeService.isDarkMode;
 
   menuItems: MenuItem[] = [
     {
@@ -32,6 +36,10 @@ export class HeaderComponent {
       command: () => this.signOut()
     }
   ];
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
+  }
 
   signIn() {
     this.securityStore.signIn();

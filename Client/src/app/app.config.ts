@@ -15,7 +15,10 @@ export const appConfig: ApplicationConfig = {
   providers: [
     providePrimeNG({
       theme: {
-        preset: Aura
+        preset: Aura,
+        options: {
+          darkModeSelector: '.dark'
+        }
       }
     }),
     provideZoneChangeDetection({ eventCoalescing: true }),

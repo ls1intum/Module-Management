@@ -1,22 +1,26 @@
-<header class="w-full flex items-center justify-between p-4 gap-2 bg-gray-100">
-  <!-- Left Side: Logo and Title -->
-  <div class="flex gap-4 items-center flex-1">
-    <a class="flex gap-2 items-center hover:text-muted-foreground" routerLink="/">
-      <!-- Replace with your logo if available -->
-      <span class="text-xl font-semibold">CIT Module Management</span>
-    </a>
-  </div>
+<header class="w-full flex items-center justify-between p-4 bg-gray-100 dark:bg-black ">
+  <!-- Left Side:  Title -->
 
-  <!-- Right Side: Sign In/Out -->
-  <div>
+  <a class="flex gap-2 text-xl font-semibold" routerLink="/">CIT Module Management</a>
+
+  <!-- Right Side: Theme Toggle, Sign In/Out -->
+  <div class="flex items-center gap-4">
+    <!-- Theme Toggle Button -->
+    <p-button
+      [icon]="isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'"
+      severity="contrast"
+      (onClick)="toggleTheme()"
+      [pTooltip]="isDarkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+      tooltipPosition="bottom"
+      [ariaLabel]="isDarkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+    />
+
     <!-- If the user is signed in -->
     @if(user() !== undefined){
-
     <p-button #userButton [label]="user()?.firstName + ' ' + user()?.lastName" severity="contrast" [outlined]="true" (onClick)="menu.toggle($event)" />
 
     <!-- User Menu -->
     <p-menu #menu [model]="menuItems" [popup]="true" [style]="{ 'min-width': userButton.el.nativeElement.offsetWidth + 'px' }" />
-
     }
 
     <!-- If the user is not signed in -->
