@@ -55,7 +55,7 @@ export class FeedbackStatusTagPipe implements PipeTransform {
   transform(status: Feedback.StatusEnum): { text: string; severity: Tag['severity'] } {
     switch (status) {
       case 'PENDING_SUBMISSION':
-        return { text: 'Pending Submission', severity: null };
+        return { text: 'Pending Submission', severity: 'secondary' };
       case 'PENDING_FEEDBACK':
         return { text: 'Pending Feedback', severity: 'warn' };
       case 'APPROVED':

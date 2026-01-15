@@ -2,7 +2,7 @@
   <ng-template #header>
     <tr>
       <th>Feedback ID</th>
-      <th style="width: 45%">Proposal Title</th>
+      <th>Proposal Title</th>
       <th>Created By</th>
       <th>Status</th>
       <th>Actions</th>
@@ -27,7 +27,7 @@
   </ng-template>
   <ng-template #emptymessage>
     <tr>
-      <td class="text-sm text-muted-foreground">
+      <td class="text-sm text-muted-foreground" colspan="5">
         @if (error) {
         {{ error }}
         } @else { No feedbacks found.}

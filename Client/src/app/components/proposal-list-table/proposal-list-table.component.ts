@@ -6,13 +6,13 @@ import { Proposal, ProposalControllerService, ProposalsCompactDTO } from '../../
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { StatusDisplayTagPipe } from '../../pipes/proposalStatus.pipe';
+import { StatusDisplayPipe } from '../../pipes/proposalStatus.pipe';
 import { SecurityStore } from '../../core/security/security-store.service';
 
 @Component({
   selector: 'proposal-list-table',
   standalone: true,
-  imports: [TableModule, ButtonModule, TagModule, CommonModule, RouterModule, StatusDisplayTagPipe],
+  imports: [TableModule, ButtonModule, TagModule, CommonModule, RouterModule, StatusDisplayPipe],
   host: {
     class: 'w-full overflow-x-auto'
   },

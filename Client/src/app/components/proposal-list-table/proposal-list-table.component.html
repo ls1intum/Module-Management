@@ -2,7 +2,7 @@
   <ng-template #header>
     <tr>
       <th>Proposal ID</th>
-      <th style="width: 50%">Latest Title</th>
+      <th>Latest Title</th>
       <th>Status</th>
       <th>Actions</th>
     </tr>
@@ -14,7 +14,7 @@
         {{ proposal.latestTitle }}
       </td>
       <td>
-        <p-tag [value]="(proposal.status! | statusDisplayTag).text" [severity]="(proposal.status! | statusDisplayTag).severity" />
+        <p-tag [value]="(proposal.status! | statusDisplay).text" [severity]="(proposal.status! | statusDisplay).severity" />
       </td>
       <td>
         <p-button severity="contrast" label="View" styleClass="p-button-outlined" [routerLink]="['/proposals/view', proposal.proposalId]" />
@@ -23,7 +23,7 @@
   </ng-template>
   <ng-template #emptymessage>
     <tr>
-      <td class="text-sm text-muted-foreground">
+      <td class="text-sm text-muted-foreground" colspan="4">
         @if (error) {
         {{ error }}
         } @else { No proposals found.}

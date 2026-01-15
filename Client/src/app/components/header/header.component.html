@@ -17,7 +17,14 @@
 
     <!-- If the user is signed in -->
     @if(user() !== undefined){
-    <p-button #userButton [label]="user()?.firstName + ' ' + user()?.lastName" severity="contrast" [outlined]="true" (onClick)="menu.toggle($event)" />
+    <p-button
+      #userButton
+      [label]="user()?.firstName + ' ' + user()?.lastName"
+      severity="contrast"
+      [outlined]="true"
+      (onClick)="menu.toggle($event)"
+      [style]="{ 'min-width': '150px' }"
+    />
 
     <!-- User Menu -->
     <p-menu #menu [model]="menuItems" [popup]="true" [style]="{ 'min-width': userButton.el.nativeElement.offsetWidth + 'px' }" />

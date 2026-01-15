@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ModuleVersionCompactDTO } from '../core/modules/openapi';
+import { Tag } from 'primeng/tag';
 
 @Pipe({
   name: 'moduleVersionStatus',
@@ -22,6 +23,31 @@ export class ModuleVersionStatusPipe implements PipeTransform {
         return { text: 'Cancelled', colorClass: 'bg-gray-300' };
       default:
         return { text: status, colorClass: 'bg-gray-400' };
+    }
+  }
+}
+
+@Pipe({
+  name: 'moduleVersionStatusTag',
+  standalone: true
+})
+export class ModuleVersionStatusTagPipe implements PipeTransform {
+  transform(status: ModuleVersionCompactDTO.StatusEnum): { text: string; severity: Tag['severity'] } {
+    switch (status) {
+      case ModuleVersionCompactDTO.StatusEnum.PendingSubmission:
+        return { text: 'Pending Submission', severity: 'secondary' };
+      case ModuleVersionCompactDTO.StatusEnum.PendingFeedback:
+        return { text: 'Pending Feedback', severity: 'warn' };
+      case ModuleVersionCompactDTO.StatusEnum.Accepted:
+        return { text: 'Accepted', severity: 'success' };
+      case ModuleVersionCompactDTO.StatusEnum.FeedbackGiven:
+        return { text: 'Feedback given', severity: 'info' };
+      case ModuleVersionCompactDTO.StatusEnum.Rejected:
+        return { text: 'Rejected', severity: 'danger' };
+      case ModuleVersionCompactDTO.StatusEnum.Cancelled:
+        return { text: 'Cancelled', severity: 'secondary' };
+      default:
+        return { text: status, severity: 'secondary' };
     }
   }
 }
