@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { BrnFormFieldControl } from '@spartan-ng/ui-formfield-brain';
-
+import { FormsModule } from '@angular/forms';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 export interface ToggleOption {
   value: any;
   label: string;
@@ -10,25 +10,20 @@ export interface ToggleOption {
 @Component({
   selector: 'app-toggle-button-group',
   standalone: true,
-  imports: [],
+  imports: [ToggleButtonModule, FormsModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: ToggleButtonGroupComponent,
-      multi: true,
-    },
-    {
-      provide: BrnFormFieldControl,
-      useExisting: ToggleButtonGroupComponent,
-    },
+      multi: true
+    }
   ],
-  templateUrl: './toggle-button-group.component.html',
-  styleUrls: ['./toggle-button-group.component.css']
+  templateUrl: './toggle-button-group.component.html'
 })
 /*
-
+ 
 Disclaimer: This component is a last minute addition and AI Generated. It is slightly buggy and should not be reworked.
-
+ 
 */
 export class ToggleButtonGroupComponent implements ControlValueAccessor {
   @Input() options: ToggleOption[] = [];
@@ -63,7 +58,7 @@ export class ToggleButtonGroupComponent implements ControlValueAccessor {
 
   onToggleClick(value: any): void {
     if (this.disabled) return;
-    
+
     if (this.required) {
       this.selectedValue = value;
     } else {
@@ -73,5 +68,9 @@ export class ToggleButtonGroupComponent implements ControlValueAccessor {
     this.onChange(this.selectedValue);
     this.onTouched();
     this.valueChange.emit(this.selectedValue);
+  }
+
+  isChecked(optionValue: any): boolean {
+    return this.selectedValue === optionValue;
   }
 }

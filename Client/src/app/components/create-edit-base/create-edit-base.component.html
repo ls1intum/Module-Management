@@ -1,60 +1,60 @@
 <div class="max-w-4xl mx-auto">
   <h1 class="text-2xl mb-8">{{ moduleVersionDto?.titleEng ? 'Edit Proposal for ' + moduleVersionDto?.titleEng : 'Create New Module Proposal' }}</h1>
-  <div hlmAlert class="mb-8">
-    <hlm-icon hlmAlertIcon name="lucideInfo" />
-    <h3 hlmAlertTitle>Information</h3>
-    <p hlmAlertDesc>
-      Please fill out all information fields required for a new module.
-      <br />
-      After giving the module a title you can save your progress at any time and come back at another time.
-    </p>
-  </div>
+  <p-message severity="secondary" class="mb-8">
+    <div class="flex flex-row">
+      <i class="pi pi-info-circle mt-1" style="font-size: 1.2rem"></i>
+      <div class="ml-3">
+        <p class="font-bold">Information</p>
+        <p>
+          Please fill out all information fields required for a new module.
+          <br />
+          After giving the module a title you can save your progress at any time and come back at another time.
+        </p>
+      </div>
+    </div>
+  </p-message>
 
   <form [formGroup]="proposalForm" (ngSubmit)="onSubmit()" class="space-y-6">
     <div>
-      <label hlmLabel class="text-xl">Title</label>
+      <label class="text-xl">Title</label>
       @if (moduleVersionId && hasFeedback('titleFeedback')) {
-      <div class="mt-2 text-sm text-gray-600">
+      <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
         @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.titleFeedback) {
         <p>
-          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
           {{ feedback.titleFeedback }}
         </p>
         } }
-      </div>
+      </p-message>
       }
-      <hlm-form-field class="mt-2">
-        <input hlmInput formControlName="titleEng" placeholder="Title (English)" class="w-full" />
-        <hlm-error>A preliminary title is required</hlm-error>
-      </hlm-form-field>
+      <div class="mt-2">
+        <input pInputText formControlName="titleEng" placeholder="Title (English)" class="w-full" />
+        @if (proposalForm.get('titleEng')?.invalid && proposalForm.get('titleEng')?.touched) {
+        <p-message severity="error" size="small" variant="simple" class="mt-1">A preliminary title is required</p-message>
+        }
+      </div>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">Key Points</label>
-      <hlm-form-field class="mt-2">
-        <textarea
-          autoResize
-          hlmInput
-          formControlName="bulletPoints"
-          placeholder="Enter key points about the module to generate module descriptions from"
-          class="w-full min-h-[100px]"
-        ></textarea>
-      </hlm-form-field>
+      <label class="text-xl">Key Points</label>
+      <div class="mt-2">
+        <textarea pTextarea formControlName="bulletPoints" placeholder="Enter key points about the module to generate module descriptions from" rows="4" fluid></textarea>
+      </div>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">Level</label>
+      <label class="text-xl">Level</label>
       @if (moduleVersionId && hasFeedback('levelFeedback')) {
-      <div class="mt-2 text-sm text-gray-600">
+      <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
         @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.levelFeedback) {
         <p>
-          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
           {{ feedback.levelFeedback }}
         </p>
         } }
-      </div>
+      </p-message>
       }
-      <hlm-form-field class="mt-2">
+      <div class="mt-2">
         <app-toggle-button-group
           [options]="[
             { value: 'Bachelor', label: 'Bachelor' },
@@ -64,22 +64,22 @@
           [required]="false"
           formControlName="levelEng"
         ></app-toggle-button-group>
-      </hlm-form-field>
+      </div>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">Language</label>
+      <label class="text-xl">Language</label>
       @if (moduleVersionId && hasFeedback('languageFeedback')) {
-      <div class="mt-2 text-sm text-gray-600">
+      <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
         @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.languageFeedback) {
         <p>
-          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
           {{ feedback.languageFeedback }}
         </p>
         } }
-      </div>
+      </p-message>
       }
-      <hlm-form-field class="mt-2">
+      <div class="mt-2">
         <app-toggle-button-group
           [options]="[
             { value: 'English', label: 'English' },
@@ -88,22 +88,22 @@
           [required]="true"
           formControlName="languageEng"
         ></app-toggle-button-group>
-      </hlm-form-field>
+      </div>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">Duration</label>
+      <label class="text-xl">Duration</label>
       @if (moduleVersionId && hasFeedback('durationFeedback')) {
-      <div class="mt-2 text-sm text-gray-600">
+      <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
         @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.durationFeedback) {
         <p>
-          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
           {{ feedback.durationFeedback }}
         </p>
         } }
-      </div>
+      </p-message>
       }
-      <hlm-form-field class="mt-2">
+      <div class="mt-2">
         <app-toggle-button-group
           [options]="[
             { value: 'One Semester', label: 'One Semester' },
@@ -114,22 +114,22 @@
           [required]="false"
           formControlName="duration"
         ></app-toggle-button-group>
-      </hlm-form-field>
+      </div>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">Repetition</label>
+      <label class="text-xl">Repetition</label>
       @if (moduleVersionId && hasFeedback('repetitionFeedback')) {
-      <div class="mt-2 text-sm text-gray-600">
+      <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
         @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.repetitionFeedback) {
         <p>
-          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
           {{ feedback.repetitionFeedback }}
         </p>
         } }
-      </div>
+      </p-message>
       }
-      <hlm-form-field class="mt-2">
+      <div class="mt-2">
         <app-toggle-button-group
           [options]="[
             { value: 'End of Semester', label: 'End of Semester' },
@@ -139,22 +139,22 @@
           [required]="false"
           formControlName="repetitionEng"
         ></app-toggle-button-group>
-      </hlm-form-field>
+      </div>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">Frequency</label>
+      <label class="text-xl">Frequency</label>
       @if (moduleVersionId && hasFeedback('frequencyFeedback')) {
-      <div class="mt-2 text-sm text-gray-600">
+      <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
         @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.frequencyFeedback) {
         <p>
-          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
           {{ feedback.frequencyFeedback }}
         </p>
         } }
-      </div>
+      </p-message>
       }
-      <hlm-form-field class="mt-2">
+      <div class="mt-2">
         <app-toggle-button-group
           [options]="[
             { value: 'Winter semester', label: 'Winter semester' },
@@ -164,311 +164,293 @@
           [required]="false"
           formControlName="frequencyEng"
         ></app-toggle-button-group>
-      </hlm-form-field>
+      </div>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
-        <label hlmLabel class="text-xl">Credits</label>
+        <label class="text-xl">Credits</label>
         @if (moduleVersionId && hasFeedback('creditsFeedback')) {
-        <div class="mt-2 text-sm text-gray-600">
+        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
           @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.creditsFeedback) {
           <p>
-            <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+            <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
             {{ feedback.creditsFeedback }}
           </p>
           } }
-        </div>
+        </p-message>
         }
-        <hlm-form-field class="mt-2">
-          <input hlmInput type="number" formControlName="credits" placeholder="Credits" class="w-full" />
-        </hlm-form-field>
+        <div class="mt-2">
+          <p-inputNumber formControlName="credits" placeholder="Credits" class="w-full" [style]="{ width: '100%' }"></p-inputNumber>
+        </div>
       </div>
 
       <div>
-        <label hlmLabel class="text-xl">Total Hours</label>
+        <label class="text-xl">Total Hours</label>
         @if (moduleVersionId && hasFeedback('hoursTotalFeedback')) {
-        <div class="mt-2 text-sm text-gray-600">
+        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
           @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.hoursTotalFeedback) {
           <p>
-            <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+            <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
             {{ feedback.hoursTotalFeedback }}
           </p>
           } }
-        </div>
+        </p-message>
         }
-        <hlm-form-field class="mt-2">
-          <input hlmInput type="number" formControlName="hoursTotal" placeholder="Total Hours" class="w-full" />
-        </hlm-form-field>
+        <div class="mt-2">
+          <p-inputNumber formControlName="hoursTotal" placeholder="Total Hours" class="w-full" [style]="{ width: '100%' }"></p-inputNumber>
+        </div>
       </div>
 
       <div>
-        <label hlmLabel class="text-xl">Self-Study Hours</label>
+        <label class="text-xl">Self-Study Hours</label>
         @if (moduleVersionId && hasFeedback('hoursSelfStudyFeedback')) {
-        <div class="mt-2 text-sm text-gray-600">
+        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
           @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.hoursSelfStudyFeedback) {
           <p>
-            <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+            <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
             {{ feedback.hoursSelfStudyFeedback }}
           </p>
           } }
-        </div>
+        </p-message>
         }
-        <hlm-form-field class="mt-2">
-          <input hlmInput type="number" formControlName="hoursSelfStudy" placeholder="Self-Study Hours" class="w-full" />
-        </hlm-form-field>
+        <div class="mt-2">
+          <p-inputNumber formControlName="hoursSelfStudy" placeholder="Self-Study Hours" class="w-full" [style]="{ width: '100%' }"></p-inputNumber>
+        </div>
       </div>
 
       <div>
-        <label hlmLabel class="text-xl">Presence Hours</label>
+        <label class="text-xl">Presence Hours</label>
         @if (moduleVersionId && hasFeedback('hoursPresenceFeedback')) {
-        <div class="mt-2 text-sm text-gray-600">
+        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
           @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.hoursPresenceFeedback) {
           <p>
-            <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+            <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
             {{ feedback.hoursPresenceFeedback }}
           </p>
           } }
-        </div>
+        </p-message>
         }
-        <hlm-form-field class="mt-2">
-          <input hlmInput type="number" formControlName="hoursPresence" placeholder="Presence Hours" class="w-full" />
-        </hlm-form-field>
+        <div class="mt-2">
+          <p-inputNumber formControlName="hoursPresence" placeholder="Presence Hours" class="w-full" [style]="{ width: '100%' }"></p-inputNumber>
+        </div>
       </div>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">Examination Achievements</label>
+      <label class="text-xl">Examination Achievements</label>
       @if (moduleVersionId && hasFeedback('examinationAchievementsFeedback')) {
-      <div class="mt-2 text-sm text-gray-600">
+      <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
         @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.examinationAchievementsFeedback) {
         <p>
-          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
           {{ feedback.examinationAchievementsFeedback }}
         </p>
         } }
-      </div>
+      </p-message>
       }
-      <hlm-form-field class="mt-2">
-        <textarea autoResize hlmInput formControlName="examinationAchievementsEng" placeholder="How is the students performance evaluated?" class="w-full min-h-[100px]"></textarea>
-      </hlm-form-field>
-      <div class="flex justify-between items-center gap-2 mt-2">
-        <button hlmBtn type="button" variant="outline" size="sm" (click)="togglePromptField('examination')">
+      <div class="mt-2">
+        <textarea pTextarea formControlName="examinationAchievementsEng" placeholder="How is the students performance evaluated?" rows="4" fluid></textarea>
+      </div>
+      <div class="flex justify-between mt-2">
+        <p-button type="button" severity="secondary" [outlined]="true" size="small" (onClick)="togglePromptField('examination')">
           {{ showPrompt['examination'] ? 'Hide Prompt' : 'Customize Prompt' }}
-        </button>
-        <button hlmBtn type="button" variant="default" size="sm" class="min-w-28" (click)="generateExaminationAchievements()" [disabled]="loading">
+        </p-button>
+        <p-button type="button" severity="contrast" size="small" styleClass="min-w-28" (onClick)="generateExaminationAchievements()" [disabled]="loading">
           Generate Examination Achievements
-        </button>
+        </p-button>
       </div>
       @if (showPrompt['examination']) {
-      <hlm-form-field class="mt-2 mb-2">
+      <div class="mt-2 mb-2">
         <textarea
-          autoResize
-          hlmInput
+          pTextarea
           [formControlName]="'examinationAchievementsPromptEng'"
           placeholder="Enter additional prompt text for examination achievements generation"
-          class="w-full min-h-[60px]"
+          rows="2"
+          fluid
         ></textarea>
-      </hlm-form-field>
+      </div>
       }
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">Recommended Prerequisites</label>
+      <label class="text-xl">Recommended Prerequisites</label>
       @if (moduleVersionId && hasFeedback('recommendedPrerequisitesFeedback')) {
-      <div class="mt-2 text-sm text-gray-600">
+      <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
         @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.recommendedPrerequisitesFeedback) {
         <p>
-          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
           {{ feedback.recommendedPrerequisitesFeedback }}
         </p>
         } }
-      </div>
+      </p-message>
       }
-      <hlm-form-field class="mt-2">
-        <textarea autoResize hlmInput formControlName="recommendedPrerequisitesEng" placeholder="What are participants expected to know?" class="w-full min-h-[100px]"></textarea>
-      </hlm-form-field>
+      <div class="mt-2">
+        <textarea pTextarea formControlName="recommendedPrerequisitesEng" placeholder="What are participants expected to know?" rows="4" fluid></textarea>
+      </div>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">Module Content</label>
+      <label class="text-xl">Module Content</label>
       @if (moduleVersionId && hasFeedback('contentFeedback')) {
-      <div class="mt-2 text-sm text-gray-600">
+      <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
         @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.contentFeedback) {
         <p>
-          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
           {{ feedback.contentFeedback }}
         </p>
         } }
-      </div>
+      </p-message>
       }
-      <hlm-form-field class="mt-2">
-        <textarea autoResize hlmInput formControlName="contentEng" placeholder="What is the module about?" class="w-full min-h-[100px]"></textarea>
-      </hlm-form-field>
-      <div class="flex justify-between items-center gap-2 mt-2">
-        <button hlmBtn type="button" variant="outline" size="sm" class="min-w-28" (click)="togglePromptField('content')">
+      <div class="mt-2">
+        <textarea pTextarea formControlName="contentEng" placeholder="What is the module about?" rows="4" fluid></textarea>
+      </div>
+      <div class="flex justify-between mt-2">
+        <p-button type="button" severity="secondary" [outlined]="true" size="small" (onClick)="togglePromptField('content')">
           {{ showPrompt['content'] ? 'Hide Prompt' : 'Customize Prompt' }}
-        </button>
-        <button hlmBtn type="button" variant="default" size="sm" (click)="generateContent()" [disabled]="loading">Generate Content</button>
+        </p-button>
+        <p-button type="button" severity="contrast" size="small" (onClick)="generateContent()" [disabled]="loading">Generate Content</p-button>
       </div>
       @if (showPrompt['content']) {
-      <hlm-form-field class="mt-2 mb-2">
-        <textarea
-          autoResize
-          hlmInput
-          [formControlName]="'contentPromptEng'"
-          placeholder="Enter additional prompt text for content generation"
-          class="w-full min-h-[60px]"
-        ></textarea>
-      </hlm-form-field>
+      <div class="mt-2">
+        <textarea pTextarea [formControlName]="'contentPromptEng'" placeholder="Enter additional prompt text for content generation" rows="2" fluid></textarea>
+      </div>
       }
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">Learning Outcomes</label>
+      <label class="text-xl">Learning Outcomes</label>
       @if (moduleVersionId && hasFeedback('learningOutcomesFeedback')) {
-      <div class="mt-2 text-sm text-gray-600">
+      <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
         @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.learningOutcomesFeedback) {
         <p>
-          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
           {{ feedback.learningOutcomesFeedback }}
         </p>
         } }
-      </div>
+      </p-message>
       }
-      <hlm-form-field class="mt-2">
-        <textarea autoResize hlmInput formControlName="learningOutcomesEng" placeholder="What will the participants learn?" class="w-full min-h-[100px]"></textarea>
-      </hlm-form-field>
-      <div class="flex justify-between items-center gap-2 mt-2">
-        <button hlmBtn type="button" variant="outline" class="min-w-28" size="sm" (click)="togglePromptField('learning')">
+      <div class="mt-2">
+        <textarea pTextarea formControlName="learningOutcomesEng" placeholder="What will the participants learn?" rows="4" fluid></textarea>
+      </div>
+      <div class="flex justify-between mt-2">
+        <p-button type="button" severity="secondary" [outlined]="true" size="small" (onClick)="togglePromptField('learning')">
           {{ showPrompt['learning'] ? 'Hide Prompt' : 'Customize Prompt' }}
-        </button>
-        <button hlmBtn type="button" variant="default" size="sm" (click)="generateLearningOutcomes()" [disabled]="loading">Generate Learning Outcomes</button>
+        </p-button>
+        <p-button type="button" severity="contrast" size="small" (onClick)="generateLearningOutcomes()" [disabled]="loading">Generate Learning Outcomes</p-button>
       </div>
       @if (showPrompt['learning']) {
-      <hlm-form-field class="mt-2 mb-2">
-        <textarea
-          autoResize
-          hlmInput
-          [formControlName]="'learningOutcomesPromptEng'"
-          placeholder="Enter additional prompt text for learning outcomes generation"
-          class="w-full min-h-[60px]"
-        ></textarea>
-      </hlm-form-field>
+      <div class="mt-2">
+        <textarea pTextarea [formControlName]="'learningOutcomesPromptEng'" placeholder="Enter additional prompt text for learning outcomes generation" rows="2" fluid></textarea>
+      </div>
       }
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">Teaching Methods</label>
+      <label class="text-xl">Teaching Methods</label>
       @if (moduleVersionId && hasFeedback('teachingMethodsFeedback')) {
-      <div class="mt-2 text-sm text-gray-600">
+      <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
         @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.teachingMethodsFeedback) {
         <p>
-          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
           {{ feedback.teachingMethodsFeedback }}
         </p>
         } }
-      </div>
+      </p-message>
       }
-      <hlm-form-field class="mt-2">
-        <textarea autoResize hlmInput formControlName="teachingMethodsEng" placeholder="How will the content be taught?" class="w-full min-h-[100px]"></textarea>
-      </hlm-form-field>
-      <div class="flex justify-between items-center gap-2 mt-2">
-        <button hlmBtn type="button" variant="outline" class="min-w-28" size="sm" (click)="togglePromptField('teaching')">
+      <div class="mt-2">
+        <textarea pTextarea formControlName="teachingMethodsEng" placeholder="How will the content be taught?" rows="4" fluid></textarea>
+      </div>
+      <div class="flex justify-between mt-2">
+        <p-button type="button" severity="secondary" [outlined]="true" size="small" (onClick)="togglePromptField('teaching')">
           {{ showPrompt['teaching'] ? 'Hide Prompt' : 'Customize Prompt' }}
-        </button>
-        <button hlmBtn type="button" variant="default" size="sm" (click)="generateTeachingMethods()" [disabled]="loading">Generate Teaching Methods</button>
+        </p-button>
+        <p-button type="button" severity="contrast" size="small" (onClick)="generateTeachingMethods()" [disabled]="loading">Generate Teaching Methods</p-button>
       </div>
       @if (showPrompt['teaching']) {
-      <hlm-form-field class="mt-2 mb-2">
-        <textarea
-          autoResize
-          hlmInput
-          [formControlName]="'teachingMethodsPromptEng'"
-          placeholder="Enter additional prompt text for teaching methods generation"
-          class="w-full min-h-[60px]"
-        ></textarea>
-      </hlm-form-field>
+      <div class="mt-2">
+        <textarea pTextarea [formControlName]="'teachingMethodsPromptEng'" placeholder="Enter additional prompt text for teaching methods generation" rows="2" fluid></textarea>
+      </div>
       }
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">Media used</label>
+      <label class="text-xl">Media used</label>
       @if (moduleVersionId && hasFeedback('mediaFeedback')) {
-      <div class="mt-2 text-sm text-gray-600">
+      <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
         @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.mediaFeedback) {
         <p>
-          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
           {{ feedback.mediaFeedback }}
         </p>
         } }
-      </div>
+      </p-message>
       }
-      <hlm-form-field class="mt-2">
-        <textarea autoResize hlmInput formControlName="mediaEng" placeholder="What media will be used?" class="w-full min-h-[100px]"></textarea>
-      </hlm-form-field>
+      <div class="mt-2">
+        <textarea pTextarea formControlName="mediaEng" placeholder="What media will be used?" rows="4" fluid></textarea>
+      </div>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">Literature</label>
+      <label class="text-xl">Literature</label>
       @if (moduleVersionId && hasFeedback('literatureFeedback')) {
-      <div class="mt-2 text-sm text-gray-600">
+      <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
         @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.literatureFeedback) {
         <p>
-          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
           {{ feedback.literatureFeedback }}
         </p>
         } }
-      </div>
+      </p-message>
       }
-      <hlm-form-field class="mt-2">
-        <textarea autoResize hlmInput formControlName="literatureEng" placeholder="What literature is reccommended?" class="w-full min-h-[100px]"></textarea>
-      </hlm-form-field>
+      <div class="mt-2">
+        <textarea pTextarea formControlName="literatureEng" placeholder="What literature is reccommended?" rows="4" fluid></textarea>
+      </div>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">Responsibles</label>
+      <label class="text-xl">Responsibles</label>
       @if (moduleVersionId && hasFeedback('responsiblesFeedback')) {
-      <div class="mt-2 text-sm text-gray-600">
+      <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
         @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.responsiblesFeedback) {
         <p>
-          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
           {{ feedback.responsiblesFeedback }}
         </p>
         } }
-      </div>
+      </p-message>
       }
-      <hlm-form-field class="mt-2">
-        <textarea autoResize hlmInput formControlName="responsiblesEng" placeholder="Who is responsible for the module?" class="w-full min-h-[100px]"></textarea>
-      </hlm-form-field>
+      <div class="mt-2">
+        <textarea pTextarea formControlName="responsiblesEng" placeholder="Who is responsible for the module?" rows="4" fluid></textarea>
+      </div>
     </div>
 
     <div>
-      <label hlmLabel class="text-xl">Lecturer</label>
+      <label class="text-xl">Lecturer</label>
       @if (moduleVersionId && hasFeedback('lvSwsLecturerFeedback')) {
-      <div class="mt-2 text-sm text-gray-600">
+      <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
         @for (feedback of feedbacks; track feedback.feedbackRole) { @if (feedback.lvSwsLecturerFeedback) {
         <p>
-          <span class="text-red-600">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+          <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
           {{ feedback.lvSwsLecturerFeedback }}
         </p>
         } }
-      </div>
+      </p-message>
       }
-      <hlm-form-field class="mt-2">
-        <textarea autoResize hlmInput formControlName="lvSwsLecturerEng" placeholder="Who will hold the lectures?" class="w-full min-h-[100px]"></textarea>
-      </hlm-form-field>
+      <div class="mt-2">
+        <textarea pTextarea formControlName="lvSwsLecturerEng" placeholder="Who will hold the lectures?" rows="4" fluid></textarea>
+      </div>
     </div>
 
-    <div class="flex justify-between gap-4">
-      <button hlmBtn [routerLink]="['/proposals']" variant="outline">Cancel</button>
-      <button type="submit" hlmBtn [disabled]="proposalForm.invalid || loading">
+    <div class="flex justify-between">
+      <p-button [routerLink]="['/proposals']" severity="secondary" [outlined]="true">Cancel</p-button>
+      <p-button type="submit" severity="contrast" [disabled]="proposalForm.invalid || loading">
         {{ loading ? 'Saving...' : moduleVersionDto ? 'Update Proposal' : 'Create Proposal' }}
-      </button>
+      </p-button>
     </div>
 
     @if (error) {
-    <div class="text-red-500 mt-4">{{ error }}</div>
+    <p-message severity="error" icon="pi pi-exclamation-circle">{{ error }}</p-message>
     }
   </form>
 </div>

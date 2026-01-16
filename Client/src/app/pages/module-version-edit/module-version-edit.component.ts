@@ -1,23 +1,17 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { HlmFormFieldModule } from '@spartan-ng/ui-formfield-helm';
-import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
-import { BrnSelectImports } from '@spartan-ng/ui-select-brain';
-import { HlmSelectImports } from '@spartan-ng/ui-select-helm';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { AutoResizeDirective } from '../../core/shared/autoresize.directive';
-import { HlmAlertDescriptionDirective, HlmAlertDirective, HlmAlertIconDirective, HlmAlertTitleDirective } from '@spartan-ng/ui-alert-helm';
-import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
-import { provideIcons } from '@ng-icons/core';
-import { lucideInfo } from '@ng-icons/lucide';
 import { ProposalBaseComponent } from '../../components/create-edit-base/create-edit-base.component';
 import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
 import { ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO, ModuleVersionViewDTO, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
 import { ToggleButtonGroupComponent } from '../../components/toggle-button-group/toggle-button-group.component';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { TextareaModule } from 'primeng/textarea';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-module-version-edit',
@@ -25,22 +19,15 @@ import { ToggleButtonGroupComponent } from '../../components/toggle-button-group
   imports: [
     ReactiveFormsModule,
     CommonModule,
-    HlmButtonDirective,
-    HlmFormFieldModule,
-    HlmInputDirective,
-    BrnSelectImports,
-    HlmSelectImports,
     RouterModule,
-    AutoResizeDirective,
-    HlmAlertDescriptionDirective,
-    HlmAlertDirective,
-    HlmAlertIconDirective,
-    HlmAlertTitleDirective,
-    HlmIconComponent,
     FeedbackDepartmentPipe,
-    ToggleButtonGroupComponent
+    ToggleButtonGroupComponent,
+    ButtonModule,
+    InputTextModule,
+    TextareaModule,
+    InputNumberModule,
+    MessageModule
   ],
-  providers: [provideIcons({ lucideInfo })],
   templateUrl: '../../components/create-edit-base/create-edit-base.component.html'
 })
 export class ModuleVersionEditComponent extends ProposalBaseComponent {
