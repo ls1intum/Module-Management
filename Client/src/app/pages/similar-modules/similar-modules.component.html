@@ -17,12 +17,12 @@
 } @else {
   <div class="space-y-6">
     @for (module of similarModules; track module.moduleId) {
-      <p-panel [header]="module.titleEng || 'Module ' + module.moduleId">
-        <p class="text-sm text-muted-foreground">Module ID: {{ module.moduleId }}</p>
+      <p-panel>
+        <h3 class="text-lg font-medium">{{ module.titleEng || 'Module ' + module.moduleId }}</h3>
+        <p class="text-sm text-muted-foreground mb-4">Module ID: {{ module.moduleId }}</p>
 
-        <p-panel class="mt-4" header="Module Content:">
-          <p class="text-sm leading-relaxed">{{ module.contentEng }}</p>
-        </p-panel>
+        <h4 class="font-medium mb-2">Module Content:</h4>
+        <textarea pTextarea [value]="module.contentEng || ''" [disabled]="true" [readonly]="true" fluid autoResize="true"></textarea>
 
         @if (module.similarity !== undefined) {
           <ng-template #footer>

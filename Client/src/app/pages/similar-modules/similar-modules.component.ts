@@ -7,11 +7,12 @@ import { TagModule } from 'primeng/tag';
 import { MessageModule } from 'primeng/message';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { PanelModule } from 'primeng/panel';
+import { TextareaModule } from 'primeng/textarea';
 
 @Component({
   selector: 'similar-modules-page',
   standalone: true,
-  imports: [RouterModule, ButtonModule, TagModule, MessageModule, ProgressSpinnerModule, PanelModule],
+  imports: [RouterModule, ButtonModule, TagModule, MessageModule, ProgressSpinnerModule, PanelModule, TextareaModule],
   templateUrl: './similar-modules.component.html'
 })
 export class SimilarModulesPage {
