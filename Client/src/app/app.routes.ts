@@ -20,9 +20,9 @@ export const routes: Routes = [
   { path: 'proposals/view/:id', component: ProposalViewComponent, canActivate: [AuthGuard] },
   { path: 'module-version/edit/:id', component: ModuleVersionEditComponent, canActivate: [AuthGuard] },
   { path: 'module-version/view/:id', component: ModuleVersionViewComponent, canActivate: [AuthGuard] },
-  { path: 'overlap/:id', component: SimilarModulesPage },
-  { path: 'feedbacks/for-user/:id', component: ApprovalStaffHomePageComponent },
-  { path: 'feedbacks/view/:id', component: FeedbackViewComponent },
+  { path: 'overlap/:id', component: SimilarModulesPage, canActivate: [AuthGuard] },
+  { path: 'feedbacks/for-user/:id', component: ApprovalStaffHomePageComponent, canActivate: [AuthGuard] },
+  { path: 'feedbacks/view/:id', component: FeedbackViewComponent, canActivate: [AuthGuard]},
   {
     path: 'account',
     component: AccountManagementPageComponent,
