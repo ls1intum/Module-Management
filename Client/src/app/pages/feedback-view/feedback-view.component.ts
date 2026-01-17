@@ -1,56 +1,22 @@
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { BrnSelectModule } from '@spartan-ng/ui-select-brain';
-import { BrnSeparatorModule } from '@spartan-ng/ui-separator-brain';
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, FeedbackDTO, GiveFeedbackDTO, ModuleVersionControllerService } from '../../core/modules/openapi';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
-import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
-import { HlmSelectModule } from '@spartan-ng/ui-select-helm';
-import { toast } from 'ngx-sonner';
-import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
-import {
-  HlmAlertDialogComponent,
-  HlmAlertDialogContentComponent,
-  HlmAlertDialogDescriptionDirective,
-  HlmAlertDialogFooterComponent,
-  HlmAlertDialogHeaderComponent,
-  HlmAlertDialogTitleDirective
-} from '@spartan-ng/ui-alertdialog-helm';
 import { HttpErrorResponse } from '@angular/common/http';
-import { lucideCheck, lucideX } from '@ng-icons/lucide';
-import { provideIcons } from '@ng-icons/core';
-import { HlmIconComponent } from '../../../spartan-components/ui-icon-helm/src/lib/hlm-icon.component';
-import { BrnDialogCloseDirective } from '@spartan-ng/ui-dialog-brain';
-import { HlmToasterComponent } from '@spartan-ng/ui-sonner-helm';
 import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { TextareaModule } from 'primeng/textarea';
+import { DialogModule } from 'primeng/dialog';
+import { ToastModule } from 'primeng/toast';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TooltipModule } from 'primeng/tooltip';
+import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-feedback-view',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    BrnSelectModule,
-    BrnSeparatorModule,
-    HlmButtonDirective,
-    HlmInputDirective,
-    HlmSelectModule,
-    BrnAlertDialogTriggerDirective,
-    BrnAlertDialogContentDirective,
-    BrnDialogCloseDirective,
-    HlmAlertDialogComponent,
-    HlmAlertDialogHeaderComponent,
-    HlmAlertDialogFooterComponent,
-    HlmAlertDialogTitleDirective,
-    HlmAlertDialogDescriptionDirective,
-    HlmAlertDialogContentComponent,
-    HlmIconComponent,
-    HlmToasterComponent
-  ],
-  providers: [provideIcons({ lucideCheck, lucideX })],
+  imports: [CommonModule, FormsModule, RouterModule, ButtonModule, TextareaModule, DialogModule, ToastModule, ProgressSpinnerModule, TooltipModule, MessageModule],
   templateUrl: './feedback-view.component.html'
 })
 export class FeedbackViewComponent {
@@ -64,6 +30,7 @@ export class FeedbackViewComponent {
   loading: boolean = true;
   error: string | null = null;
   rejectionReason: string = '';
+  showRejectDialog: boolean = false;
 
   // utility
 
@@ -207,21 +174,16 @@ export class FeedbackViewComponent {
       });
   }
 
-  cancel() {
-    this.router.navigate(['']);
-  }
-
   checkOverlaps() {}
 
   pdfExport() {
     const mvid = this.moduleVersion?.moduleVersionId;
     if (!mvid) {
-      toast('Exporting PDF', {
-        description: 'Failed to create PDF...',
-        duration: 3000
-      });
+      this.messageService.add({ severity: 'error', summary: 'Exporting PDF', detail: 'Failed to create PDF...' });
       return;
     }
+
+    this.messageService.add({ severity: 'info', summary: 'Exporting PDF', detail: 'Creating a PDF file for you to download...' });
 
     this.feedbackService.exportModuleVersionPdf(mvid).subscribe({
       next: (response: Blob) => {
@@ -235,19 +197,12 @@ export class FeedbackViewComponent {
           link.click();
           document.body.removeChild(link);
           URL.revokeObjectURL(link.href);
+          this.messageService.add({ severity: 'success', summary: 'PDF Exported', detail: 'PDF file downloaded successfully' });
         }
       },
       error: () => {
-        toast('Exporting PDF', {
-          description: 'Failed to create PDF...',
-          duration: 3000
-        });
+        this.messageService.add({ severity: 'error', summary: 'Exporting PDF', detail: 'Failed to create PDF...' });
       }
-    });
-
-    toast('Exporting PDF', {
-      description: 'Creating a PDF file for you to download...',
-      duration: 3000
     });
   }
 
@@ -257,13 +212,11 @@ export class FeedbackViewComponent {
       this.feedbackService.rejectFeedback(this.feedbackId, giveFeedbackDTO).subscribe({
         next: () => {
           this.messageService.add({ severity: 'success', summary: 'Module Proposal Rejected', detail: 'You successfully rejected this Module Proposal' });
+          this.showRejectDialog = false;
           this.router.navigate(['']);
         },
         error: (err: HttpErrorResponse) => {
-          toast('Rejection failed.', {
-            description: err.error || 'Unable to reject module',
-            duration: 3000
-          });
+          this.messageService.add({ severity: 'error', summary: 'Rejection failed', detail: err.error || 'Unable to reject module' });
           this.error = err.error;
         }
       });
@@ -278,14 +231,10 @@ export class FeedbackViewComponent {
       this.feedbackService.giveFeedback(this.feedbackId, feedbackDTO).subscribe({
         next: () => {
           this.messageService.add({ severity: 'success', summary: 'Feedback Submitted', detail: 'Your feedback has been submitted successfully' });
-
           this.router.navigate(['']);
         },
         error: (err: HttpErrorResponse) => {
-          toast('Sending feedback failed.', {
-            description: err.error || 'Unable to send feedback',
-            duration: 3000
-          });
+          this.messageService.add({ severity: 'error', summary: 'Sending feedback failed', detail: err.error || 'Unable to send feedback' });
           this.error = err.error;
         }
       });
