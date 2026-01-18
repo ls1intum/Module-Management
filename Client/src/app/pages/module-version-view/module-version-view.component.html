@@ -44,7 +44,7 @@
       @if (moduleVersionDto.feedbacks?.length) {
         <div class="space-y-6">
           @for (feedback of moduleVersionDto.feedbacks; track feedback.feedbackId) {
-            <p-card class="mb-4" [header]="(feedback.feedbackRole! | feedbackDepartment).text">
+            <p-panel class="mb-4" [header]="(feedback.feedbackRole! | feedbackDepartment).text">
               <p-tag [value]="(feedback.feedbackStatus! | feedbackStatus).text" [severity]="(feedback.feedbackStatus! | feedbackStatus).severity" />
               <div class="flex justify-between">
                 <p class="font-medium mt-1">{{ feedback.feedbackFromFirstName }} {{ feedback.feedbackFromLastName }}</p>
@@ -68,7 +68,7 @@
                   </p-message>
                 }
               </div>
-            </p-card>
+            </p-panel>
           }
         </div>
       } @else {
