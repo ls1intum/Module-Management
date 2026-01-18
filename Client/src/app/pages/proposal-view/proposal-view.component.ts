@@ -4,8 +4,8 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { StatusInfoPipeline, StatusDisplayPipe } from '../../pipes/proposalStatus.pipe';
-import { FadedModuleVersionStatusPipe, ModuleVersionStatusTagPipe } from '../../pipes/moduleVersionStatus.pipe';
-import { FadedFeedbackStatusPipe, FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
+import { ModuleVersionStatusPipe } from '../../pipes/moduleVersionStatus.pipe';
+import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
 import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
@@ -27,13 +27,11 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     TooltipModule,
     FeedbackStatusPipe,
     FeedbackDepartmentPipe,
-    FadedFeedbackStatusPipe,
     RouterModule,
     CommonModule,
     StatusDisplayPipe,
     StatusInfoPipeline,
-    ModuleVersionStatusTagPipe,
-    FadedModuleVersionStatusPipe,
+    ModuleVersionStatusPipe,
     ProgressSpinnerModule
   ],
   host: {

@@ -65,20 +65,17 @@
           {{ proposal.latestModuleVersion!.titleEng }}
         </td>
         <td>
-          <p-tag
-            [value]="(proposal.latestModuleVersion!.status! | moduleVersionStatusTag).text"
-            [severity]="(proposal.latestModuleVersion!.status! | moduleVersionStatusTag).severity"
-          />
+          <p-tag [value]="(proposal.latestModuleVersion!.status! | moduleVersionStatus).text" [severity]="(proposal.latestModuleVersion!.status! | moduleVersionStatus).severity" />
         </td>
         <td>
           <div class="flex">
             @if (proposal.latestModuleVersion!.feedbackList!.length) {
               @for (feedback of proposal.latestModuleVersion!.feedbackList; track feedback.requiredRole) {
                 <div
-                  [pTooltip]="'Feedback from ' + (feedback.requiredRole! | feedbackDepartment).text + ': ' + (feedback.status | fadedFeedbackStatus).text"
+                  [pTooltip]="'Feedback from ' + (feedback.requiredRole! | feedbackDepartment).text + ': ' + (feedback.status | feedbackStatus).text"
                   tooltipPosition="top"
                   class="w-8 h-8 mr-2 rounded"
-                  [class]="(feedback.status | feedbackStatus).colorClass"
+                  [class]="(feedback.status | feedbackStatus).normalColor"
                 ></div>
               }
             }
@@ -139,17 +136,17 @@
           {{ version.titleEng }}
         </td>
         <td>
-          <p-tag [value]="(version.status! | fadedModuleVersionStatus).text" severity="secondary" class="opacity-60" />
+          <p-tag [value]="(version.status! | moduleVersionStatus).text" severity="secondary" class="opacity-60" />
         </td>
         <td>
           <div class="flex">
             @if (version.feedbackList?.length) {
               @for (feedback of version.feedbackList; track feedback.requiredRole) {
                 <div
-                  [pTooltip]="'Feedback from ' + (feedback.requiredRole! | feedbackDepartment).text + ': ' + (feedback.status | fadedFeedbackStatus).text"
+                  [pTooltip]="'Feedback from ' + (feedback.requiredRole! | feedbackDepartment).text + ': ' + (feedback.status | feedbackStatus).text"
                   tooltipPosition="top"
                   class="w-8 h-8 mr-2 rounded opacity-60"
-                  [class]="(feedback.status | feedbackStatus).colorClass"
+                  [class]="(feedback.status | feedbackStatus).fadedColor"
                 ></div>
               }
             }

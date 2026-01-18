@@ -18,7 +18,7 @@
         {{ feedback.proposalCreatedByName || 'Unknown' }}
       </td>
       <td>
-        <p-tag [value]="(feedback.status | feedbackStatusTag).text" [severity]="(feedback.status | feedbackStatusTag).severity" />
+        <p-tag [value]="(feedback.status | feedbackStatus).text" [severity]="(feedback.status | feedbackStatus).severity" />
       </td>
       <td>
         <p-button label="View" styleClass="p-button-outlined" severity="contrast" [routerLink]="['/feedbacks/view', feedback.feedbackId]" />
