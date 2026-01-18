@@ -1,4 +1,3 @@
-@import '@angular/cdk/overlay-prebuilt.css' layer(base);
 @import 'primeicons/primeicons.css' layer(base);
 @import 'tailwindcss';
 @config '../tailwind.config.js';
