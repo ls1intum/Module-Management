@@ -22,7 +22,9 @@
         <p class="text-sm text-muted-foreground mb-4">Module ID: {{ module.moduleId }}</p>
 
         <h4 class="font-medium mb-2">Module Content:</h4>
-        <textarea pTextarea [value]="module.contentEng || ''" [disabled]="true" [readonly]="true" fluid autoResize="true"></textarea>
+        <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded-md border border-gray-200 dark:border-gray-600 whitespace-pre-line">
+          {{ module.contentEng }}
+        </div>
 
         @if (module.similarity !== undefined) {
           <ng-template #footer>
