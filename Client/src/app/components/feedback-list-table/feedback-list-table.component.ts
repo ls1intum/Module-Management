@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Feedback, FeedbackControllerService } from '../../core/modules/openapi';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
 import { SecurityStore } from '../../core/security/security-store.service';
 import { TableModule } from 'primeng/table';
@@ -12,7 +12,7 @@ import { ButtonModule } from 'primeng/button';
 @Component({
   selector: 'feedback-list-table',
   standalone: true,
-  imports: [RouterModule, CommonModule, TableModule, FeedbackStatusPipe, TagModule, ButtonModule],
+  imports: [RouterModule, TableModule, FeedbackStatusPipe, TagModule, ButtonModule],
   host: {
     class: 'w-full overflow-x-auto'
   },

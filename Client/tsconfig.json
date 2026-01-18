@@ -17,7 +17,6 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
-    "lib": ["ES2022", "dom"],
     "paths": {
       "@spartan-ng/ui-accordion-helm": ["./src/spartan-components/ui-accordion-helm/src/index.ts"],
       "@spartan-ng/ui-alert-helm": ["./src/spartan-components/ui-alert-helm/src/index.ts"],

@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { Component, inject } from '@angular/core';
 import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, FeedbackDTO, GiveFeedbackDTO, ModuleVersionControllerService } from '../../core/modules/openapi';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
@@ -16,7 +16,7 @@ import { MessageModule } from 'primeng/message';
 @Component({
   selector: 'app-feedback-view',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, ButtonModule, TextareaModule, DialogModule, ToastModule, ProgressSpinnerModule, TooltipModule, MessageModule],
+  imports: [FormsModule, RouterModule, ButtonModule, TextareaModule, DialogModule, ToastModule, ProgressSpinnerModule, TooltipModule, MessageModule],
   templateUrl: './feedback-view.component.html'
 })
 export class FeedbackViewComponent {

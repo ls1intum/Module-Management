@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProposalBaseComponent } from '../../components/create-edit-base/create-edit-base.component';
@@ -17,7 +17,6 @@ import { MessageModule } from 'primeng/message';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    CommonModule,
     RouterModule,
     FeedbackDepartmentPipe,
     ToggleButtonGroupComponent,
@@ -26,7 +25,7 @@ import { MessageModule } from 'primeng/message';
     TextareaModule,
     InputNumberModule,
     MessageModule
-  ],
+],
   templateUrl: '../../components/create-edit-base/create-edit-base.component.html'
 })
 export class ProposalCreateComponent extends ProposalBaseComponent {
