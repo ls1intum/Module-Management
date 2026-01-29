@@ -9,15 +9,10 @@
  */
 
 
-export interface UserDTO { 
-    userId: string;
-    userName?: string;
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    role?: UserDTO.RoleEnum;
+export interface UpdateUserRoleDTO { 
+    role: UpdateUserRoleDTO.RoleEnum;
 }
-export namespace UserDTO {
+export namespace UpdateUserRoleDTO {
     export type RoleEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR' | 'UNDEFINED';
     export const RoleEnum = {
         Admin: 'ADMIN' as RoleEnum,
