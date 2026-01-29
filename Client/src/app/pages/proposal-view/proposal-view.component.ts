@@ -1,58 +1,43 @@
 import { Component, inject } from '@angular/core';
-import { HlmTableComponent, HlmTrowComponent, HlmThComponent, HlmTdComponent, HlmCaptionComponent } from '@spartan-ng/ui-table-helm';
 import { AddModuleVersionDTO, ModuleVersion, Proposal, ProposalControllerService, ProposalViewDTO } from '../../core/modules/openapi';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
-import { BrnHoverCardComponent, BrnHoverCardContentDirective, BrnHoverCardTriggerDirective } from '@spartan-ng/ui-hovercard-brain';
 import { HttpErrorResponse } from '@angular/common/http';
-import { StatusDisplayPipe, StatusInfoPipeline } from '../../pipes/proposalStatus.pipe';
-import { FadedModuleVersionStatusPipe, ModuleVersionStatusPipe } from '../../pipes/moduleVersionStatus.pipe';
-import { HlmHoverCardModule } from '@spartan-ng/ui-hovercard-helm';
-import { FadedFeedbackStatusPipe, FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
+import { StatusInfoPipeline, StatusDisplayPipe } from '../../pipes/proposalStatus.pipe';
+import { ModuleVersionStatusPipe } from '../../pipes/moduleVersionStatus.pipe';
+import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
 import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
-import { HlmAlertDescriptionDirective, HlmAlertDirective, HlmAlertIconDirective, HlmAlertTitleDirective } from '@spartan-ng/ui-alert-helm';
-import { lucideInfo } from '@ng-icons/lucide';
-import { provideIcons } from '@ng-icons/core';
-import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
-import { HlmToasterComponent } from "../../../spartan-components/ui-sonner-helm/src/lib/hlm-toaster.component";
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { TagModule } from 'primeng/tag';
+import { MessageModule } from 'primeng/message';
+import { ToastModule } from 'primeng/toast';
+import { TooltipModule } from 'primeng/tooltip';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-proposal-view',
   standalone: true,
   imports: [
-    BrnHoverCardComponent,
-    BrnHoverCardContentDirective,
-    BrnHoverCardTriggerDirective,
-    HlmTableComponent,
-    HlmTrowComponent,
-    HlmHoverCardModule,
-    HlmThComponent,
-    HlmTdComponent,
-    HlmButtonDirective,
+    TableModule,
+    ButtonModule,
+    TagModule,
+    MessageModule,
+    ToastModule,
+    TooltipModule,
     FeedbackStatusPipe,
     FeedbackDepartmentPipe,
-    FadedFeedbackStatusPipe,
     RouterModule,
     CommonModule,
-    HlmBadgeDirective,
     StatusDisplayPipe,
     StatusInfoPipeline,
     ModuleVersionStatusPipe,
-    FadedModuleVersionStatusPipe,
-    HlmAlertDescriptionDirective,
-    HlmAlertDirective,
-    HlmAlertIconDirective,
-    HlmAlertTitleDirective,
-    HlmIconComponent,
-    HlmToasterComponent
-],
+    ProgressSpinnerModule
+  ],
   host: {
     class: 'w-full overflow-x-auto'
   },
-  templateUrl: './proposal-view.component.html',
-  providers: [provideIcons({ lucideInfo })]
+  templateUrl: './proposal-view.component.html'
 })
 export class ProposalViewComponent {
   router = inject(Router);
@@ -106,24 +91,6 @@ export class ProposalViewComponent {
         next: () => this.router.navigate(['/proposals']),
         error: (err: HttpErrorResponse) => (this.error = err.error)
       });
-    }
-  }
-
-  updateProposal() {
-    if (this.proposal) {
-      this.router.navigate(['/proposals/edit', this.proposal.proposalId]);
-    }
-  }
-
-  viewModuleVersion(versionId: number | undefined) {
-    if (versionId) {
-      this.router.navigate(['/module-version/view', versionId]);
-    }
-  }
-
-  editLatestModuleVersion() {
-    if (this.proposal?.latestVersion) {
-      this.router.navigate(['/module-version/edit', this.proposal.latestModuleVersion!.moduleVersionId]);
     }
   }
 

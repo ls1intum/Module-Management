@@ -1,22 +1,22 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Proposal } from '../core/modules/openapi';
-
+import { Tag } from 'primeng/tag';
 @Pipe({ name: 'statusDisplay', standalone: true })
 export class StatusDisplayPipe implements PipeTransform {
-  transform(status: Proposal.StatusEnum): { text: string; colorClass: string } {
+  transform(status: Proposal.StatusEnum): { text: string; severity: Tag['severity'] } {
     switch (status) {
       case 'PENDING_SUBMISSION':
-        return { text: 'Pending Submission', colorClass: 'bg-gray-500' };
+        return { text: 'Pending Submission', severity: 'secondary' };
       case 'PENDING_FEEDBACK':
-        return { text: 'Pending Feedback', colorClass: 'bg-yellow-500' };
+        return { text: 'Pending Feedback', severity: 'warn' };
       case 'ACCEPTED':
-        return { text: 'Accepted', colorClass: 'bg-green-500' };
+        return { text: 'Accepted', severity: 'success' };
       case 'REQUIRES_REVIEW':
-        return { text: 'Requires Review', colorClass: 'bg-blue-500' };
+        return { text: 'Requires Review', severity: 'info' };
       case 'REJECTED':
-        return { text: 'Rejected', colorClass: 'bg-red-500' };
+        return { text: 'Rejected', severity: 'danger' };
       default:
-        return { text: status, colorClass: 'bg-gray-400' };
+        return { text: status, severity: 'secondary' };
     }
   }
 }

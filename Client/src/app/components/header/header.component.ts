@@ -1,30 +1,45 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SecurityStore } from '../../core/security/security-store.service';
-import { HlmButtonModule } from '@spartan-ng/ui-button-helm';
-import { HlmAvatarModule } from '@spartan-ng/ui-avatar-helm';
-import { HlmMenuModule } from '@spartan-ng/ui-menu-helm';
-import { BrnMenuTriggerDirective } from '@spartan-ng/ui-menu-brain';
-import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
-import { provideIcons } from '@ng-icons/core';
-import { lucideLogOut, lucideSettings } from '@ng-icons/lucide';
+import { ThemeService } from '../../core/theme/theme.service';
+import { ButtonModule } from 'primeng/button';
+import { AvatarModule } from 'primeng/avatar';
+import { MenuModule } from 'primeng/menu';
+import { TooltipModule } from 'primeng/tooltip';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   standalone: true,
-  imports: [RouterLink, HlmButtonModule, HlmAvatarModule, HlmMenuModule, BrnMenuTriggerDirective, HlmIconComponent],
-  providers: [
-    provideIcons({
-      lucideLogOut,
-      lucideSettings
-    })
-  ]
+  imports: [RouterLink, ButtonModule, AvatarModule, MenuModule, TooltipModule]
 })
 export class HeaderComponent {
   securityStore = inject(SecurityStore);
+  themeService = inject(ThemeService);
 
   user = this.securityStore.user;
+  isDarkMode = this.themeService.isDarkMode;
+
+  menuItems: MenuItem[] = [
+    {
+      label: 'Settings',
+      icon: 'pi pi-cog',
+      routerLink: '/account'
+    },
+    {
+      separator: true
+    },
+    {
+      label: 'Sign Out',
+      icon: 'pi pi-sign-out',
+      command: () => this.signOut()
+    }
+  ];
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
+  }
 
   signIn() {
     this.securityStore.signIn();

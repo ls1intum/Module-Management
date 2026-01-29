@@ -1,13 +1,18 @@
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  presets: [require('@spartan-ng/ui-core/hlm-tailwind-preset')],
+  darkMode: 'class', // Enable class-based dark mode
   content: [
     './src/**/*.{html,ts}',
-    './src/spartan-components/**/*.{html,ts}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+      },
+    },
   },
   plugins: [],
 };

@@ -10,12 +10,9 @@ import {
 } from '../../core/modules/openapi';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { HlmSeparatorModule } from '@spartan-ng/ui-separator-helm';
-import { BrnSeparatorModule } from '@spartan-ng/ui-separator-brain';
 
 @Component({
-  template: '',
-  imports: [BrnSeparatorModule, HlmSeparatorModule]
+  template: ''
 })
 export abstract class ProposalBaseComponent {
   protected formBuilder = inject(FormBuilder);
@@ -87,7 +84,7 @@ export abstract class ProposalBaseComponent {
   }
 
   hasFeedback(field: keyof ModuleVersionViewFeedbackDTO): boolean {
-    return this.feedbacks?.some(feedback => feedback[field]) || false;
+    return this.feedbacks?.some((feedback) => feedback[field]) || false;
   }
 
   protected async generateContent() {

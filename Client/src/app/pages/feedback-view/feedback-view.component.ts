@@ -1,60 +1,36 @@
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { BrnSelectModule } from '@spartan-ng/ui-select-brain';
-import { BrnSeparatorModule } from '@spartan-ng/ui-separator-brain';
-import { CommonModule } from '@angular/common';
+
 import { Component, inject } from '@angular/core';
 import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, FeedbackDTO, GiveFeedbackDTO, ModuleVersionControllerService } from '../../core/modules/openapi';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
-import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
-import { HlmSelectModule } from '@spartan-ng/ui-select-helm';
-import { toast } from 'ngx-sonner';
-import { BrnAlertDialogContentDirective, BrnAlertDialogTriggerDirective } from '@spartan-ng/ui-alertdialog-brain';
-import { HlmAlertDialogComponent, HlmAlertDialogContentComponent, HlmAlertDialogDescriptionDirective, HlmAlertDialogFooterComponent, HlmAlertDialogHeaderComponent, HlmAlertDialogTitleDirective } from '@spartan-ng/ui-alertdialog-helm';
 import { HttpErrorResponse } from '@angular/common/http';
-import { lucideCheck, lucideX } from '@ng-icons/lucide';
-import { provideIcons } from '@ng-icons/core';
-import { HlmIconComponent } from "../../../spartan-components/ui-icon-helm/src/lib/hlm-icon.component";
-import { BrnDialogCloseDirective } from '@spartan-ng/ui-dialog-brain';
-import { HlmToasterComponent } from '@spartan-ng/ui-sonner-helm';
+import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { TextareaModule } from 'primeng/textarea';
+import { DialogModule } from 'primeng/dialog';
+import { ToastModule } from 'primeng/toast';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TooltipModule } from 'primeng/tooltip';
+import { MessageModule } from 'primeng/message';
 
 @Component({
   selector: 'app-feedback-view',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    BrnSelectModule,
-    BrnSeparatorModule,
-    HlmButtonDirective,
-    HlmInputDirective,
-    HlmSelectModule,
-    BrnAlertDialogTriggerDirective,
-    BrnAlertDialogContentDirective,
-    BrnDialogCloseDirective,
-    HlmAlertDialogComponent,
-    HlmAlertDialogHeaderComponent,
-    HlmAlertDialogFooterComponent,
-    HlmAlertDialogTitleDirective,
-    HlmAlertDialogDescriptionDirective,
-    HlmAlertDialogContentComponent,
-    HlmIconComponent,
-    HlmToasterComponent
-],
-  providers: [provideIcons({ lucideCheck, lucideX })],
+  imports: [FormsModule, RouterModule, ButtonModule, TextareaModule, DialogModule, ToastModule, ProgressSpinnerModule, TooltipModule, MessageModule],
   templateUrl: './feedback-view.component.html'
 })
 export class FeedbackViewComponent {
   router = inject(Router);
   feedbackService = inject(FeedbackControllerService);
-  moduleVersionService = inject(ModuleVersionControllerService)
+  messageService = inject(MessageService);
+  moduleVersionService = inject(ModuleVersionControllerService);
   feedbackForm: FormGroup;
   feedbackId: number | null = null;
   moduleVersion: ModuleVersionUpdateRequestDTO | null = null;
   loading: boolean = true;
   error: string | null = null;
   rejectionReason: string = '';
+  showRejectDialog: boolean = false;
 
   // utility
 
@@ -90,7 +66,7 @@ export class FeedbackViewComponent {
   ] as const;
 
   constructor(formBulider: FormBuilder, route: ActivatedRoute) {
-    this.moduleFields.forEach(field => {
+    this.moduleFields.forEach((field) => {
       this.fieldStates[field.key] = { accepted: null };
       this.fieldFeedback[field.key] = '';
     });
@@ -132,7 +108,7 @@ export class FeedbackViewComponent {
       responsiblesAccepted: [null],
       responsiblesFeedback: [''],
       lvSwsLecturerAccepted: [null],
-      lvSwsLecturerFeedback: [''],
+      lvSwsLecturerFeedback: ['']
     });
     this.feedbackId = Number(route.snapshot.paramMap.get('id'));
     this.fetchModuleVersion(this.feedbackId);
@@ -154,7 +130,7 @@ export class FeedbackViewComponent {
   // field methods
 
   handleApprove(key: string) {
-    const formField = key.replace('Eng', ''); 
+    const formField = key.replace('Eng', '');
     this.fieldStates[key] = { accepted: true };
     this.fieldFeedback[key] = '';
     const acceptedField = `${formField}Accepted`;
@@ -164,14 +140,14 @@ export class FeedbackViewComponent {
   }
 
   handleReject(key: string) {
-    const formField = key.replace('Eng', ''); 
+    const formField = key.replace('Eng', '');
     this.fieldStates[key] = { accepted: false };
     const acceptedField = `${formField}Accepted`;
     this.feedbackForm.get(acceptedField)?.setValue(false);
   }
 
   updateFeedback(key: string, value: string) {
-    const formField = key.replace('Eng', ''); 
+    const formField = key.replace('Eng', '');
     this.fieldFeedback[key] = value;
     this.feedbackForm.patchValue({
       [`${formField}Feedback`]: value
@@ -181,45 +157,38 @@ export class FeedbackViewComponent {
   // form methods
 
   isEveryFieldFilled(): boolean {
-  const formValues = this.feedbackForm.value;
-  return Object.keys(formValues)
-    .filter(key => key.endsWith('Accepted'))
-    .every(acceptedKey => {
-      const isAccepted = formValues[acceptedKey];
-      if (isAccepted === true) {
-        return true;
-      }
-      if (isAccepted === false) {
-        const feedbackKey = acceptedKey.replace('Accepted', 'Feedback');
-        const feedback = formValues[feedbackKey];
-        return feedback && feedback.trim().length > 0;
-      }
-      return false;
-    });
+    const formValues = this.feedbackForm.value;
+    return Object.keys(formValues)
+      .filter((key) => key.endsWith('Accepted'))
+      .every((acceptedKey) => {
+        const isAccepted = formValues[acceptedKey];
+        if (isAccepted === true) {
+          return true;
+        }
+        if (isAccepted === false) {
+          const feedbackKey = acceptedKey.replace('Accepted', 'Feedback');
+          const feedback = formValues[feedbackKey];
+          return feedback && feedback.trim().length > 0;
+        }
+        return false;
+      });
   }
 
-  cancel() {
-    this.router.navigate(['']);
-  }
-
-  checkOverlaps() {
-    
-  }
+  checkOverlaps() {}
 
   pdfExport() {
     const mvid = this.moduleVersion?.moduleVersionId;
     if (!mvid) {
-      toast('Exporting PDF', {
-        description: 'Failed to create PDF...',
-        duration: 3000
-      })
+      this.messageService.add({ severity: 'error', summary: 'Exporting PDF', detail: 'Failed to create PDF...' });
       return;
     }
-    
+
+    this.messageService.add({ severity: 'info', summary: 'Exporting PDF', detail: 'Creating a PDF file for you to download...' });
+
     this.feedbackService.exportModuleVersionPdf(mvid).subscribe({
       next: (response: Blob) => {
         {
-          const fileName = `f${this.feedbackId}_mv${mvid}_${this.moduleVersion?.titleEng}`
+          const fileName = `f${this.feedbackId}_mv${mvid}_${this.moduleVersion?.titleEng}`;
           const blob = new Blob([response], { type: 'application/pdf' });
           const link = document.createElement('a');
           link.href = URL.createObjectURL(blob);
@@ -228,21 +197,13 @@ export class FeedbackViewComponent {
           link.click();
           document.body.removeChild(link);
           URL.revokeObjectURL(link.href);
+          this.messageService.add({ severity: 'success', summary: 'PDF Exported', detail: 'PDF file downloaded successfully' });
         }
       },
-    error: () => {
-      toast('Exporting PDF', {
-        description: 'Failed to create PDF...',
-        duration: 3000
-      });
-    }
-    })
-
-    toast('Exporting PDF', {
-      description: 'Creating a PDF file for you to download...',
-      duration: 3000
-    })
-
+      error: () => {
+        this.messageService.add({ severity: 'error', summary: 'Exporting PDF', detail: 'Failed to create PDF...' });
+      }
+    });
   }
 
   reject() {
@@ -250,13 +211,12 @@ export class FeedbackViewComponent {
       const giveFeedbackDTO: GiveFeedbackDTO = { comment: this.rejectionReason };
       this.feedbackService.rejectFeedback(this.feedbackId, giveFeedbackDTO).subscribe({
         next: () => {
-          this.router.navigate([''], { queryParams: { rejected: true } });
+          this.messageService.add({ severity: 'success', summary: 'Module Proposal Rejected', detail: 'You successfully rejected this Module Proposal' });
+          this.showRejectDialog = false;
+          this.router.navigate(['']);
         },
         error: (err: HttpErrorResponse) => {
-          toast('Rejection failed.', {
-            description: err.error || 'Unable to reject module',
-            duration: 3000
-          });
+          this.messageService.add({ severity: 'error', summary: 'Rejection failed', detail: err.error || 'Unable to reject module' });
           this.error = err.error;
         }
       });
@@ -266,17 +226,15 @@ export class FeedbackViewComponent {
   giveFeedback() {
     if (this.feedbackId) {
       const feedbackDTO: FeedbackDTO = {
-        ...this.feedbackForm.value,
-      }
+        ...this.feedbackForm.value
+      };
       this.feedbackService.giveFeedback(this.feedbackId, feedbackDTO).subscribe({
         next: () => {
-          this.router.navigate([''], { queryParams: { feedback_given: true } });
+          this.messageService.add({ severity: 'success', summary: 'Feedback Submitted', detail: 'Your feedback has been submitted successfully' });
+          this.router.navigate(['']);
         },
         error: (err: HttpErrorResponse) => {
-          toast('Sending feedback failed.', {
-            description: err.error || 'Unable to send feedback',
-            duration: 3000
-          });
+          this.messageService.add({ severity: 'error', summary: 'Sending feedback failed', detail: err.error || 'Unable to send feedback' });
           this.error = err.error;
         }
       });

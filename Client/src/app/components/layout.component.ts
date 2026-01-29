@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
   standalone: true,
   imports: [RouterModule],
   template: `
-    <div class="content-container p-12 sm:px-24 max-w-[1400px] mx-auto">
+    <div class="content-container p-32 sm:px-24 max-w-[1400px] mx-auto">
       <ng-content></ng-content>
     </div>
   `

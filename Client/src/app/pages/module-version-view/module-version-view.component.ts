@@ -1,13 +1,17 @@
-import { CommonModule } from "@angular/common";
-import { HttpErrorResponse } from "@angular/common/http";
-import { Component, inject } from "@angular/core";
-import { RouterModule, ActivatedRoute } from "@angular/router";
-import { HlmBadgeDirective } from "@spartan-ng/ui-badge-helm";
-import { HlmButtonDirective } from "@spartan-ng/ui-button-helm";
-import { ModuleVersionControllerService, ModuleVersionViewDTO, ModuleVersion, ModuleVersionViewFeedbackDTO } from "../../core/modules/openapi";
-import { FeedbackDepartmentPipe } from "../../pipes/feedbackDepartment.pipe";
-import { FeedbackStatusPipe } from "../../pipes/feedbackStatus.pipe";
-import { ModuleVersionStatusPipe } from "../../pipes/moduleVersionStatus.pipe";
+import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, inject } from '@angular/core';
+import { RouterModule, ActivatedRoute } from '@angular/router';
+import { ModuleVersionControllerService, ModuleVersionViewDTO, ModuleVersion, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
+import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
+import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
+import { ModuleVersionStatusPipe } from '../../pipes/moduleVersionStatus.pipe';
+import { ButtonModule } from 'primeng/button';
+import { TagModule } from 'primeng/tag';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MessageModule } from 'primeng/message';
+import { CardModule } from 'primeng/card';
+import { PanelModule } from 'primeng/panel';
 
 export interface ModuleField {
   key: keyof ModuleVersionViewDTO;
@@ -21,7 +25,19 @@ export interface ModuleField {
 @Component({
   selector: 'module-version-view',
   standalone: true,
-  imports: [CommonModule, RouterModule, HlmBadgeDirective, HlmButtonDirective, ModuleVersionStatusPipe, FeedbackStatusPipe, FeedbackDepartmentPipe],
+  imports: [
+    CommonModule,
+    RouterModule,
+    ModuleVersionStatusPipe,
+    FeedbackStatusPipe,
+    FeedbackDepartmentPipe,
+    ButtonModule,
+    TagModule,
+    ProgressSpinnerModule,
+    MessageModule,
+    CardModule,
+    PanelModule
+  ],
   templateUrl: './module-version-view.component.html'
 })
 export class ModuleVersionViewComponent {
@@ -45,10 +61,24 @@ export class ModuleVersionViewComponent {
     { key: 'hoursSelfStudy', label: 'Self-Study Hours', section: 'hours', feedbackKey: 'hoursSelfStudyFeedback' },
     { key: 'hoursPresence', label: 'Presence Hours', section: 'hours', feedbackKey: 'hoursPresenceFeedback' },
     { key: 'bulletPoints', label: 'Key Points', section: 'content', isLongText: true },
-    { key: 'examinationAchievementsEng', label: 'Examination Achievements', section: 'content', isLongText: true, hasPrompt: 'examinationAchievementsPromptEng', feedbackKey: 'examinationAchievementsFeedback' },
+    {
+      key: 'examinationAchievementsEng',
+      label: 'Examination Achievements',
+      section: 'content',
+      isLongText: true,
+      hasPrompt: 'examinationAchievementsPromptEng',
+      feedbackKey: 'examinationAchievementsFeedback'
+    },
     { key: 'recommendedPrerequisitesEng', label: 'Recommended Prerequisites', section: 'content', isLongText: true, feedbackKey: 'recommendedPrerequisitesFeedback' },
     { key: 'contentEng', label: 'Module Content', section: 'content', isLongText: true, hasPrompt: 'contentPromptEng', feedbackKey: 'contentFeedback' },
-    { key: 'learningOutcomesEng', label: 'Learning Outcomes', section: 'content', isLongText: true, hasPrompt: 'learningOutcomesPromptEng', feedbackKey: 'learningOutcomesFeedback' },
+    {
+      key: 'learningOutcomesEng',
+      label: 'Learning Outcomes',
+      section: 'content',
+      isLongText: true,
+      hasPrompt: 'learningOutcomesPromptEng',
+      feedbackKey: 'learningOutcomesFeedback'
+    },
     { key: 'teachingMethodsEng', label: 'Teaching Methods', section: 'content', isLongText: true, hasPrompt: 'teachingMethodsPromptEng', feedbackKey: 'teachingMethodsFeedback' },
     { key: 'mediaEng', label: 'Media', section: 'content', isLongText: true, feedbackKey: 'mediaFeedback' },
     { key: 'literatureEng', label: 'Literature', section: 'content', isLongText: true, feedbackKey: 'literatureFeedback' },
@@ -75,11 +105,11 @@ export class ModuleVersionViewComponent {
     if (!mvid) {
       return;
     }
-    
+
     this.moduleVersionService.exportProfessorModuleVersionPdf(mvid).subscribe({
       next: (response: Blob) => {
         {
-          const fileName = `mv${mvid}_${this.moduleVersionDto!.titleEng}`
+          const fileName = `mv${mvid}_${this.moduleVersionDto!.titleEng}`;
           const blob = new Blob([response], { type: 'application/pdf' });
           const link = document.createElement('a');
           link.href = URL.createObjectURL(blob);
@@ -90,8 +120,8 @@ export class ModuleVersionViewComponent {
           URL.revokeObjectURL(link.href);
         }
       },
-    error: (err: HttpErrorResponse) => this.error = err.error
-    })
+      error: (err: HttpErrorResponse) => (this.error = err.error)
+    });
   }
 
   getModuleVersionProperty(key: keyof ModuleVersionViewDTO): string {
@@ -109,10 +139,10 @@ export class ModuleVersionViewComponent {
 
   getFeedbackFields(feedback: ModuleVersionViewFeedbackDTO): { key: string; label: string; value: string }[] {
     const feedbackFields: { key: string; label: string; value: string }[] = [];
-    
+
     for (const field of this.moduleFields) {
       if (!field.feedbackKey) continue;
-      
+
       const feedbackValue = feedback[field.feedbackKey as keyof ModuleVersionViewFeedbackDTO];
       if (feedbackValue) {
         feedbackFields.push({
@@ -122,30 +152,26 @@ export class ModuleVersionViewComponent {
         });
       }
     }
-    
+
     return feedbackFields;
   }
 
   getFieldFeedbacks(fieldKey: keyof ModuleVersionViewDTO): ModuleVersionViewFeedbackDTO[] {
     if (!this.moduleVersionDto?.feedbacks) return [];
-    
-    const field = this.moduleFields.find(f => f.key === fieldKey);
+
+    const field = this.moduleFields.find((f) => f.key === fieldKey);
     if (!field?.feedbackKey) return [];
-    
-    return this.moduleVersionDto.feedbacks.filter(feedback => {
+
+    return this.moduleVersionDto.feedbacks.filter((feedback) => {
       const feedbackValue = feedback[field.feedbackKey as keyof ModuleVersionViewFeedbackDTO];
       return feedbackValue !== null && feedbackValue !== undefined && feedbackValue !== '';
     });
   }
 
   getFeedbackContent(feedback: ModuleVersionViewFeedbackDTO, fieldKey: keyof ModuleVersionViewDTO): string {
-    const field = this.moduleFields.find(f => f.key === fieldKey);
+    const field = this.moduleFields.find((f) => f.key === fieldKey);
     if (!field?.feedbackKey) return '';
-    
-    return String(feedback[field.feedbackKey as keyof ModuleVersionViewFeedbackDTO] || '');
-  }
 
-  getFeedbackBorderClass(status: ModuleVersionViewFeedbackDTO.FeedbackStatusEnum): string {
-    return 'border-blue-500';
+    return String(feedback[field.feedbackKey as keyof ModuleVersionViewFeedbackDTO] || '');
   }
 }

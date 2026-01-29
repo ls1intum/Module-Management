@@ -1,52 +1,68 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ModuleVersionCompactDTO } from '../core/modules/openapi';
+import { Tag } from 'primeng/tag';
 
 @Pipe({
   name: 'moduleVersionStatus',
   standalone: true
 })
 export class ModuleVersionStatusPipe implements PipeTransform {
-  transform(status: ModuleVersionCompactDTO.StatusEnum): { text: string; colorClass: string } {
+  transform(status: ModuleVersionCompactDTO.StatusEnum): {
+    text: string;
+    normalColor: string;
+    fadedColor: string;
+    severity: Tag['severity'];
+  } {
     switch (status) {
       case ModuleVersionCompactDTO.StatusEnum.PendingSubmission:
-        return { text: 'Pending Submission', colorClass: 'bg-gray-500' };
+        return {
+          text: 'Pending Submission',
+          normalColor: 'bg-gray-500',
+          fadedColor: 'bg-gray-300',
+          severity: 'secondary'
+        };
       case ModuleVersionCompactDTO.StatusEnum.PendingFeedback:
-        return { text: 'Pending Feedback', colorClass: 'bg-yellow-500' };
+        return {
+          text: 'Pending Feedback',
+          normalColor: 'bg-yellow-500',
+          fadedColor: 'bg-yellow-300',
+          severity: 'warn'
+        };
       case ModuleVersionCompactDTO.StatusEnum.Accepted:
-        return { text: 'Accepted', colorClass: 'bg-green-500' };
+        return {
+          text: 'Accepted',
+          normalColor: 'bg-green-500',
+          fadedColor: 'bg-green-300',
+          severity: 'success'
+        };
       case ModuleVersionCompactDTO.StatusEnum.FeedbackGiven:
-        return { text: 'Feedback given', colorClass: 'bg-blue-500' };
+        return {
+          text: 'Feedback given',
+          normalColor: 'bg-blue-500',
+          fadedColor: 'bg-blue-300',
+          severity: 'info'
+        };
       case ModuleVersionCompactDTO.StatusEnum.Rejected:
-        return { text: 'Rejected', colorClass: 'bg-red-500' };
+        return {
+          text: 'Rejected',
+          normalColor: 'bg-red-500',
+          fadedColor: 'bg-red-300',
+          severity: 'danger'
+        };
       case ModuleVersionCompactDTO.StatusEnum.Cancelled:
-        return { text: 'Cancelled', colorClass: 'bg-gray-300' };
+        return {
+          text: 'Cancelled',
+          normalColor: 'bg-gray-300',
+          fadedColor: 'bg-gray-100',
+          severity: 'secondary'
+        };
       default:
-        return { text: status, colorClass: 'bg-gray-400' };
-    }
-  }
-}
-
-@Pipe({
-  name: 'fadedModuleVersionStatus',
-  standalone: true
-})
-export class FadedModuleVersionStatusPipe implements PipeTransform {
-  transform(status: ModuleVersionCompactDTO.StatusEnum): { text: string; colorClass: string } {
-    switch (status) {
-      case ModuleVersionCompactDTO.StatusEnum.PendingSubmission:
-        return { text: 'Pending Submission', colorClass: 'bg-gray-300' };
-      case ModuleVersionCompactDTO.StatusEnum.PendingFeedback:
-        return { text: 'Pending Feedback', colorClass: 'bg-yellow-300' };
-      case ModuleVersionCompactDTO.StatusEnum.Accepted:
-        return { text: 'Accepted', colorClass: 'bg-green-300' };
-      case ModuleVersionCompactDTO.StatusEnum.FeedbackGiven:
-        return { text: 'Feedback given', colorClass: 'bg-blue-300' };
-      case ModuleVersionCompactDTO.StatusEnum.Rejected:
-        return { text: 'Rejected', colorClass: 'bg-red-300' };
-      case ModuleVersionCompactDTO.StatusEnum.Cancelled:
-        return { text: 'Cancelled', colorClass: 'bg-gray-100' };
-      default:
-        return { text: status, colorClass: 'bg-gray-200' };
+        return {
+          text: status,
+          normalColor: 'bg-gray-400',
+          fadedColor: 'bg-gray-200',
+          severity: 'secondary'
+        };
     }
   }
 }

@@ -24,7 +24,6 @@ The Module Management System streamlines the process of creating, reviewing, and
 ### For Professors
 
 1. **Creating a Module Proposal**:
-
    - Log in to the system with professor credentials
    - Navigate to "Create New Proposal"
    - Fill in all required module information
@@ -118,7 +117,7 @@ From the `Client` directory:
 
 ```bash
 cd Client
-npm install --legacy-peer-deps   # First time only
+npm install   # First time only
 npm start
 ```
 
@@ -138,7 +137,6 @@ SpringAI supports using local LLMs via LM Studio or other OpenAI-compatible loca
 **Setup Steps:**
 
 1. **Start LM Studio**:
-
    - Open LM Studio
    - Load a model of your choice
    - Start the local server (usually runs on `http://localhost:1234`)

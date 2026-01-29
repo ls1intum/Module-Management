@@ -1,46 +1,38 @@
-<div>
-  <h1 class="text-2xl font-semibold mb-6">Potential Module Overlaps</h1>
+<h1 class="text-2xl mb-8">Potential Module Overlaps</h1>
 
-  @if (isLoading) {
-  <div class="flex justify-center items-center min-h-[200px]">
-    <div class="animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent"></div>
+@if (isLoading) {
+  <div class="fixed inset-0 flex justify-center items-center">
+    <p-progress-spinner ariaLabel="loading" />
   </div>
-  } @else if (similarModules.length === 0) {
-  <div hlmAlert class="mb-4">
-    <hlm-icon hlmAlertIcon name="lucideInfo" />
-    <h3 hlmAlertTitle>No Similar Modules Found</h3>
-    <p hlmAlertDesc>We couldn't find any modules that are similar to your proposal.</p>
-  </div>
-  } @else {
-  <div class="space-y-4">
-    @for (module of similarModules; track module.moduleId) {
-    <div class="border rounded-lg p-6 bg-card">
-      <div class="flex justify-between items-start mb-4">
-        <div>
-          <h3 class="text-lg font-medium">{{ module.titleEng || 'Module ' + module.moduleId }}</h3>
-          <p class="text-sm text-muted-foreground">Module ID: {{ module.moduleId }}</p>
-        </div>
+} @else if (similarModules.length === 0) {
+  <p-message severity="success">
+    <div class="flex flex-row">
+      <i class="pi pi-info-circle mt-1" style="font-size: 1.2rem"></i>
+      <div class="ml-3">
+        <p class="font-bold">No Similar Modules Found</p>
+        <p>We couldn't find any modules that are similar to your proposal.</p>
       </div>
-
-      <div hlmCard class="p-2 bg-muted/80 rounded-lg">
-        <h4 class="font-medium mb-2">Module Content:</h4>
-        <p class="text-sm leading-relaxed">{{ module.contentEng }}</p>
-      </div>
-
-      @if (module.similarity !== undefined) {
-      <div class="mt-4 flex items-center gap-2">
-        <span class="text-sm text-muted-foreground">Similarity Score:</span>
-        <div hlmBadge [class]="module.similarity > 0.7 ? 'bg-red-500' : module.similarity > 0.4 ? 'bg-yellow-500' : 'bg-green-500'">
-          {{ (module.similarity * 100).toFixed(1) }}%
-        </div>
-      </div>
-      }
     </div>
+  </p-message>
+} @else {
+  <div class="space-y-6">
+    @for (module of similarModules; track module.moduleId) {
+      <p-panel>
+        <h3 class="text-lg font-medium">{{ module.titleEng || 'Module ' + module.moduleId }}</h3>
+        <p class="text-sm text-muted-foreground mb-4">Module ID: {{ module.moduleId }}</p>
+
+        <h4 class="font-medium mb-2">Module Content:</h4>
+        <div class="p-3 bg-gray-100 dark:bg-gray-700 rounded-md border border-gray-200 dark:border-gray-600 whitespace-pre-line">
+          {{ module.contentEng }}
+        </div>
+
+        @if (module.similarity !== undefined) {
+          <ng-template #footer>
+            <span class="text-sm text-muted-foreground mr-2">Similarity Score:</span>
+            <p-tag [value]="(module.similarity * 100).toFixed(1) + '%'" [severity]="module.similarity > 0.7 ? 'danger' : module.similarity > 0.4 ? 'warn' : 'success'" />
+          </ng-template>
+        }
+      </p-panel>
     }
   </div>
-  }
-
-  <div class="mt-8">
-    <button hlmBtn variant="outline" class="mr-4" (click)="goBack()">Go Back</button>
-  </div>
-</div>
+}

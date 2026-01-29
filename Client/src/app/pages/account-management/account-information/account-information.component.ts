@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { SecurityStore } from '../../../core/security/security-store.service';
-import { HlmCardDirective, HlmCardContentDirective, HlmCardDescriptionDirective, HlmCardHeaderDirective, HlmCardTitleDirective } from '@spartan-ng/ui-card-helm';
+import { PanelModule } from 'primeng/panel';
 
 @Component({
   selector: 'account-information',
   standalone: true,
-  imports: [HlmCardDirective, HlmCardHeaderDirective, HlmCardTitleDirective, HlmCardDescriptionDirective, HlmCardContentDirective],
+  imports: [PanelModule],
   templateUrl: './account-information.component.html'
 })
 export class AccountInformationComponent {

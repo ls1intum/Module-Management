@@ -1,37 +1,37 @@
-<hlm-table class="w-full min-w-[400px]">
-  <hlm-trow>
-    <hlm-th class="w-40">Feedback ID</hlm-th>
-    <hlm-th class="flex-1">Feedback From</hlm-th>
-    <hlm-th class="w-50">Status</hlm-th>
-    <hlm-th class="justify-end w-40">Actions</hlm-th>
-  </hlm-trow>
-  @if (loading) {
-  <hlm-trow>
-    <hlm-td colspan="4" class="text-center flex-1 block mt-4 text-sm text-muted-foreground">Loading feedbacks...</hlm-td>
-  </hlm-trow>
-  } @if (error) {
-  <hlm-trow>
-    <hlm-td colspan="4" class="text-center flex-1 block mt-4 text-sm text-muted-foreground">
-      {{ error }}
-    </hlm-td>
-  </hlm-trow>
-  } @for (feedback of feedbacks; track feedback.feedbackId) {
-  <hlm-trow>
-    <hlm-td truncate class="font-medium w-40 text-center">{{ feedback.feedbackId }}</hlm-td>
-    <hlm-td class="flex-1">
-      <div>{{ feedback.feedbackFrom?.firstName + ' ' + feedback.feedbackFrom?.lastName || 'Pending' }}</div>
-    </hlm-td>
-    <hlm-td class="w-50">
-      <div hlmBadge [class]="(feedback.status | feedbackStatus).colorClass">
-        {{ (feedback.status | feedbackStatus).text }}
-      </div>
-    </hlm-td>
-    <hlm-td class="justify-end w-40">
-      <button hlmBtn variant="outline" [routerLink]="['/feedbacks/view', feedback.feedbackId]">View</button>
-    </hlm-td>
-  </hlm-trow>
-  } @empty {
-  <hlm-td colspan="4" class="text-center flex-1 block mt-4 text-sm text-muted-foreground">No feedbacks available.</hlm-td>
-  }
-  <hlm-trow></hlm-trow>
-</hlm-table>
+<p-table [value]="feedbacks" selectionMode="single" [loading]="loading">
+  <ng-template #header>
+    <tr>
+      <th>Feedback ID</th>
+      <th>Proposal Title</th>
+      <th>Created By</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template #body let-feedback>
+    <tr [pSelectableRow]="feedback" [routerLink]="['/feedbacks/view', feedback.feedbackId]">
+      <td>{{ feedback.feedbackId }}</td>
+      <td>
+        {{ feedback.moduleVersionTitleEng || 'Untitled Proposal' }}
+      </td>
+      <td>
+        {{ feedback.proposalCreatedByName || 'Unknown' }}
+      </td>
+      <td>
+        <p-tag [value]="(feedback.status | feedbackStatus).text" [severity]="(feedback.status | feedbackStatus).severity" />
+      </td>
+      <td>
+        <p-button label="View" styleClass="p-button-outlined" severity="contrast" [routerLink]="['/feedbacks/view', feedback.feedbackId]" />
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template #emptymessage>
+    <tr>
+      <td class="text-sm text-muted-foreground" colspan="5">
+        @if (error) {
+        {{ error }}
+        } @else { No feedbacks found.}
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

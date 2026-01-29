@@ -10,6 +10,8 @@ import { AuthGuard } from './core/security/auth.guard';
 import { ModuleVersionViewComponent } from './pages/module-version-view/module-version-view.component';
 import { SimilarModulesPage } from './pages/similar-modules/similar-modules.component';
 import { AccountManagementPageComponent } from './pages/account-management/account-management-page.component';
+import { AccountInformationComponent } from './pages/account-management/account-information/account-information.component';
+import { AccountPasskeysComponent } from './pages/account-management/passkeys/account-passkeys.component';
 
 export const routes: Routes = [
   { path: '', component: IndexComponent },
@@ -18,8 +20,17 @@ export const routes: Routes = [
   { path: 'proposals/view/:id', component: ProposalViewComponent, canActivate: [AuthGuard] },
   { path: 'module-version/edit/:id', component: ModuleVersionEditComponent, canActivate: [AuthGuard] },
   { path: 'module-version/view/:id', component: ModuleVersionViewComponent, canActivate: [AuthGuard] },
-  { path: 'overlap/:id', component: SimilarModulesPage },
-  { path: 'feedbacks/for-user/:id', component: ApprovalStaffHomePageComponent },
-  { path: 'feedbacks/view/:id', component: FeedbackViewComponent },
-  { path: 'account', component: AccountManagementPageComponent, canActivate: [AuthGuard] }
+  { path: 'overlap/:id', component: SimilarModulesPage, canActivate: [AuthGuard] },
+  { path: 'feedbacks/for-user/:id', component: ApprovalStaffHomePageComponent, canActivate: [AuthGuard] },
+  { path: 'feedbacks/view/:id', component: FeedbackViewComponent, canActivate: [AuthGuard]},
+  {
+    path: 'account',
+    component: AccountManagementPageComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'information', component: AccountInformationComponent },
+      { path: 'passkeys', component: AccountPasskeysComponent },
+      { path: '', redirectTo: 'information', pathMatch: 'full' }
+    ]
+  }
 ];

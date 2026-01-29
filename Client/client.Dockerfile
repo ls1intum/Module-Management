@@ -7,4 +7,7 @@ COPY . .
 RUN npm run build
 
 FROM nginx:1.29.3
+
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 COPY --from=builder /app/dist/module-management-client/browser /usr/share/nginx/html

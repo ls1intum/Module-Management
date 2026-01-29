@@ -1,29 +1,18 @@
 import { Component, inject } from '@angular/core';
-import { HlmCaptionComponent, HlmTableComponent, HlmTdComponent, HlmThComponent, HlmTrowComponent } from '@spartan-ng/ui-table-helm';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { TagModule } from 'primeng/tag';
 import { Proposal, ProposalControllerService, ProposalsCompactDTO } from '../../core/modules/openapi';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
-import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
-import { HlmBadgeDirective } from '@spartan-ng/ui-badge-helm';
+
 import { StatusDisplayPipe } from '../../pipes/proposalStatus.pipe';
 import { SecurityStore } from '../../core/security/security-store.service';
 
 @Component({
   selector: 'proposal-list-table',
   standalone: true,
-  imports: [
-    HlmTableComponent,
-    HlmTrowComponent,
-    HlmThComponent,
-    HlmTdComponent,
-    HlmCaptionComponent,
-    HlmButtonDirective,
-    CommonModule,
-    HlmBadgeDirective,
-    StatusDisplayPipe,
-    RouterModule
-  ],
+  imports: [TableModule, ButtonModule, TagModule, RouterModule, StatusDisplayPipe],
   host: {
     class: 'w-full overflow-x-auto'
   },

@@ -1,159 +1,168 @@
-<hlm-toaster />
 @if (loading) {
-<div class="text-center">Loading...</div>
+  <div class="fixed inset-0 flex justify-center items-center">
+    <p-progress-spinner ariaLabel="loading" />
+  </div>
 } @else if (error) {
-<div class="text-center text-red-500">{{ error }}</div>
+  <p-message severity="error" class="mt-8">
+    <div class="flex flex-row">
+      <i class="pi pi-info-circle" style="font-size: 1.2rem"></i>
+      <div class="ml-3">
+        <p>{{ error }}</p>
+      </div>
+    </div>
+  </p-message>
 } @else if (proposal) {
-<div class="mb-6 space-y-6">
-  <div class="flex items-center justify-between">
-    <h2 class="text-2xl">Module Proposal '{{ proposal.latestModuleVersion?.titleEng }}'</h2>
+  <div>
+    <h2 class="text-2xl mb-6">Module Proposal '{{ proposal.latestModuleVersion?.titleEng }}'</h2>
+
+    <div class="grid grid-cols-4 gap-4">
+      <div class="col-span-2 grid grid-cols-2 gap-4">
+        <div>
+          <p class="text-sm text-muted-foreground">Proposal ID</p>
+          <p class="text-lg font-medium">{{ proposal.proposalId }}</p>
+        </div>
+        <div>
+          <p class="text-sm text-muted-foreground">Latest Version</p>
+          <p class="text-lg font-medium">{{ proposal.latestVersion }}</p>
+        </div>
+        <div>
+          <p class="text-sm text-muted-foreground">Proposal Status</p>
+          <p-tag [value]="(proposal.status! | statusDisplay).text" [severity]="(proposal.status! | statusDisplay).severity" />
+        </div>
+        <div>
+          <p class="text-sm text-muted-foreground">Created On</p>
+          <p class="text-lg font-medium">{{ proposal.creationDate | date: 'yyyy-MM-dd' }}</p>
+        </div>
+      </div>
+
+      <p-message severity="secondary" class="col-span-2">
+        <div class="flex flex-row">
+          <i class="pi pi-info-circle mt-1" style="font-size: 1.2rem"></i>
+          <div class="ml-3">
+            <p class="font-bold">Information</p>
+            <p>{{ proposal.status! | statusInfo }}</p>
+          </div>
+        </div>
+      </p-message>
+    </div>
   </div>
 
-  <div class="grid grid-cols-4 gap-4">
-    <div class="col-span-2 grid grid-cols-2 gap-4">
-      <div>
-        <p class="text-sm text-muted-foreground">Proposal ID</p>
-        <p class="text-lg font-medium">{{ proposal.proposalId }}</p>
-      </div>
-      <div>
-        <p class="text-sm text-muted-foreground">Latest Version</p>
-        <p class="text-lg font-medium">{{ proposal.latestVersion }}</p>
-      </div>
-      <div>
-        <p class="text-sm text-muted-foreground">Proposal Status</p>
-        <div hlmBadge [class]="(proposal.status! | statusDisplay).colorClass">
-          {{ (proposal.status! | statusDisplay).text }}
-        </div>
-      </div>
-      <div>
-        <p class="text-sm text-muted-foreground">Created On</p>
-        <p class="text-lg font-medium">{{ proposal.creationDate | date : 'yyyy-MM-dd' }}</p>
-      </div>
-    </div>
-
-    <div class="col-span-2">
-      <div hlmAlert class="h-full">
-        <hlm-icon hlmAlertIcon name="lucideInfo" />
-        <h3 hlmAlertTitle>Information</h3>
-        <p hlmAlertDesc>{{ proposal.status! | statusInfo }}</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<h2 class="text-xl mb-8 mt-10">Current Module Versions</h2>
-<hlm-table class="w-full min-w-[400px] mb-8">
-  <hlm-trow>
-    <hlm-th class="w-24">Version</hlm-th>
-    <hlm-th class="flex-1">Title</hlm-th>
-    <hlm-th class="w-44">Status</hlm-th>
-    <hlm-th class="w-48">Required Feedbacks</hlm-th>
-    <hlm-th class="w-64">Actions</hlm-th>
-  </hlm-trow>
-
-  <hlm-trow>
-    <hlm-td truncate class="font-medium w-24">{{ proposal.latestVersion }}</hlm-td>
-    <hlm-td class="flex-1">
-      <button hlmBtn variant="link" class="text-left px-0" [routerLink]="['/module-version/view', proposal.latestModuleVersion!.moduleVersionId]">
-        {{ proposal.latestModuleVersion!.titleEng }}
-      </button>
-    </hlm-td>
-    <hlm-td class="w-44">
-      <div hlmBadge [class]="(proposal.latestModuleVersion!.status! | moduleVersionStatus).colorClass">
-        {{ (proposal.latestModuleVersion!.status! | moduleVersionStatus).text }}
-      </div>
-    </hlm-td>
-    <hlm-td class="w-48">
-      @if(proposal.latestModuleVersion!.feedbackList!.length) { @for (feedback of proposal.latestModuleVersion!.feedbackList; track feedback.requiredRole) {
-      <brn-hover-card>
-        <div brnHoverCardTrigger class="flex mr-1">
-          <div hlmBadge [class]="(feedback.status | feedbackStatus).colorClass" class="h-5"></div>
-        </div>
-        <hlm-hover-card-content *brnHoverCardContent class="w-60">
-          <div class="grid grid-flow-row auto-rows-min">
-            <div>Feedback from</div>
-            <div>
-              <span class="font-bold">{{ (feedback.requiredRole! | feedbackDepartment).text }}</span>
-            </div>
-            <div>
-              {{ (feedback.status | fadedFeedbackStatus).text }}
-            </div>
+  <h2 class="text-xl mt-10 mb-8">Current Module Versions</h2>
+  <p-table [value]="[proposal.latestModuleVersion]" selectionMode="single">
+    <ng-template #header>
+      <tr>
+        <th>Version</th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Required Feedbacks</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-version>
+      <tr [pSelectableRow]="version" [routerLink]="['/module-version/view', proposal.latestModuleVersion!.moduleVersionId]">
+        <td>{{ proposal.latestVersion }}</td>
+        <td>
+          {{ proposal.latestModuleVersion!.titleEng }}
+        </td>
+        <td>
+          <p-tag [value]="(proposal.latestModuleVersion!.status! | moduleVersionStatus).text" [severity]="(proposal.latestModuleVersion!.status! | moduleVersionStatus).severity" />
+        </td>
+        <td>
+          <div class="flex">
+            @if (proposal.latestModuleVersion!.feedbackList!.length) {
+              @for (feedback of proposal.latestModuleVersion!.feedbackList; track feedback.requiredRole) {
+                <div
+                  [pTooltip]="'Feedback from ' + (feedback.requiredRole! | feedbackDepartment).text + ': ' + (feedback.status | feedbackStatus).text"
+                  tooltipPosition="top"
+                  class="w-8 h-8 mr-2 rounded"
+                  [class]="(feedback.status | feedbackStatus).normalColor"
+                ></div>
+              }
+            }
           </div>
-        </hlm-hover-card-content>
-      </brn-hover-card>
-      } }
-    </hlm-td>
-    <hlm-td class="w-64">
-      @if (proposal.latestModuleVersion!.isComplete && proposal.latestModuleVersion!.status == moduleStatusEnum.PendingSubmission) {
-      <button hlmBtn variant="default" class="bg-green-600 mr-2" (click)="submitProposal()">Submit</button>
-      } @if (proposal.latestModuleVersion!.isComplete && proposal.latestModuleVersion!.status !== moduleStatusEnum.FeedbackGiven) {
-      <button hlmBtn variant="outline" class="mr-2" [routerLink]="['/overlap', proposal.latestModuleVersion?.moduleVersionId]">Overlaps</button>
-      } @if (proposal.latestModuleVersion!.status === moduleStatusEnum.FeedbackGiven || proposal.latestModuleVersion!.status === moduleStatusEnum.Rejected) {
-      <button hlmBtn variant="outline" class="mr-2" [routerLink]="['/module-version/view', proposal.latestModuleVersion?.moduleVersionId]" fragment="feedbacks">
-        View Feedback
-      </button>
-      } @if(proposal.latestModuleVersion!.status === moduleStatusEnum.PendingSubmission) {
-      <button hlmBtn variant="outline" class="mr-2" [routerLink]="['/module-version/edit', proposal.latestModuleVersion!.moduleVersionId]">Edit</button>
-      } @if(proposal.latestModuleVersion!.status === moduleStatusEnum.PendingFeedback) {
-      <button hlmBtn variant="outline" class="mr-2" (click)="cancelProposal()">Cancel</button>
-      } @if(proposal.status === proposalStatusEnum.RequiresReview) {
-      <button hlmBtn variant="outline" (click)="addNewModuleVersion()">Create New Version</button>
-      }
-    </hlm-td>
-  </hlm-trow>
-</hlm-table>
-
-<h2 class="text-xl mb-8 text-muted-foreground">Previous Module Versions</h2>
-@if (proposal.oldModuleVersions && proposal.oldModuleVersions.length > 0) {
-<hlm-table class="w-full min-w-[400px] text-muted-foreground">
-  <hlm-trow>
-    <hlm-th class="w-24">Version</hlm-th>
-    <hlm-th class="flex-1">Title</hlm-th>
-    <hlm-th class="w-44">Status</hlm-th>
-    <hlm-th class="w-48">Required Feedbacks</hlm-th>
-    <hlm-th class="w-64">Actions</hlm-th>
-  </hlm-trow>
-
-  @for (version of proposal.oldModuleVersions; track version.moduleVersionId) {
-  <hlm-trow>
-    <hlm-td truncate class="font-medium w-24">{{ version.version }}</hlm-td>
-    <hlm-td class="flex-1">
-      <button hlmBtn variant="link" class="text-left text-muted-foreground px-0" [routerLink]="['/module-version/view', version.moduleVersionId]">
-        {{ version.titleEng }}
-      </button>
-    </hlm-td>
-    <hlm-td class="w-44">
-      <div hlmBadge [class]="(version.status! | fadedModuleVersionStatus).colorClass">
-        {{ (version.status! | fadedModuleVersionStatus).text }}
-      </div>
-    </hlm-td>
-    <hlm-td class="w-48">
-      @if(version.feedbackList?.length) { @for (feedback of version.feedbackList; track feedback.requiredRole) {
-      <brn-hover-card>
-        <div brnHoverCardTrigger class="flex mr-1">
-          <div hlmBadge [class]="(feedback.status | fadedFeedbackStatus).colorClass" class="h-5"></div>
-        </div>
-        <hlm-hover-card-content *brnHoverCardContent class="w-60">
-          <div class="grid grid-flow-row auto-rows-min">
-            <div>Feedback from</div>
-            <div>
-              <span class="font-bold">{{ (feedback.requiredRole! | feedbackDepartment).text }}</span>
-            </div>
-            <div>
-              {{ (feedback.status | fadedFeedbackStatus).text }}
-            </div>
+        </td>
+        <td>
+          <div class="flex gap-2">
+            @if (proposal.latestModuleVersion!.isComplete && proposal.latestModuleVersion!.status == moduleStatusEnum.PendingSubmission) {
+              <p-button label="Submit" severity="success" (onClick)="submitProposal()" (click)="$event.stopPropagation()" />
+            }
+            @if (proposal.latestModuleVersion!.status === moduleStatusEnum.FeedbackGiven || proposal.latestModuleVersion!.status === moduleStatusEnum.Rejected) {
+              <p-button
+                label="View Feedback"
+                severity="contrast"
+                outlined
+                [routerLink]="['/module-version/view', proposal.latestModuleVersion!.moduleVersionId]"
+                (click)="$event.stopPropagation()"
+              />
+            }
+            @if (proposal.latestModuleVersion!.status === moduleStatusEnum.PendingSubmission) {
+              <p-button
+                label="Edit"
+                outlined
+                severity="contrast"
+                [routerLink]="['/module-version/edit', proposal.latestModuleVersion!.moduleVersionId]"
+                (click)="$event.stopPropagation()"
+              />
+            }
+            @if (proposal.latestModuleVersion!.status === moduleStatusEnum.PendingFeedback) {
+              <p-button label="Cancel" severity="danger" outlined (onClick)="cancelProposal()" />
+            }
+            @if (proposal.status === proposalStatusEnum.RequiresReview) {
+              <p-button label="Create New Version" severity="contrast" outlined (onClick)="addNewModuleVersion()" (click)="$event.stopPropagation()" />
+            }
+            <p-button label="Overlaps" outlined severity="contrast" [routerLink]="['/overlap', proposal.latestModuleVersion?.moduleVersionId]" (click)="$event.stopPropagation()" />
           </div>
-        </hlm-hover-card-content>
-      </brn-hover-card>
-      } }
-    </hlm-td>
-    <hlm-td class="w-64">
-      <button hlmBtn variant="ghost" (click)="viewModuleVersion(version.moduleVersionId)">View Module</button>
-      <button hlmBtn variant="ghost" (click)="viewModuleVersion(version.moduleVersionId)">View Feedback</button>
-    </hlm-td>
-  </hlm-trow>
-  }
-</hlm-table>
-} } @else {
-<div class="text-center">No proposal found</div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <h2 class="text-xl mt-10 mb-8 text-muted-foreground">Previous Module Versions</h2>
+
+  <p-table [value]="proposal.oldModuleVersions ?? []" selectionMode="single">
+    <ng-template #header>
+      <tr>
+        <th>Version</th>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Required Feedbacks</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-version>
+      <tr [pSelectableRow]="version" [routerLink]="['/module-version/view', version.moduleVersionId]">
+        <td class="text-muted-foreground">{{ version.version }}</td>
+        <td class="text-muted-foreground">
+          {{ version.titleEng }}
+        </td>
+        <td>
+          <p-tag [value]="(version.status! | moduleVersionStatus).text" severity="secondary" class="opacity-60" />
+        </td>
+        <td>
+          <div class="flex">
+            @if (version.feedbackList?.length) {
+              @for (feedback of version.feedbackList; track feedback.requiredRole) {
+                <div
+                  [pTooltip]="'Feedback from ' + (feedback.requiredRole! | feedbackDepartment).text + ': ' + (feedback.status | feedbackStatus).text"
+                  tooltipPosition="top"
+                  class="w-8 h-8 mr-2 rounded opacity-60"
+                  [class]="(feedback.status | feedbackStatus).fadedColor"
+                ></div>
+              }
+            }
+          </div>
+        </td>
+        <td>
+          <div class="flex gap-2">
+            <p-button label="View Feedback" severity="contrast" outlined [routerLink]="['/module-version/view', version.moduleVersionId]" (click)="$event.stopPropagation()" />
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="5" class="text-center">No previous module versions found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
 }
