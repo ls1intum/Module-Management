@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0006-admin-user
+      author: mohamedalaaser
+      changes:
+        - insert:
+            tableName: app_user
+            columns:
+              - column:
+                  name: user_id
+                  value: f47ac10b-58cc-4372-a567-0e02b2c3d479
+              - column:
+                  name: user_name
+                  value: "module_management_test_admin"
+              - column:
+                  name: first_name
+                  value: "Admin"
+              - column:
+                  name: last_name
+                  value: "User"
+              - column:
+                  name: email
+                  value: "admin@example.com"
+              - column:
+                  name: role
+                  value: "ADMIN"
