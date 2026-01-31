@@ -47,8 +47,8 @@ dependencies {
     implementation "com.itextpdf:itext-core:9.1.0"
     implementation "com.itextpdf:html2pdf:6.1.0"
 
-    implementation "ch.qos.logback:logback-classic:1.5.19"
-    implementation "ch.qos.logback:logback-core:1.5.19"
+    implementation "ch.qos.logback:logback-classic:1.5.27"
+    implementation "ch.qos.logback:logback-core:1.5.27"
 
     // Spring AI dependencies
     implementation platform('org.springframework.ai:spring-ai-bom:2.0.0-M1')
