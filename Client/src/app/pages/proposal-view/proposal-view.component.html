@@ -59,7 +59,7 @@
       </tr>
     </ng-template>
     <ng-template #body let-version>
-      <tr [pSelectableRow]="version" [routerLink]="['/module-version/view', proposal.latestModuleVersion!.moduleVersionId]">
+      <tr [pSelectableRow]="version" [routerLink]="['/proposals/view', proposal.proposalId, 'version', proposal.latestModuleVersion!.moduleVersionId]">
         <td>{{ proposal.latestVersion }}</td>
         <td>
           {{ proposal.latestModuleVersion!.titleEng }}
@@ -91,7 +91,7 @@
                 label="View Feedback"
                 severity="contrast"
                 outlined
-                [routerLink]="['/module-version/view', proposal.latestModuleVersion!.moduleVersionId]"
+                [routerLink]="['/proposals/view', proposal.proposalId, 'version', proposal.latestModuleVersion!.moduleVersionId]"
                 (click)="$event.stopPropagation()"
               />
             }
@@ -100,17 +100,23 @@
                 label="Edit"
                 outlined
                 severity="contrast"
-                [routerLink]="['/module-version/edit', proposal.latestModuleVersion!.moduleVersionId]"
+                [routerLink]="['/proposals/view', proposal.proposalId, 'version', proposal.latestModuleVersion!.moduleVersionId, 'edit']"
                 (click)="$event.stopPropagation()"
               />
             }
             @if (proposal.latestModuleVersion!.status === moduleStatusEnum.PendingFeedback) {
-              <p-button label="Cancel" severity="danger" outlined (onClick)="cancelProposal()" />
+              <p-button label="Cancel" severity="danger" outlined (onClick)="cancelProposal()" (click)="$event.stopPropagation()" />
             }
             @if (proposal.status === proposalStatusEnum.RequiresReview) {
               <p-button label="Create New Version" severity="contrast" outlined (onClick)="addNewModuleVersion()" (click)="$event.stopPropagation()" />
             }
-            <p-button label="Overlaps" outlined severity="contrast" [routerLink]="['/overlap', proposal.latestModuleVersion?.moduleVersionId]" (click)="$event.stopPropagation()" />
+            <p-button
+              label="Overlaps"
+              outlined
+              severity="contrast"
+              [routerLink]="['/proposals/view', proposal.proposalId, 'version', proposal.latestModuleVersion?.moduleVersionId, 'overlap']"
+              (click)="$event.stopPropagation()"
+            />
           </div>
         </td>
       </tr>
@@ -130,7 +136,7 @@
       </tr>
     </ng-template>
     <ng-template #body let-version>
-      <tr [pSelectableRow]="version" [routerLink]="['/module-version/view', version.moduleVersionId]">
+      <tr [pSelectableRow]="version" [routerLink]="['/proposals/view', proposal.proposalId, 'version', version.moduleVersionId]">
         <td class="text-muted-foreground">{{ version.version }}</td>
         <td class="text-muted-foreground">
           {{ version.titleEng }}
@@ -154,7 +160,13 @@
         </td>
         <td>
           <div class="flex gap-2">
-            <p-button label="View Feedback" severity="contrast" outlined [routerLink]="['/module-version/view', version.moduleVersionId]" (click)="$event.stopPropagation()" />
+            <p-button
+              label="View Feedback"
+              severity="contrast"
+              outlined
+              [routerLink]="['/proposals/view', proposal.proposalId, 'version', version.moduleVersionId]"
+              (click)="$event.stopPropagation()"
+            />
           </div>
         </td>
       </tr>

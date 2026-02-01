@@ -24,7 +24,7 @@ export class SimilarModulesPage {
 
   constructor() {
     this.route.params.subscribe((param) => {
-      const moduleVersionId = Number(param['id']);
+      const moduleVersionId = Number(param['versionId']);
       if (moduleVersionId) {
         this.checkSimilarity(moduleVersionId);
       }

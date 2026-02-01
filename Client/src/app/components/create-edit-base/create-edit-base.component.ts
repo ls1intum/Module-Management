@@ -8,6 +8,7 @@ import {
   CompletionServiceResponseDTO,
   ModuleVersionViewFeedbackDTO
 } from '../../core/modules/openapi';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -17,6 +18,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export abstract class ProposalBaseComponent {
   protected formBuilder = inject(FormBuilder);
   protected router = inject(Router);
+  protected location = inject(Location);
   protected moduleVersionService = inject(ModuleVersionControllerService);
   protected proposalService = inject(ProposalControllerService);
 
@@ -43,6 +45,10 @@ export abstract class ProposalBaseComponent {
 
   togglePromptField(field: string) {
     this.showPrompt[field] = !this.showPrompt[field];
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 
   constructor() {

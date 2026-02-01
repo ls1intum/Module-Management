@@ -16,9 +16,14 @@
     <h2 class="text-2xl">Overview of '{{ moduleVersionDto.titleEng }}' - Version {{ moduleVersionDto.version }}</h2>
     <div class="flex justify-between mb-6">
       <p-button label="Export PDF" severity="contrast" (onClick)="pdfExport()" />
-      @if (isLatestVersion() && moduleVersionDto.status == moduleVersionStatus.PendingSubmission) {
-        <p-button label="Edit Module Version" severity="contrast" [routerLink]="['/module-version/edit', moduleVersionDto.moduleVersionId]" />
-      }
+      <div class="flex gap-2">
+        @if (proposalId) {
+          <p-button label="Check Overlaps" severity="contrast" outlined [routerLink]="['/proposals/view', proposalId, 'version', moduleVersionId, 'overlap']" />
+        }
+        @if (isLatestVersion() && moduleVersionDto.status == moduleVersionStatus.PendingSubmission && proposalId) {
+          <p-button label="Edit Module Version" severity="contrast" [routerLink]="['/proposals/view', proposalId, 'version', moduleVersionId, 'edit']" />
+        }
+      </div>
     </div>
 
     <div class="grid grid-cols-4 gap-4 mb-6">

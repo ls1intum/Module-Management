@@ -43,6 +43,7 @@ export interface ModuleField {
 export class ModuleVersionViewComponent {
   route = inject(ActivatedRoute);
   moduleVersionService = inject(ModuleVersionControllerService);
+  proposalId: string | null = null;
   moduleVersionId: number | null = null;
   loading = true;
   moduleVersionDto: ModuleVersionViewDTO | null = null;
@@ -87,7 +88,10 @@ export class ModuleVersionViewComponent {
   ];
 
   constructor() {
-    this.moduleVersionId = Number(this.route.snapshot.paramMap.get('id'));
+    const params = this.route.snapshot.paramMap;
+    this.proposalId = params.get('id');
+    const versionId = params.get('versionId');
+    this.moduleVersionId = Number(versionId);
     this.fetchModuleVersionViewDto(this.moduleVersionId);
   }
 

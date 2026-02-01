@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SecurityStore } from '../../core/security/security-store.service';
 import { ThemeService } from '../../core/theme/theme.service';
+import { SidebarService } from '../side-bar/sidebar.service';
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
 import { MenuModule } from 'primeng/menu';
@@ -17,6 +18,7 @@ import { MenuItem } from 'primeng/api';
 export class HeaderComponent {
   securityStore = inject(SecurityStore);
   themeService = inject(ThemeService);
+  sidebarService = inject(SidebarService);
 
   user = this.securityStore.user;
   isDarkMode = this.themeService.isDarkMode;

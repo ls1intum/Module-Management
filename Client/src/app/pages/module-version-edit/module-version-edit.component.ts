@@ -39,7 +39,7 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
 
   constructor(route: ActivatedRoute) {
     super();
-    this.moduleVersionId = Number(route.snapshot.paramMap.get('id'));
+    this.moduleVersionId = Number(route.snapshot.paramMap.get('versionId'));
     this.fetchModuleVersion(this.moduleVersionId);
     this.fetchPreviousModuleVersionFeedback(this.moduleVersionId);
   }
@@ -62,15 +62,15 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
   async fetchPreviousModuleVersionFeedback(previousModuleVersionId: number) {
     this.feedbackLoading = true;
     this.moduleVersionService.getPreviousModuleVersionFeedback(previousModuleVersionId).subscribe({
-      next: (response: Array<ModuleVersionViewFeedbackDTO>) => { 
+      next: (response: Array<ModuleVersionViewFeedbackDTO>) => {
         this.feedbacks = [...response];
       },
-      error: (err: HttpErrorResponse) => ( this.error = err.error ),
+      error: (err: HttpErrorResponse) => (this.error = err.error),
       complete: () => {
         this.moduleLoading = false;
         this.loading = this.moduleLoading && this.feedbackLoading;
       }
-    })
+    });
   }
 
   override async onSubmit() {

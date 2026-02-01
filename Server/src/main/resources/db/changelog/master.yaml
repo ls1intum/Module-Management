@@ -14,3 +14,6 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: initialize/0005_initialize_users.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: initialize/0006_initialize_admin_user.yaml

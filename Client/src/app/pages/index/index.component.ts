@@ -1,28 +1,29 @@
-import { Component, computed, inject } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { ProfessorHomePageComponent } from '../professor-home/professor-home-page.component';
-import { ApprovalStaffHomePageComponent } from '../approval-staff-home/approval-staff-home-page.component';
+import { Component, effect, inject } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { SecurityStore } from '../../core/security/security-store.service';
-import { LoginRequiredComponent } from '../../components/login-required/login-required.component';
-import { User } from '../../core/modules/openapi';
+import { isAdminRole, isProfessorRole, isReviewerRole } from '../../core/shared/user-role.utils';
 
 @Component({
   selector: 'index-component',
   standalone: true,
-  imports: [RouterModule, ProfessorHomePageComponent, ApprovalStaffHomePageComponent, LoginRequiredComponent],
+  imports: [RouterModule],
   templateUrl: './index.component.html'
 })
 export class IndexComponent {
+  private router = inject(Router);
   securityStore = inject(SecurityStore);
   user = this.securityStore.user;
 
-  isProposalSubmitter = computed(() => {
-    const user = this.user();
-    return user && user.role === User.RoleEnum.Professor;
-  });
-
-  isProposalReviewer = computed(() => {
-    const user = this.user();
-    return user && user.role && [User.RoleEnum.QualityManagement, User.RoleEnum.AcademicProgramAdvisor, User.RoleEnum.ExaminationBoard].includes(user.role);
-  });
+  constructor() {
+    effect(() => {
+      if (!this.user()) return;
+      if (isAdminRole(this.user()!.role)) {
+        this.router.navigateByUrl('/admin');
+      } else if (isProfessorRole(this.user()!.role)) {
+        this.router.navigateByUrl('/proposals');
+      } else if (isReviewerRole(this.user()!.role)) {
+        this.router.navigateByUrl('/feedbacks');
+      }
+    });
+  }
 }
