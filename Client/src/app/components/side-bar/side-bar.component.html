@@ -20,15 +20,13 @@
       />
     }
     @if (isReviewer()) {
-      @if (u.userId; as userId) {
-        <p-button
-          label="Pending Feedbacks"
-          icon="pi pi-list"
-          [routerLink]="['/feedbacks/for-user', userId]"
-          [severity]="isActive('/feedbacks/for-user') ? 'contrast' : 'secondary'"
-          [style]="{ width: '100%' }"
-        />
-      }
+      <p-button
+        label="Pending Feedbacks"
+        icon="pi pi-list"
+        [routerLink]="['/feedbacks']"
+        [severity]="isActive('/feedbacks') && !isActive('/feedbacks/view') ? 'contrast' : 'secondary'"
+        [style]="{ width: '100%' }"
+      />
     }
   </aside>
 }

@@ -33,8 +33,9 @@ export const routes: Routes = [
     path: 'feedbacks',
     canActivate: [AuthGuard],
     children: [
-      { path: 'for-user/:id', component: ApprovalStaffHomePageComponent },
-      { path: 'view/:id', component: FeedbackViewComponent }
+      { path: '', component: ApprovalStaffHomePageComponent },
+      { path: 'view/:id', component: FeedbackViewComponent },
+      { path: 'view/:id/overlap/:versionId', component: SimilarModulesPage }
     ]
   },
   {

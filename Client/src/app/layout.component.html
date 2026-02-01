@@ -1,7 +1,6 @@
 <app-header />
 <app-side-bar />
-<div class="pt-[75px] flex min-h-[calc(100vh-75px)]" [class.ml-56]="sidebarService.isVisible() && user()">
-  <div class="flex-1 min-w-0 content-container p-18 max-w-[1400px] mx-auto">
-    <ng-content></ng-content>
-  </div>
+<div class="p-18 pt-[100px] flex-1 min-w-0 content-container max-w-[1400px] mx-auto flex flex-col" [class.ml-56]="sidebarService.isVisible() && user()">
+  <app-breadcrumb class="mb-8" />
+  <ng-content />
 </div>

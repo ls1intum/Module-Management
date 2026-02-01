@@ -21,8 +21,8 @@ export class IndexComponent {
         this.router.navigateByUrl('/admin');
       } else if (isProfessorRole(this.user()!.role)) {
         this.router.navigateByUrl('/proposals');
-      } else if (isReviewerRole(this.user()!.role) && this.user()!.userId) {
-        this.router.navigate(['/feedbacks/for-user', this.user()!.userId]);
+      } else if (isReviewerRole(this.user()!.role)) {
+        this.router.navigateByUrl('/feedbacks');
       }
     });
   }
