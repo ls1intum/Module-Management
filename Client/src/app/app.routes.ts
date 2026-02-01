@@ -10,6 +10,7 @@ import { AuthGuard } from './core/security/auth.guard';
 import { AdminGuard } from './core/security/admin.guard';
 import { ModuleVersionViewComponent } from './pages/module-version-view/module-version-view.component';
 import { SimilarModulesPage } from './pages/similar-modules/similar-modules.component';
+import { AccountLayoutComponent } from './pages/account-management/account-layout/account-layout.component';
 import { AccountInformationComponent } from './pages/account-management/account-information/account-information.component';
 import { AccountPasskeysComponent } from './pages/account-management/passkeys/account-passkeys.component';
 import { AdminUsersPageComponent } from './pages/admin/users/admin-users-page.component';
@@ -38,6 +39,7 @@ export const routes: Routes = [
   },
   {
     path: 'account',
+    component: AccountLayoutComponent,
     canActivate: [AuthGuard],
     children: [
       { path: 'information', component: AccountInformationComponent },
