@@ -36,8 +36,7 @@
         [style]="{ 'min-width': '150px' }"
       />
 
-      <!-- User Menu -->
-      <p-menu #menu [model]="menuItems" [popup]="true" [style]="{ 'min-width': userButton.el.nativeElement.offsetWidth + 'px' }" />
+      <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body" [style]="{ 'min-width': userButton.el.nativeElement.offsetWidth + 'px' }" />
     } @else {
       <p-button label="Sign In" severity="contrast" (onClick)="signIn()" />
     }
