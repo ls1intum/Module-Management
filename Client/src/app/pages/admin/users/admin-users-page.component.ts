@@ -4,6 +4,8 @@ import { UserDTO } from '../../../core/modules/openapi/model/user-dto';
 import { FormsModule } from '@angular/forms';
 import { TableModule, TablePageEvent } from 'primeng/table';
 import { SelectModule } from 'primeng/select';
+import { InputTextModule } from 'primeng/inputtext';
+import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { firstValueFrom } from 'rxjs';
@@ -11,7 +13,7 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-admin-users-page',
   standalone: true,
-  imports: [FormsModule, TableModule, SelectModule, ToastModule],
+  imports: [FormsModule, TableModule, SelectModule, InputTextModule, ButtonModule, ToastModule],
   templateUrl: './admin-users-page.component.html'
 })
 export class AdminUsersPageComponent {
@@ -22,27 +24,36 @@ export class AdminUsersPageComponent {
   totalRecords = signal(0);
   loading = signal(false);
   savingUserId = signal<string | null>(null);
-  search = signal<string | undefined>(undefined);
+  searchQuery = '';
+  currentPageSize = signal(10);
+  firstRowIndex = signal(0);
   roles = Object.entries(UserDTO.RoleEnum).map(([key, value]) => ({
     label: key,
     value
   }));
 
   constructor() {
-    this.loadUsers(0, 10, this.search());
+    this.loadUsers(0, this.currentPageSize(), this.searchQuery);
   }
 
   async pageChange(event: TablePageEvent) {
     const first = event.first ?? 0;
-    const rows = event.rows ?? 10;
+    const rows = event.rows ?? this.currentPageSize();
+    this.currentPageSize.set(rows);
+    this.firstRowIndex.set(first);
     const page = rows > 0 ? Math.floor(first / rows) : 0;
-    await this.loadUsers(page, rows, this.search());
+    await this.loadUsers(page, rows, this.searchQuery);
+  }
+
+  runSearch() {
+    this.firstRowIndex.set(0);
+    this.loadUsers(0, this.currentPageSize(), this.searchQuery);
   }
 
   async loadUsers(page = 0, size = 10, search?: string) {
     this.loading.set(true);
     try {
-      const res = await firstValueFrom(this.adminUserControllerService.getUsers(page, size, search));
+      const res = await firstValueFrom(this.adminUserControllerService.getUsers(page, size, search?.trim() || undefined));
       this.users.set(res.content ?? []);
       this.totalRecords.set(res.totalElements ?? 0);
     } catch (e) {

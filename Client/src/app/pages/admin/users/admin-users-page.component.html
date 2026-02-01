@@ -2,11 +2,17 @@
 <h2 class="text-xl font-semibold mb-4">Users & Roles</h2>
 <p class="text-muted-foreground mb-6">View all users and assign or change their roles.</p>
 
+<div class="flex gap-2 mb-4">
+  <input pInputText type="text" [(ngModel)]="searchQuery" placeholder="Search by name, email, or username" (keyup.enter)="runSearch()" class="flex-1 max-w-md" />
+  <p-button label="Search" icon="pi pi-search" (onClick)="runSearch()" severity="contrast" />
+</div>
+
 <p-table
   [value]="users()"
   [lazy]="true"
   [paginator]="true"
-  [rows]="10"
+  [first]="firstRowIndex()"
+  [rows]="currentPageSize()"
   [totalRecords]="totalRecords()"
   [loading]="loading()"
   (onPage)="pageChange($event)"
