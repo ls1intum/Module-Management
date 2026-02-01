@@ -1,6 +1,6 @@
 services:
   nginx:
-    image: nginx:1.29.3
+    image: nginx:1.29.4
     container_name: module-management-nginx
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
