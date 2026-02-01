@@ -1,7 +1,17 @@
-<header class="fixed z-50 w-full flex items-center justify-between p-4 bg-gray-100 dark:bg-black border-b border-gray-200 dark:border-gray-800">
-  <!-- Left Side:  Title -->
-
-  <a class="flex gap-2 text-xl font-semibold" routerLink="/">CIT Module Management</a>
+<header class="fixed w-full flex items-center justify-between p-4 bg-gray-100 dark:bg-black border-b border-gray-200 dark:border-gray-800">
+  <div class="flex items-center gap-3">
+    @if (user()) {
+      <p-button
+        icon="pi pi-bars"
+        [rounded]="true"
+        [text]="true"
+        severity="contrast"
+        (onClick)="sidebarService.toggle()"
+        pTooltip="{{ sidebarService.isVisible() ? 'Hide menu' : 'Show menu' }}"
+      />
+    }
+    <a class="flex gap-2 text-xl font-semibold" routerLink="/">CIT Module Management</a>
+  </div>
 
   <!-- Right Side: Theme Toggle, Sign In/Out -->
   <div class="flex items-center gap-4">
@@ -16,23 +26,20 @@
     />
 
     <!-- If the user is signed in -->
-    @if(user() !== undefined){
-    <p-button
-      #userButton
-      [label]="user()?.firstName + ' ' + user()?.lastName"
-      severity="contrast"
-      [outlined]="true"
-      (onClick)="menu.toggle($event)"
-      [style]="{ 'min-width': '150px' }"
-    />
+    @if (user() !== undefined) {
+      <p-button
+        #userButton
+        [label]="user()?.firstName + ' ' + user()?.lastName"
+        severity="contrast"
+        [outlined]="true"
+        (onClick)="menu.toggle($event)"
+        [style]="{ 'min-width': '150px' }"
+      />
 
-    <!-- User Menu -->
-    <p-menu #menu [model]="menuItems" [popup]="true" [style]="{ 'min-width': userButton.el.nativeElement.offsetWidth + 'px' }" />
-    }
-
-    <!-- If the user is not signed in -->
-    @else {
-    <p-button label="Sign In" severity="contrast" (onClick)="signIn()" />
+      <!-- User Menu -->
+      <p-menu #menu [model]="menuItems" [popup]="true" [style]="{ 'min-width': userButton.el.nativeElement.offsetWidth + 'px' }" />
+    } @else {
+      <p-button label="Sign In" severity="contrast" (onClick)="signIn()" />
     }
   </div>
 </header>

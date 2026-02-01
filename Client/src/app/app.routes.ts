@@ -10,25 +10,34 @@ import { AuthGuard } from './core/security/auth.guard';
 import { AdminGuard } from './core/security/admin.guard';
 import { ModuleVersionViewComponent } from './pages/module-version-view/module-version-view.component';
 import { SimilarModulesPage } from './pages/similar-modules/similar-modules.component';
-import { AccountManagementPageComponent } from './pages/account-management/account-management-page.component';
 import { AccountInformationComponent } from './pages/account-management/account-information/account-information.component';
 import { AccountPasskeysComponent } from './pages/account-management/passkeys/account-passkeys.component';
-import { AdminLayoutComponent } from './pages/admin/admin-layout.component';
 import { AdminUsersPageComponent } from './pages/admin/users/admin-users-page.component';
 
 export const routes: Routes = [
   { path: '', component: IndexComponent },
-  { path: 'proposals', component: ProfessorHomePageComponent, canActivate: [AuthGuard] },
-  { path: 'proposals/create', component: ProposalCreateComponent, canActivate: [AuthGuard] },
-  { path: 'proposals/view/:id', component: ProposalViewComponent, canActivate: [AuthGuard] },
-  { path: 'module-version/edit/:id', component: ModuleVersionEditComponent, canActivate: [AuthGuard] },
-  { path: 'module-version/view/:id', component: ModuleVersionViewComponent, canActivate: [AuthGuard] },
-  { path: 'overlap/:id', component: SimilarModulesPage, canActivate: [AuthGuard] },
-  { path: 'feedbacks/for-user/:id', component: ApprovalStaffHomePageComponent, canActivate: [AuthGuard] },
-  { path: 'feedbacks/view/:id', component: FeedbackViewComponent, canActivate: [AuthGuard]},
+  {
+    path: 'proposals',
+    canActivate: [AuthGuard],
+    children: [
+      { path: '', component: ProfessorHomePageComponent },
+      { path: 'create', component: ProposalCreateComponent },
+      { path: 'view/:id', component: ProposalViewComponent },
+      { path: 'view/:id/version/:versionId', component: ModuleVersionViewComponent },
+      { path: 'view/:id/version/:versionId/edit', component: ModuleVersionEditComponent },
+      { path: 'view/:id/version/:versionId/overlap', component: SimilarModulesPage }
+    ]
+  },
+  {
+    path: 'feedbacks',
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'for-user/:id', component: ApprovalStaffHomePageComponent },
+      { path: 'view/:id', component: FeedbackViewComponent }
+    ]
+  },
   {
     path: 'account',
-    component: AccountManagementPageComponent,
     canActivate: [AuthGuard],
     children: [
       { path: 'information', component: AccountInformationComponent },
@@ -38,7 +47,6 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    component: AdminLayoutComponent,
     canActivate: [AuthGuard, AdminGuard],
     children: [
       { path: 'users', component: AdminUsersPageComponent },

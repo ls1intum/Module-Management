@@ -1,0 +1,34 @@
+@if (sidebarService.isVisible() && user(); as u) {
+  <aside class="fixed left-0 top-[75px] bottom-0 z-40 min-w-56 flex flex-col gap-2 p-4 bg-gray-100 dark:bg-black border-r border-gray-200 dark:border-gray-800">
+    @if (isAdmin()) {
+      <p-button label="Users" icon="pi pi-users" [routerLink]="['/admin/users']" [severity]="isActive('/admin/users') ? 'contrast' : 'secondary'" [style]="{ width: '100%' }" />
+    }
+    @if (isProfessor()) {
+      <p-button
+        label="My Proposals"
+        icon="pi pi-list"
+        [routerLink]="['/proposals']"
+        [severity]="isActive('/proposals') && !isActive('/proposals/create') ? 'contrast' : 'secondary'"
+        [style]="{ width: '100%' }"
+      />
+      <p-button
+        label="Create Proposal"
+        icon="pi pi-plus"
+        [routerLink]="['/proposals/create']"
+        [severity]="isActive('/proposals/create') ? 'contrast' : 'secondary'"
+        [style]="{ width: '100%' }"
+      />
+    }
+    @if (isReviewer()) {
+      @if (u.userId; as userId) {
+        <p-button
+          label="Pending Feedbacks"
+          icon="pi pi-list"
+          [routerLink]="['/feedbacks/for-user', userId]"
+          [severity]="isActive('/feedbacks/for-user') ? 'contrast' : 'secondary'"
+          [style]="{ width: '100%' }"
+        />
+      }
+    }
+  </aside>
+}
