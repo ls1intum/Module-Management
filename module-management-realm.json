@@ -48,6 +48,25 @@
   "failureFactor": 30,
   "users": [
     {
+      "id": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+      "username": "module_management_test_admin",
+      "enabled": true,
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin@example.com",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "test",
+          "temporary": true
+        }
+      ],
+      "emailVerified": true,
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      }
+    },
+    {
       "id": "7bb1edd9-02c5-411c-a1e2-9aed33808437",
       "username": "module_management_test_professor1",
       "enabled": true,

@@ -1,5 +1,5 @@
-import { Component, computed, inject } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, computed, effect, inject } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { ProfessorHomePageComponent } from '../professor-home/professor-home-page.component';
 import { ApprovalStaffHomePageComponent } from '../approval-staff-home/approval-staff-home-page.component';
 import { SecurityStore } from '../../core/security/security-store.service';
@@ -13,8 +13,18 @@ import { User } from '../../core/modules/openapi';
   templateUrl: './index.component.html'
 })
 export class IndexComponent {
+  private router = inject(Router);
   securityStore = inject(SecurityStore);
   user = this.securityStore.user;
+
+  constructor() {
+    effect(() => {
+      const u = this.user();
+      if (u?.role === 'ADMIN') {
+        this.router.navigateByUrl('/admin');
+      }
+    });
+  }
 
   isProposalSubmitter = computed(() => {
     const user = this.user();
