@@ -35,7 +35,7 @@
     "@angular/compiler-cli": "^21.1.0",
     "@openapitools/openapi-generator-cli": "^2.27.0",
     "@tailwindcss/postcss": "^4.1.18",
-    "@types/jasmine": "~5.1.15",
+    "@types/jasmine": "~6.0.0",
     "autoprefixer": "^10.4.23",
     "jasmine-core": "~5.13.0",
     "karma": "~6.4.4",
