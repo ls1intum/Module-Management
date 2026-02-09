@@ -7,11 +7,14 @@ import { ProfessorHomePageComponent } from './pages/professor-home/professor-hom
 import { ModuleVersionEditComponent } from './pages/module-version-edit/module-version-edit.component';
 import { ApprovalStaffHomePageComponent } from './pages/approval-staff-home/approval-staff-home-page.component';
 import { AuthGuard } from './core/security/auth.guard';
+import { AdminGuard } from './core/security/admin.guard';
 import { ModuleVersionViewComponent } from './pages/module-version-view/module-version-view.component';
 import { SimilarModulesPage } from './pages/similar-modules/similar-modules.component';
 import { AccountManagementPageComponent } from './pages/account-management/account-management-page.component';
 import { AccountInformationComponent } from './pages/account-management/account-information/account-information.component';
 import { AccountPasskeysComponent } from './pages/account-management/passkeys/account-passkeys.component';
+import { AdminLayoutComponent } from './pages/admin/admin-layout.component';
+import { AdminUsersPageComponent } from './pages/admin/users/admin-users-page.component';
 
 export const routes: Routes = [
   { path: '', component: IndexComponent },
@@ -31,6 +34,15 @@ export const routes: Routes = [
       { path: 'information', component: AccountInformationComponent },
       { path: 'passkeys', component: AccountPasskeysComponent },
       { path: '', redirectTo: 'information', pathMatch: 'full' }
+    ]
+  },
+  {
+    path: 'admin',
+    component: AdminLayoutComponent,
+    canActivate: [AuthGuard, AdminGuard],
+    children: [
+      { path: 'users', component: AdminUsersPageComponent },
+      { path: '', redirectTo: 'users', pathMatch: 'full' }
     ]
   }
 ];
