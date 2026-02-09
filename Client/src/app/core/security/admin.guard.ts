@@ -2,6 +2,7 @@ import { inject, Injectable, Injector } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { CanActivate, Router, UrlTree } from '@angular/router';
 import { SecurityStore } from './security-store.service';
+import { isAdminRole } from '../shared/user-role.utils';
 import { filter, map, Observable, switchMap, take } from 'rxjs';
 
 @Injectable({
@@ -19,7 +20,7 @@ export class AdminGuard implements CanActivate {
       take(1),
       switchMap(() => toObservable(this.securityStore.user, { injector: this.injector }).pipe(take(1))),
       map((user) => {
-        if (user?.role === 'ADMIN') {
+        if (isAdminRole(user?.role)) {
           return true;
         }
         return this.router.createUrlTree(['/']);
