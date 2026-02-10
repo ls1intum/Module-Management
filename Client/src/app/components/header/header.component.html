@@ -1,6 +1,6 @@
 <header class="fixed z-50 w-full flex items-center justify-between p-4 bg-gray-100 dark:bg-black border-b border-gray-200 dark:border-gray-800">
   <div class="flex items-center gap-3">
-    @if (user()) {
+    @if (user()?.roles?.length) {
       <p-button
         icon="pi pi-bars"
         [rounded]="true"
