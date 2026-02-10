@@ -5,7 +5,7 @@ WORKDIR /home/gradle/src
 
 RUN gradle build -x test --no-daemon
 
-FROM eclipse-temurin:21
+FROM eclipse-temurin:25
 
 EXPOSE 8080
 
