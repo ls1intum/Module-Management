@@ -1,4 +1,4 @@
-<p-table [value]="proposals" selectionMode="single">
+<p-table [value]="proposals()" selectionMode="single">
   <ng-template #header>
     <tr>
       <th>Proposal ID</th>
@@ -24,8 +24,8 @@
   <ng-template #emptymessage>
     <tr>
       <td class="text-sm text-muted-foreground" colspan="4">
-        @if (error) {
-        {{ error }}
+        @if (error()) {
+        {{ error() }}
         } @else { No proposals found.}
       </td>
     </tr>

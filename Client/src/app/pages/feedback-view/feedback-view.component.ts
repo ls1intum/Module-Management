@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, FeedbackDTO, GiveFeedbackDTO, ModuleVersionControllerService } from '../../core/modules/openapi';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -26,9 +26,9 @@ export class FeedbackViewComponent {
   moduleVersionService = inject(ModuleVersionControllerService);
   feedbackForm: FormGroup;
   feedbackId: number | null = null;
-  moduleVersion: ModuleVersionUpdateRequestDTO | null = null;
-  loading: boolean = true;
-  error: string | null = null;
+  moduleVersion = signal<ModuleVersionUpdateRequestDTO | null>(null);
+  loading = signal(true);
+  error = signal<string | null>(null);
   rejectionReason: string = '';
   showRejectDialog: boolean = false;
 
@@ -38,7 +38,8 @@ export class FeedbackViewComponent {
   fieldFeedback: Record<string, string> = {};
 
   getModuleVersionProperty(key: keyof ModuleVersionUpdateRequestDTO): string | undefined {
-    return this.moduleVersion ? this.moduleVersion[key]?.toString() : undefined;
+    const mv = this.moduleVersion();
+    return mv ? mv[key]?.toString() : undefined;
   }
 
   // prepare form and data
@@ -116,13 +117,13 @@ export class FeedbackViewComponent {
 
   // get data
 
-  private async fetchModuleVersion(feedbackId: number | null) {
-    this.loading = true;
+  private fetchModuleVersion(feedbackId: number | null) {
+    this.loading.set(true);
     if (feedbackId) {
       this.feedbackService.getModuleVersionOfFeedback(feedbackId).subscribe({
-        next: (response: ModuleVersionUpdateRequestDTO) => (this.moduleVersion = response),
-        error: (err: HttpErrorResponse) => (this.error = err.error),
-        complete: () => (this.loading = false)
+        next: (response: ModuleVersionUpdateRequestDTO) => this.moduleVersion.set(response),
+        error: (err: HttpErrorResponse) => this.error.set(err.error),
+        complete: () => this.loading.set(false)
       });
     }
   }
@@ -177,7 +178,7 @@ export class FeedbackViewComponent {
   checkOverlaps() {}
 
   pdfExport() {
-    const mvid = this.moduleVersion?.moduleVersionId;
+    const mvid = this.moduleVersion()?.moduleVersionId;
     if (!mvid) {
       this.messageService.add({ severity: 'error', summary: 'Exporting PDF', detail: 'Failed to create PDF...' });
       return;
@@ -188,7 +189,7 @@ export class FeedbackViewComponent {
     this.feedbackService.exportModuleVersionPdf(mvid).subscribe({
       next: (response: Blob) => {
         {
-          const fileName = `f${this.feedbackId}_mv${mvid}_${this.moduleVersion?.titleEng}`;
+          const fileName = `f${this.feedbackId}_mv${mvid}_${this.moduleVersion()?.titleEng}`;
           const blob = new Blob([response], { type: 'application/pdf' });
           const link = document.createElement('a');
           link.href = URL.createObjectURL(blob);
@@ -217,7 +218,7 @@ export class FeedbackViewComponent {
         },
         error: (err: HttpErrorResponse) => {
           this.messageService.add({ severity: 'error', summary: 'Rejection failed', detail: err.error || 'Unable to reject module' });
-          this.error = err.error;
+          this.error.set(err.error);
         }
       });
     }
@@ -235,7 +236,7 @@ export class FeedbackViewComponent {
         },
         error: (err: HttpErrorResponse) => {
           this.messageService.add({ severity: 'error', summary: 'Sending feedback failed', detail: err.error || 'Unable to send feedback' });
-          this.error = err.error;
+          this.error.set(err.error);
         }
       });
     }

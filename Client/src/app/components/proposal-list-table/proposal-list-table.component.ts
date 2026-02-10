@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
@@ -22,34 +22,33 @@ export class ProposalListTableComponent {
   router = inject(Router);
   proposalService = inject(ProposalControllerService);
   securityStore = inject(SecurityStore);
-  loading: boolean = true;
-  error: string | null = null;
-  proposals: ProposalsCompactDTO[] = [];
+  loading = signal(true);
+  error = signal<string | null>(null);
+  proposals = signal<ProposalsCompactDTO[]>([]);
   proposalEnum = Proposal.StatusEnum;
   user = this.securityStore.user;
 
   constructor() {
-    if (this.user !== undefined) {
+    if (this.user() !== undefined) {
       this.fetchProposalsForUser();
     } else {
       this.securityStore.signIn();
     }
   }
 
-  private async fetchProposalsForUser() {
-    this.loading = true;
-
+  private fetchProposalsForUser() {
+    this.loading.set(true);
     this.proposalService.getCompactProposalsFromUser().subscribe({
-      next: (proposals: ProposalsCompactDTO[]) => (this.proposals = proposals),
-      error: (err: HttpErrorResponse) => (this.error = err.error),
-      complete: () => (this.loading = false)
+      next: (proposals: ProposalsCompactDTO[]) => this.proposals.set(proposals),
+      error: (err: HttpErrorResponse) => this.error.set(err.error),
+      complete: () => this.loading.set(false)
     });
   }
 
   deleteProposal(proposalId: number) {
     this.proposalService.deleteProposal(proposalId).subscribe({
       next: () => this.router.navigate(['/proposals']),
-      error: (err: HttpErrorResponse) => (this.error = err.error)
+      error: (err: HttpErrorResponse) => this.error.set(err.error)
     });
   }
 }

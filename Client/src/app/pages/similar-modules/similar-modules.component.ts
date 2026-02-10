@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ModuleVersionControllerService, SimilarModuleDTO } from '../../core/modules/openapi';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -19,8 +19,8 @@ export class SimilarModulesPage {
   router = inject(Router);
   route = inject(ActivatedRoute);
   moduleVersionService = inject(ModuleVersionControllerService);
-  similarModules: SimilarModuleDTO[] = [];
-  isLoading = false;
+  similarModules = signal<SimilarModuleDTO[]>([]);
+  isLoading = signal(false);
 
   constructor() {
     this.route.params.subscribe((param) => {
@@ -31,17 +31,12 @@ export class SimilarModulesPage {
     });
   }
 
-  protected async checkSimilarity(moduleVersionId: number) {
-    this.isLoading = true;
-
+  protected checkSimilarity(moduleVersionId: number) {
+    this.isLoading.set(true);
     this.moduleVersionService.checkSimilarity(moduleVersionId).subscribe({
-      next: (response: SimilarModuleDTO[]) => {
-        this.similarModules = response;
-      },
+      next: (response: SimilarModuleDTO[]) => this.similarModules.set(response),
       error: (err: HttpErrorResponse) => console.log(err),
-      complete: () => (this.isLoading = false)
+      complete: () => this.isLoading.set(false)
     });
-
-    return;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   CompletionServiceRequestDTO,
@@ -23,11 +23,11 @@ export abstract class ProposalBaseComponent {
   protected proposalService = inject(ProposalControllerService);
 
   proposalForm: FormGroup;
-  loading: boolean = false;
-  error: string | null = null;
-  moduleVersionDto: ModuleVersionUpdateRequestDTO | null = null;
+  loading = signal(false);
+  error = signal<string | null>(null);
+  moduleVersionDto = signal<ModuleVersionUpdateRequestDTO | null>(null);
   moduleVersionId: number | null = null;
-  feedbacks: ModuleVersionViewFeedbackDTO[] | undefined = [];
+  feedbacks = signal<ModuleVersionViewFeedbackDTO[] | undefined>([]);
 
   showPrompt: { [key: string]: boolean } = {
     examination: false,
@@ -90,70 +90,54 @@ export abstract class ProposalBaseComponent {
   }
 
   hasFeedback(field: keyof ModuleVersionViewFeedbackDTO): boolean {
-    return this.feedbacks?.some((feedback) => feedback[field]) || false;
+    return this.feedbacks()?.some((feedback) => feedback[field]) || false;
   }
 
   protected async generateContent() {
-    this.loading = true;
+    this.loading.set(true);
     const data = this.getCompletionServiceRequestDTO('contentPromptEng');
     this.moduleVersionService.generateContent(data).subscribe({
       next: (response: CompletionServiceResponseDTO) => {
         this.proposalForm.patchValue({ contentEng: response.responseData });
       },
-      error: (err: HttpErrorResponse) => {
-        console.log(err.error);
-      },
-      complete: () => {
-        this.loading = false;
-      }
+      error: (err: HttpErrorResponse) => console.log(err.error),
+      complete: () => this.loading.set(false)
     });
   }
 
   protected async generateExaminationAchievements() {
-    this.loading = true;
+    this.loading.set(true);
     const data = this.getCompletionServiceRequestDTO('examinationAchievementsPromptEng');
     this.moduleVersionService.generateExaminationAchievements(data).subscribe({
       next: (response: CompletionServiceResponseDTO) => {
         this.proposalForm.patchValue({ examinationAchievementsEng: response.responseData });
       },
-      error: (err: HttpErrorResponse) => {
-        console.log(err.error);
-      },
-      complete: () => {
-        this.loading = false;
-      }
+      error: (err: HttpErrorResponse) => console.log(err.error),
+      complete: () => this.loading.set(false)
     });
   }
 
   protected async generateLearningOutcomes() {
-    this.loading = true;
+    this.loading.set(true);
     const data = this.getCompletionServiceRequestDTO('learningOutcomesPromptEng');
     this.moduleVersionService.generateLearningOutcomes(data).subscribe({
       next: (response: CompletionServiceResponseDTO) => {
         this.proposalForm.patchValue({ learningOutcomesEng: response.responseData });
       },
-      error: (err: HttpErrorResponse) => {
-        console.log(err.error);
-      },
-      complete: () => {
-        this.loading = false;
-      }
+      error: (err: HttpErrorResponse) => console.log(err.error),
+      complete: () => this.loading.set(false)
     });
   }
 
   protected async generateTeachingMethods() {
-    this.loading = true;
+    this.loading.set(true);
     const data = this.getCompletionServiceRequestDTO('teachingMethodsPromptEng');
     this.moduleVersionService.generateTeachingMethods(data).subscribe({
       next: (response: CompletionServiceResponseDTO) => {
         this.proposalForm.patchValue({ teachingMethodsEng: response.responseData });
       },
-      error: (err: HttpErrorResponse) => {
-        console.log(err.error);
-      },
-      complete: () => {
-        this.loading = false;
-      }
+      error: (err: HttpErrorResponse) => console.log(err.error),
+      complete: () => this.loading.set(false)
     });
   }
 

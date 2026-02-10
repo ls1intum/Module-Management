@@ -1,10 +1,10 @@
 <h1 class="text-2xl mb-8">Potential Module Overlaps</h1>
 
-@if (isLoading) {
+@if (isLoading()) {
   <div class="fixed inset-0 flex justify-center items-center">
     <p-progress-spinner ariaLabel="loading" />
   </div>
-} @else if (similarModules.length === 0) {
+} @else if (similarModules().length === 0) {
   <p-message severity="success">
     <div class="flex flex-row">
       <i class="pi pi-info-circle mt-1" style="font-size: 1.2rem"></i>
@@ -16,7 +16,7 @@
   </p-message>
 } @else {
   <div class="space-y-6">
-    @for (module of similarModules; track module.moduleId) {
+    @for (module of similarModules(); track module.moduleId) {
       <p-panel>
         <h3 class="text-lg font-medium">{{ module.titleEng || 'Module ' + module.moduleId }}</h3>
         <p class="text-sm text-muted-foreground mb-4">Module ID: {{ module.moduleId }}</p>

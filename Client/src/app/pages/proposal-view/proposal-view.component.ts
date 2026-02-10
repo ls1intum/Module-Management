@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { AddModuleVersionDTO, ModuleVersion, Proposal, ProposalControllerService, ProposalViewDTO } from '../../core/modules/openapi';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -43,9 +43,9 @@ export class ProposalViewComponent {
   router = inject(Router);
   route = inject(ActivatedRoute);
   proposalService = inject(ProposalControllerService);
-  loading: boolean = true;
-  error: string | null = null;
-  proposal: ProposalViewDTO | null = null;
+  loading = signal(true);
+  error = signal<string | null>(null);
+  proposal = signal<ProposalViewDTO | null>(null);
   proposalStatusEnum = Proposal.StatusEnum;
   moduleStatusEnum = ModuleVersion.StatusEnum;
 
@@ -53,53 +53,53 @@ export class ProposalViewComponent {
     this.fetchProposal();
   }
 
-  private async fetchProposal() {
+  private fetchProposal() {
     this.route.params.subscribe((params) => {
       const proposalId = Number(params['id']);
       if (proposalId) {
-        this.loading = true;
+        this.loading.set(true);
         this.proposalService.getProposalView(proposalId).subscribe({
-          next: (data: ProposalViewDTO) => (this.proposal = data),
-          error: (err: HttpErrorResponse) => (this.error = err.error),
-          complete: () => (this.loading = false)
+          next: (data: ProposalViewDTO) => this.proposal.set(data),
+          error: (err: HttpErrorResponse) => this.error.set(err.error),
+          complete: () => this.loading.set(false)
         });
       }
     });
   }
 
   submitProposal() {
-    if (this.proposal) {
-      this.proposalService.submitProposal(this.proposal.proposalId!).subscribe({
-        next: (response: ProposalViewDTO) => (this.proposal = response),
-        error: (err: HttpErrorResponse) => (this.error = err.error)
+    if (this.proposal()) {
+      this.proposalService.submitProposal(this.proposal()!.proposalId!).subscribe({
+        next: (response: ProposalViewDTO) => this.proposal.set(response),
+        error: (err: HttpErrorResponse) => this.error.set(err.error)
       });
     }
   }
 
   cancelProposal() {
-    if (this.proposal) {
-      this.proposalService.cancelSubmission(this.proposal.proposalId!).subscribe({
-        next: (response: ProposalViewDTO) => (this.proposal = response),
-        error: (err: HttpErrorResponse) => (this.error = err.error)
+    if (this.proposal()) {
+      this.proposalService.cancelSubmission(this.proposal()!.proposalId!).subscribe({
+        next: (response: ProposalViewDTO) => this.proposal.set(response),
+        error: (err: HttpErrorResponse) => this.error.set(err.error)
       });
     }
   }
 
   deleteProposal() {
-    if (this.proposal) {
-      this.proposalService.deleteProposal(this.proposal.proposalId!).subscribe({
+    if (this.proposal()) {
+      this.proposalService.deleteProposal(this.proposal()!.proposalId!).subscribe({
         next: () => this.router.navigate(['/proposals']),
-        error: (err: HttpErrorResponse) => (this.error = err.error)
+        error: (err: HttpErrorResponse) => this.error.set(err.error)
       });
     }
   }
 
   addNewModuleVersion() {
-    if (this.proposal) {
-      const addModuleVersionDto: AddModuleVersionDTO = { proposalId: this.proposal.proposalId! };
+    if (this.proposal()) {
+      const addModuleVersionDto: AddModuleVersionDTO = { proposalId: this.proposal()!.proposalId! };
       this.proposalService.addModuleVersion(addModuleVersionDto).subscribe({
-        next: (response: ProposalViewDTO) => (this.proposal = response),
-        error: (err: HttpErrorResponse) => (this.error = err.error)
+        next: (response: ProposalViewDTO) => this.proposal.set(response),
+        error: (err: HttpErrorResponse) => this.error.set(err.error)
       });
     }
   }
