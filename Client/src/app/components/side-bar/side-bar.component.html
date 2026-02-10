@@ -1,7 +1,14 @@
 @if (sidebarService.isVisible() && user(); as u) {
-  <aside class="fixed left-0 top-[75px] bottom-0 z-40 min-w-56 flex flex-col gap-2 p-4 bg-gray-100 dark:bg-black border-r border-gray-200 dark:border-gray-800">
+  <aside class="h-full sticky flex flex-col gap-2 p-4 bg-gray-100 dark:bg-black border-r border-gray-200 dark:border-gray-800">
     @if (isAdmin()) {
-      <p-button label="Users" icon="pi pi-users" [routerLink]="['/admin/users']" [severity]="isActive('/admin/users') ? 'contrast' : 'secondary'" [style]="{ width: '100%' }" styleClass="sidebar-btn justify-start" />
+      <p-button
+        label="Users"
+        icon="pi pi-users"
+        [routerLink]="['/admin/users']"
+        [severity]="isActive('/admin/users') ? 'contrast' : 'secondary'"
+        [style]="{ width: '100%' }"
+        styleClass="sidebar-btn justify-start"
+      />
     }
     @if (isProfessor()) {
       <p-button
