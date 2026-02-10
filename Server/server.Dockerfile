@@ -1,11 +1,11 @@
-FROM gradle:9.2.1-jdk21 AS build
+FROM gradle:9.3.1-jdk21 AS build
 
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
 
 RUN gradle build -x test --no-daemon
 
-FROM eclipse-temurin:21
+FROM eclipse-temurin:25
 
 EXPOSE 8080
 
