@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0007-user-roles-many
+      author: module-management
+      changes:
+        - createTable:
+            tableName: app_user_role
+            columns:
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    references: app_user(user_id)
+                    foreignKeyName: fk_user_role_user
+              - column:
+                  name: role
+                  type: VARCHAR(50)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+        - sql:
+            sql: INSERT INTO app_user_role (user_id, role) SELECT user_id, role FROM app_user
+        - dropColumn:
+            tableName: app_user
+            columnName: role

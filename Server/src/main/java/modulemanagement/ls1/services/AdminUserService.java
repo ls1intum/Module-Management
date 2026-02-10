@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 @Service
@@ -31,7 +32,7 @@ public class AdminUserService {
     public UserDTO updateUserRole(UUID userId, UpdateUserRoleDTO dto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
-        user.setRole(dto.getRole());
+        user.setRoles(dto.getRoles());
         user = userRepository.save(user);
         return UserDTO.fromUser(user);
     }

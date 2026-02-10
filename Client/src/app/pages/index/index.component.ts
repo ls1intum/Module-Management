@@ -17,11 +17,12 @@ export class IndexComponent {
   constructor() {
     effect(() => {
       if (!this.user()) return;
-      if (isAdminRole(this.user()!.role)) {
+      const roles = this.user()!.roles;
+      if (isAdminRole(roles)) {
         this.router.navigateByUrl('/admin');
-      } else if (isProfessorRole(this.user()!.role)) {
+      } else if (isProfessorRole(roles)) {
         this.router.navigateByUrl('/proposals');
-      } else if (isReviewerRole(this.user()!.role)) {
+      } else if (isReviewerRole(roles)) {
         this.router.navigateByUrl('/feedbacks');
       }
     });

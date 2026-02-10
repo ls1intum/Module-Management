@@ -3,7 +3,7 @@ import { AdminUserControllerService } from '../../../core/modules/openapi';
 import { UserDTO } from '../../../core/modules/openapi/model/user-dto';
 import { FormsModule } from '@angular/forms';
 import { TableModule, TablePageEvent } from 'primeng/table';
-import { SelectModule } from 'primeng/select';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
@@ -13,7 +13,7 @@ import { firstValueFrom } from 'rxjs';
 @Component({
   selector: 'app-admin-users-page',
   standalone: true,
-  imports: [FormsModule, TableModule, SelectModule, InputTextModule, ButtonModule, ToastModule],
+  imports: [FormsModule, TableModule, MultiSelectModule, InputTextModule, ButtonModule, ToastModule],
   templateUrl: './admin-users-page.component.html'
 })
 export class AdminUsersPageComponent {
@@ -27,10 +27,12 @@ export class AdminUsersPageComponent {
   searchQuery = '';
   currentPageSize = signal(10);
   firstRowIndex = signal(0);
-  roles = Object.entries(UserDTO.RoleEnum).map(([key, value]) => ({
-    label: key,
-    value
-  }));
+  roles = Object.entries(UserDTO.RolesEnum)
+    .filter(([key]) => key !== 'Undefined')
+    .map(([key, value]) => ({
+      label: key.replace(/([A-Z])/g, ' $1').trim(),
+      value
+    }));
 
   constructor() {
     this.loadUsers(0, this.currentPageSize(), this.searchQuery);
@@ -69,22 +71,25 @@ export class AdminUsersPageComponent {
     }
   }
 
-  async onRoleChange(user: UserDTO, newRole: UserDTO.RoleEnum) {
-    if (!user.userId || user.role === newRole) return;
+  async onRolesChange(user: UserDTO, newRoles: UserDTO.RolesEnum[]) {
+    if (!user.userId) return;
+    const sortedNew = [...(newRoles ?? [])].sort();
+    const sortedCurrent = [...(user.roles ?? [])].sort();
+    if (sortedNew.length === sortedCurrent.length && sortedNew.every((r, i) => r === sortedCurrent[i])) return;
     this.savingUserId.set(user.userId);
     try {
-      await firstValueFrom(this.adminUserControllerService.updateUserRole(user.userId, { role: newRole }));
-      this.users.update((list) => list.map((u) => (u.userId === user.userId ? { ...u, role: newRole } : u)));
+      await firstValueFrom(this.adminUserControllerService.updateUserRole(user.userId, { roles: newRoles ?? [] }));
+      this.users.update((list) => list.map((u) => (u.userId === user.userId ? { ...u, roles: newRoles ?? [] } : u)));
       this.messageService.add({
         severity: 'success',
-        summary: 'Role updated',
-        detail: `Role for ${user.firstName} ${user.lastName} has been updated.`
+        summary: 'Roles updated',
+        detail: `Roles for ${user.firstName} ${user.lastName} have been updated.`
       });
     } catch (e) {
       this.messageService.add({
         severity: 'error',
         summary: 'Error',
-        detail: 'Failed to update role.'
+        detail: 'Failed to update roles.'
       });
     } finally {
       this.savingUserId.set(null);
