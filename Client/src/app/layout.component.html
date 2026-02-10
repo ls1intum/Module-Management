@@ -1,6 +1,12 @@
-<app-header />
-<app-side-bar />
-<div class="p-18 pt-[100px] flex-1 min-w-0 content-container max-w-[1400px] mx-auto flex flex-col">
-  <app-breadcrumb class="mb-8" />
-  <ng-content />
+<div class="flex flex-col h-screen overflow-hidden">
+  <app-header />
+  <div class="flex flex-1 min-h-0">
+    <app-side-bar />
+    <div class="flex-1 min-w-0 overflow-auto">
+      <div class="max-w-[1400px] mx-auto p-10 flex flex-col">
+        <app-breadcrumb class="mb-8" />
+        <ng-content />
+      </div>
+    </div>
+  </div>
 </div>

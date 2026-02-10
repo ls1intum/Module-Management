@@ -9,7 +9,14 @@ import { SidebarService } from './sidebar.service';
   selector: 'app-side-bar',
   standalone: true,
   imports: [RouterModule, ButtonModule],
-  templateUrl: './side-bar.component.html'
+  templateUrl: './side-bar.component.html',
+  styles: [
+    `
+      :host ::ng-deep .sidebar-btn.p-button {
+        justify-content: flex-start;
+      }
+    `
+  ]
 })
 export class SideBarComponent {
   private router = inject(Router);
