@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { ModuleVersionControllerService, ModuleVersionViewDTO, ModuleVersion, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
 import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
@@ -45,10 +45,10 @@ export class ModuleVersionViewComponent {
   moduleVersionService = inject(ModuleVersionControllerService);
   proposalId: string | null = null;
   moduleVersionId: number | null = null;
-  loading = true;
-  moduleVersionDto: ModuleVersionViewDTO | null = null;
+  loading = signal(true);
+  moduleVersionDto = signal<ModuleVersionViewDTO | null>(null);
   moduleVersionStatus = ModuleVersion.StatusEnum;
-  error: string | null = null;
+  error = signal<string | null>(null);
 
   moduleFields: ModuleField[] = [
     { key: 'titleEng', label: 'Title', section: 'basic', feedbackKey: 'titleFeedback' },
@@ -96,11 +96,11 @@ export class ModuleVersionViewComponent {
   }
 
   private fetchModuleVersionViewDto(moduleVersionId: number) {
-    this.loading = true;
+    this.loading.set(true);
     this.moduleVersionService.getModuleVersionViewDto(moduleVersionId).subscribe({
-      next: (data: ModuleVersionViewDTO) => (this.moduleVersionDto = data),
-      error: (err: HttpErrorResponse) => (this.error = err.error),
-      complete: () => (this.loading = false)
+      next: (data: ModuleVersionViewDTO) => this.moduleVersionDto.set(data),
+      error: (err: HttpErrorResponse) => this.error.set(err.error),
+      complete: () => this.loading.set(false)
     });
   }
 
@@ -113,7 +113,7 @@ export class ModuleVersionViewComponent {
     this.moduleVersionService.exportProfessorModuleVersionPdf(mvid).subscribe({
       next: (response: Blob) => {
         {
-          const fileName = `mv${mvid}_${this.moduleVersionDto!.titleEng}`;
+          const fileName = `mv${mvid}_${this.moduleVersionDto()!.titleEng}`;
           const blob = new Blob([response], { type: 'application/pdf' });
           const link = document.createElement('a');
           link.href = URL.createObjectURL(blob);
@@ -124,12 +124,12 @@ export class ModuleVersionViewComponent {
           URL.revokeObjectURL(link.href);
         }
       },
-      error: (err: HttpErrorResponse) => (this.error = err.error)
+      error: (err: HttpErrorResponse) => this.error.set(err.error)
     });
   }
 
   getModuleVersionProperty(key: keyof ModuleVersionViewDTO): string {
-    const value = this.moduleVersionDto?.[key];
+    const value = this.moduleVersionDto()?.[key];
     return value == null ? '' : String(value);
   }
 
@@ -138,7 +138,7 @@ export class ModuleVersionViewComponent {
   }
 
   isLatestVersion(): boolean {
-    return this.moduleVersionDto?.version === this.moduleVersionDto?.latestVersion;
+    return this.moduleVersionDto()?.version === this.moduleVersionDto()?.latestVersion;
   }
 
   getFeedbackFields(feedback: ModuleVersionViewFeedbackDTO): { key: string; label: string; value: string }[] {
@@ -161,12 +161,12 @@ export class ModuleVersionViewComponent {
   }
 
   getFieldFeedbacks(fieldKey: keyof ModuleVersionViewDTO): ModuleVersionViewFeedbackDTO[] {
-    if (!this.moduleVersionDto?.feedbacks) return [];
+    if (!this.moduleVersionDto()?.feedbacks) return [];
 
     const field = this.moduleFields.find((f) => f.key === fieldKey);
     if (!field?.feedbackKey) return [];
 
-    return this.moduleVersionDto.feedbacks.filter((feedback) => {
+    return this.moduleVersionDto()!.feedbacks!.filter((feedback) => {
       const feedbackValue = feedback[field.feedbackKey as keyof ModuleVersionViewFeedbackDTO];
       return feedbackValue !== null && feedbackValue !== undefined && feedbackValue !== '';
     });

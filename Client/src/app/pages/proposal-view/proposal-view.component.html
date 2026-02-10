@@ -1,17 +1,17 @@
-@if (loading) {
+@if (loading()) {
   <div class="fixed inset-0 flex justify-center items-center">
     <p-progress-spinner ariaLabel="loading" />
   </div>
-} @else if (error) {
+} @else if (error()) {
   <p-message severity="error" class="mt-8">
     <div class="flex flex-row">
       <i class="pi pi-info-circle" style="font-size: 1.2rem"></i>
       <div class="ml-3">
-        <p>{{ error }}</p>
+        <p>{{ error() }}</p>
       </div>
     </div>
   </p-message>
-} @else if (proposal) {
+} @else if (proposal(); as proposal) {
   <div>
     <h2 class="text-2xl mb-6">Module Proposal '{{ proposal.latestModuleVersion?.titleEng }}'</h2>
 

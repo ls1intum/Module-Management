@@ -31,8 +31,8 @@ import { MessageModule } from 'primeng/message';
 export class ProposalCreateComponent extends ProposalBaseComponent {
   override async onSubmit() {
     if (this.proposalForm.valid) {
-      this.loading = true;
-      this.error = null;
+      this.loading.set(true);
+      this.error.set(null);
 
       const proposalData = this.proposalForm.value;
       this.proposalService.createProposal(proposalData).subscribe({
@@ -43,12 +43,10 @@ export class ProposalCreateComponent extends ProposalBaseComponent {
           });
         },
         error: (err: HttpErrorResponse) => {
-          this.error = err.error;
-          this.loading = false;
+          this.error.set(err.error);
+          this.loading.set(false);
         },
-        complete: () => {
-          this.loading = false;
-        }
+        complete: () => this.loading.set(false)
       });
     }
   }

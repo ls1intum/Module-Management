@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Feedback, FeedbackControllerService } from '../../core/modules/openapi';
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
@@ -22,25 +22,25 @@ export class FeedbackListTableComponent {
   feedbackService = inject(FeedbackControllerService);
   securityStore = inject(SecurityStore);
   user = this.securityStore.user;
-  loading: boolean = true;
-  error: string | null = null;
-  feedbacks: Feedback[] = [];
+  loading = signal(true);
+  error = signal<string | null>(null);
+  feedbacks = signal<Feedback[]>([]);
   feedbackStatusEnum = Feedback.StatusEnum;
 
   constructor() {
-    if (this.user !== undefined) {
+    if (this.user() !== undefined) {
       this.fetchFeedbacksForUser();
     } else {
       this.securityStore.signIn();
     }
   }
 
-  private async fetchFeedbacksForUser() {
-    this.loading = true;
+  private fetchFeedbacksForUser() {
+    this.loading.set(true);
     this.feedbackService.getFeedbacksForAuthenticatedUser().subscribe({
-      next: (feedbacks) => (this.feedbacks = feedbacks),
-      error: (err: HttpErrorResponse) => (this.error = err.error),
-      complete: () => (this.loading = false)
+      next: (feedbacks) => this.feedbacks.set(feedbacks),
+      error: (err: HttpErrorResponse) => this.error.set(err.error),
+      complete: () => this.loading.set(false)
     });
   }
 }

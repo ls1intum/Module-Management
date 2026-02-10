@@ -1,17 +1,17 @@
-@if (loading) {
+@if (loading()) {
   <div class="fixed inset-0 flex justify-center items-center">
     <p-progress-spinner ariaLabel="loading" />
   </div>
-} @else if (error) {
+} @else if (error()) {
   <p-message severity="error" class="mt-8">
     <div class="flex flex-row">
       <i class="pi pi-exclamation-circle" style="font-size: 1.2rem"></i>
       <div class="ml-3">
-        <p>{{ error }}</p>
+        <p>{{ error() }}</p>
       </div>
     </div>
   </p-message>
-} @else if (moduleVersionDto) {
+} @else if (moduleVersionDto(); as moduleVersionDto) {
   <div class="max-w-4xl mx-auto space-y-6">
     <h2 class="text-2xl">Overview of '{{ moduleVersionDto.titleEng }}' - Version {{ moduleVersionDto.version }}</h2>
     <div class="flex justify-between mb-6">

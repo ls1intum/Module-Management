@@ -1,5 +1,5 @@
 <div class="max-w-4xl mx-auto">
-  <h1 class="text-2xl mb-8">{{ moduleVersionDto?.titleEng ? 'Edit Proposal for ' + moduleVersionDto?.titleEng : 'Create New Module Proposal' }}</h1>
+  <h1 class="text-2xl mb-8">{{ moduleVersionDto()?.titleEng ? 'Edit Proposal for ' + moduleVersionDto()?.titleEng : 'Create New Module Proposal' }}</h1>
   <p-message severity="secondary" class="mb-8">
     <div class="flex flex-row">
       <i class="pi pi-info-circle mt-1" style="font-size: 1.2rem"></i>
@@ -19,7 +19,7 @@
       <label class="text-xl">Title</label>
       @if (moduleVersionId && hasFeedback('titleFeedback')) {
         <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks; track feedback.feedbackRole) {
+          @for (feedback of feedbacks(); track feedback.feedbackRole) {
             @if (feedback.titleFeedback) {
               <p>
                 <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -55,7 +55,7 @@
       <label class="text-xl">Level</label>
       @if (moduleVersionId && hasFeedback('levelFeedback')) {
         <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks; track feedback.feedbackRole) {
+          @for (feedback of feedbacks(); track feedback.feedbackRole) {
             @if (feedback.levelFeedback) {
               <p>
                 <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -82,7 +82,7 @@
       <label class="text-xl">Language</label>
       @if (moduleVersionId && hasFeedback('languageFeedback')) {
         <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks; track feedback.feedbackRole) {
+          @for (feedback of feedbacks(); track feedback.feedbackRole) {
             @if (feedback.languageFeedback) {
               <p>
                 <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -108,7 +108,7 @@
       <label class="text-xl">Duration</label>
       @if (moduleVersionId && hasFeedback('durationFeedback')) {
         <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks; track feedback.feedbackRole) {
+          @for (feedback of feedbacks(); track feedback.feedbackRole) {
             @if (feedback.durationFeedback) {
               <p>
                 <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -136,7 +136,7 @@
       <label class="text-xl">Repetition</label>
       @if (moduleVersionId && hasFeedback('repetitionFeedback')) {
         <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks; track feedback.feedbackRole) {
+          @for (feedback of feedbacks(); track feedback.feedbackRole) {
             @if (feedback.repetitionFeedback) {
               <p>
                 <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -163,7 +163,7 @@
       <label class="text-xl">Frequency</label>
       @if (moduleVersionId && hasFeedback('frequencyFeedback')) {
         <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks; track feedback.feedbackRole) {
+          @for (feedback of feedbacks(); track feedback.feedbackRole) {
             @if (feedback.frequencyFeedback) {
               <p>
                 <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -191,7 +191,7 @@
         <label class="text-xl">Credits</label>
         @if (moduleVersionId && hasFeedback('creditsFeedback')) {
           <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-            @for (feedback of feedbacks; track feedback.feedbackRole) {
+            @for (feedback of feedbacks(); track feedback.feedbackRole) {
               @if (feedback.creditsFeedback) {
                 <p>
                   <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -210,7 +210,7 @@
         <label class="text-xl">Total Hours</label>
         @if (moduleVersionId && hasFeedback('hoursTotalFeedback')) {
           <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-            @for (feedback of feedbacks; track feedback.feedbackRole) {
+            @for (feedback of feedbacks(); track feedback.feedbackRole) {
               @if (feedback.hoursTotalFeedback) {
                 <p>
                   <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -229,7 +229,7 @@
         <label class="text-xl">Self-Study Hours</label>
         @if (moduleVersionId && hasFeedback('hoursSelfStudyFeedback')) {
           <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-            @for (feedback of feedbacks; track feedback.feedbackRole) {
+            @for (feedback of feedbacks(); track feedback.feedbackRole) {
               @if (feedback.hoursSelfStudyFeedback) {
                 <p>
                   <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -248,7 +248,7 @@
         <label class="text-xl">Presence Hours</label>
         @if (moduleVersionId && hasFeedback('hoursPresenceFeedback')) {
           <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-            @for (feedback of feedbacks; track feedback.feedbackRole) {
+            @for (feedback of feedbacks(); track feedback.feedbackRole) {
               @if (feedback.hoursPresenceFeedback) {
                 <p>
                   <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -268,7 +268,7 @@
       <label class="text-xl">Examination Achievements</label>
       @if (moduleVersionId && hasFeedback('examinationAchievementsFeedback')) {
         <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks; track feedback.feedbackRole) {
+          @for (feedback of feedbacks(); track feedback.feedbackRole) {
             @if (feedback.examinationAchievementsFeedback) {
               <p>
                 <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -285,7 +285,7 @@
         <p-button type="button" severity="secondary" [outlined]="true" size="small" (onClick)="togglePromptField('examination')">
           {{ showPrompt['examination'] ? 'Hide Prompt' : 'Customize Prompt' }}
         </p-button>
-        <p-button type="button" severity="contrast" size="small" styleClass="min-w-28" (onClick)="generateExaminationAchievements()" [disabled]="loading">
+        <p-button type="button" severity="contrast" size="small" styleClass="min-w-28" (onClick)="generateExaminationAchievements()" [disabled]="loading()">
           Generate Examination Achievements
         </p-button>
       </div>
@@ -307,7 +307,7 @@
       <label class="text-xl">Recommended Prerequisites</label>
       @if (moduleVersionId && hasFeedback('recommendedPrerequisitesFeedback')) {
         <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks; track feedback.feedbackRole) {
+          @for (feedback of feedbacks(); track feedback.feedbackRole) {
             @if (feedback.recommendedPrerequisitesFeedback) {
               <p>
                 <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -326,7 +326,7 @@
       <label class="text-xl">Module Content</label>
       @if (moduleVersionId && hasFeedback('contentFeedback')) {
         <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks; track feedback.feedbackRole) {
+          @for (feedback of feedbacks(); track feedback.feedbackRole) {
             @if (feedback.contentFeedback) {
               <p>
                 <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -343,7 +343,7 @@
         <p-button type="button" severity="secondary" [outlined]="true" size="small" (onClick)="togglePromptField('content')">
           {{ showPrompt['content'] ? 'Hide Prompt' : 'Customize Prompt' }}
         </p-button>
-        <p-button type="button" severity="contrast" size="small" (onClick)="generateContent()" [disabled]="loading">Generate Content</p-button>
+        <p-button type="button" severity="contrast" size="small" (onClick)="generateContent()" [disabled]="loading()">Generate Content</p-button>
       </div>
       @if (showPrompt['content']) {
         <div class="mt-2">
@@ -363,7 +363,7 @@
       <label class="text-xl">Learning Outcomes</label>
       @if (moduleVersionId && hasFeedback('learningOutcomesFeedback')) {
         <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks; track feedback.feedbackRole) {
+          @for (feedback of feedbacks(); track feedback.feedbackRole) {
             @if (feedback.learningOutcomesFeedback) {
               <p>
                 <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -380,7 +380,7 @@
         <p-button type="button" severity="secondary" [outlined]="true" size="small" (onClick)="togglePromptField('learning')">
           {{ showPrompt['learning'] ? 'Hide Prompt' : 'Customize Prompt' }}
         </p-button>
-        <p-button type="button" severity="contrast" size="small" (onClick)="generateLearningOutcomes()" [disabled]="loading">Generate Learning Outcomes</p-button>
+        <p-button type="button" severity="contrast" size="small" (onClick)="generateLearningOutcomes()" [disabled]="loading()">Generate Learning Outcomes</p-button>
       </div>
       @if (showPrompt['learning']) {
         <div class="mt-2">
@@ -400,7 +400,7 @@
       <label class="text-xl">Teaching Methods</label>
       @if (moduleVersionId && hasFeedback('teachingMethodsFeedback')) {
         <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks; track feedback.feedbackRole) {
+          @for (feedback of feedbacks(); track feedback.feedbackRole) {
             @if (feedback.teachingMethodsFeedback) {
               <p>
                 <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -417,7 +417,7 @@
         <p-button type="button" severity="secondary" [outlined]="true" size="small" (onClick)="togglePromptField('teaching')">
           {{ showPrompt['teaching'] ? 'Hide Prompt' : 'Customize Prompt' }}
         </p-button>
-        <p-button type="button" severity="contrast" size="small" (onClick)="generateTeachingMethods()" [disabled]="loading">Generate Teaching Methods</p-button>
+        <p-button type="button" severity="contrast" size="small" (onClick)="generateTeachingMethods()" [disabled]="loading()">Generate Teaching Methods</p-button>
       </div>
       @if (showPrompt['teaching']) {
         <div class="mt-2">
@@ -437,7 +437,7 @@
       <label class="text-xl">Media used</label>
       @if (moduleVersionId && hasFeedback('mediaFeedback')) {
         <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks; track feedback.feedbackRole) {
+          @for (feedback of feedbacks(); track feedback.feedbackRole) {
             @if (feedback.mediaFeedback) {
               <p>
                 <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -456,7 +456,7 @@
       <label class="text-xl">Literature</label>
       @if (moduleVersionId && hasFeedback('literatureFeedback')) {
         <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks; track feedback.feedbackRole) {
+          @for (feedback of feedbacks(); track feedback.feedbackRole) {
             @if (feedback.literatureFeedback) {
               <p>
                 <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -475,7 +475,7 @@
       <label class="text-xl">Responsibles</label>
       @if (moduleVersionId && hasFeedback('responsiblesFeedback')) {
         <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks; track feedback.feedbackRole) {
+          @for (feedback of feedbacks(); track feedback.feedbackRole) {
             @if (feedback.responsiblesFeedback) {
               <p>
                 <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -494,7 +494,7 @@
       <label class="text-xl">Lecturer</label>
       @if (moduleVersionId && hasFeedback('lvSwsLecturerFeedback')) {
         <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks; track feedback.feedbackRole) {
+          @for (feedback of feedbacks(); track feedback.feedbackRole) {
             @if (feedback.lvSwsLecturerFeedback) {
               <p>
                 <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
@@ -512,12 +512,12 @@
     <div class="flex justify-between">
       <p-button (onClick)="goBack()" severity="secondary" [outlined]="true">Cancel</p-button>
       <p-button type="submit" severity="contrast" [disabled]="proposalForm.invalid || loading">
-        {{ loading ? 'Saving...' : moduleVersionDto ? 'Update Proposal' : 'Create Proposal' }}
+        {{ loading() ? 'Saving...' : moduleVersionDto() ? 'Update Proposal' : 'Create Proposal' }}
       </p-button>
     </div>
 
-    @if (error) {
-      <p-message severity="error" icon="pi pi-exclamation-circle">{{ error }}</p-message>
+    @if (error()) {
+      <p-message severity="error" icon="pi pi-exclamation-circle">{{ error() }}</p-message>
     }
   </form>
 </div>
