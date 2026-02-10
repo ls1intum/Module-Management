@@ -18,14 +18,13 @@ export interface UserDTO {
     roles?: Array<UserDTO.RolesEnum>;
 }
 export namespace UserDTO {
-    export type RolesEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR' | 'UNDEFINED';
+    export type RolesEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR';
     export const RolesEnum = {
         Admin: 'ADMIN' as RolesEnum,
         QualityManagement: 'QUALITY_MANAGEMENT' as RolesEnum,
         AcademicProgramAdvisor: 'ACADEMIC_PROGRAM_ADVISOR' as RolesEnum,
         ExaminationBoard: 'EXAMINATION_BOARD' as RolesEnum,
-        Professor: 'PROFESSOR' as RolesEnum,
-        Undefined: 'UNDEFINED' as RolesEnum
+        Professor: 'PROFESSOR' as RolesEnum
     };
 }
 

@@ -27,12 +27,10 @@ export class AdminUsersPageComponent {
   searchQuery = '';
   currentPageSize = signal(10);
   firstRowIndex = signal(0);
-  roles = Object.entries(UserDTO.RolesEnum)
-    .filter(([key]) => key !== 'Undefined')
-    .map(([key, value]) => ({
-      label: key.replace(/([A-Z])/g, ' $1').trim(),
-      value
-    }));
+  roles = Object.entries(UserDTO.RolesEnum).map(([key, value]) => ({
+    label: key.replace(/([A-Z])/g, ' $1').trim(),
+    value
+  }));
 
   constructor() {
     this.loadUsers(0, this.currentPageSize(), this.searchQuery);
