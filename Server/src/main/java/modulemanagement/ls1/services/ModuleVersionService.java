@@ -46,9 +46,10 @@ public class ModuleVersionService {
             return true;
         }
 
-        return user.getRole() == UserRole.QUALITY_MANAGEMENT ||
-                user.getRole() == UserRole.EXAMINATION_BOARD ||
-                user.getRole() == UserRole.ACADEMIC_PROGRAM_ADVISOR;
+        return user.getRoles() != null && (
+                user.getRoles().contains(UserRole.QUALITY_MANAGEMENT) ||
+                user.getRoles().contains(UserRole.EXAMINATION_BOARD) ||
+                user.getRoles().contains(UserRole.ACADEMIC_PROGRAM_ADVISOR));
     }
 
     public ModuleVersionUpdateResponseDTO updateModuleVersionFromRequest(UUID userId, Long moduleVersionId,

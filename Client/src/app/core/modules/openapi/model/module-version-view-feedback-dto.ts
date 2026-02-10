@@ -38,14 +38,13 @@ export interface ModuleVersionViewFeedbackDTO {
     lvSwsLecturerFeedback?: string;
 }
 export namespace ModuleVersionViewFeedbackDTO {
-    export type FeedbackRoleEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR' | 'UNDEFINED';
+    export type FeedbackRoleEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR';
     export const FeedbackRoleEnum = {
         Admin: 'ADMIN' as FeedbackRoleEnum,
         QualityManagement: 'QUALITY_MANAGEMENT' as FeedbackRoleEnum,
         AcademicProgramAdvisor: 'ACADEMIC_PROGRAM_ADVISOR' as FeedbackRoleEnum,
         ExaminationBoard: 'EXAMINATION_BOARD' as FeedbackRoleEnum,
-        Professor: 'PROFESSOR' as FeedbackRoleEnum,
-        Undefined: 'UNDEFINED' as FeedbackRoleEnum
+        Professor: 'PROFESSOR' as FeedbackRoleEnum
     };
     export type FeedbackStatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'APPROVED' | 'FEEDBACK_GIVEN' | 'REJECTED' | 'OBSOLETE' | 'CANCELLED';
     export const FeedbackStatusEnum = {

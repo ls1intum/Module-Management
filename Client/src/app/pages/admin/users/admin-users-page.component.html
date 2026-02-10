@@ -25,7 +25,7 @@
       <th>Name</th>
       <th>Username</th>
       <th>Email</th>
-      <th>Role</th>
+      <th>Roles</th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-user>
@@ -34,14 +34,15 @@
       <td>{{ user.userName }}</td>
       <td>{{ user.email }}</td>
       <td>
-        <p-select
+        <p-multiSelect
           [options]="roles"
-          [ngModel]="user.role"
-          (ngModelChange)="onRoleChange(user, $event)"
+          [ngModel]="user.roles ?? []"
+          (ngModelChange)="onRolesChange(user, $event)"
           [disabled]="isSaving(user.userId)"
           [loading]="isSaving(user.userId)"
           optionLabel="label"
           optionValue="value"
+          placeholder="Select roles"
           appendTo="body"
         />
       </td>

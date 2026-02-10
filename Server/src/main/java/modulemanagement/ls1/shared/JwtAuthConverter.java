@@ -1,5 +1,6 @@
 package modulemanagement.ls1.shared;
 
+import modulemanagement.ls1.enums.UserRole;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.services.AuthenticationService;
 import org.springframework.core.convert.converter.Converter;
@@ -30,8 +31,12 @@ public class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
 
         Collection<GrantedAuthority> authorities = new ArrayList<>();
 
-        // Convert UserRole enum to Spring Security role format
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
+        // Convert each user role to Spring Security authority
+        if (user.getRoles() != null) {
+            for (UserRole role : user.getRoles()) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + role.name()));
+            }
+        }
 
         JwtAuthenticationToken token = new JwtAuthenticationToken(jwt, authorities, jwt.getClaim("preferred_username"));
 

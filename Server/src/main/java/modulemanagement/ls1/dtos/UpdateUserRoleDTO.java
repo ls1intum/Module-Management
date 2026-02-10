@@ -4,8 +4,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import modulemanagement.ls1.enums.UserRole;
 
+import java.util.List;
+
 @Data
 public class UpdateUserRoleDTO {
     @NotNull
-    private UserRole role;
+    private List<UserRole> roles;
 }

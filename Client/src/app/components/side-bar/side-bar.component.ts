@@ -18,9 +18,9 @@ export class SideBarComponent {
 
   user = this.securityStore.user;
 
-  isAdmin = (): boolean => isAdminRole(this.user()?.role);
-  isProfessor = (): boolean => isProfessorRole(this.user()?.role);
-  isReviewer = (): boolean => isReviewerRole(this.user()?.role);
+  isAdmin = (): boolean => isAdminRole(this.user()?.roles);
+  isProfessor = (): boolean => isProfessorRole(this.user()?.roles);
+  isReviewer = (): boolean => isReviewerRole(this.user()?.roles);
 
   isActive(path: string): boolean {
     return this.router.url.startsWith(path);

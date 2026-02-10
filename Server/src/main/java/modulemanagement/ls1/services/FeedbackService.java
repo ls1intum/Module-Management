@@ -27,8 +27,9 @@ public class FeedbackService {
 
     public Feedback Accept(Long feedbackId, User user) {
         Feedback feedback = getPendingFeedback(feedbackId);
-        if (!user.getRole().equals(feedback.getRequiredRole()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You do not have permission to accept this feedback");
+        if (user.getRoles() == null || !user.getRoles().contains(feedback.getRequiredRole()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "You do not have permission to accept this feedback");
         feedback.setFeedbackFrom(user);
         feedback.setSubmissionDate(LocalDateTime.now());
         feedback.setStatus(FeedbackStatus.APPROVED);
@@ -38,8 +39,9 @@ public class FeedbackService {
 
     public Feedback GiveFeedback(Long feedbackId, User user, FeedbackDTO givenFeedback) {
         Feedback feedback = getPendingFeedback(feedbackId);
-        if (!user.getRole().equals(feedback.getRequiredRole()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You do not have permission to accept this feedback");
+        if (user.getRoles() == null || !user.getRoles().contains(feedback.getRequiredRole()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "You do not have permission to accept this feedback");
         feedback.setFeedbackFrom(user);
         feedback.setSubmissionDate(LocalDateTime.now());
         feedback.insert(givenFeedback);
@@ -51,8 +53,9 @@ public class FeedbackService {
 
     public Feedback RejectFeedback(Long feedbackId, User user, @NotBlank String comment) {
         Feedback feedback = getPendingFeedback(feedbackId);
-        if (!user.getRole().equals(feedback.getRequiredRole()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You do not have permission to accept this feedback");
+        if (user.getRoles() == null || !user.getRoles().contains(feedback.getRequiredRole()))
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "You do not have permission to accept this feedback");
         feedback.setFeedbackFrom(user);
         feedback.setSubmissionDate(LocalDateTime.now());
         feedback.setStatus(FeedbackStatus.REJECTED);
@@ -62,16 +65,16 @@ public class FeedbackService {
     }
 
     public List<FeedbackListItemDto> getAllFeedbacksForUser(User user) {
-        return feedbackRepository.findByRequiredRoleAndStatus(user.getRole(), FeedbackStatus.PENDING_FEEDBACK)
+        return feedbackRepository.findByRequiredRoleInAndStatus(user.getRoles(), FeedbackStatus.PENDING_FEEDBACK)
                 .stream()
-                .filter(feedback -> feedback.getRequiredRole().equals(user.getRole()))
                 .sorted(Comparator.comparing(Feedback::getFeedbackId))
                 .map(FeedbackListItemDto::fromFeedback)
                 .toList();
     }
 
     private Feedback getPendingFeedback(Long feedbackId) {
-        Feedback feedback = feedbackRepository.findById(feedbackId).orElseThrow(() -> new ResourceNotFoundException("Feedback not found"));
+        Feedback feedback = feedbackRepository.findById(feedbackId)
+                .orElseThrow(() -> new ResourceNotFoundException("Feedback not found"));
         if (feedback.getStatus() != FeedbackStatus.PENDING_FEEDBACK) {
             throw new IllegalStateException("This module is not " + FeedbackStatus.PENDING_FEEDBACK);
         }
@@ -79,7 +82,8 @@ public class FeedbackService {
     }
 
     public ModuleVersionUpdateRequestDTO getModuleVersionOfFeedback(Long feedbackId) {
-        Feedback feedback = feedbackRepository.findById(feedbackId).orElseThrow(() -> new ResourceNotFoundException("Feedback not found"));
+        Feedback feedback = feedbackRepository.findById(feedbackId)
+                .orElseThrow(() -> new ResourceNotFoundException("Feedback not found"));
         return ModuleVersionUpdateRequestDTO.fromModuleVersion(feedback.getModuleVersion());
     }
 
