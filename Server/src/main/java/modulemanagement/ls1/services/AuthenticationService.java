@@ -6,6 +6,7 @@ import modulemanagement.ls1.repositories.UserRepository;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,7 +27,7 @@ public class AuthenticationService {
     }
 
     private UUID getUuidFromJwt(Jwt jwt) {
-        return UUID.fromString((String)jwt.getClaims().get("sub"));
+        return UUID.fromString((String) jwt.getClaims().get("sub"));
     }
 
     private User createUserFromJwt(Jwt jwt, UUID uuid) {
@@ -39,8 +40,6 @@ public class AuthenticationService {
         newUser.setFirstName((String) claims.getOrDefault("given_name", ""));
         newUser.setLastName((String) claims.getOrDefault("family_name", ""));
         newUser.setEmail((String) claims.getOrDefault("email", ""));
-
-        newUser.setRole(UserRole.UNDEFINED);
 
         return userRepository.save(newUser);
     }

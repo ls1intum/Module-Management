@@ -1,19 +1,18 @@
 import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
-import { RouterModule } from '@angular/router';
 
 @Component({
-  selector: 'account-management-page',
+  selector: 'app-admin-layout',
   standalone: true,
   imports: [PanelModule, ButtonModule, RouterModule],
-  templateUrl: './account-management-page.component.html'
+  templateUrl: './admin-layout.component.html'
 })
-export class AccountManagementPageComponent {
+export class AdminLayoutComponent {
   private router = inject(Router);
 
   isActive(path: string): boolean {
-    return this.router.url === path;
+    return this.router.url.startsWith(path);
   }
 }

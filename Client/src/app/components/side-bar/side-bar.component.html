@@ -1,0 +1,42 @@
+@if (sidebarService.isVisible() && user(); as u) {
+  <aside class="h-full sticky flex flex-col gap-2 p-4 bg-gray-100 dark:bg-black border-r border-gray-200 dark:border-gray-800">
+    @if (isAdmin()) {
+      <p-button
+        label="Users"
+        icon="pi pi-users"
+        [routerLink]="['/admin/users']"
+        [severity]="isActive('/admin/users') ? 'contrast' : 'secondary'"
+        [style]="{ width: '100%' }"
+        styleClass="sidebar-btn justify-start"
+      />
+    }
+    @if (isProfessor()) {
+      <p-button
+        label="My Proposals"
+        icon="pi pi-list"
+        [routerLink]="['/proposals']"
+        [severity]="isActive('/proposals') && !isActive('/proposals/create') ? 'contrast' : 'secondary'"
+        [style]="{ width: '100%' }"
+        styleClass="sidebar-btn justify-start"
+      />
+      <p-button
+        label="Create Proposal"
+        icon="pi pi-plus"
+        [routerLink]="['/proposals/create']"
+        [severity]="isActive('/proposals/create') ? 'contrast' : 'secondary'"
+        [style]="{ width: '100%' }"
+        styleClass="sidebar-btn justify-start"
+      />
+    }
+    @if (isReviewer()) {
+      <p-button
+        label="Pending Feedbacks"
+        icon="pi pi-list"
+        [routerLink]="['/feedbacks']"
+        [severity]="isActive('/feedbacks') && !isActive('/feedbacks/view') ? 'contrast' : 'secondary'"
+        [style]="{ width: '100%' }"
+        styleClass="sidebar-btn justify-start"
+      />
+    }
+  </aside>
+}

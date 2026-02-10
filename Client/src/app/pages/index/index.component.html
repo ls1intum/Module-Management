@@ -1,13 +1,55 @@
-@if (user() !== undefined) { @if (isProposalSubmitter()) {
-<ng-container>
-  <professor-home-page />
-</ng-container>
-} @else if (isProposalReviewer()) {
-<ng-container>
-  <approval-staff-home-page />
-</ng-container>
+@if (!user()) {
+  <p-panel class="text-center max-w-md mx-auto my-16">
+    <ng-template pTemplate="header">
+      <div class="flex items-center justify-center gap-3 py-2">
+        <i class="pi pi-lock text-3xl text-muted-foreground"></i>
+        <span class="text-xl font-semibold">Sign in required</span>
+      </div>
+    </ng-template>
+    <p class="text-muted-foreground mb-6">Log in to access the Module Management application.</p>
+    <p-button label="Sign In" icon="pi pi-sign-in" severity="contrast" (onClick)="securityStore.signIn()" />
+    <p-divider />
+    <a href="https://outline.aet.cit.tum.de/doc/application-test-users-2XneFHnMuJ" target="_blank" class="text-sm text-muted-foreground hover:underline">
+      <i class="pi pi-external-link"></i>
+      Application Test Users
+    </a>
+  </p-panel>
+} @else if (!user()?.roles?.length) {
+  <p-panel class="text-center max-w-md mx-auto my-16">
+    <ng-template pTemplate="header">
+      <div class="flex items-center justify-center gap-3 py-2">
+        <i class="pi pi-id-card text-3xl text-muted-foreground"></i>
+        <span class="text-xl font-semibold">Welcome, {{ user()?.firstName }} {{ user()?.lastName }}</span>
+      </div>
+    </ng-template>
+    <p class="text-muted-foreground">You do not have any roles assigned yet. Please contact an administrator to get access to the application.</p>
+  </p-panel>
 } @else {
-<login-required />
-} } @else {
-<login-required />
+  <div>
+    <h2 class="text-2xl font-semibold mb-8">Welcome, {{ user()?.firstName }} {{ user()?.lastName }}</h2>
+    <p class="text-muted-foreground mb-8">Choose an area to get started:</p>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @if (isAdmin()) {
+        <p-panel header="Users & Roles">
+          <p class="text-sm text-muted-foreground mb-4">Manage users and assign roles.</p>
+          <p-button label="Users" icon="pi pi-users" [routerLink]="['/admin/users']" severity="contrast" />
+        </p-panel>
+      }
+      @if (isProfessor()) {
+        <p-panel header="Module Proposals">
+          <p class="text-sm text-muted-foreground mb-4">Create and manage your module proposals.</p>
+          <div class="flex flex-col gap-2">
+            <p-button label="My Proposals" icon="pi pi-list" [routerLink]="['/proposals']" severity="contrast" />
+            <p-button label="Create Proposal" icon="pi pi-plus" [routerLink]="['/proposals/create']" [outlined]="true" severity="contrast" />
+          </div>
+        </p-panel>
+      }
+      @if (isReviewer()) {
+        <p-panel header="Pending Feedbacks">
+          <p class="text-sm text-muted-foreground mb-4">Review and submit feedback on proposals.</p>
+          <p-button label="Pending Feedbacks" icon="pi pi-list" [routerLink]="['/feedbacks']" severity="contrast" />
+        </p-panel>
+      }
+    </div>
+  </div>
 }

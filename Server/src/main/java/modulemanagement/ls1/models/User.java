@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -29,7 +31,9 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "app_user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private List<UserRole> roles = new ArrayList<>();
 }

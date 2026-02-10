@@ -2,7 +2,8 @@ import { inject, Injectable, Injector } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { CanActivate, Router, UrlTree } from '@angular/router';
 import { SecurityStore } from './security-store.service';
-import { filter, map, Observable } from 'rxjs';
+import { isAdminRole } from '../shared/user-role.utils';
+import { filter, map, Observable, switchMap, take } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +14,13 @@ export class AdminGuard implements CanActivate {
   router = inject(Router);
 
   canActivate(): Observable<boolean | UrlTree> {
-    return toObservable(this.securityStore.loadedUser, { injector: this.injector }).pipe(
-      filter(Boolean),
+    // Wait for loading to complete, then check user
+    return toObservable(this.securityStore.isLoading, { injector: this.injector }).pipe(
+      filter((loading) => !loading), // Wait until loading is false
+      take(1),
+      switchMap(() => toObservable(this.securityStore.user, { injector: this.injector }).pipe(take(1))),
       map((user) => {
-        if (user && user.roles.includes('admin')) {
+        if (isAdminRole(user?.roles)) {
           return true;
         }
         return this.router.createUrlTree(['/']);

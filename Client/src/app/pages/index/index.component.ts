@@ -1,28 +1,22 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ProfessorHomePageComponent } from '../professor-home/professor-home-page.component';
-import { ApprovalStaffHomePageComponent } from '../approval-staff-home/approval-staff-home-page.component';
+import { ButtonModule } from 'primeng/button';
+import { DividerModule } from 'primeng/divider';
+import { PanelModule } from 'primeng/panel';
 import { SecurityStore } from '../../core/security/security-store.service';
-import { LoginRequiredComponent } from '../../components/login-required/login-required.component';
-import { User } from '../../core/modules/openapi';
+import { isAdminRole, isProfessorRole, isReviewerRole } from '../../core/shared/user-role.utils';
 
 @Component({
   selector: 'index-component',
   standalone: true,
-  imports: [RouterModule, ProfessorHomePageComponent, ApprovalStaffHomePageComponent, LoginRequiredComponent],
+  imports: [RouterModule, ButtonModule, DividerModule, PanelModule],
   templateUrl: './index.component.html'
 })
 export class IndexComponent {
   securityStore = inject(SecurityStore);
   user = this.securityStore.user;
 
-  isProposalSubmitter = computed(() => {
-    const user = this.user();
-    return user && user.role === User.RoleEnum.Professor;
-  });
-
-  isProposalReviewer = computed(() => {
-    const user = this.user();
-    return user && user.role && [User.RoleEnum.QualityManagement, User.RoleEnum.AcademicProgramAdvisor, User.RoleEnum.ExaminationBoard].includes(user.role);
-  });
+  isAdmin = (): boolean => isAdminRole(this.user()?.roles);
+  isProfessor = (): boolean => isProfessorRole(this.user()?.roles);
+  isReviewer = (): boolean => isReviewerRole(this.user()?.roles);
 }

@@ -10,22 +10,21 @@
 
 
 export interface UserDTO { 
-    userId?: string;
+    userId: string;
     userName?: string;
     firstName?: string;
     lastName?: string;
     email?: string;
-    role?: UserDTO.RoleEnum;
+    roles?: Array<UserDTO.RolesEnum>;
 }
 export namespace UserDTO {
-    export type RoleEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR' | 'UNDEFINED';
-    export const RoleEnum = {
-        Admin: 'ADMIN' as RoleEnum,
-        QualityManagement: 'QUALITY_MANAGEMENT' as RoleEnum,
-        AcademicProgramAdvisor: 'ACADEMIC_PROGRAM_ADVISOR' as RoleEnum,
-        ExaminationBoard: 'EXAMINATION_BOARD' as RoleEnum,
-        Professor: 'PROFESSOR' as RoleEnum,
-        Undefined: 'UNDEFINED' as RoleEnum
+    export type RolesEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR';
+    export const RolesEnum = {
+        Admin: 'ADMIN' as RolesEnum,
+        QualityManagement: 'QUALITY_MANAGEMENT' as RolesEnum,
+        AcademicProgramAdvisor: 'ACADEMIC_PROGRAM_ADVISOR' as RolesEnum,
+        ExaminationBoard: 'EXAMINATION_BOARD' as RolesEnum,
+        Professor: 'PROFESSOR' as RolesEnum
     };
 }
 
