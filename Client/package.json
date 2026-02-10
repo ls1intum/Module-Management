@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "api:generate": "npx openapi-generator-cli generate -i http://localhost:8080/v3/api-docs.yaml -g typescript-angular -o src/app/core/modules/openapi --additional-properties fileNaming=kebab-case,withInterfaces=true --generate-alias-as-model",
-    "api:clean": "rimraf src/app/core/modules/openapi",
+    "api:clean": "rm -rf src/app/core/modules/openapi",
     "api:update": "npm run api:clean && npm run api:generate",
     "dependencies:update": "npm-check-updates -u && npm install"
   },
