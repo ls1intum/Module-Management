@@ -9,6 +9,14 @@
         [style]="{ width: '100%' }"
         styleClass="sidebar-btn justify-start"
       />
+      <p-button
+        label="Schools"
+        icon="pi pi-building"
+        [routerLink]="['/admin/schools']"
+        [severity]="isActive('/admin/schools') ? 'contrast' : 'secondary'"
+        [style]="{ width: '100%' }"
+        styleClass="sidebar-btn justify-start"
+      />
     }
     @if (isProfessor()) {
       <p-button

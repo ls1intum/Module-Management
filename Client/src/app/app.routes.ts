@@ -14,6 +14,7 @@ import { AccountLayoutComponent } from './pages/account-management/account-layou
 import { AccountInformationComponent } from './pages/account-management/account-information/account-information.component';
 import { AccountPasskeysComponent } from './pages/account-management/passkeys/account-passkeys.component';
 import { AdminUsersPageComponent } from './pages/admin/users/admin-users-page.component';
+import { AdminSchoolsPageComponent } from './pages/admin/schools/admin-schools-page.component';
 
 export const routes: Routes = [
   { path: '', component: IndexComponent },
@@ -53,6 +54,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard, AdminGuard],
     children: [
       { path: 'users', component: AdminUsersPageComponent },
+      { path: 'schools', component: AdminSchoolsPageComponent },
       { path: '', redirectTo: 'users', pathMatch: 'full' }
     ]
   }

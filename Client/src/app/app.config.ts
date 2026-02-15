@@ -9,7 +9,7 @@ import { BASE_PATH } from './core/modules/openapi/variables';
 import { environment } from '../../environments/environment';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
-import { MessageService } from 'primeng/api';
+import { MessageService, ConfirmationService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -29,6 +29,7 @@ export const appConfig: ApplicationConfig = {
       provide: BASE_PATH,
       useValue: environment.serverUrl
     },
-    MessageService
+    MessageService,
+    ConfirmationService
   ]
 };

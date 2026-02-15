@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { AdminUserControllerService } from '../../../core/modules/openapi';
+import { AdminControllerService } from '../../../core/modules/openapi';
 import { UserDTO } from '../../../core/modules/openapi/model/user-dto';
 import { FormsModule } from '@angular/forms';
 import { TableModule, TablePageEvent } from 'primeng/table';
@@ -17,7 +17,7 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './admin-users-page.component.html'
 })
 export class AdminUsersPageComponent {
-  private readonly adminUserControllerService = inject(AdminUserControllerService);
+  private readonly adminControllerService = inject(AdminControllerService);
   private readonly messageService = inject(MessageService);
 
   users = signal<UserDTO[]>([]);
@@ -53,7 +53,7 @@ export class AdminUsersPageComponent {
   async loadUsers(page = 0, size = 10, search?: string) {
     this.loading.set(true);
     try {
-      const res = await firstValueFrom(this.adminUserControllerService.getUsers(page, size, search?.trim() || undefined));
+      const res = await firstValueFrom(this.adminControllerService.getUsers(page, size, search?.trim() || undefined));
       this.users.set(res.content ?? []);
       this.totalRecords.set(res.totalElements ?? 0);
     } catch (e) {
@@ -76,7 +76,7 @@ export class AdminUsersPageComponent {
     if (sortedNew.length === sortedCurrent.length && sortedNew.every((r, i) => r === sortedCurrent[i])) return;
     this.savingUserId.set(user.userId);
     try {
-      await firstValueFrom(this.adminUserControllerService.updateUserRole(user.userId, { roles: newRoles ?? [] }));
+      await firstValueFrom(this.adminControllerService.updateUserRole(user.userId, { roles: newRoles ?? [] }));
       this.users.update((list) => list.map((u) => (u.userId === user.userId ? { ...u, roles: newRoles ?? [] } : u)));
       this.messageService.add({
         severity: 'success',

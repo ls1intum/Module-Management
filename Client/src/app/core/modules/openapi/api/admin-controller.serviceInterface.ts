@@ -11,7 +11,10 @@ import { HttpHeaders }                                       from '@angular/comm
 
 import { Observable }                                        from 'rxjs';
 
+import { CreateSchoolDTO } from '../model/models';
+import { PageResponseDTOSchool } from '../model/models';
 import { PageResponseDTOUserDTO } from '../model/models';
+import { School } from '../model/models';
 import { UpdateUserRoleDTO } from '../model/models';
 import { UserDTO } from '../model/models';
 
@@ -20,9 +23,32 @@ import { Configuration }                                     from '../configurat
 
 
 
-export interface AdminUserControllerServiceInterface {
+export interface AdminControllerServiceInterface {
     defaultHeaders: HttpHeaders;
     configuration: Configuration;
+
+    /**
+     * 
+     * 
+     * @param createSchoolDTO 
+     */
+    createSchool(createSchoolDTO: CreateSchoolDTO, extraHttpRequestParams?: any): Observable<School>;
+
+    /**
+     * 
+     * 
+     * @param schoolId 
+     */
+    deleteSchool(schoolId: number, extraHttpRequestParams?: any): Observable<{}>;
+
+    /**
+     * 
+     * 
+     * @param page 
+     * @param size 
+     * @param search 
+     */
+    getSchools(page?: number, size?: number, search?: string, extraHttpRequestParams?: any): Observable<PageResponseDTOSchool>;
 
     /**
      * 

@@ -34,6 +34,10 @@
           <p class="text-sm text-muted-foreground mb-4">Manage users and assign roles.</p>
           <p-button label="Users" icon="pi pi-users" [routerLink]="['/admin/users']" severity="contrast" />
         </p-panel>
+        <p-panel header="Schools">
+          <p class="text-sm text-muted-foreground mb-4">Add and manage schools.</p>
+          <p-button label="Schools" icon="pi pi-building" [routerLink]="['/admin/schools']" severity="contrast" />
+        </p-panel>
       }
       @if (isProfessor()) {
         <p-panel header="Module Proposals">

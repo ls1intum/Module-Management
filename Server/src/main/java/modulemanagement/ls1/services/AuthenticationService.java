@@ -1,12 +1,10 @@
 package modulemanagement.ls1.services;
 
-import modulemanagement.ls1.enums.UserRole;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.repositories.UserRepository;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;

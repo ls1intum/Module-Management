@@ -2,8 +2,8 @@
 .openapi-generator-ignore
 README.md
 api.module.ts
-api/admin-user-controller.service.ts
-api/admin-user-controller.serviceInterface.ts
+api/admin-controller.service.ts
+api/admin-controller.serviceInterface.ts
 api/api.ts
 api/feedback-controller.service.ts
 api/feedback-controller.serviceInterface.ts
@@ -20,6 +20,7 @@ index.ts
 model/add-module-version-dto.ts
 model/completion-service-request-dto.ts
 model/completion-service-response-dto.ts
+model/create-school-dto.ts
 model/feedback-dto.ts
 model/feedback-list-item-dto.ts
 model/feedback.ts
@@ -31,11 +32,13 @@ model/module-version-update-response-dto.ts
 model/module-version-view-dto.ts
 model/module-version-view-feedback-dto.ts
 model/module-version.ts
+model/page-response-dto-school.ts
 model/page-response-dto-user-dto.ts
 model/proposal-request-dto.ts
 model/proposal-view-dto.ts
 model/proposal.ts
 model/proposals-compact-dto.ts
+model/school.ts
 model/similar-module-dto.ts
 model/update-user-role-dto.ts
 model/user-dto.ts

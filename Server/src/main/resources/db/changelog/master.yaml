@@ -20,3 +20,6 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: changes/0007_user_roles_many.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: changes/0008_create_school_table.yaml

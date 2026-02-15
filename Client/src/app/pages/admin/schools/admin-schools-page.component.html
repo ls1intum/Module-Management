@@ -1,0 +1,71 @@
+<h2 class="text-xl font-semibold mb-4">Schools</h2>
+<p class="text-muted-foreground mb-6">Add and manage schools in the system.</p>
+
+<div class="flex gap-2 mb-4">
+  <input pInputText type="text" [(ngModel)]="searchQuery" placeholder="Search by name" (keyup.enter)="runSearch()" class="flex-1 max-w-md" />
+  <p-button label="Search" icon="pi pi-search" (onClick)="runSearch()" severity="contrast" />
+  <p-button label="Add school" icon="pi pi-plus" (onClick)="openCreateDialog()" severity="contrast" />
+</div>
+
+<p-table
+  [value]="schools()"
+  [lazy]="true"
+  [paginator]="true"
+  [first]="firstRowIndex()"
+  [rows]="currentPageSize()"
+  [totalRecords]="totalRecords()"
+  [loading]="loading()"
+  (onPage)="pageChange($event)"
+  [rowsPerPageOptions]="[10, 25, 50]"
+  [showCurrentPageReport]="true"
+  currentPageReportTemplate="Showing schools {first} to {last} of total {totalRecords} schools"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-school>
+    <tr>
+      <td>{{ school.schoolId }}</td>
+      <td>{{ school.name }}</td>
+      <td>
+        <p-button icon="pi pi-trash" [rounded]="true" severity="danger" [text]="true" (onClick)="confirmDeleteSchool(school)" title="Delete school" />
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="3" class="text-center py-8 text-muted-foreground">No schools found.</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog
+  [visible]="showCreateDialog()"
+  (onHide)="showCreateDialog.set(false); newSchoolName = ''"
+  header="Add school"
+  [modal]="true"
+  [style]="{ width: '28rem' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="flex flex-col gap-3">
+    <label for="newSchoolName" class="font-medium">School name</label>
+    <input
+      id="newSchoolName"
+      pInputText
+      type="text"
+      [(ngModel)]="newSchoolName"
+      placeholder="e.g. School of Computation, Information and Technology"
+      class="w-full"
+      (keyup.enter)="addSchool()"
+    />
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" severity="secondary" (onClick)="showCreateDialog.set(false)" [disabled]="saving()" />
+    <p-button label="Add" icon="pi pi-plus" (onClick)="addSchool()" [loading]="saving()" [disabled]="saving()" />
+  </ng-template>
+</p-dialog>

@@ -1,6 +1,6 @@
-export * from './admin-user-controller.service';
-import { AdminUserControllerService } from './admin-user-controller.service';
-export * from './admin-user-controller.serviceInterface';
+export * from './admin-controller.service';
+import { AdminControllerService } from './admin-controller.service';
+export * from './admin-controller.serviceInterface';
 export * from './feedback-controller.service';
 import { FeedbackControllerService } from './feedback-controller.service';
 export * from './feedback-controller.serviceInterface';
@@ -13,4 +13,4 @@ export * from './proposal-controller.serviceInterface';
 export * from './user-controller.service';
 import { UserControllerService } from './user-controller.service';
 export * from './user-controller.serviceInterface';
-export const APIS = [AdminUserControllerService, FeedbackControllerService, ModuleVersionControllerService, ProposalControllerService, UserControllerService];
+export const APIS = [AdminControllerService, FeedbackControllerService, ModuleVersionControllerService, ProposalControllerService, UserControllerService];
