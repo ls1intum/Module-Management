@@ -34,7 +34,7 @@
     "@angular/compiler": "21.1.4",
     "@angular/compiler-cli": "21.1.4",
     "@openapitools/openapi-generator-cli": "2.28.3",
-    "@tailwindcss/postcss": "4.1.18",
+    "@tailwindcss/postcss": "4.2.0",
     "@types/jasmine": "6.0.0",
     "autoprefixer": "10.4.24",
     "jasmine-core": "6.0.1",
@@ -44,7 +44,7 @@
     "karma-jasmine": "5.1.0",
     "karma-jasmine-html-reporter": "2.2.0",
     "postcss": "8.5.6",
-    "tailwindcss": "4.1.18",
+    "tailwindcss": "4.2.0",
     "typescript": "5.9.3"
   }
 }
