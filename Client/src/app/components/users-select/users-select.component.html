@@ -1,0 +1,26 @@
+<p-select
+  [options]="userOptions()"
+  [ngModel]="value()"
+  (ngModelChange)="onValueChange($event)"
+  (onFilter)="onFilter($event)"
+  (onLazyLoad)="onLazyLoad($event)"
+  placeholder="Select user"
+  optionLabel="label"
+  optionValue="value"
+  [filter]="true"
+  [lazy]="true"
+  [virtualScroll]="true"
+  [virtualScrollItemSize]="40"
+  [loading]="loading()"
+  [class]="styleClass()"
+  appendTo="body"
+  scrollHeight="15rem"
+>
+  <ng-template pTemplate="footer">
+    @if (loading()) {
+      <div class="flex align-items-center justify-content-center">
+        <p-progress-spinner ariaLabel="Loading users" [style]="{ width: '1.5rem', height: '1.5rem' }" strokeWidth="4" />
+      </div>
+    }
+  </ng-template>
+</p-select>

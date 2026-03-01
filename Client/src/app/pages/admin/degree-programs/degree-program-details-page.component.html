@@ -1,0 +1,109 @@
+<p-toast />
+
+@if (program(); as prog) {
+  <h2 class="text-2xl mb-6">Program details – {{ prog.name }} </h2>
+
+  <div class="flex flex-col gap-4 mb-6 p-4 border border-gray-200 dark:border-gray-800 rounded-lg bg-gray-50 dark:bg-gray-900/50">
+    <h3 class="text-lg font-medium">Program details</h3>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <div>
+        <label class="block text-sm font-medium mb-1">Name</label>
+        <input pInputText [ngModel]="programName()" (ngModelChange)="programName.set($event)" class="w-full" placeholder="Degree program name" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Responsible user</label>
+        <app-users-select
+          [ngModel]="programResponsibleUserId()"
+          (ngModelChange)="programResponsibleUserId.set($event)"
+          [selectedUser]="program()?.responsibleUser ?? null"
+          styleClass="w-full"
+        />
+      </div>
+    </div>
+    <p-button label="Save program details" icon="pi pi-check" (onClick)="saveProgramDetails()" [loading]="savingProgram()" />
+  </div>
+
+  <p class="text-muted-foreground mb-6">Manage which specializations are assigned to this degree program. Add from the list below or create and assign a new one.</p>
+
+  <div class="flex flex-col gap-4 mb-6">
+    <div>
+      <label class="block text-sm font-medium mb-1">Add from list</label>
+      <div class="flex gap-2 items-end flex-wrap">
+        <p-multiSelect
+          [options]="specializationOptions()"
+          [(ngModel)]="specializationsToAdd"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select from list"
+          appendTo="body"
+          [scrollHeight]="'15rem'"
+          [style]="{ width: '20rem', minWidth: '12rem' }"
+        />
+        <p-button label="Add selected" icon="pi pi-plus" (onClick)="addSpecializations()" [disabled]="specializationsToAdd.length === 0" />
+      </div>
+    </div>
+    <p-button label="Create new specialization and assign to this program" icon="pi pi-plus-circle" (onClick)="openCreateSpec()" severity="secondary" />
+  </div>
+
+  <h3 class="text-lg font-medium mb-3">Currently assigned to this program</h3>
+  @if (prog.degreeProgramSpecializations && prog.degreeProgramSpecializations.length > 0) {
+    <p-table [value]="prog.degreeProgramSpecializations" [tableStyle]="{ 'min-width': '40rem' }">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Name</th>
+          <th>Responsible user</th>
+          <th style="width: 10rem">Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-spec>
+        <tr>
+          <td>{{ spec.name }}</td>
+          <td>{{ userLabel(spec) }}</td>
+          <td>
+            <p-button
+              icon="pi pi-times"
+              pTooltip="Remove from this program"
+              (onClick)="removeSpecialization(spec.degreeProgramSpecializationId)"
+              [rounded]="true"
+              [text]="true"
+              severity="secondary"
+              class="mr-1"
+            />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  } @else {
+    <p class="text-muted-foreground py-6">No specializations assigned to this program yet. Add from the list above or create and assign a new one.</p>
+  }
+} @else if (!loading()) {
+  <p class="text-muted-foreground">Degree program not found.</p>
+  <p-button label="Back to Degree Programs" [routerLink]="['/admin/degree-programs']" class="mt-4" />
+} @else {
+  <p>Loading…</p>
+}
+
+<p-dialog
+  header="Create new specialization and assign to this program"
+  [visible]="createDialogVisible()"
+  (visibleChange)="createDialogVisible.set($event)"
+  [modal]="true"
+  [style]="{ width: '24rem' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="flex flex-col gap-4">
+    <div>
+      <label class="block text-sm font-medium mb-1">Name</label>
+      <input pInputText [ngModel]="newSpecName()" (ngModelChange)="newSpecName.set($event)" class="w-full" placeholder="Specialization name" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Responsible user</label>
+      <app-users-select [ngModel]="newSpecResponsibleUserId()" (ngModelChange)="newSpecResponsibleUserId.set($event)" styleClass="w-full" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" severity="secondary" (onClick)="createDialogVisible.set(false)" />
+    <p-button label="Create and assign" (onClick)="createSpecAndAssign()" />
+  </ng-template>
+</p-dialog>

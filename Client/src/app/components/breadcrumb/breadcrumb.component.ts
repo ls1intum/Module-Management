@@ -3,7 +3,7 @@ import { Router, RouterModule, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import type { MenuItem } from 'primeng/api';
-import { SecurityStore } from '../../core/security/security-store.service';
+import { BreadcrumbLabelsService } from './breadcrumb-labels.service';
 
 @Component({
   selector: 'app-breadcrumb',
@@ -13,7 +13,7 @@ import { SecurityStore } from '../../core/security/security-store.service';
 })
 export class BreadcrumbComponent {
   private router = inject(Router);
-  private securityStore = inject(SecurityStore);
+  private breadcrumbLabels = inject(BreadcrumbLabelsService);
 
   private url = signal(this.router.url);
 
@@ -27,13 +27,47 @@ export class BreadcrumbComponent {
 
   showBreadcrumb = computed(() => {
     const u = this.url();
-    return u.startsWith('/proposals') || u.startsWith('/feedbacks');
+    return u.startsWith('/proposals') || u.startsWith('/feedbacks') || u.startsWith('/admin');
   });
 
   private buildItems(url: string): MenuItem[] {
     if (url.startsWith('/proposals')) return this.buildProposalItems(url);
     if (url.startsWith('/feedbacks')) return this.buildFeedbackItems(url);
+    if (url.startsWith('/admin')) return this.buildAdminItems(url);
     return [];
+  }
+
+  private buildAdminItems(url: string): MenuItem[] {
+    const segments = url.split('/').filter(Boolean); // ['admin', 'degree-programs', ...]
+    const items: MenuItem[] = [];
+
+    if (segments.length < 2) return items;
+
+    if (segments[1] === 'users') {
+      items.push({ label: 'Users', routerLink: ['/admin/users'] });
+      return items;
+    }
+
+    if (segments[1] === 'degree-programs') {
+      items.push({ label: 'Degree Programs', routerLink: ['/admin/degree-programs'] });
+      if (segments.length <= 2) return items;
+
+      if (segments[2] === 'specializations') {
+        items.push({ label: 'All areas of specializations', routerLink: ['/admin/degree-programs/specializations'] });
+        return items;
+      }
+
+      // degree-programs/:id (program details page) – label from details page when it loads the program
+      const programId = segments[2];
+      const name = (this.breadcrumbLabels.degreeProgramName() ?? '').trim() || `Program ${programId}`;
+      items.push({
+        label: name,
+        routerLink: ['/admin/degree-programs', programId]
+      });
+      return items;
+    }
+
+    return items;
   }
 
   private buildProposalItems(url: string): MenuItem[] {
@@ -53,8 +87,9 @@ export class BreadcrumbComponent {
 
     if (segments[1] === 'view' && segments[2]) {
       const proposalId = segments[2];
+      const proposalLabel = (this.breadcrumbLabels.proposalTitle() ?? '').trim() || `Proposal ${proposalId}`;
       items.push({
-        label: 'Proposal ' + proposalId,
+        label: proposalLabel,
         routerLink: ['/proposals/view', proposalId]
       });
 
@@ -62,8 +97,9 @@ export class BreadcrumbComponent {
 
       if (segments[3] === 'version' && segments[4]) {
         const versionId = segments[4];
+        const versionSegmentLabel = (this.breadcrumbLabels.versionLabel() ?? '').trim() || `Version ${versionId}`;
         items.push({
-          label: 'Version ' + versionId,
+          label: versionSegmentLabel,
           routerLink: ['/proposals/view', proposalId, 'version', versionId]
         });
 
@@ -97,7 +133,8 @@ export class BreadcrumbComponent {
     }
 
     if (segments[1] === 'view' && segments[2]) {
-      items.push({ label: 'Feedback ' + segments[2], routerLink: ['/feedbacks/view', segments[2]] });
+      const label = (this.breadcrumbLabels.feedbackLabel() ?? '').trim() || `Feedback ${segments[2]}`;
+      items.push({ label, routerLink: ['/feedbacks/view', segments[2]] });
     }
 
     if (segments[3] === 'overlap' && segments[4]) {

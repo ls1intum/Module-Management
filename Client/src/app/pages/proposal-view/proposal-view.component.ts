@@ -1,5 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnDestroy } from '@angular/core';
 import { AddModuleVersionDTO, ModuleVersion, Proposal, ProposalControllerService, ProposalViewDTO } from '../../core/modules/openapi';
+import { BreadcrumbLabelsService } from '../../components/breadcrumb/breadcrumb-labels.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -39,10 +40,11 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   },
   templateUrl: './proposal-view.component.html'
 })
-export class ProposalViewComponent {
+export class ProposalViewComponent implements OnDestroy {
   router = inject(Router);
   route = inject(ActivatedRoute);
   proposalService = inject(ProposalControllerService);
+  private breadcrumbLabels = inject(BreadcrumbLabelsService);
   loading = signal(true);
   error = signal<string | null>(null);
   proposal = signal<ProposalViewDTO | null>(null);
@@ -59,7 +61,11 @@ export class ProposalViewComponent {
       if (proposalId) {
         this.loading.set(true);
         this.proposalService.getProposalView(proposalId).subscribe({
-          next: (data: ProposalViewDTO) => this.proposal.set(data),
+          next: (data: ProposalViewDTO) => {
+            this.proposal.set(data);
+            const title = data?.latestModuleVersion?.titleEng ?? null;
+            this.breadcrumbLabels.proposalTitle.set(title);
+          },
           error: (err: HttpErrorResponse) => this.error.set(err.error),
           complete: () => this.loading.set(false)
         });
@@ -102,5 +108,9 @@ export class ProposalViewComponent {
         error: (err: HttpErrorResponse) => this.error.set(err.error)
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.breadcrumbLabels.proposalTitle.set(null);
   }
 }

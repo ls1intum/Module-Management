@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnDestroy } from '@angular/core';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { ModuleVersionControllerService, ModuleVersionViewDTO, ModuleVersion, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
+import { BreadcrumbLabelsService } from '../../components/breadcrumb/breadcrumb-labels.service';
 import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
 import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
 import { ModuleVersionStatusPipe } from '../../pipes/moduleVersionStatus.pipe';
@@ -40,9 +41,10 @@ export interface ModuleField {
   ],
   templateUrl: './module-version-view.component.html'
 })
-export class ModuleVersionViewComponent {
+export class ModuleVersionViewComponent implements OnDestroy {
   route = inject(ActivatedRoute);
   moduleVersionService = inject(ModuleVersionControllerService);
+  private breadcrumbLabels = inject(BreadcrumbLabelsService);
   proposalId: string | null = null;
   moduleVersionId: number | null = null;
   loading = signal(true);
@@ -98,10 +100,20 @@ export class ModuleVersionViewComponent {
   private fetchModuleVersionViewDto(moduleVersionId: number) {
     this.loading.set(true);
     this.moduleVersionService.getModuleVersionViewDto(moduleVersionId).subscribe({
-      next: (data: ModuleVersionViewDTO) => this.moduleVersionDto.set(data),
+      next: (data: ModuleVersionViewDTO) => {
+        this.moduleVersionDto.set(data);
+        const version = data?.version;
+        this.breadcrumbLabels.proposalTitle.set(data?.titleEng ?? null);
+        this.breadcrumbLabels.versionLabel.set(version != null ? `Version ${version}` : null);
+      },
       error: (err: HttpErrorResponse) => this.error.set(err.error),
       complete: () => this.loading.set(false)
     });
+  }
+
+  ngOnDestroy(): void {
+    this.breadcrumbLabels.proposalTitle.set(null);
+    this.breadcrumbLabels.versionLabel.set(null);
   }
 
   pdfExport() {

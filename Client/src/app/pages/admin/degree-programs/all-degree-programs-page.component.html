@@ -1,0 +1,63 @@
+<p-toast />
+
+<h2 class="text-2xl mb-6">Degree Programs</h2>
+<p class="text-muted-foreground mb-6">Create and manage degree programs. Assign areas of specializations to each program from the program's page.</p>
+
+<div class="mb-4 flex gap-2 flex-wrap">
+  <p-button label="Add degree program" icon="pi pi-plus" (onClick)="openCreate()" severity="contrast" />
+  <a [routerLink]="['/admin/degree-programs/specializations']" class="no-underline">
+    <p-button label="All areas of specializations" icon="pi pi-tags" severity="secondary" />
+  </a>
+</div>
+
+<p-table [value]="programs()" [loading]="loading()" [tableStyle]="{ 'min-width': '50rem' }">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Name</th>
+      <th>Responsible user</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-program>
+    <tr>
+      <td>{{ program.name }}</td>
+      <td>{{ userLabel(program) }}</td>
+      <td>
+        <a [routerLink]="['/admin/degree-programs', program.degreeProgramId]" class="no-underline">
+          <p-button label="Edit" icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" class="mr-1" />
+        </a>
+        <p-button icon="pi pi-trash" pTooltip="Delete" (onClick)="deleteProgram(program)" [rounded]="true" [text]="true" severity="danger" />
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="4" class="text-center py-8 text-muted-foreground">No degree programs yet. Add one to get started.</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog
+  header="Add degree program"
+  [visible]="dialogVisible()"
+  (visibleChange)="dialogVisible.set($event)"
+  [modal]="true"
+  [style]="{ width: '24rem' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="flex flex-col gap-4">
+    <div>
+      <label class="block text-sm font-medium mb-1">Name</label>
+      <input pInputText [ngModel]="name()" (ngModelChange)="name.set($event)" class="w-full" placeholder="Degree program name" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Responsible user</label>
+      <app-users-select [ngModel]="responsibleUserId()" (ngModelChange)="responsibleUserId.set($event)" styleClass="w-full" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" severity="secondary" (onClick)="dialogVisible.set(false)" />
+    <p-button label="Save" (onClick)="saveProgram()" />
+  </ng-template>
+</p-dialog>

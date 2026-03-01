@@ -13,8 +13,10 @@ import { SimilarModulesPage } from './pages/similar-modules/similar-modules.comp
 import { AccountLayoutComponent } from './pages/account-management/account-layout/account-layout.component';
 import { AccountInformationComponent } from './pages/account-management/account-information/account-information.component';
 import { AccountPasskeysComponent } from './pages/account-management/passkeys/account-passkeys.component';
-import { AdminUsersPageComponent } from './pages/admin/users/admin-users-page.component';
-
+import { UsersPageComponent } from './pages/admin/users/users-page.component';
+import { AllDegreeProgramsPageComponent } from './pages/admin/degree-programs/all-degree-programs-page.component';
+import { DegreeProgramDetailsPageComponent } from './pages/admin/degree-programs/degree-program-details-page.component';
+import { AllSpecializationsPageComponent } from './pages/admin/degree-program-specializations/all-specializations-page.component';
 export const routes: Routes = [
   { path: '', component: IndexComponent },
   {
@@ -52,7 +54,10 @@ export const routes: Routes = [
     path: 'admin',
     canActivate: [AuthGuard, AdminGuard],
     children: [
-      { path: 'users', component: AdminUsersPageComponent },
+      { path: 'users', component: UsersPageComponent },
+      { path: 'degree-programs/specializations', component: AllSpecializationsPageComponent },
+      { path: 'degree-programs/:id', component: DegreeProgramDetailsPageComponent },
+      { path: 'degree-programs', component: AllDegreeProgramsPageComponent },
       { path: '', redirectTo: 'users', pathMatch: 'full' }
     ]
   }
