@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
-import { Component, inject, signal, OnDestroy } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, FeedbackDTO, GiveFeedbackDTO, ModuleVersionControllerService } from '../../core/modules/openapi';
 import { BreadcrumbLabelsService } from '../../components/breadcrumb/breadcrumb-labels.service';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
@@ -20,7 +20,7 @@ import { MessageModule } from 'primeng/message';
   imports: [FormsModule, RouterModule, ButtonModule, TextareaModule, DialogModule, ToastModule, ProgressSpinnerModule, TooltipModule, MessageModule],
   templateUrl: './feedback-view.component.html'
 })
-export class FeedbackViewComponent implements OnDestroy {
+export class FeedbackViewComponent {
   router = inject(Router);
   feedbackService = inject(FeedbackControllerService);
   messageService = inject(MessageService);
@@ -227,10 +227,6 @@ export class FeedbackViewComponent implements OnDestroy {
         }
       });
     }
-  }
-
-  ngOnDestroy(): void {
-    this.breadcrumbLabels.feedbackLabel.set(null);
   }
 
   giveFeedback() {

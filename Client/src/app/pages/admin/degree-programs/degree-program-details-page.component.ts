@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, OnDestroy } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
@@ -26,7 +26,7 @@ import { BreadcrumbLabelsService } from '../../../components/breadcrumb/breadcru
   imports: [RouterLink, FormsModule, TableModule, ButtonModule, InputTextModule, DialogModule, MultiSelectModule, TooltipModule, ToastModule, UsersSelectComponent],
   templateUrl: './degree-program-details-page.component.html'
 })
-export class DegreeProgramDetailsPageComponent implements OnDestroy {
+export class DegreeProgramDetailsPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly degreeProgramsService = inject(DegreeProgramsControllerService);
   private readonly specializationsService = inject(DegreeProgramSpecializationsControllerService);
@@ -60,10 +60,6 @@ export class DegreeProgramDetailsPageComponent implements OnDestroy {
         this.loadProgram(Number(id));
       }
     });
-  }
-
-  ngOnDestroy(): void {
-    this.breadcrumbLabels.degreeProgramName.set(null);
   }
 
   async loadProgram(id: number) {

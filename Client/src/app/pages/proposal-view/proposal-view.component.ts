@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnDestroy } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { AddModuleVersionDTO, ModuleVersion, Proposal, ProposalControllerService, ProposalViewDTO } from '../../core/modules/openapi';
 import { BreadcrumbLabelsService } from '../../components/breadcrumb/breadcrumb-labels.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -40,7 +40,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   },
   templateUrl: './proposal-view.component.html'
 })
-export class ProposalViewComponent implements OnDestroy {
+export class ProposalViewComponent {
   router = inject(Router);
   route = inject(ActivatedRoute);
   proposalService = inject(ProposalControllerService);
@@ -108,9 +108,5 @@ export class ProposalViewComponent implements OnDestroy {
         error: (err: HttpErrorResponse) => this.error.set(err.error)
       });
     }
-  }
-
-  ngOnDestroy(): void {
-    this.breadcrumbLabels.proposalTitle.set(null);
   }
 }

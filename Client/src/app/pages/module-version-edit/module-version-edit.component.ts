@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -31,7 +31,7 @@ import { MessageModule } from 'primeng/message';
   ],
   templateUrl: '../../components/create-edit-base/create-edit-base.component.html'
 })
-export class ModuleVersionEditComponent extends ProposalBaseComponent implements OnDestroy {
+export class ModuleVersionEditComponent extends ProposalBaseComponent {
   override moduleVersionId: number;
   moduleLoading = false;
   feedbackLoading = false;
@@ -42,11 +42,6 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent implements
     this.moduleVersionId = Number(route.snapshot.paramMap.get('versionId'));
     this.fetchModuleVersion(this.moduleVersionId);
     this.fetchPreviousModuleVersionFeedback(this.moduleVersionId);
-  }
-
-  ngOnDestroy(): void {
-    this.breadcrumbLabels.proposalTitle.set(null);
-    this.breadcrumbLabels.versionLabel.set(null);
   }
 
   fetchModuleVersion(moduleVersionId: number) {
