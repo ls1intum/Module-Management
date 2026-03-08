@@ -1,4 +1,5 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   CompletionServiceRequestDTO,
@@ -42,17 +43,33 @@ export abstract class ProposalBaseComponent {
   isCreateMode = computed(() => this.moduleVersionId == null);
   currentStepIndex = signal(0);
 
+  /** Updated on form valueChanges so stepCompleted computed re-runs when user types. */
+  private formValueVersion = signal(0);
+
   stepCompleted = computed(() => {
+    this.formValueVersion();
     const form = this.proposalForm;
-    return MODULE_EDIT_STEPS.map((step) => {
-      const required = step.requiredControlNames ?? [];
-      if (required.length === 0) return false;
-      return required.every((name) => {
-        const c = form.get(name);
-        return c && c.valid && c.value != null && c.value !== '';
-      });
+    const assignmentsList = this.assignments();
+    return MODULE_EDIT_STEPS.map((step, index) => {
+      const allFieldsFilled = step.controlNames.every((name) => this.controlHasValue(form.get(name)));
+      if (step.id === 'basic') {
+        const hasCompleteAssignment = assignmentsList.some(
+          (a) => a.degreeProgramId != null && a.degreeProgramSpecializationId != null
+        );
+        return allFieldsFilled && hasCompleteAssignment;
+      }
+      return allFieldsFilled;
     });
   });
+
+  private controlHasValue(c: ReturnType<FormGroup['get']>): boolean {
+    if (!c) return false;
+    const v = c.value;
+    if (v === undefined || v === null) return false;
+    if (typeof v === 'string') return v.trim() !== '';
+    if (typeof v === 'number') return true;
+    return true;
+  }
 
   moduleVersionStatus = computed(() => {
     const dto = this.moduleVersionDto();
@@ -61,7 +78,7 @@ export abstract class ProposalBaseComponent {
 
   currentVersionFeedbacks = computed(() => {
     const dto = this.moduleVersionDto();
-    return dto && 'feedbacks' in dto ? (dto as ModuleVersionViewDTO).feedbacks ?? [] : [];
+    return dto && 'feedbacks' in dto ? ((dto as ModuleVersionViewDTO).feedbacks ?? []) : [];
   });
 
   canSubmitForFeedback = computed(() => {
@@ -74,9 +91,7 @@ export abstract class ProposalBaseComponent {
     const dto = this.moduleVersionDto();
     if (dto && 'degreeProgramAssignments' in dto && Array.isArray((dto as ModuleVersionViewDTO).degreeProgramAssignments)) {
       const list = (dto as ModuleVersionViewDTO).degreeProgramAssignments ?? [];
-      this.assignments.set(
-        list.map((a) => ({ degreeProgramId: a.degreeProgramId ?? null, degreeProgramSpecializationId: a.degreeProgramSpecializationId ?? null }))
-      );
+      this.assignments.set(list.map((a) => ({ degreeProgramId: a.degreeProgramId ?? null, degreeProgramSpecializationId: a.degreeProgramSpecializationId ?? null })));
     }
   });
 
@@ -101,6 +116,8 @@ export abstract class ProposalBaseComponent {
   goBack(): void {
     this.location.back();
   }
+
+  private destroyRef = inject(DestroyRef);
 
   constructor() {
     this.proposalForm = this.formBuilder.group({
@@ -136,6 +153,7 @@ export abstract class ProposalBaseComponent {
       responsiblesEng: [''],
       lvSwsLecturerEng: ['']
     });
+    this.proposalForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.formValueVersion.update((n) => n + 1));
   }
 
   goToStep(index: number) {
@@ -176,7 +194,9 @@ export abstract class ProposalBaseComponent {
   }
 
   degreeProgramsAvailableForRow(rowIndex: number): DegreeProgramDTO[] {
-    const selected = this.assignments().map((a) => a.degreeProgramId).filter(Boolean) as number[];
+    const selected = this.assignments()
+      .map((a) => a.degreeProgramId)
+      .filter(Boolean) as number[];
     return this.degreePrograms().filter((p) => {
       const current = this.assignments()[rowIndex]?.degreeProgramId;
       return !selected.includes(p.degreeProgramId) || p.degreeProgramId === current;

@@ -12,7 +12,7 @@ export const MODULE_EDIT_STEPS: ModuleEditStepConfig[] = [
     controlNames: [
       'titleEng',
       'titleDe',
-      'bulletPoints',
+      // 'bulletPoints',
       'credits',
       'frequencyEng',
       'hoursLecture',
@@ -21,7 +21,7 @@ export const MODULE_EDIT_STEPS: ModuleEditStepConfig[] = [
       'hoursSeminar',
       'firstSemesterAvailable',
       'successorModuleName',
-      'levelEng',
+      // 'levelEng',
       'languageEng'
     ],
     requiredControlNames: ['titleEng']
@@ -34,19 +34,12 @@ export const MODULE_EDIT_STEPS: ModuleEditStepConfig[] = [
   {
     id: 'examination-prereqs',
     title: 'Examination & prerequisites',
-    controlNames: ['examinationAchievementsEng', 'examinationAchievementsPromptEng', 'recommendedPrerequisitesEng']
+    controlNames: ['examinationAchievementsEng', 'recommendedPrerequisitesEng']
   },
   {
     id: 'content-learning-teaching',
     title: 'Content, learning & teaching',
-    controlNames: [
-      'contentEng',
-      'contentPromptEng',
-      'learningOutcomesEng',
-      'learningOutcomesPromptEng',
-      'teachingMethodsEng',
-      'teachingMethodsPromptEng'
-    ]
+    controlNames: ['contentEng', 'learningOutcomesEng', 'teachingMethodsEng']
   },
   {
     id: 'media-literature',
