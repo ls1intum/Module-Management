@@ -19,4 +19,8 @@ public interface DegreeProgramRepository extends JpaRepository<DegreeProgram, Lo
     @EntityGraph(attributePaths = { "responsibleUser", "degreeProgramSpecializations",
             "degreeProgramSpecializations.responsibleUser" })
     Optional<DegreeProgram> findWithSpecializationsByDegreeProgramId(Long degreeProgramId);
+
+    @EntityGraph(attributePaths = { "degreeProgramSpecializations" })
+    @Query("SELECT p FROM DegreeProgram p ORDER BY p.name")
+    List<DegreeProgram> findAllWithSpecializations();
 }

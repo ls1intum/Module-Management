@@ -1,7 +1,6 @@
 package modulemanagement.ls1.controllers;
 
 import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
-import modulemanagement.ls1.dtos.ModuleVersionUpdateResponseDTO;
 import modulemanagement.ls1.dtos.ModuleVersionViewDTO;
 import modulemanagement.ls1.dtos.CompletionServiceResponseDTO;
 import modulemanagement.ls1.dtos.CompletionServiceRequestDTO;
@@ -42,18 +41,18 @@ public class ModuleVersionController {
 
     @GetMapping("/{moduleVersionId}")
     @PreAuthorize("hasAnyRole('PROFESSOR')")
-    public ResponseEntity<ModuleVersionUpdateResponseDTO> getModuleVersionUpdateDtoFromId(
+    public ResponseEntity<ModuleVersionViewDTO> getModuleVersionUpdateDtoFromId(
             @CurrentUser User user, @PathVariable Long moduleVersionId) {
-        ModuleVersionUpdateResponseDTO dto = moduleVersionService.getModuleVersionUpdateDtoFromId(moduleVersionId,
+        ModuleVersionViewDTO dto = moduleVersionService.getModuleVersionUpdateDtoFromId(moduleVersionId,
                 user.getUserId());
         return ResponseEntity.ok(dto);
     }
 
     @PutMapping("/{moduleVersionId}")
     @PreAuthorize("hasAnyRole('PROFESSOR')")
-    public ResponseEntity<ModuleVersionUpdateResponseDTO> updateModuleVersion(@CurrentUser User user,
+    public ResponseEntity<ModuleVersionViewDTO> updateModuleVersion(@CurrentUser User user,
             @PathVariable Long moduleVersionId, @Valid @RequestBody ModuleVersionUpdateRequestDTO moduleVersion) {
-        ModuleVersionUpdateResponseDTO updatedModuleVersion = moduleVersionService
+        ModuleVersionViewDTO updatedModuleVersion = moduleVersionService
                 .updateModuleVersionFromRequest(user.getUserId(), moduleVersionId, moduleVersion);
         return ResponseEntity.ok(updatedModuleVersion);
     }

@@ -19,8 +19,6 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { AddModuleVersionDTO } from '../model/add-module-version-dto';
 // @ts-ignore
-import { Proposal } from '../model/proposal';
-// @ts-ignore
 import { ProposalRequestDTO } from '../model/proposal-request-dto';
 // @ts-ignore
 import { ProposalViewDTO } from '../model/proposal-view-dto';
@@ -242,9 +240,9 @@ export class ProposalControllerService implements ProposalControllerServiceInter
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createProposal(proposalRequestDTO: ProposalRequestDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Proposal>;
-    public createProposal(proposalRequestDTO: ProposalRequestDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Proposal>>;
-    public createProposal(proposalRequestDTO: ProposalRequestDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Proposal>>;
+    public createProposal(proposalRequestDTO: ProposalRequestDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProposalViewDTO>;
+    public createProposal(proposalRequestDTO: ProposalRequestDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProposalViewDTO>>;
+    public createProposal(proposalRequestDTO: ProposalRequestDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProposalViewDTO>>;
     public createProposal(proposalRequestDTO: ProposalRequestDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (proposalRequestDTO === null || proposalRequestDTO === undefined) {
             throw new Error('Required parameter proposalRequestDTO was null or undefined when calling createProposal.');
@@ -296,7 +294,7 @@ export class ProposalControllerService implements ProposalControllerServiceInter
         }
 
         let localVarPath = `/api/proposals`;
-        return this.httpClient.request<Proposal>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ProposalViewDTO>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: proposalRequestDTO,

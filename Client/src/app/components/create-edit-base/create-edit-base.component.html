@@ -1,523 +1,639 @@
-<div class="max-w-4xl mx-auto">
-  <h1 class="text-2xl mb-8">{{ moduleVersionDto()?.titleEng ? 'Edit Proposal for ' + moduleVersionDto()?.titleEng : 'Create New Module Proposal' }}</h1>
-  <p-message severity="secondary" class="mb-8">
-    <div class="flex flex-row">
-      <i class="pi pi-info-circle mt-1" style="font-size: 1.2rem"></i>
-      <div class="ml-3">
-        <p class="font-bold">Information</p>
-        <p>
-          Please fill out all information fields required for a new module.
-          <br />
-          After giving the module a title you can save your progress at any time and come back at another time.
-        </p>
+<div class="module-edit-layout" style="padding: 1rem 0">
+  <aside class="module-edit-stepper-column">
+    <app-module-edit-stepper
+      [steps]="MODULE_EDIT_STEPS"
+      [currentIndex]="currentStepIndex()"
+      [stepCompleted]="stepCompleted()"
+      [feedbacks]="currentVersionFeedbacks()"
+      [status]="moduleVersionStatus()"
+      (stepChange)="goToStep($event)"
+    />
+  </aside>
+  <div class="module-edit-form-column">
+    <h1 class="text-2xl mb-4">{{ moduleVersionDto()?.titleEng ? 'Edit Proposal for ' + moduleVersionDto()?.titleEng : 'Create New Module Proposal' }}</h1>
+    <p-message severity="secondary" class="mb-4">
+      <div class="flex flex-row">
+        <i class="pi pi-info-circle mt-1" style="font-size: 1.2rem"></i>
+        <div class="ml-3">
+          <p class="font-bold">Information</p>
+          <p>Complete the steps on the left. You can save progress at any time and submit for feedback when ready.</p>
+        </div>
       </div>
-    </div>
-  </p-message>
+    </p-message>
 
-  <form [formGroup]="proposalForm" (ngSubmit)="onSubmit()" class="space-y-6">
-    <div>
-      <label class="text-xl">Title</label>
-      @if (moduleVersionId && hasFeedback('titleFeedback')) {
-        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks(); track feedback.feedbackRole) {
-            @if (feedback.titleFeedback) {
-              <p>
-                <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                {{ feedback.titleFeedback }}
-              </p>
+    <form [formGroup]="proposalForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      @if (currentStepIndex() === 0) {
+        <div class="space-y-6">
+          <div>
+            <label class="text-xl">
+              Title (English)
+              <span class="text-red-500">*</span>
+            </label>
+            @if (moduleVersionId && hasFeedback('titleFeedback')) {
+              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @if (feedback.titleFeedback) {
+                    <p>
+                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      {{ feedback.titleFeedback }}
+                    </p>
+                  }
+                }
+              </p-message>
             }
-          }
-        </p-message>
-      }
-      <div class="mt-2">
-        <input pInputText formControlName="titleEng" placeholder="Title (English)" class="w-full" />
-        @if (proposalForm.get('titleEng')?.invalid && proposalForm.get('titleEng')?.touched) {
-          <p-message severity="error" size="small" variant="simple" class="mt-1">A preliminary title is required</p-message>
-        }
-      </div>
-    </div>
-
-    <div>
-      <label class="text-xl">Key Points</label>
-      <div class="mt-2">
-        <textarea
-          pTextarea
-          formControlName="bulletPoints"
-          placeholder="Enter key points about the module to generate module descriptions from"
-          rows="4"
-          fluid
-          [autoResize]="true"
-        ></textarea>
-      </div>
-    </div>
-
-    <div>
-      <label class="text-xl">Level</label>
-      @if (moduleVersionId && hasFeedback('levelFeedback')) {
-        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks(); track feedback.feedbackRole) {
-            @if (feedback.levelFeedback) {
-              <p>
-                <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                {{ feedback.levelFeedback }}
-              </p>
-            }
-          }
-        </p-message>
-      }
-      <div class="mt-2">
-        <app-toggle-button-group
-          [options]="[
-            { value: 'Bachelor', label: 'Bachelor' },
-            { value: 'Master', label: 'Master' },
-            { value: 'Bachelor/Master', label: 'Bachelor/Master' }
-          ]"
-          [required]="false"
-          formControlName="levelEng"
-        ></app-toggle-button-group>
-      </div>
-    </div>
-
-    <div>
-      <label class="text-xl">Language</label>
-      @if (moduleVersionId && hasFeedback('languageFeedback')) {
-        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks(); track feedback.feedbackRole) {
-            @if (feedback.languageFeedback) {
-              <p>
-                <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                {{ feedback.languageFeedback }}
-              </p>
-            }
-          }
-        </p-message>
-      }
-      <div class="mt-2">
-        <app-toggle-button-group
-          [options]="[
-            { value: 'English', label: 'English' },
-            { value: 'German', label: 'German' }
-          ]"
-          [required]="true"
-          formControlName="languageEng"
-        ></app-toggle-button-group>
-      </div>
-    </div>
-
-    <div>
-      <label class="text-xl">Duration</label>
-      @if (moduleVersionId && hasFeedback('durationFeedback')) {
-        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks(); track feedback.feedbackRole) {
-            @if (feedback.durationFeedback) {
-              <p>
-                <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                {{ feedback.durationFeedback }}
-              </p>
-            }
-          }
-        </p-message>
-      }
-      <div class="mt-2">
-        <app-toggle-button-group
-          [options]="[
-            { value: 'One Semester', label: 'One Semester' },
-            { value: 'Two Semesters', label: 'Two Semesters' },
-            { value: 'Three Semesters', label: 'Three Semesters' },
-            { value: 'Four Semesters', label: 'Four Semesters' }
-          ]"
-          [required]="false"
-          formControlName="duration"
-        ></app-toggle-button-group>
-      </div>
-    </div>
-
-    <div>
-      <label class="text-xl">Repetition</label>
-      @if (moduleVersionId && hasFeedback('repetitionFeedback')) {
-        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks(); track feedback.feedbackRole) {
-            @if (feedback.repetitionFeedback) {
-              <p>
-                <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                {{ feedback.repetitionFeedback }}
-              </p>
-            }
-          }
-        </p-message>
-      }
-      <div class="mt-2">
-        <app-toggle-button-group
-          [options]="[
-            { value: 'End of Semester', label: 'End of Semester' },
-            { value: 'Following Semester', label: 'Following Semester' },
-            { value: 'End of Semester/Following Semester', label: 'End of Semester/Following Semester' }
-          ]"
-          [required]="false"
-          formControlName="repetitionEng"
-        ></app-toggle-button-group>
-      </div>
-    </div>
-
-    <div>
-      <label class="text-xl">Frequency</label>
-      @if (moduleVersionId && hasFeedback('frequencyFeedback')) {
-        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks(); track feedback.feedbackRole) {
-            @if (feedback.frequencyFeedback) {
-              <p>
-                <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                {{ feedback.frequencyFeedback }}
-              </p>
-            }
-          }
-        </p-message>
-      }
-      <div class="mt-2">
-        <app-toggle-button-group
-          [options]="[
-            { value: 'Winter semester', label: 'Winter semester' },
-            { value: 'Summer semester', label: 'Summer semester' },
-            { value: 'Winter/Summer semester', label: 'Winter/Summer semester' }
-          ]"
-          [required]="false"
-          formControlName="frequencyEng"
-        ></app-toggle-button-group>
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <label class="text-xl">Credits</label>
-        @if (moduleVersionId && hasFeedback('creditsFeedback')) {
-          <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-            @for (feedback of feedbacks(); track feedback.feedbackRole) {
-              @if (feedback.creditsFeedback) {
-                <p>
-                  <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                  {{ feedback.creditsFeedback }}
-                </p>
+            <div class="mt-2">
+              <input pInputText formControlName="titleEng" placeholder="Title (English)" class="w-full" />
+              @if (proposalForm.get('titleEng')?.invalid && proposalForm.get('titleEng')?.touched) {
+                <p-message severity="error" size="small" variant="simple" class="mt-1">A preliminary title is required</p-message>
               }
+            </div>
+          </div>
+          <div>
+            <label class="text-xl">Title (German)</label>
+            <div class="mt-2">
+              <input pInputText formControlName="titleDe" placeholder="Modulbezeichnung auf Deutsch" class="w-full" />
+            </div>
+          </div>
+          <!-- <div>
+            <label class="text-xl">Key Points</label>
+            <div class="mt-2">
+              <textarea
+                pTextarea
+                formControlName="bulletPoints"
+                placeholder="Enter key points about the module to generate module descriptions from"
+                rows="4"
+                fluid
+                [autoResize]="true"
+              ></textarea>
+            </div>
+          </div> -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xl">Credits</label>
+              <div class="mt-2">
+                <p-inputNumber formControlName="credits" [min]="0" placeholder="Credits" class="w-full" inputStyleClass="w-full"></p-inputNumber>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label class="text-xl">Frequency</label>
+            <div class="mt-2">
+              <app-toggle-button-group
+                [options]="[
+                  { value: 'Winter semester', label: 'Winter semester' },
+                  { value: 'Summer semester', label: 'Summer semester' },
+                  { value: 'Winter/Summer semester', label: 'Winter/Summer semester' },
+                  { value: 'Irregularly', label: 'Irregularly' }
+                ]"
+                [required]="false"
+                formControlName="frequencyEng"
+              ></app-toggle-button-group>
+            </div>
+          </div>
+          <div>
+            <label class="text-xl">Hours per week</label>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-2">
+              <div>
+                <label class="text-l text-muted-foreground">Lecture (V)</label>
+                <div class="mt-2"><p-inputNumber formControlName="hoursLecture" [min]="0" placeholder="0" class="w-full" inputStyleClass="w-full"></p-inputNumber></div>
+              </div>
+              <div>
+                <label class="text-l text-muted-foreground">Exercise (Ü)</label>
+                <div class="mt-2"><p-inputNumber formControlName="hoursExercise" [min]="0" placeholder="0" class="w-full" inputStyleClass="w-full"></p-inputNumber></div>
+              </div>
+              <div>
+                <label class="text-l text-muted-foreground">Practical (P)</label>
+                <div class="mt-2"><p-inputNumber formControlName="hoursPractical" [min]="0" placeholder="0" class="w-full" inputStyleClass="w-full"></p-inputNumber></div>
+              </div>
+              <div>
+                <label class="text-l text-muted-foreground">Seminar (S)</label>
+                <div class="mt-2"><p-inputNumber formControlName="hoursSeminar" [min]="0" placeholder="0" class="w-full" inputStyleClass="w-full"></p-inputNumber></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label class="text-xl">First semester available</label>
+            <div class="mt-2"><input pInputText formControlName="firstSemesterAvailable" placeholder="e.g. WiSe 2025" class="w-full" /></div>
+          </div>
+          <div>
+            <label class="text-xl">Successor module name</label>
+            <div class="mt-2"><input pInputText formControlName="successorModuleName" placeholder="Title of the successor module" class="w-full" /></div>
+          </div>
+          <!-- <div>
+            <label class="text-xl">Level</label>
+            @if (moduleVersionId && hasFeedback('levelFeedback')) {
+              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @if (feedback.levelFeedback) {
+                    <p>
+                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      {{ feedback.levelFeedback }}
+                    </p>
+                  }
+                }
+              </p-message>
             }
-          </p-message>
-        }
-        <div class="mt-2">
-          <p-inputNumber formControlName="credits" placeholder="Credits" class="w-full" [style]="{ width: '100%' }"></p-inputNumber>
-        </div>
-      </div>
+            <div class="mt-2">
+              <app-toggle-button-group
+                [options]="[
+                  { value: 'Bachelor', label: 'Bachelor' },
+                  { value: 'Master', label: 'Master' },
+                  { value: 'Bachelor/Master', label: 'Bachelor/Master' }
+                ]"
+                [required]="false"
+                formControlName="levelEng"
+              ></app-toggle-button-group>
+            </div>
+          </div> -->
 
-      <div>
-        <label class="text-xl">Total Hours</label>
-        @if (moduleVersionId && hasFeedback('hoursTotalFeedback')) {
-          <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-            @for (feedback of feedbacks(); track feedback.feedbackRole) {
-              @if (feedback.hoursTotalFeedback) {
-                <p>
-                  <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                  {{ feedback.hoursTotalFeedback }}
-                </p>
+          <!-- <div>
+            <label class="text-xl">Language</label>
+            @if (moduleVersionId && hasFeedback('languageFeedback')) {
+              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @if (feedback.languageFeedback) {
+                    <p>
+                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      {{ feedback.languageFeedback }}
+                    </p>
+                  }
+                }
+              </p-message>
+            }
+            <div class="mt-2">
+              <app-toggle-button-group
+                [options]="[
+                  { value: 'English', label: 'English' },
+                  { value: 'German', label: 'German' }
+                ]"
+                [required]="true"
+                formControlName="languageEng"
+              ></app-toggle-button-group>
+            </div>
+          </div> -->
+          <div>
+            <label class="text-xl">Degree program assignments</label>
+            <p class="text-sm text-muted-foreground mt-1">Assign this module to degree programs and specializations.</p>
+            @if (loadingPrograms()) {
+              <p-progressSpinner [style]="{ width: '24px', height: '24px' }" styleClass="inline-block mt-2"></p-progressSpinner>
+            } @else {
+              <div class="mt-2 space-y-2">
+                @for (row of assignments(); track $index; let i = $index) {
+                  <div class="flex gap-2 items-center flex-wrap">
+                    <p-select
+                      [options]="degreeProgramsAvailableForRow(i)"
+                      optionLabel="name"
+                      optionValue="degreeProgramId"
+                      [ngModel]="assignments()[i].degreeProgramId"
+                      [ngModelOptions]="{ standalone: true }"
+                      placeholder="Degree program"
+                      (onChange)="setAssignmentProgram(i, $event.value); onProgramChange(i)"
+                      styleClass="flex-1 min-w-[180px]"
+                    />
+                    <p-select
+                      [options]="specializationsForProgram(assignments()[i].degreeProgramId)"
+                      optionLabel="name"
+                      optionValue="degreeProgramSpecializationId"
+                      [ngModel]="assignments()[i].degreeProgramSpecializationId"
+                      [ngModelOptions]="{ standalone: true }"
+                      placeholder="Specialization"
+                      (onChange)="setAssignmentSpecialization(i, $event.value)"
+                      [disabled]="!assignments()[i].degreeProgramId"
+                      styleClass="flex-1 min-w-[180px]"
+                    />
+                    <p-button type="button" icon="pi pi-trash" severity="secondary" [outlined]="true" (onClick)="removeAssignment(i)"></p-button>
+                  </div>
+                }
+                <p-button type="button" label="Add assignment" icon="pi pi-plus" severity="secondary" [outlined]="true" (onClick)="addAssignment()"></p-button>
+              </div>
+            }
+          </div>
+        </div>
+      }
+      @if (currentStepIndex() === 1) {
+        <div class="space-y-6">
+          <div>
+            <label class="text-xl">Duration</label>
+            @if (moduleVersionId && hasFeedback('durationFeedback')) {
+              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @if (feedback.durationFeedback) {
+                    <p>
+                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      {{ feedback.durationFeedback }}
+                    </p>
+                  }
+                }
+              </p-message>
+            }
+            <div class="mt-2">
+              <app-toggle-button-group
+                [options]="[
+                  { value: 'One Semester', label: 'One Semester' },
+                  { value: 'Two Semesters', label: 'Two Semesters' },
+                  { value: 'Three Semesters', label: 'Three Semesters' },
+                  { value: 'Four Semesters', label: 'Four Semesters' }
+                ]"
+                [required]="false"
+                formControlName="duration"
+              ></app-toggle-button-group>
+            </div>
+          </div>
+          <div>
+            <label class="text-xl">Repetition</label>
+            @if (moduleVersionId && hasFeedback('repetitionFeedback')) {
+              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @if (feedback.repetitionFeedback) {
+                    <p>
+                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      {{ feedback.repetitionFeedback }}
+                    </p>
+                  }
+                }
+              </p-message>
+            }
+            <div class="mt-2">
+              <app-toggle-button-group
+                [options]="[
+                  { value: 'End of Semester', label: 'End of Semester' },
+                  { value: 'Following Semester', label: 'Following Semester' },
+                  { value: 'End of Semester/Following Semester', label: 'End of Semester/Following Semester' }
+                ]"
+                [required]="false"
+                formControlName="repetitionEng"
+              ></app-toggle-button-group>
+            </div>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xl">Credits</label>
+              @if (moduleVersionId && hasFeedback('creditsFeedback')) {
+                <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                  @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                    @if (feedback.creditsFeedback) {
+                      <p>
+                        <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                        {{ feedback.creditsFeedback }}
+                      </p>
+                    }
+                  }
+                </p-message>
               }
-            }
-          </p-message>
-        }
-        <div class="mt-2">
-          <p-inputNumber formControlName="hoursTotal" placeholder="Total Hours" class="w-full" [style]="{ width: '100%' }"></p-inputNumber>
-        </div>
-      </div>
-
-      <div>
-        <label class="text-xl">Self-Study Hours</label>
-        @if (moduleVersionId && hasFeedback('hoursSelfStudyFeedback')) {
-          <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-            @for (feedback of feedbacks(); track feedback.feedbackRole) {
-              @if (feedback.hoursSelfStudyFeedback) {
-                <p>
-                  <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                  {{ feedback.hoursSelfStudyFeedback }}
-                </p>
+              <div class="mt-2">
+                <p-inputNumber formControlName="credits" placeholder="Credits" class="w-full" [style]="{ width: '100%' }"></p-inputNumber>
+              </div>
+            </div>
+            <div>
+              <label class="text-xl">Total Hours</label>
+              @if (moduleVersionId && hasFeedback('hoursTotalFeedback')) {
+                <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                  @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                    @if (feedback.hoursTotalFeedback) {
+                      <p>
+                        <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                        {{ feedback.hoursTotalFeedback }}
+                      </p>
+                    }
+                  }
+                </p-message>
               }
-            }
-          </p-message>
-        }
-        <div class="mt-2">
-          <p-inputNumber formControlName="hoursSelfStudy" placeholder="Self-Study Hours" class="w-full" [style]="{ width: '100%' }"></p-inputNumber>
-        </div>
-      </div>
-
-      <div>
-        <label class="text-xl">Presence Hours</label>
-        @if (moduleVersionId && hasFeedback('hoursPresenceFeedback')) {
-          <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-            @for (feedback of feedbacks(); track feedback.feedbackRole) {
-              @if (feedback.hoursPresenceFeedback) {
-                <p>
-                  <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                  {{ feedback.hoursPresenceFeedback }}
-                </p>
+              <div class="mt-2">
+                <p-inputNumber formControlName="hoursTotal" placeholder="Total Hours" class="w-full" [style]="{ width: '100%' }"></p-inputNumber>
+              </div>
+            </div>
+            <div>
+              <label class="text-xl">Self-Study Hours</label>
+              @if (moduleVersionId && hasFeedback('hoursSelfStudyFeedback')) {
+                <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                  @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                    @if (feedback.hoursSelfStudyFeedback) {
+                      <p>
+                        <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                        {{ feedback.hoursSelfStudyFeedback }}
+                      </p>
+                    }
+                  }
+                </p-message>
               }
-            }
-          </p-message>
-        }
-        <div class="mt-2">
-          <p-inputNumber formControlName="hoursPresence" placeholder="Presence Hours" class="w-full" [style]="{ width: '100%' }"></p-inputNumber>
-        </div>
-      </div>
-    </div>
-
-    <div>
-      <label class="text-xl">Examination Achievements</label>
-      @if (moduleVersionId && hasFeedback('examinationAchievementsFeedback')) {
-        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks(); track feedback.feedbackRole) {
-            @if (feedback.examinationAchievementsFeedback) {
-              <p>
-                <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                {{ feedback.examinationAchievementsFeedback }}
-              </p>
-            }
-          }
-        </p-message>
-      }
-      <div class="mt-2">
-        <textarea pTextarea formControlName="examinationAchievementsEng" placeholder="How is the students performance evaluated?" rows="4" fluid [autoResize]="true"></textarea>
-      </div>
-      <div class="flex justify-between mt-2">
-        <p-button type="button" severity="secondary" [outlined]="true" size="small" (onClick)="togglePromptField('examination')">
-          {{ showPrompt['examination'] ? 'Hide Prompt' : 'Customize Prompt' }}
-        </p-button>
-        <p-button type="button" severity="contrast" size="small" styleClass="min-w-28" (onClick)="generateExaminationAchievements()" [disabled]="loading()">
-          Generate Examination Achievements
-        </p-button>
-      </div>
-      @if (showPrompt['examination']) {
-        <div class="mt-2 mb-2">
-          <textarea
-            pTextarea
-            [formControlName]="'examinationAchievementsPromptEng'"
-            placeholder="Enter additional prompt text for examination achievements generation"
-            rows="2"
-            fluid
-            [autoResize]="true"
-          ></textarea>
+              <div class="mt-2">
+                <p-inputNumber formControlName="hoursSelfStudy" placeholder="Self-Study Hours" class="w-full" [style]="{ width: '100%' }"></p-inputNumber>
+              </div>
+            </div>
+            <div>
+              <label class="text-xl">Presence Hours</label>
+              @if (moduleVersionId && hasFeedback('hoursPresenceFeedback')) {
+                <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                  @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                    @if (feedback.hoursPresenceFeedback) {
+                      <p>
+                        <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                        {{ feedback.hoursPresenceFeedback }}
+                      </p>
+                    }
+                  }
+                </p-message>
+              }
+              <div class="mt-2">
+                <p-inputNumber formControlName="hoursPresence" placeholder="Presence Hours" class="w-full" [style]="{ width: '100%' }"></p-inputNumber>
+              </div>
+            </div>
+          </div>
         </div>
       }
-    </div>
-
-    <div>
-      <label class="text-xl">Recommended Prerequisites</label>
-      @if (moduleVersionId && hasFeedback('recommendedPrerequisitesFeedback')) {
-        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks(); track feedback.feedbackRole) {
-            @if (feedback.recommendedPrerequisitesFeedback) {
-              <p>
-                <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                {{ feedback.recommendedPrerequisitesFeedback }}
-              </p>
+      @if (currentStepIndex() === 2) {
+        <div class="space-y-6">
+          <div>
+            <label class="text-xl">Examination Achievements</label>
+            @if (moduleVersionId && hasFeedback('examinationAchievementsFeedback')) {
+              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @if (feedback.examinationAchievementsFeedback) {
+                    <p>
+                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      {{ feedback.examinationAchievementsFeedback }}
+                    </p>
+                  }
+                }
+              </p-message>
             }
-          }
-        </p-message>
-      }
-      <div class="mt-2">
-        <textarea pTextarea formControlName="recommendedPrerequisitesEng" placeholder="What are participants expected to know?" rows="4" fluid [autoResize]="true"></textarea>
-      </div>
-    </div>
-
-    <div>
-      <label class="text-xl">Module Content</label>
-      @if (moduleVersionId && hasFeedback('contentFeedback')) {
-        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks(); track feedback.feedbackRole) {
-            @if (feedback.contentFeedback) {
-              <p>
-                <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                {{ feedback.contentFeedback }}
-              </p>
+            <div class="mt-2">
+              <textarea
+                pTextarea
+                formControlName="examinationAchievementsEng"
+                placeholder="How is the students performance evaluated?"
+                rows="4"
+                fluid
+                [autoResize]="true"
+              ></textarea>
+            </div>
+            <div class="flex justify-between mt-2">
+              <p-button type="button" severity="secondary" [outlined]="true" size="small" (onClick)="togglePromptField('examination')">
+                {{ showPrompt['examination'] ? 'Hide Prompt' : 'Customize Prompt' }}
+              </p-button>
+              <p-button type="button" severity="contrast" size="small" styleClass="min-w-28" (onClick)="generateExaminationAchievements()" [disabled]="loading()">
+                Generate Examination Achievements
+              </p-button>
+            </div>
+            @if (showPrompt['examination']) {
+              <div class="mt-2 mb-2">
+                <textarea
+                  pTextarea
+                  [formControlName]="'examinationAchievementsPromptEng'"
+                  placeholder="Enter additional prompt text for examination achievements generation"
+                  rows="2"
+                  fluid
+                  [autoResize]="true"
+                ></textarea>
+              </div>
             }
-          }
-        </p-message>
-      }
-      <div class="mt-2">
-        <textarea pTextarea formControlName="contentEng" placeholder="What is the module about?" rows="4" fluid [autoResize]="true"></textarea>
-      </div>
-      <div class="flex justify-between mt-2">
-        <p-button type="button" severity="secondary" [outlined]="true" size="small" (onClick)="togglePromptField('content')">
-          {{ showPrompt['content'] ? 'Hide Prompt' : 'Customize Prompt' }}
-        </p-button>
-        <p-button type="button" severity="contrast" size="small" (onClick)="generateContent()" [disabled]="loading()">Generate Content</p-button>
-      </div>
-      @if (showPrompt['content']) {
-        <div class="mt-2">
-          <textarea
-            pTextarea
-            [formControlName]="'contentPromptEng'"
-            placeholder="Enter additional prompt text for content generation"
-            rows="2"
-            fluid
-            [autoResize]="true"
-          ></textarea>
+          </div>
+          <div>
+            <label class="text-xl">Recommended Prerequisites</label>
+            @if (moduleVersionId && hasFeedback('recommendedPrerequisitesFeedback')) {
+              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @if (feedback.recommendedPrerequisitesFeedback) {
+                    <p>
+                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      {{ feedback.recommendedPrerequisitesFeedback }}
+                    </p>
+                  }
+                }
+              </p-message>
+            }
+            <div class="mt-2">
+              <textarea pTextarea formControlName="recommendedPrerequisitesEng" placeholder="What are participants expected to know?" rows="4" fluid [autoResize]="true"></textarea>
+            </div>
+          </div>
         </div>
       }
-    </div>
-
-    <div>
-      <label class="text-xl">Learning Outcomes</label>
-      @if (moduleVersionId && hasFeedback('learningOutcomesFeedback')) {
-        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks(); track feedback.feedbackRole) {
-            @if (feedback.learningOutcomesFeedback) {
-              <p>
-                <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                {{ feedback.learningOutcomesFeedback }}
-              </p>
+      @if (currentStepIndex() === 3) {
+        <div class="space-y-6">
+          <div>
+            <label class="text-xl">Module Content</label>
+            @if (moduleVersionId && hasFeedback('contentFeedback')) {
+              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @if (feedback.contentFeedback) {
+                    <p>
+                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      {{ feedback.contentFeedback }}
+                    </p>
+                  }
+                }
+              </p-message>
             }
-          }
-        </p-message>
-      }
-      <div class="mt-2">
-        <textarea pTextarea formControlName="learningOutcomesEng" placeholder="What will the participants learn?" rows="4" fluid [autoResize]="true"></textarea>
-      </div>
-      <div class="flex justify-between mt-2">
-        <p-button type="button" severity="secondary" [outlined]="true" size="small" (onClick)="togglePromptField('learning')">
-          {{ showPrompt['learning'] ? 'Hide Prompt' : 'Customize Prompt' }}
-        </p-button>
-        <p-button type="button" severity="contrast" size="small" (onClick)="generateLearningOutcomes()" [disabled]="loading()">Generate Learning Outcomes</p-button>
-      </div>
-      @if (showPrompt['learning']) {
-        <div class="mt-2">
-          <textarea
-            pTextarea
-            [formControlName]="'learningOutcomesPromptEng'"
-            placeholder="Enter additional prompt text for learning outcomes generation"
-            rows="2"
-            fluid
-            [autoResize]="true"
-          ></textarea>
+            <div class="mt-2">
+              <textarea pTextarea formControlName="contentEng" placeholder="What is the module about?" rows="4" fluid [autoResize]="true"></textarea>
+            </div>
+            <div class="flex justify-between mt-2">
+              <p-button type="button" severity="secondary" [outlined]="true" size="small" (onClick)="togglePromptField('content')">
+                {{ showPrompt['content'] ? 'Hide Prompt' : 'Customize Prompt' }}
+              </p-button>
+              <p-button type="button" severity="contrast" size="small" (onClick)="generateContent()" [disabled]="loading()">Generate Content</p-button>
+            </div>
+            @if (showPrompt['content']) {
+              <div class="mt-2">
+                <textarea
+                  pTextarea
+                  [formControlName]="'contentPromptEng'"
+                  placeholder="Enter additional prompt text for content generation"
+                  rows="2"
+                  fluid
+                  [autoResize]="true"
+                ></textarea>
+              </div>
+            }
+          </div>
+          <div>
+            <label class="text-xl">Learning Outcomes</label>
+            @if (moduleVersionId && hasFeedback('learningOutcomesFeedback')) {
+              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @if (feedback.learningOutcomesFeedback) {
+                    <p>
+                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      {{ feedback.learningOutcomesFeedback }}
+                    </p>
+                  }
+                }
+              </p-message>
+            }
+            <div class="mt-2">
+              <textarea pTextarea formControlName="learningOutcomesEng" placeholder="What will the participants learn?" rows="4" fluid [autoResize]="true"></textarea>
+            </div>
+            <div class="flex justify-between mt-2">
+              <p-button type="button" severity="secondary" [outlined]="true" size="small" (onClick)="togglePromptField('learning')">
+                {{ showPrompt['learning'] ? 'Hide Prompt' : 'Customize Prompt' }}
+              </p-button>
+              <p-button type="button" severity="contrast" size="small" (onClick)="generateLearningOutcomes()" [disabled]="loading()">Generate Learning Outcomes</p-button>
+            </div>
+            @if (showPrompt['learning']) {
+              <div class="mt-2">
+                <textarea
+                  pTextarea
+                  [formControlName]="'learningOutcomesPromptEng'"
+                  placeholder="Enter additional prompt text for learning outcomes generation"
+                  rows="2"
+                  fluid
+                  [autoResize]="true"
+                ></textarea>
+              </div>
+            }
+          </div>
+          <div>
+            <label class="text-xl">Teaching Methods</label>
+            @if (moduleVersionId && hasFeedback('teachingMethodsFeedback')) {
+              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @if (feedback.teachingMethodsFeedback) {
+                    <p>
+                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      {{ feedback.teachingMethodsFeedback }}
+                    </p>
+                  }
+                }
+              </p-message>
+            }
+            <div class="mt-2">
+              <textarea pTextarea formControlName="teachingMethodsEng" placeholder="How will the content be taught?" rows="4" fluid [autoResize]="true"></textarea>
+            </div>
+            <div class="flex justify-between mt-2">
+              <p-button type="button" severity="secondary" [outlined]="true" size="small" (onClick)="togglePromptField('teaching')">
+                {{ showPrompt['teaching'] ? 'Hide Prompt' : 'Customize Prompt' }}
+              </p-button>
+              <p-button type="button" severity="contrast" size="small" (onClick)="generateTeachingMethods()" [disabled]="loading()">Generate Teaching Methods</p-button>
+            </div>
+            @if (showPrompt['teaching']) {
+              <div class="mt-2">
+                <textarea
+                  pTextarea
+                  [formControlName]="'teachingMethodsPromptEng'"
+                  placeholder="Enter additional prompt text for teaching methods generation"
+                  rows="2"
+                  fluid
+                  [autoResize]="true"
+                ></textarea>
+              </div>
+            }
+          </div>
         </div>
       }
-    </div>
-
-    <div>
-      <label class="text-xl">Teaching Methods</label>
-      @if (moduleVersionId && hasFeedback('teachingMethodsFeedback')) {
-        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks(); track feedback.feedbackRole) {
-            @if (feedback.teachingMethodsFeedback) {
-              <p>
-                <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                {{ feedback.teachingMethodsFeedback }}
-              </p>
+      @if (currentStepIndex() === 4) {
+        <div class="space-y-6">
+          <div>
+            <label class="text-xl">Media used</label>
+            @if (moduleVersionId && hasFeedback('mediaFeedback')) {
+              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @if (feedback.mediaFeedback) {
+                    <p>
+                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      {{ feedback.mediaFeedback }}
+                    </p>
+                  }
+                }
+              </p-message>
             }
-          }
-        </p-message>
-      }
-      <div class="mt-2">
-        <textarea pTextarea formControlName="teachingMethodsEng" placeholder="How will the content be taught?" rows="4" fluid [autoResize]="true"></textarea>
-      </div>
-      <div class="flex justify-between mt-2">
-        <p-button type="button" severity="secondary" [outlined]="true" size="small" (onClick)="togglePromptField('teaching')">
-          {{ showPrompt['teaching'] ? 'Hide Prompt' : 'Customize Prompt' }}
-        </p-button>
-        <p-button type="button" severity="contrast" size="small" (onClick)="generateTeachingMethods()" [disabled]="loading()">Generate Teaching Methods</p-button>
-      </div>
-      @if (showPrompt['teaching']) {
-        <div class="mt-2">
-          <textarea
-            pTextarea
-            [formControlName]="'teachingMethodsPromptEng'"
-            placeholder="Enter additional prompt text for teaching methods generation"
-            rows="2"
-            fluid
-            [autoResize]="true"
-          ></textarea>
+            <div class="mt-2">
+              <textarea pTextarea formControlName="mediaEng" placeholder="What media will be used?" rows="4" fluid [autoResize]="true"></textarea>
+            </div>
+          </div>
+
+          <div>
+            <label class="text-xl">Literature</label>
+            @if (moduleVersionId && hasFeedback('literatureFeedback')) {
+              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @if (feedback.literatureFeedback) {
+                    <p>
+                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      {{ feedback.literatureFeedback }}
+                    </p>
+                  }
+                }
+              </p-message>
+            }
+            <div class="mt-2">
+              <textarea pTextarea formControlName="literatureEng" placeholder="What literature is reccommended?" rows="4" fluid [autoResize]="true"></textarea>
+            </div>
+          </div>
+
+          <div>
+            <label class="text-xl">Responsibles</label>
+            @if (moduleVersionId && hasFeedback('responsiblesFeedback')) {
+              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @if (feedback.responsiblesFeedback) {
+                    <p>
+                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      {{ feedback.responsiblesFeedback }}
+                    </p>
+                  }
+                }
+              </p-message>
+            }
+            <div class="mt-2">
+              <textarea pTextarea formControlName="responsiblesEng" placeholder="Who is responsible for the module?" rows="4" fluid [autoResize]="true"></textarea>
+            </div>
+          </div>
+
+          <div>
+            <label class="text-xl">Lecturer</label>
+            @if (moduleVersionId && hasFeedback('lvSwsLecturerFeedback')) {
+              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
+                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @if (feedback.lvSwsLecturerFeedback) {
+                    <p>
+                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      {{ feedback.lvSwsLecturerFeedback }}
+                    </p>
+                  }
+                }
+              </p-message>
+            }
+            <div class="mt-2">
+              <textarea pTextarea formControlName="lvSwsLecturerEng" placeholder="Who will hold the lectures?" rows="4" fluid [autoResize]="true"></textarea>
+            </div>
+          </div>
         </div>
       }
-    </div>
 
-    <div>
-      <label class="text-xl">Media used</label>
-      @if (moduleVersionId && hasFeedback('mediaFeedback')) {
-        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks(); track feedback.feedbackRole) {
-            @if (feedback.mediaFeedback) {
-              <p>
-                <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                {{ feedback.mediaFeedback }}
-              </p>
-            }
+      <div class="flex justify-between flex-wrap gap-2 pt-4">
+        <p-button (onClick)="goBack()" severity="secondary" [outlined]="true">Cancel</p-button>
+        <div class="flex gap-2">
+          @if (currentStepIndex() > 0) {
+            <p-button type="button" severity="secondary" (onClick)="goToStep(currentStepIndex() - 1)">Previous</p-button>
           }
-        </p-message>
-      }
-      <div class="mt-2">
-        <textarea pTextarea formControlName="mediaEng" placeholder="What media will be used?" rows="4" fluid [autoResize]="true"></textarea>
-      </div>
-    </div>
-
-    <div>
-      <label class="text-xl">Literature</label>
-      @if (moduleVersionId && hasFeedback('literatureFeedback')) {
-        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks(); track feedback.feedbackRole) {
-            @if (feedback.literatureFeedback) {
-              <p>
-                <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                {{ feedback.literatureFeedback }}
-              </p>
-            }
+          @if (isCreateMode()) {
+            <p-button
+              type="button"
+              type="submit"
+              severity="contrast"
+              label="Create proposal &amp; continue"
+              icon="pi pi-arrow-right"
+              [loading]="loading()"
+              [disabled]="loading() || !proposalForm.get('titleEng')?.value?.trim()"
+            ></p-button>
           }
-        </p-message>
-      }
-      <div class="mt-2">
-        <textarea pTextarea formControlName="literatureEng" placeholder="What literature is reccommended?" rows="4" fluid [autoResize]="true"></textarea>
-      </div>
-    </div>
-
-    <div>
-      <label class="text-xl">Responsibles</label>
-      @if (moduleVersionId && hasFeedback('responsiblesFeedback')) {
-        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks(); track feedback.feedbackRole) {
-            @if (feedback.responsiblesFeedback) {
-              <p>
-                <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                {{ feedback.responsiblesFeedback }}
-              </p>
-            }
+          @if (!isCreateMode() && currentStepIndex() < MODULE_EDIT_STEPS.length - 1) {
+            <p-button type="button" severity="contrast" (onClick)="goToStep(currentStepIndex() + 1)">Next</p-button>
           }
-        </p-message>
-      }
-      <div class="mt-2">
-        <textarea pTextarea formControlName="responsiblesEng" placeholder="Who is responsible for the module?" rows="4" fluid [autoResize]="true"></textarea>
-      </div>
-    </div>
-
-    <div>
-      <label class="text-xl">Lecturer</label>
-      @if (moduleVersionId && hasFeedback('lvSwsLecturerFeedback')) {
-        <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-          @for (feedback of feedbacks(); track feedback.feedbackRole) {
-            @if (feedback.lvSwsLecturerFeedback) {
-              <p>
-                <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
-                {{ feedback.lvSwsLecturerFeedback }}
-              </p>
-            }
+          @if (!isCreateMode() && currentStepIndex() === MODULE_EDIT_STEPS.length - 1 && canSubmitForFeedback()) {
+            <p-button type="button" severity="success" (onClick)="submitForFeedback()" [disabled]="loading()">Submit for feedback</p-button>
           }
-        </p-message>
-      }
-      <div class="mt-2">
-        <textarea pTextarea formControlName="lvSwsLecturerEng" placeholder="Who will hold the lectures?" rows="4" fluid [autoResize]="true"></textarea>
+          @if (!isCreateMode()) {
+            <p-button type="submit" severity="contrast" [disabled]="loading()">
+              {{ loading() ? 'Saving...' : 'Update proposal' }}
+            </p-button>
+          }
+        </div>
       </div>
-    </div>
 
-    <div class="flex justify-between">
-      <p-button (onClick)="goBack()" severity="secondary" [outlined]="true">Cancel</p-button>
-      <p-button type="submit" severity="contrast" [disabled]="proposalForm.invalid || loading()">
-        {{ loading() ? 'Saving...' : moduleVersionDto() ? 'Update Proposal' : 'Create Proposal' }}
-      </p-button>
-    </div>
-
-    @if (error()) {
-      <p-message severity="error" icon="pi pi-exclamation-circle">{{ error() }}</p-message>
-    }
-  </form>
+      @if (error()) {
+        <p-message severity="error" icon="pi pi-exclamation-circle">{{ error() }}</p-message>
+      }
+    </form>
+  </div>
 </div>

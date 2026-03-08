@@ -1,7 +1,6 @@
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-
 import { Component, inject, signal } from '@angular/core';
-import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, FeedbackDTO, GiveFeedbackDTO, ModuleVersionControllerService } from '../../core/modules/openapi';
+import { FeedbackControllerService, ModuleVersionViewDTO, FeedbackDTO, GiveFeedbackDTO, ModuleVersionControllerService } from '../../core/modules/openapi';
 import { BreadcrumbLabelsService } from '../../components/breadcrumb/breadcrumb-labels.service';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -28,7 +27,7 @@ export class FeedbackViewComponent {
   private breadcrumbLabels = inject(BreadcrumbLabelsService);
   feedbackForm: FormGroup;
   feedbackId: number | null = null;
-  moduleVersion = signal<ModuleVersionUpdateRequestDTO | null>(null);
+  moduleVersion = signal<ModuleVersionViewDTO | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
   rejectionReason: string = '';
@@ -39,7 +38,7 @@ export class FeedbackViewComponent {
   fieldStates: Record<string, { accepted: boolean | null }> = {};
   fieldFeedback: Record<string, string> = {};
 
-  getModuleVersionProperty(key: keyof ModuleVersionUpdateRequestDTO): string | undefined {
+  getModuleVersionProperty(key: keyof ModuleVersionViewDTO): string | undefined {
     const mv = this.moduleVersion();
     return mv ? mv[key]?.toString() : undefined;
   }
@@ -123,7 +122,7 @@ export class FeedbackViewComponent {
     this.loading.set(true);
     if (feedbackId) {
       this.feedbackService.getModuleVersionOfFeedback(feedbackId).subscribe({
-        next: (response: ModuleVersionUpdateRequestDTO) => {
+        next: (response: ModuleVersionViewDTO) => {
           this.moduleVersion.set(response);
           this.breadcrumbLabels.feedbackLabel.set(response?.titleEng ?? null);
         },

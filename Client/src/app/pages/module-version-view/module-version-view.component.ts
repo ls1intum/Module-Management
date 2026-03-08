@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { RouterModule, ActivatedRoute } from '@angular/router';
-import { ModuleVersionControllerService, ModuleVersionViewDTO, ModuleVersion, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
+import { ModuleVersionControllerService, ModuleVersionViewDTO, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
 import { BreadcrumbLabelsService } from '../../components/breadcrumb/breadcrumb-labels.service';
 import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
 import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
@@ -49,7 +49,7 @@ export class ModuleVersionViewComponent {
   moduleVersionId: number | null = null;
   loading = signal(true);
   moduleVersionDto = signal<ModuleVersionViewDTO | null>(null);
-  moduleVersionStatus = ModuleVersion.StatusEnum;
+  moduleVersionStatus = ModuleVersionViewDTO.StatusEnum;
   error = signal<string | null>(null);
 
   moduleFields: ModuleField[] = [

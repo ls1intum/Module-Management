@@ -9,6 +9,7 @@ import modulemanagement.ls1.models.ModuleVersion;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class ModuleVersionViewDTO {
@@ -21,10 +22,18 @@ public class ModuleVersionViewDTO {
     private String bulletPoints;
 
     private String titleEng;
+    private String titleDe;
     private String levelEng;
     private Language languageEng;
     private String frequencyEng;
     private Integer credits;
+    private Integer hoursLecture;
+    private Integer hoursExercise;
+    private Integer hoursPractical;
+    private Integer hoursSeminar;
+    private String firstSemesterAvailable;
+    private String successorModuleName;
+    private List<ModuleDegreeProgramAssignmentDTO> degreeProgramAssignments = new ArrayList<>();
     private String duration;
     private Integer hoursTotal;
     private Integer hoursSelfStudy;
@@ -55,10 +64,28 @@ public class ModuleVersionViewDTO {
         dto.status = moduleVersion.getStatus();
         dto.bulletPoints = moduleVersion.getBulletPoints();
         dto.titleEng = moduleVersion.getTitleEng();
+        dto.titleDe = moduleVersion.getTitleDe();
         dto.levelEng = moduleVersion.getLevelEng();
         dto.languageEng = moduleVersion.getLanguageEng();
         dto.frequencyEng = moduleVersion.getFrequencyEng();
         dto.credits = moduleVersion.getCredits();
+        dto.hoursLecture = moduleVersion.getHoursLecture();
+        dto.hoursExercise = moduleVersion.getHoursExercise();
+        dto.hoursPractical = moduleVersion.getHoursPractical();
+        dto.hoursSeminar = moduleVersion.getHoursSeminar();
+        dto.firstSemesterAvailable = moduleVersion.getFirstSemesterAvailable();
+        dto.successorModuleName = moduleVersion.getSuccessorModuleName();
+        if (moduleVersion.getDegreeProgramAssignments() != null) {
+            dto.degreeProgramAssignments = moduleVersion.getDegreeProgramAssignments().stream()
+                    .map(a -> {
+                        ModuleDegreeProgramAssignmentDTO item = new ModuleDegreeProgramAssignmentDTO();
+                        item.setDegreeProgramId(a.getDegreeProgram().getDegreeProgramId());
+                        item.setDegreeProgramSpecializationId(
+                                a.getDegreeProgramSpecialization().getDegreeProgramSpecializationId());
+                        return item;
+                    })
+                    .collect(Collectors.toList());
+        }
         dto.duration = moduleVersion.getDuration();
         dto.hoursTotal = moduleVersion.getHoursTotal();
         dto.hoursSelfStudy = moduleVersion.getHoursSelfStudy();

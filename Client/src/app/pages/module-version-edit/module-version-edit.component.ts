@@ -1,11 +1,17 @@
 import { Component, inject } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProposalBaseComponent } from '../../components/create-edit-base/create-edit-base.component';
 import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
-import { ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
+import { ModuleEditStepperComponent } from '../../components/module-edit-stepper/module-edit-stepper.component';
+import {
+  ModuleDegreeProgramAssignmentDTO,
+  ModuleVersionUpdateRequestDTO,
+  ModuleVersionViewDTO,
+  ModuleVersionViewFeedbackDTO
+} from '../../core/modules/openapi';
 import { BreadcrumbLabelsService } from '../../components/breadcrumb/breadcrumb-labels.service';
 import { ToggleButtonGroupComponent } from '../../components/toggle-button-group/toggle-button-group.component';
 import { ButtonModule } from 'primeng/button';
@@ -13,23 +19,30 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { MessageModule } from 'primeng/message';
+import { SelectModule } from 'primeng/select';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-module-version-edit',
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    FormsModule,
     CommonModule,
     RouterModule,
     FeedbackDepartmentPipe,
     ToggleButtonGroupComponent,
+    ModuleEditStepperComponent,
     ButtonModule,
     InputTextModule,
     TextareaModule,
     InputNumberModule,
-    MessageModule
+    MessageModule,
+    SelectModule,
+    ProgressSpinnerModule
   ],
-  templateUrl: '../../components/create-edit-base/create-edit-base.component.html'
+  templateUrl: '../../components/create-edit-base/create-edit-base.component.html',
+  styleUrl: '../../components/create-edit-base/create-edit-base-layout.css'
 })
 export class ModuleVersionEditComponent extends ProposalBaseComponent {
   override moduleVersionId: number;
@@ -40,6 +53,7 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
   constructor(route: ActivatedRoute) {
     super();
     this.moduleVersionId = Number(route.snapshot.paramMap.get('versionId'));
+    this.loadDegreePrograms();
     this.fetchModuleVersion(this.moduleVersionId);
     this.fetchPreviousModuleVersionFeedback(this.moduleVersionId);
   }
@@ -47,7 +61,7 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
   fetchModuleVersion(moduleVersionId: number) {
     this.moduleLoading = true;
     this.moduleVersionService.getModuleVersionUpdateDtoFromId(moduleVersionId).subscribe({
-      next: (response: ModuleVersionUpdateRequestDTO) => {
+      next: (response: ModuleVersionViewDTO) => {
         this.proposalForm.patchValue(response);
         this.moduleVersionDto.set(response);
         const version = response?.version;
@@ -74,30 +88,24 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
     });
   }
 
-  override async onSubmit() {
-    if (this.proposalForm.valid && this.moduleVersionId) {
-      this.loading.set(true);
-      this.error.set(null);
-
-      const proposalData: ModuleVersionUpdateRequestDTO = {
-        ...this.proposalForm.value,
-        moduleVersionId: this.moduleVersionId
-      };
-
-      this.moduleVersionService.updateModuleVersion(this.moduleVersionId, proposalData).subscribe({
-        next: (response: ModuleVersionUpdateResponseDTO) => {
-          this.proposalForm.reset();
-          this.router.navigate(['/proposals/view', response.proposalId], {
-            queryParams: { created: true }
-          });
-        },
-        error: (err: HttpErrorResponse) => {
-          console.error(err);
-          this.error.set(err.error);
-          this.loading.set(false);
-        },
-        complete: () => this.loading.set(false)
-      });
-    }
+  override onSubmit(): void {
+    if (this.moduleVersionId == null) return;
+    this.loading.set(true);
+    this.error.set(null);
+    const rawAssignments = this.assignments().filter((a) => a.degreeProgramId != null && a.degreeProgramSpecializationId != null);
+    const degreeProgramAssignments: ModuleDegreeProgramAssignmentDTO[] = rawAssignments.map((a) => ({
+      degreeProgramId: a.degreeProgramId!,
+      degreeProgramSpecializationId: a.degreeProgramSpecializationId!
+    }));
+    const payload: ModuleVersionUpdateRequestDTO = {
+      ...this.proposalForm.value,
+      moduleVersionId: this.moduleVersionId,
+      degreeProgramAssignments: degreeProgramAssignments.length > 0 ? degreeProgramAssignments : undefined
+    };
+    this.moduleVersionService.updateModuleVersion(this.moduleVersionId, payload).subscribe({
+      next: (response: ModuleVersionViewDTO) => this.moduleVersionDto.set(response),
+      error: (err: HttpErrorResponse) => this.error.set(err.error),
+      complete: () => this.loading.set(false)
+    });
   }
 }

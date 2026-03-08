@@ -1,0 +1,76 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0009-module-version-initial-and-assignments
+      author: system
+      changes:
+        - addColumn:
+            tableName: module_version
+            columns:
+              - column:
+                  name: title_de
+                  type: VARCHAR(500)
+              - column:
+                  name: hours_lecture
+                  type: INT
+              - column:
+                  name: hours_exercise
+                  type: INT
+              - column:
+                  name: hours_practical
+                  type: INT
+              - column:
+                  name: hours_seminar
+                  type: INT
+              - column:
+                  name: first_semester_available
+                  type: VARCHAR(100)
+              - column:
+                  name: successor_module_name
+                  type: VARCHAR(500)
+        - createTable:
+            tableName: module_version_degree_program_assignment
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: module_version_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: degree_program_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: degree_program_specialization_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: module_version_degree_program_assignment
+            columnNames: module_version_id, degree_program_id
+            constraintName: mv_dp_assign_unique_mv_program
+        - addForeignKeyConstraint:
+            baseTableName: module_version_degree_program_assignment
+            baseColumnNames: module_version_id
+            referencedTableName: module_version
+            referencedColumnNames: module_version_id
+            constraintName: mv_dp_assign_mv_fk
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: module_version_degree_program_assignment
+            baseColumnNames: degree_program_id
+            referencedTableName: degree_program
+            referencedColumnNames: degree_program_id
+            constraintName: mv_dp_assign_program_fk
+        - addForeignKeyConstraint:
+            baseTableName: module_version_degree_program_assignment
+            baseColumnNames: degree_program_specialization_id
+            referencedTableName: degree_program_specialization
+            referencedColumnNames: degree_program_specialization_id
+            constraintName: mv_dp_assign_spec_fk

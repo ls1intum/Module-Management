@@ -23,8 +23,6 @@ import { CompletionServiceResponseDTO } from '../model/completion-service-respon
 // @ts-ignore
 import { ModuleVersionUpdateRequestDTO } from '../model/module-version-update-request-dto';
 // @ts-ignore
-import { ModuleVersionUpdateResponseDTO } from '../model/module-version-update-response-dto';
-// @ts-ignore
 import { ModuleVersionViewDTO } from '../model/module-version-view-dto';
 // @ts-ignore
 import { ModuleVersionViewFeedbackDTO } from '../model/module-version-view-feedback-dto';
@@ -517,9 +515,9 @@ export class ModuleVersionControllerService implements ModuleVersionControllerSe
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getModuleVersionUpdateDtoFromId(moduleVersionId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ModuleVersionUpdateResponseDTO>;
-    public getModuleVersionUpdateDtoFromId(moduleVersionId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ModuleVersionUpdateResponseDTO>>;
-    public getModuleVersionUpdateDtoFromId(moduleVersionId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ModuleVersionUpdateResponseDTO>>;
+    public getModuleVersionUpdateDtoFromId(moduleVersionId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ModuleVersionViewDTO>;
+    public getModuleVersionUpdateDtoFromId(moduleVersionId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ModuleVersionViewDTO>>;
+    public getModuleVersionUpdateDtoFromId(moduleVersionId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ModuleVersionViewDTO>>;
     public getModuleVersionUpdateDtoFromId(moduleVersionId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (moduleVersionId === null || moduleVersionId === undefined) {
             throw new Error('Required parameter moduleVersionId was null or undefined when calling getModuleVersionUpdateDtoFromId.');
@@ -562,7 +560,7 @@ export class ModuleVersionControllerService implements ModuleVersionControllerSe
         }
 
         let localVarPath = `/api/module-versions/${this.configuration.encodeParam({name: "moduleVersionId", value: moduleVersionId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
-        return this.httpClient.request<ModuleVersionUpdateResponseDTO>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ModuleVersionViewDTO>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -707,9 +705,9 @@ export class ModuleVersionControllerService implements ModuleVersionControllerSe
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateModuleVersion(moduleVersionId: number, moduleVersionUpdateRequestDTO: ModuleVersionUpdateRequestDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ModuleVersionUpdateResponseDTO>;
-    public updateModuleVersion(moduleVersionId: number, moduleVersionUpdateRequestDTO: ModuleVersionUpdateRequestDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ModuleVersionUpdateResponseDTO>>;
-    public updateModuleVersion(moduleVersionId: number, moduleVersionUpdateRequestDTO: ModuleVersionUpdateRequestDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ModuleVersionUpdateResponseDTO>>;
+    public updateModuleVersion(moduleVersionId: number, moduleVersionUpdateRequestDTO: ModuleVersionUpdateRequestDTO, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ModuleVersionViewDTO>;
+    public updateModuleVersion(moduleVersionId: number, moduleVersionUpdateRequestDTO: ModuleVersionUpdateRequestDTO, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ModuleVersionViewDTO>>;
+    public updateModuleVersion(moduleVersionId: number, moduleVersionUpdateRequestDTO: ModuleVersionUpdateRequestDTO, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ModuleVersionViewDTO>>;
     public updateModuleVersion(moduleVersionId: number, moduleVersionUpdateRequestDTO: ModuleVersionUpdateRequestDTO, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (moduleVersionId === null || moduleVersionId === undefined) {
             throw new Error('Required parameter moduleVersionId was null or undefined when calling updateModuleVersion.');
@@ -764,7 +762,7 @@ export class ModuleVersionControllerService implements ModuleVersionControllerSe
         }
 
         let localVarPath = `/api/module-versions/${this.configuration.encodeParam({name: "moduleVersionId", value: moduleVersionId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
-        return this.httpClient.request<ModuleVersionUpdateResponseDTO>('put', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ModuleVersionViewDTO>('put', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: moduleVersionUpdateRequestDTO,

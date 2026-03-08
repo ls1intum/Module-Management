@@ -25,7 +25,7 @@ import { FeedbackListItemDto } from '../model/feedback-list-item-dto';
 // @ts-ignore
 import { GiveFeedbackDTO } from '../model/give-feedback-dto';
 // @ts-ignore
-import { ModuleVersionUpdateRequestDTO } from '../model/module-version-update-request-dto';
+import { ModuleVersionViewDTO } from '../model/module-version-view-dto';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -280,9 +280,9 @@ export class FeedbackControllerService implements FeedbackControllerServiceInter
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getModuleVersionOfFeedback(feedbackId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ModuleVersionUpdateRequestDTO>;
-    public getModuleVersionOfFeedback(feedbackId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ModuleVersionUpdateRequestDTO>>;
-    public getModuleVersionOfFeedback(feedbackId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ModuleVersionUpdateRequestDTO>>;
+    public getModuleVersionOfFeedback(feedbackId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ModuleVersionViewDTO>;
+    public getModuleVersionOfFeedback(feedbackId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ModuleVersionViewDTO>>;
+    public getModuleVersionOfFeedback(feedbackId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ModuleVersionViewDTO>>;
     public getModuleVersionOfFeedback(feedbackId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (feedbackId === null || feedbackId === undefined) {
             throw new Error('Required parameter feedbackId was null or undefined when calling getModuleVersionOfFeedback.');
@@ -325,7 +325,7 @@ export class FeedbackControllerService implements FeedbackControllerServiceInter
         }
 
         let localVarPath = `/api/feedbacks/module-version-of-feedback/${this.configuration.encodeParam({name: "feedbackId", value: feedbackId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
-        return this.httpClient.request<ModuleVersionUpdateRequestDTO>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<ModuleVersionViewDTO>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

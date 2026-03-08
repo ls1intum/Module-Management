@@ -1,16 +1,19 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   CompletionServiceRequestDTO,
+  DegreeProgramDTO,
   ModuleVersionControllerService,
   ProposalControllerService,
-  ModuleVersionUpdateRequestDTO,
+  ModuleVersionViewDTO,
   CompletionServiceResponseDTO,
   ModuleVersionViewFeedbackDTO
 } from '../../core/modules/openapi';
+import { DegreeProgramsControllerService } from '../../core/modules/openapi/api/degree-programs-controller.service';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MODULE_EDIT_STEPS } from '../module-edit-stepper/module-edit-steps.config';
 
 @Component({
   template: ''
@@ -21,13 +24,61 @@ export abstract class ProposalBaseComponent {
   protected location = inject(Location);
   protected moduleVersionService = inject(ModuleVersionControllerService);
   protected proposalService = inject(ProposalControllerService);
+  protected degreeProgramsService = inject(DegreeProgramsControllerService);
+
+  readonly MODULE_EDIT_STEPS = MODULE_EDIT_STEPS;
 
   proposalForm: FormGroup;
   loading = signal(false);
+  loadingPrograms = signal(true);
   error = signal<string | null>(null);
-  moduleVersionDto = signal<ModuleVersionUpdateRequestDTO | null>(null);
+  moduleVersionDto = signal<ModuleVersionViewDTO | null>(null);
   moduleVersionId: number | null = null;
   feedbacks = signal<ModuleVersionViewFeedbackDTO[] | undefined>([]);
+
+  degreePrograms = signal<DegreeProgramDTO[]>([]);
+  assignments = signal<{ degreeProgramId: number | null; degreeProgramSpecializationId: number | null }[]>([]);
+
+  isCreateMode = computed(() => this.moduleVersionId == null);
+  currentStepIndex = signal(0);
+
+  stepCompleted = computed(() => {
+    const form = this.proposalForm;
+    return MODULE_EDIT_STEPS.map((step) => {
+      const required = step.requiredControlNames ?? [];
+      if (required.length === 0) return false;
+      return required.every((name) => {
+        const c = form.get(name);
+        return c && c.valid && c.value != null && c.value !== '';
+      });
+    });
+  });
+
+  moduleVersionStatus = computed(() => {
+    const dto = this.moduleVersionDto();
+    return dto && 'status' in dto ? (dto as ModuleVersionViewDTO).status : undefined;
+  });
+
+  currentVersionFeedbacks = computed(() => {
+    const dto = this.moduleVersionDto();
+    return dto && 'feedbacks' in dto ? (dto as ModuleVersionViewDTO).feedbacks ?? [] : [];
+  });
+
+  canSubmitForFeedback = computed(() => {
+    const dto = this.moduleVersionDto();
+    const status = dto && 'status' in dto ? (dto as ModuleVersionViewDTO).status : null;
+    return status === 'PENDING_SUBMISSION' && this.proposalForm.valid;
+  });
+
+  private _syncAssignmentsFromDto = effect(() => {
+    const dto = this.moduleVersionDto();
+    if (dto && 'degreeProgramAssignments' in dto && Array.isArray((dto as ModuleVersionViewDTO).degreeProgramAssignments)) {
+      const list = (dto as ModuleVersionViewDTO).degreeProgramAssignments ?? [];
+      this.assignments.set(
+        list.map((a) => ({ degreeProgramId: a.degreeProgramId ?? null, degreeProgramSpecializationId: a.degreeProgramSpecializationId ?? null }))
+      );
+    }
+  });
 
   showPrompt: { [key: string]: boolean } = {
     examination: false,
@@ -55,11 +106,18 @@ export abstract class ProposalBaseComponent {
     this.proposalForm = this.formBuilder.group({
       bulletPoints: [''],
       titleEng: ['', Validators.required],
+      titleDe: [''],
       levelEng: [''],
       languageEng: ['English'],
       repetitionEng: [''],
       frequencyEng: [''],
       credits: [null],
+      hoursLecture: [null],
+      hoursExercise: [null],
+      hoursPractical: [null],
+      hoursSeminar: [null],
+      firstSemesterAvailable: [''],
+      successorModuleName: [''],
       duration: [''],
       hoursTotal: [null],
       hoursSelfStudy: [null],
@@ -77,6 +135,71 @@ export abstract class ProposalBaseComponent {
       literatureEng: [''],
       responsiblesEng: [''],
       lvSwsLecturerEng: ['']
+    });
+  }
+
+  goToStep(index: number) {
+    this.currentStepIndex.set(index);
+  }
+
+  loadDegreePrograms() {
+    this.loadingPrograms.set(true);
+    this.degreeProgramsService.getDegreeProgramsWithSpecializations().subscribe({
+      next: (list) => this.degreePrograms.set(list ?? []),
+      error: () => this.degreePrograms.set([]),
+      complete: () => this.loadingPrograms.set(false)
+    });
+  }
+
+  addAssignment() {
+    this.assignments.update((a) => [...a, { degreeProgramId: null, degreeProgramSpecializationId: null }]);
+  }
+
+  removeAssignment(index: number) {
+    this.assignments.update((a) => a.filter((_, i) => i !== index));
+  }
+
+  setAssignmentProgram(index: number, degreeProgramId: number | null) {
+    this.assignments.update((a) => {
+      const next = [...a];
+      next[index] = { ...next[index], degreeProgramId, degreeProgramSpecializationId: null };
+      return next;
+    });
+  }
+
+  setAssignmentSpecialization(index: number, degreeProgramSpecializationId: number | null) {
+    this.assignments.update((a) => {
+      const next = [...a];
+      next[index] = { ...next[index], degreeProgramSpecializationId };
+      return next;
+    });
+  }
+
+  degreeProgramsAvailableForRow(rowIndex: number): DegreeProgramDTO[] {
+    const selected = this.assignments().map((a) => a.degreeProgramId).filter(Boolean) as number[];
+    return this.degreePrograms().filter((p) => {
+      const current = this.assignments()[rowIndex]?.degreeProgramId;
+      return !selected.includes(p.degreeProgramId) || p.degreeProgramId === current;
+    });
+  }
+
+  specializationsForProgram(degreeProgramId: number | null) {
+    if (!degreeProgramId) return [];
+    const program = this.degreePrograms().find((p) => p.degreeProgramId === degreeProgramId);
+    return program?.degreeProgramSpecializations ?? [];
+  }
+
+  onProgramChange(rowIndex: number) {
+    this.setAssignmentSpecialization(rowIndex, null);
+  }
+
+  submitForFeedback(): void {
+    const dto = this.moduleVersionDto();
+    const proposalId = dto && 'proposalId' in dto ? (dto as ModuleVersionViewDTO).proposalId : null;
+    if (proposalId == null) return;
+    this.proposalService.submitProposal(proposalId).subscribe({
+      next: () => this.router.navigate(['/proposals/view', proposalId]),
+      error: (err: HttpErrorResponse) => this.error.set(err.error?.message ?? err.error ?? 'Failed to submit')
     });
   }
 

@@ -1,7 +1,6 @@
 package modulemanagement.ls1.controllers;
 
 import modulemanagement.ls1.dtos.*;
-import modulemanagement.ls1.models.Proposal;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.services.ProposalService;
 import modulemanagement.ls1.shared.CurrentUser;
@@ -30,11 +29,11 @@ public class ProposalController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('PROFESSOR')")
-    public ResponseEntity<Proposal> createProposal(@CurrentUser User user,
+    public ResponseEntity<ProposalViewDTO> createProposal(@CurrentUser User user,
             @Valid @RequestBody ProposalRequestDTO request) {
         log.info("createProposal invoked");
-        Proposal proposal = proposalService.createProposalFromRequest(user, request);
-        return ResponseEntity.ok(proposal);
+        ProposalViewDTO proposalView = proposalService.createProposalFromRequest(user, request);
+        return ResponseEntity.ok(proposalView);
     }
 
     @PostMapping(value = "/submit/{proposalId}")

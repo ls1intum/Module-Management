@@ -1,0 +1,84 @@
+databaseChangeLog:
+  # Seed areas of specialization (responsible_user_id = admin user from 0006)
+  - changeSet:
+      id: 0011-seed-specializations
+      author: system
+      changes:
+        - insert:
+            tableName: degree_program_specialization
+            columns:
+              - column: { name: name, value: "Engineering Software-intensive Systems (SE)" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program_specialization
+            columns:
+              - column: { name: name, value: "Databases and Information Systems (DBI)" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program_specialization
+            columns:
+              - column: { name: name, value: "Robotics (ROB)" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program_specialization
+            columns:
+              - column: { name: name, value: "Machine Learning and Analytics (MLA)" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program_specialization
+            columns:
+              - column: { name: name, value: "Computer Graphics and Vision (CGV)" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program_specialization
+            columns:
+              - column: { name: name, value: "Computer Architecture, Computer Networks and Distributed Systems (RRV)" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program_specialization
+            columns:
+              - column: { name: name, value: "Security and Privacy (SP)" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program_specialization
+            columns:
+              - column: { name: name, value: "Algorithms (ALG)" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program_specialization
+            columns:
+              - column: { name: name, value: "Scientific Computing and High Performance Computing (HPC)" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program_specialization
+            columns:
+              - column: { name: name, value: "Formal Methods and their Applications (FMA)" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program_specialization
+            columns:
+              - column: { name: name, value: "Human Centered Engineering (HCE)" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program_specialization
+            columns:
+              - column: { name: name, value: "Digital Biology and Digital Medicine (DBM)" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program_specialization
+            columns:
+              - column: { name: name, value: "Support Electives (UFG)" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+
+  # Assign all 13 specializations to all 11 degree programs (from 0010)
+  - changeSet:
+      id: 0011-assign-specializations-to-programs
+      author: system
+      changes:
+        - sql:
+            - INSERT INTO degree_program_specialization_assignment (degree_program_id, degree_program_specialization_id)
+              SELECT dp.degree_program_id, ds.degree_program_specialization_id
+              FROM degree_program dp
+              CROSS JOIN degree_program_specialization ds
+              WHERE dp.degree_program_id BETWEEN 1 AND 11
+                AND ds.degree_program_specialization_id BETWEEN 1 AND 13

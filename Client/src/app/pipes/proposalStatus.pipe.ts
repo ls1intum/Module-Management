@@ -1,9 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Proposal } from '../core/modules/openapi';
+import { ProposalViewDTO } from '../core/modules/openapi';
 import { Tag } from 'primeng/tag';
 @Pipe({ name: 'statusDisplay', standalone: true })
 export class StatusDisplayPipe implements PipeTransform {
-  transform(status: Proposal.StatusEnum): { text: string; severity: Tag['severity'] } {
+  transform(status: ProposalViewDTO.StatusEnum): { text: string; severity: Tag['severity'] } {
     switch (status) {
       case 'PENDING_SUBMISSION':
         return { text: 'Pending Submission', severity: 'secondary' };
@@ -23,7 +23,7 @@ export class StatusDisplayPipe implements PipeTransform {
 
 @Pipe({ name: 'statusInfo', standalone: true })
 export class StatusInfoPipeline implements PipeTransform {
-  transform(status: Proposal.StatusEnum): string {
+  transform(status: ProposalViewDTO.StatusEnum): string {
     switch (status) {
       case 'PENDING_SUBMISSION':
         return 'This module proposal is pending submission. Please fill all module information fields and submit the module proposal. After submission the necessary staff will be notified to review your proposal.';

@@ -25,6 +25,12 @@ public class DegreeProgramsController {
         return ResponseEntity.ok(degreeProgramService.getAllDegreePrograms());
     }
 
+    @GetMapping("/with-specializations")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
+    public ResponseEntity<List<DegreeProgramDTO>> getDegreeProgramsWithSpecializations() {
+        return ResponseEntity.ok(degreeProgramService.getAllDegreeProgramsWithSpecializations());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<DegreeProgramDTO> getDegreeProgram(@PathVariable Long id) {
         return ResponseEntity.ok(degreeProgramService.getDegreeProgram(id));

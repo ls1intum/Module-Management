@@ -34,7 +34,8 @@ public class Proposal {
     private LocalDateTime creationDate;
 
     @Column(name = "status")
-    @NotNull private ProposalStatus status;
+    @NotNull
+    private ProposalStatus status;
 
     @OneToMany(mappedBy = "proposal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ModuleVersion> moduleVersions = new ArrayList<>();
@@ -54,7 +55,6 @@ public class Proposal {
         return getLatestModuleVersionWithContent().getVersion();
     }
 
-
     @JsonIgnore
     public void addNewModuleVersion() {
         ModuleVersion latestMv = getLatestModuleVersionWithContent();
@@ -65,6 +65,13 @@ public class Proposal {
         newMv.setStatus(ModuleVersionStatus.PENDING_SUBMISSION);
         newMv.setBulletPoints(latestMv.getBulletPoints());
         newMv.setTitleEng(latestMv.getTitleEng());
+        newMv.setTitleDe(latestMv.getTitleDe());
+        newMv.setHoursLecture(latestMv.getHoursLecture());
+        newMv.setHoursExercise(latestMv.getHoursExercise());
+        newMv.setHoursPractical(latestMv.getHoursPractical());
+        newMv.setHoursSeminar(latestMv.getHoursSeminar());
+        newMv.setFirstSemesterAvailable(latestMv.getFirstSemesterAvailable());
+        newMv.setSuccessorModuleName(latestMv.getSuccessorModuleName());
         newMv.setLevelEng(latestMv.getLevelEng());
         newMv.setLanguageEng(latestMv.getLanguageEng());
         newMv.setFrequencyEng(latestMv.getFrequencyEng());
@@ -84,6 +91,15 @@ public class Proposal {
         newMv.setResponsiblesEng(latestMv.getResponsiblesEng());
         newMv.setLvSwsLecturerEng(latestMv.getLvSwsLecturerEng());
 
+        if (latestMv.getDegreeProgramAssignments() != null) {
+            for (var a : latestMv.getDegreeProgramAssignments()) {
+                ModuleVersionDegreeProgramAssignment newAssig = new ModuleVersionDegreeProgramAssignment();
+                newAssig.setModuleVersion(newMv);
+                newAssig.setDegreeProgram(a.getDegreeProgram());
+                newAssig.setDegreeProgramSpecialization(a.getDegreeProgramSpecialization());
+                newMv.getDegreeProgramAssignments().add(newAssig);
+            }
+        }
         List<Feedback> requiredFeedbacks = new ArrayList<>();
         ProposalService.createNewFeedbacks(newMv, requiredFeedbacks);
         newMv.setRequiredFeedbacks(requiredFeedbacks);

@@ -3,7 +3,7 @@ package modulemanagement.ls1.services;
 import jakarta.validation.constraints.NotBlank;
 import modulemanagement.ls1.dtos.FeedbackDTO;
 import modulemanagement.ls1.dtos.FeedbackListItemDto;
-import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
+import modulemanagement.ls1.dtos.ModuleVersionViewDTO;
 import modulemanagement.ls1.enums.FeedbackStatus;
 import modulemanagement.ls1.models.Feedback;
 import modulemanagement.ls1.models.User;
@@ -81,10 +81,10 @@ public class FeedbackService {
         return feedback;
     }
 
-    public ModuleVersionUpdateRequestDTO getModuleVersionOfFeedback(Long feedbackId) {
+    public ModuleVersionViewDTO getModuleVersionOfFeedback(Long feedbackId) {
         Feedback feedback = feedbackRepository.findById(feedbackId)
                 .orElseThrow(() -> new ResourceNotFoundException("Feedback not found"));
-        return ModuleVersionUpdateRequestDTO.fromModuleVersion(feedback.getModuleVersion());
+        return ModuleVersionViewDTO.from(feedback.getModuleVersion());
     }
 
 }

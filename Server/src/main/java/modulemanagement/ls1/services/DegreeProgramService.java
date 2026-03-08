@@ -33,6 +33,12 @@ public class DegreeProgramService {
                 .collect(Collectors.toList());
     }
 
+    public List<DegreeProgramDTO> getAllDegreeProgramsWithSpecializations() {
+        return degreeProgramRepository.findAllWithSpecializations().stream()
+                .map(DegreeProgramDTO::fromDegreeProgram)
+                .collect(Collectors.toList());
+    }
+
     public DegreeProgramDTO getDegreeProgram(Long id) {
         DegreeProgram program = degreeProgramRepository.findWithSpecializationsByDegreeProgramId(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Degree program not found: " + id));

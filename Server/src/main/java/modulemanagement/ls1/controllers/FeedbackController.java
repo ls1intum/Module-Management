@@ -2,7 +2,7 @@ package modulemanagement.ls1.controllers;
 
 import modulemanagement.ls1.dtos.FeedbackDTO;
 import modulemanagement.ls1.dtos.FeedbackListItemDto;
-import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
+import modulemanagement.ls1.dtos.ModuleVersionViewDTO;
 import modulemanagement.ls1.dtos.GiveFeedbackDTO;
 import modulemanagement.ls1.models.Feedback;
 import modulemanagement.ls1.models.User;
@@ -39,8 +39,8 @@ public class FeedbackController {
 
     @GetMapping("/module-version-of-feedback/{feedbackId}")
     @PreAuthorize("hasAnyRole('QUALITY_MANAGEMENT', 'ACADEMIC_PROGRAM_ADVISOR', 'EXAMINATION_BOARD')")
-    public ResponseEntity<ModuleVersionUpdateRequestDTO> getModuleVersionOfFeedback(@PathVariable Long feedbackId) {
-        ModuleVersionUpdateRequestDTO dto = feedbackService.getModuleVersionOfFeedback(feedbackId);
+    public ResponseEntity<ModuleVersionViewDTO> getModuleVersionOfFeedback(@PathVariable Long feedbackId) {
+        ModuleVersionViewDTO dto = feedbackService.getModuleVersionOfFeedback(feedbackId);
         return ResponseEntity.ok(dto);
     }
 

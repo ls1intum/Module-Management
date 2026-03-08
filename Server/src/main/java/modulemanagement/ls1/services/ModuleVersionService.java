@@ -1,7 +1,7 @@
 package modulemanagement.ls1.services;
 
+import modulemanagement.ls1.dtos.ModuleDegreeProgramAssignmentDTO;
 import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
-import modulemanagement.ls1.dtos.ModuleVersionUpdateResponseDTO;
 import modulemanagement.ls1.dtos.ModuleVersionViewDTO;
 import modulemanagement.ls1.dtos.ModuleVersionViewFeedbackDTO;
 import modulemanagement.ls1.dtos.SimilarModuleDTO;
@@ -9,10 +9,15 @@ import modulemanagement.ls1.enums.FeedbackStatus;
 import modulemanagement.ls1.enums.ModuleVersionStatus;
 import modulemanagement.ls1.enums.ProposalStatus;
 import modulemanagement.ls1.enums.UserRole;
+import modulemanagement.ls1.models.DegreeProgram;
+import modulemanagement.ls1.models.DegreeProgramSpecialization;
 import modulemanagement.ls1.models.Feedback;
 import modulemanagement.ls1.models.ModuleVersion;
+import modulemanagement.ls1.models.ModuleVersionDegreeProgramAssignment;
 import modulemanagement.ls1.models.Proposal;
 import modulemanagement.ls1.models.User;
+import modulemanagement.ls1.repositories.DegreeProgramRepository;
+import modulemanagement.ls1.repositories.ModuleVersionDegreeProgramAssignmentRepository;
 import modulemanagement.ls1.repositories.ModuleVersionRepository;
 import modulemanagement.ls1.repositories.ProposalRepository;
 import modulemanagement.ls1.shared.PdfCreator;
@@ -21,24 +26,36 @@ import org.springframework.core.io.Resource;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class ModuleVersionService {
     private final ModuleVersionRepository moduleVersionRepository;
+    private final ModuleVersionDegreeProgramAssignmentRepository assignmentRepository;
+    private final DegreeProgramRepository degreeProgramRepository;
     private final ProposalRepository proposalRepository;
     private final OverlapDetectionService overlapDetectionService;
     private final PdfCreator pdfCreator;
+    private final EntityManager entityManager;
 
-    public ModuleVersionService(ModuleVersionRepository moduleVersionRepository, ProposalRepository proposalRepository,
-            OverlapDetectionService overlapDetectionService, PdfCreator pdfCreator) {
+    public ModuleVersionService(ModuleVersionRepository moduleVersionRepository,
+            ModuleVersionDegreeProgramAssignmentRepository assignmentRepository,
+            DegreeProgramRepository degreeProgramRepository, ProposalRepository proposalRepository,
+            OverlapDetectionService overlapDetectionService, PdfCreator pdfCreator,
+            EntityManager entityManager) {
         this.moduleVersionRepository = moduleVersionRepository;
+        this.assignmentRepository = assignmentRepository;
+        this.degreeProgramRepository = degreeProgramRepository;
         this.proposalRepository = proposalRepository;
         this.overlapDetectionService = overlapDetectionService;
         this.pdfCreator = pdfCreator;
+        this.entityManager = entityManager;
     }
 
     private boolean hasAccessPermission(Proposal proposal, User user) {
@@ -46,13 +63,13 @@ public class ModuleVersionService {
             return true;
         }
 
-        return user.getRoles() != null && (
-                user.getRoles().contains(UserRole.QUALITY_MANAGEMENT) ||
+        return user.getRoles() != null && (user.getRoles().contains(UserRole.QUALITY_MANAGEMENT) ||
                 user.getRoles().contains(UserRole.EXAMINATION_BOARD) ||
                 user.getRoles().contains(UserRole.ACADEMIC_PROGRAM_ADVISOR));
     }
 
-    public ModuleVersionUpdateResponseDTO updateModuleVersionFromRequest(UUID userId, Long moduleVersionId,
+    @Transactional
+    public ModuleVersionViewDTO updateModuleVersionFromRequest(UUID userId, Long moduleVersionId,
             ModuleVersionUpdateRequestDTO request) {
         ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId)
                 .orElseThrow(() -> new ResourceNotFoundException("ModuleVersion not found"));
@@ -69,10 +86,17 @@ public class ModuleVersionService {
 
         mv.setBulletPoints(request.getBulletPoints());
         mv.setTitleEng(request.getTitleEng());
+        mv.setTitleDe(request.getTitleDe());
         mv.setLevelEng(request.getLevelEng());
         mv.setLanguageEng(request.getLanguageEng());
         mv.setFrequencyEng(request.getFrequencyEng());
         mv.setCredits(request.getCredits());
+        mv.setHoursLecture(request.getHoursLecture());
+        mv.setHoursExercise(request.getHoursExercise());
+        mv.setHoursPractical(request.getHoursPractical());
+        mv.setHoursSeminar(request.getHoursSeminar());
+        mv.setFirstSemesterAvailable(request.getFirstSemesterAvailable());
+        mv.setSuccessorModuleName(request.getSuccessorModuleName());
         mv.setDuration(request.getDuration());
         mv.setHoursTotal(request.getHoursTotal());
         mv.setHoursSelfStudy(request.getHoursSelfStudy());
@@ -92,8 +116,39 @@ public class ModuleVersionService {
         mv.setResponsiblesEng(request.getResponsiblesEng());
         mv.setLvSwsLecturerEng(request.getLvSwsLecturerEng());
 
+        if (request.getDegreeProgramAssignments() != null && !request.getDegreeProgramAssignments().isEmpty()) {
+            List<Long> programIds = request.getDegreeProgramAssignments().stream()
+                    .map(ModuleDegreeProgramAssignmentDTO::getDegreeProgramId)
+                    .collect(Collectors.toList());
+            if (programIds.size() != programIds.stream().distinct().count()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "A module cannot be assigned to the same degree program more than once.");
+            }
+            assignmentRepository.deleteByModuleVersion_ModuleVersionId(mv.getModuleVersionId());
+            entityManager.flush();
+            mv.getDegreeProgramAssignments().clear();
+            for (ModuleDegreeProgramAssignmentDTO item : request.getDegreeProgramAssignments()) {
+                DegreeProgram program = degreeProgramRepository
+                        .findWithSpecializationsByDegreeProgramId(item.getDegreeProgramId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                "Degree program not found: " + item.getDegreeProgramId()));
+                DegreeProgramSpecialization spec = program.getDegreeProgramSpecializations().stream()
+                        .filter(s -> s.getDegreeProgramSpecializationId()
+                                .equals(item.getDegreeProgramSpecializationId()))
+                        .findFirst()
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                "Specialization " + item.getDegreeProgramSpecializationId()
+                                        + " does not belong to degree program " + item.getDegreeProgramId()));
+                ModuleVersionDegreeProgramAssignment assignment = new ModuleVersionDegreeProgramAssignment();
+                assignment.setModuleVersion(mv);
+                assignment.setDegreeProgram(program);
+                assignment.setDegreeProgramSpecialization(spec);
+                mv.getDegreeProgramAssignments().add(assignment);
+            }
+        }
+
         mv = moduleVersionRepository.save(mv);
-        return ModuleVersionUpdateResponseDTO.fromModuleVersion(mv);
+        return ModuleVersionViewDTO.from(mv);
     }
 
     public void updateStatus(Long moduleVersionId) {
@@ -139,7 +194,7 @@ public class ModuleVersionService {
         moduleVersionRepository.save(mv);
     }
 
-    public ModuleVersionUpdateResponseDTO getModuleVersionUpdateDtoFromId(Long moduleVersionId, UUID userId) {
+    public ModuleVersionViewDTO getModuleVersionUpdateDtoFromId(Long moduleVersionId, UUID userId) {
         var mv = moduleVersionRepository.findById(moduleVersionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Module Version not found"));
         Proposal p = mv.getProposal();
@@ -151,7 +206,7 @@ public class ModuleVersionService {
             throw new IllegalStateException("Proposal must have at least one ModuleVersion.");
         }
 
-        return ModuleVersionUpdateResponseDTO.fromModuleVersion(mv);
+        return ModuleVersionViewDTO.from(mv);
     }
 
     public ModuleVersionViewDTO getModuleVersionViewDto(Long moduleVersionId, UUID userId) {

@@ -3,16 +3,21 @@ package modulemanagement.ls1.services;
 import jakarta.validation.Valid;
 import modulemanagement.ls1.dtos.*;
 import modulemanagement.ls1.enums.*;
+import modulemanagement.ls1.models.DegreeProgram;
+import modulemanagement.ls1.models.DegreeProgramSpecialization;
 import modulemanagement.ls1.models.Feedback;
 import modulemanagement.ls1.models.ModuleVersion;
+import modulemanagement.ls1.models.ModuleVersionDegreeProgramAssignment;
 import modulemanagement.ls1.models.Proposal;
 import modulemanagement.ls1.models.User;
+import modulemanagement.ls1.repositories.DegreeProgramRepository;
 import modulemanagement.ls1.repositories.FeedbackRepository;
 import modulemanagement.ls1.repositories.ModuleVersionRepository;
 import modulemanagement.ls1.repositories.ProposalRepository;
 import modulemanagement.ls1.shared.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
@@ -28,14 +33,18 @@ public class ProposalService {
     private final ProposalRepository proposalRepository;
     private final ModuleVersionRepository moduleVersionRepository;
     private final FeedbackRepository feedbackRepository;
+    private final DegreeProgramRepository degreeProgramRepository;
 
-    public ProposalService(ProposalRepository proposalRepository, ModuleVersionRepository moduleVersionRepository, FeedbackRepository feedbackRepository) {
+    public ProposalService(ProposalRepository proposalRepository, ModuleVersionRepository moduleVersionRepository,
+            FeedbackRepository feedbackRepository, DegreeProgramRepository degreeProgramRepository) {
         this.proposalRepository = proposalRepository;
         this.moduleVersionRepository = moduleVersionRepository;
         this.feedbackRepository = feedbackRepository;
+        this.degreeProgramRepository = degreeProgramRepository;
     }
 
-    public Proposal createProposalFromRequest(User user, ProposalRequestDTO request) {
+    @Transactional
+    public ProposalViewDTO createProposalFromRequest(User user, ProposalRequestDTO request) {
         Proposal p = new Proposal();
         p.setCreatedBy(user);
         p.setCreationDate(LocalDateTime.now());
@@ -50,10 +59,17 @@ public class ProposalService {
         mv.setStatus(ModuleVersionStatus.PENDING_SUBMISSION);
         mv.setBulletPoints(request.getBulletPoints());
         mv.setTitleEng(request.getTitleEng());
+        mv.setTitleDe(request.getTitleDe());
         mv.setLevelEng(request.getLevelEng());
         mv.setLanguageEng(request.getLanguageEng());
         mv.setFrequencyEng(request.getFrequencyEng());
         mv.setCredits(request.getCredits());
+        mv.setHoursLecture(request.getHoursLecture());
+        mv.setHoursExercise(request.getHoursExercise());
+        mv.setHoursPractical(request.getHoursPractical());
+        mv.setHoursSeminar(request.getHoursSeminar());
+        mv.setFirstSemesterAvailable(request.getFirstSemesterAvailable());
+        mv.setSuccessorModuleName(request.getSuccessorModuleName());
         mv.setDuration(request.getDuration());
         mv.setHoursTotal(request.getHoursTotal());
         mv.setHoursSelfStudy(request.getHoursSelfStudy());
@@ -74,6 +90,35 @@ public class ProposalService {
         mv.setLvSwsLecturerEng(request.getLvSwsLecturerEng());
         mv = moduleVersionRepository.save(mv);
 
+        if (request.getDegreeProgramAssignments() != null && !request.getDegreeProgramAssignments().isEmpty()) {
+            List<Long> programIds = request.getDegreeProgramAssignments().stream()
+                    .map(ModuleDegreeProgramAssignmentDTO::getDegreeProgramId)
+                    .collect(Collectors.toList());
+            if (programIds.size() != programIds.stream().distinct().count()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "A module cannot be assigned to the same degree program more than once.");
+            }
+            for (ModuleDegreeProgramAssignmentDTO item : request.getDegreeProgramAssignments()) {
+                DegreeProgram program = degreeProgramRepository
+                        .findWithSpecializationsByDegreeProgramId(item.getDegreeProgramId())
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                "Degree program not found: " + item.getDegreeProgramId()));
+                DegreeProgramSpecialization spec = program.getDegreeProgramSpecializations().stream()
+                        .filter(s -> s.getDegreeProgramSpecializationId()
+                                .equals(item.getDegreeProgramSpecializationId()))
+                        .findFirst()
+                        .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                                "Specialization " + item.getDegreeProgramSpecializationId()
+                                        + " does not belong to degree program " + item.getDegreeProgramId()));
+                ModuleVersionDegreeProgramAssignment assignment = new ModuleVersionDegreeProgramAssignment();
+                assignment.setModuleVersion(mv);
+                assignment.setDegreeProgram(program);
+                assignment.setDegreeProgramSpecialization(spec);
+                mv.getDegreeProgramAssignments().add(assignment);
+            }
+            moduleVersionRepository.save(mv);
+        }
+
         List<Feedback> feedbacks = new ArrayList<>();
         createNewFeedbacks(mv, feedbacks);
         feedbacks = feedbackRepository.saveAll(feedbacks);
@@ -81,7 +126,7 @@ public class ProposalService {
         moduleVersionRepository.save(mv);
         p.addModuleVersion(mv);
         proposalRepository.save(p);
-        return p;
+        return ProposalViewDTO.from(p);
     }
 
     public static void createNewFeedbacks(ModuleVersion mv, List<Feedback> feedbacks) {
@@ -97,11 +142,14 @@ public class ProposalService {
     }
 
     public ProposalViewDTO addModuleVersion(UUID userId, @Valid AddModuleVersionDTO request) {
-        Proposal p = proposalRepository.findById(request.getProposalId()).orElseThrow(() -> new ResourceNotFoundException("Proposal not found"));
+        Proposal p = proposalRepository.findById(request.getProposalId())
+                .orElseThrow(() -> new ResourceNotFoundException("Proposal not found"));
         if (!userId.equals(p.getCreatedBy().getUserId()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You cannot add a module version to a module you did not create.");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+                    "You cannot add a module version to a module you did not create.");
         if (!p.getStatus().equals(ProposalStatus.REQUIRES_REVIEW))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can only add a new module version, if the proposal requires a review.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "You can only add a new module version, if the proposal requires a review.");
 
         for (Feedback f : p.getLatestModuleVersionWithContent().getRequiredFeedbacks()) {
             if (f.getStatus().equals(FeedbackStatus.PENDING_FEEDBACK)) {
@@ -122,9 +170,12 @@ public class ProposalService {
                         p.getProposalId(),
                         p.getCreatedBy().getFirstName(),
                         p.getStatus(),
-                        p.getLatestModuleVersionWithContent() != null ? p.getLatestModuleVersionWithContent().getModuleVersionId() : null,
-                        p.getLatestModuleVersionWithContent() != null ? p.getLatestModuleVersionWithContent().getTitleEng() : null
-                ))
+                        p.getLatestModuleVersionWithContent() != null
+                                ? p.getLatestModuleVersionWithContent().getModuleVersionId()
+                                : null,
+                        p.getLatestModuleVersionWithContent() != null
+                                ? p.getLatestModuleVersionWithContent().getTitleEng()
+                                : null))
                 .sorted(Comparator.comparing(ProposalsCompactDTO::getProposalId))
                 .collect(Collectors.toList());
 
@@ -141,7 +192,7 @@ public class ProposalService {
 
     public ProposalViewDTO submitProposal(Long proposalId, UUID userId) {
         Proposal proposal = proposalRepository.findById(proposalId)
-                .orElseThrow(() -> new IllegalArgumentException("No proposal with id " + proposalId +" found"));
+                .orElseThrow(() -> new IllegalArgumentException("No proposal with id " + proposalId + " found"));
         if (!proposal.getCreatedBy().getUserId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
         }
@@ -173,7 +224,7 @@ public class ProposalService {
 
     public ProposalViewDTO cancelSubmission(Long proposalId, UUID userId) {
         Proposal proposal = proposalRepository.findById(proposalId)
-                .orElseThrow(() -> new IllegalArgumentException("No proposal with id " + proposalId +" found"));
+                .orElseThrow(() -> new IllegalArgumentException("No proposal with id " + proposalId + " found"));
 
         if (!proposal.getCreatedBy().getUserId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
@@ -181,11 +232,12 @@ public class ProposalService {
 
         ModuleVersion mv = proposal.getLatestModuleVersionWithContent();
         if (!mv.getStatus().equals(ModuleVersionStatus.PENDING_FEEDBACK)) {
-            throw new IllegalStateException("Only submitted proposals can cancel their submission. This proposal is " + mv.getStatus() + ".");
+            throw new IllegalStateException(
+                    "Only submitted proposals can cancel their submission. This proposal is " + mv.getStatus() + ".");
         }
 
         boolean oneFeedbackNotPending = false;
-        for (Feedback f: mv.getRequiredFeedbacks()) {
+        for (Feedback f : mv.getRequiredFeedbacks()) {
             if (!f.getStatus().equals(FeedbackStatus.PENDING_FEEDBACK)) {
                 oneFeedbackNotPending = true;
                 break;
@@ -193,16 +245,15 @@ public class ProposalService {
         }
 
         if (oneFeedbackNotPending) {
-            for (Feedback f: mv.getRequiredFeedbacks()) {
+            for (Feedback f : mv.getRequiredFeedbacks()) {
                 if (f.getStatus().equals(FeedbackStatus.PENDING_FEEDBACK)) {
                     f.setStatus(FeedbackStatus.CANCELLED);
                 }
             }
             mv.setStatus(ModuleVersionStatus.CANCELLED);
             proposal.setStatus(ProposalStatus.REQUIRES_REVIEW);
-        }
-        else {
-            for (Feedback f: mv.getRequiredFeedbacks()) {
+        } else {
+            for (Feedback f : mv.getRequiredFeedbacks()) {
                 f.setStatus(FeedbackStatus.PENDING_SUBMISSION);
             }
             mv.setStatus(ModuleVersionStatus.PENDING_SUBMISSION);
@@ -213,12 +264,15 @@ public class ProposalService {
     }
 
     public void deleteProposalById(long proposalId, UUID userId) {
-        Proposal p = proposalRepository.findById(proposalId).orElseThrow(() -> new ResourceNotFoundException("Proposal with id " + proposalId + " not found."));
+        Proposal p = proposalRepository.findById(proposalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Proposal with id " + proposalId + " not found."));
         if (!p.getCreatedBy().getUserId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
         }
         if (p.getStatus() != ProposalStatus.PENDING_SUBMISSION) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You can only delete a proposal that is not already submit. This module proposal is " + p.getStatus() + ".");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "You can only delete a proposal that is not already submit. This module proposal is "
+                            + p.getStatus() + ".");
         }
         proposalRepository.delete(p);
     }

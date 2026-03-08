@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { AddModuleVersionDTO, ModuleVersion, Proposal, ProposalControllerService, ProposalViewDTO } from '../../core/modules/openapi';
+import { AddModuleVersionDTO, ModuleVersionCompactDTO, ProposalControllerService, ProposalViewDTO } from '../../core/modules/openapi';
 import { BreadcrumbLabelsService } from '../../components/breadcrumb/breadcrumb-labels.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -48,8 +48,8 @@ export class ProposalViewComponent {
   loading = signal(true);
   error = signal<string | null>(null);
   proposal = signal<ProposalViewDTO | null>(null);
-  proposalStatusEnum = Proposal.StatusEnum;
-  moduleStatusEnum = ModuleVersion.StatusEnum;
+  proposalStatusEnum = ProposalViewDTO.StatusEnum;
+  moduleStatusEnum = ModuleVersionCompactDTO.StatusEnum;
 
   constructor() {
     this.fetchProposal();
