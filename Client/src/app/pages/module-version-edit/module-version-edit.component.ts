@@ -100,7 +100,7 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
     const payload: ModuleVersionUpdateRequestDTO = {
       ...this.proposalForm.value,
       moduleVersionId: this.moduleVersionId,
-      degreeProgramAssignments: degreeProgramAssignments.length > 0 ? degreeProgramAssignments : undefined
+      degreeProgramAssignments
     };
     this.moduleVersionService.updateModuleVersion(this.moduleVersionId, payload).subscribe({
       next: (response: ModuleVersionViewDTO) => this.moduleVersionDto.set(response),

@@ -116,13 +116,16 @@ public class ModuleVersionService {
         mv.setResponsiblesEng(request.getResponsiblesEng());
         mv.setLvSwsLecturerEng(request.getLvSwsLecturerEng());
 
-        if (request.getDegreeProgramAssignments() != null && !request.getDegreeProgramAssignments().isEmpty()) {
-            List<Long> programIds = request.getDegreeProgramAssignments().stream()
-                    .map(ModuleDegreeProgramAssignmentDTO::getDegreeProgramId)
-                    .collect(Collectors.toList());
-            if (programIds.size() != programIds.stream().distinct().count()) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "A module cannot be assigned to the same degree program more than once.");
+        if (request.getDegreeProgramAssignments() != null) {
+            List<ModuleDegreeProgramAssignmentDTO> assignments = request.getDegreeProgramAssignments();
+            if (!assignments.isEmpty()) {
+                List<Long> programIds = assignments.stream()
+                        .map(ModuleDegreeProgramAssignmentDTO::getDegreeProgramId)
+                        .collect(Collectors.toList());
+                if (programIds.size() != programIds.stream().distinct().count()) {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                            "A module cannot be assigned to the same degree program more than once.");
+                }
             }
             assignmentRepository.deleteByModuleVersion_ModuleVersionId(mv.getModuleVersionId());
             entityManager.flush();

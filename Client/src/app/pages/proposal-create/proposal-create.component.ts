@@ -59,7 +59,7 @@ export class ProposalCreateComponent extends ProposalBaseComponent {
     const body: ProposalRequestDTO = {
       ...this.proposalForm.value,
       titleEng: this.proposalForm.value.titleEng?.trim() ?? '',
-      degreeProgramAssignments: degreeProgramAssignments.length > 0 ? degreeProgramAssignments : undefined
+      degreeProgramAssignments
     };
     this.loading.set(true);
     this.error.set(null);
