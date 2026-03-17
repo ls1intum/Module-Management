@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Keeps PROGRAM_COORDINATOR and SPECIALIZATION_AREA_RESPONSIBLE roles in sync:
+ * Keeps PROGRAM_COORDINATOR and SPECIALIZATION_AREA_COORDINATOR roles in sync:
  * - Program coordinators (responsible for a degree program) have PROGRAM_COORDINATOR.
- * - Specialization area responsibles have SPECIALIZATION_AREA_RESPONSIBLE.
+ * - Specialization area coordinators have SPECIALIZATION_AREA_COORDINATOR.
  */
 @Service
 public class ResponsibleUserRoleService {
@@ -56,23 +56,23 @@ public class ResponsibleUserRoleService {
     }
 
     @Transactional
-    public void ensureSpecializationAreaResponsibleRole(UUID userId) {
+    public void ensureSpecializationAreaCoordinatorRole(UUID userId) {
         User user = userRepository.findById(userId).orElse(null);
         if (user == null) return;
-        if (user.getRoles() != null && user.getRoles().contains(UserRole.SPECIALIZATION_AREA_RESPONSIBLE))
+        if (user.getRoles() != null && user.getRoles().contains(UserRole.SPECIALIZATION_AREA_COORDINATOR))
             return;
         if (user.getRoles() == null) user.setRoles(new ArrayList<>());
-        user.getRoles().add(UserRole.SPECIALIZATION_AREA_RESPONSIBLE);
+        user.getRoles().add(UserRole.SPECIALIZATION_AREA_COORDINATOR);
         userRepository.save(user);
     }
 
     @Transactional
-    public void removeSpecializationAreaResponsibleRoleIfNotResponsible(UUID userId) {
+    public void removeSpecializationAreaCoordinatorRoleIfNotResponsible(UUID userId) {
         if (degreeProgramSpecializationRepository.existsByResponsibleUser_UserId(userId))
             return;
         User user = userRepository.findById(userId).orElse(null);
         if (user == null || user.getRoles() == null) return;
-        if (user.getRoles().remove(UserRole.SPECIALIZATION_AREA_RESPONSIBLE))
+        if (user.getRoles().remove(UserRole.SPECIALIZATION_AREA_COORDINATOR))
             userRepository.save(user);
     }
 

@@ -40,7 +40,7 @@ export interface ModuleVersionViewFeedbackDTO {
     lvSwsLecturerFeedback?: string;
 }
 export namespace ModuleVersionViewFeedbackDTO {
-    export type FeedbackRoleEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR' | 'PROGRAM_COORDINATOR' | 'SPECIALIZATION_AREA_RESPONSIBLE';
+    export type FeedbackRoleEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR' | 'PROGRAM_COORDINATOR' | 'SPECIALIZATION_AREA_COORDINATOR';
     export const FeedbackRoleEnum = {
         Admin: 'ADMIN' as FeedbackRoleEnum,
         QualityManagement: 'QUALITY_MANAGEMENT' as FeedbackRoleEnum,
@@ -48,7 +48,7 @@ export namespace ModuleVersionViewFeedbackDTO {
         ExaminationBoard: 'EXAMINATION_BOARD' as FeedbackRoleEnum,
         Professor: 'PROFESSOR' as FeedbackRoleEnum,
         ProgramCoordinator: 'PROGRAM_COORDINATOR' as FeedbackRoleEnum,
-        SpecializationAreaResponsible: 'SPECIALIZATION_AREA_RESPONSIBLE' as FeedbackRoleEnum
+        SpecializationAreaCoordinator: 'SPECIALIZATION_AREA_COORDINATOR' as FeedbackRoleEnum
     };
     export type FeedbackStatusEnum = 'PENDING_FEEDBACK' | 'APPROVED' | 'FEEDBACK_GIVEN' | 'REJECTED';
     export const FeedbackStatusEnum = {

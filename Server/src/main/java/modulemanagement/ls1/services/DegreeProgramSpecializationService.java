@@ -38,7 +38,7 @@ public class DegreeProgramSpecializationService {
         entity.setName(dto.getName());
         entity.setResponsibleUser(userRepository.getReferenceById(dto.getResponsibleUserId()));
         entity = degreeProgramSpecializationRepository.save(entity);
-        responsibleUserRoleService.ensureSpecializationAreaResponsibleRole(dto.getResponsibleUserId());
+        responsibleUserRoleService.ensureSpecializationAreaCoordinatorRole(dto.getResponsibleUserId());
         return DegreeProgramSpecializationDTO.fromEntity(
                 degreeProgramSpecializationRepository
                         .findByIdWithResponsibleUser(entity.getDegreeProgramSpecializationId()).orElse(entity));
@@ -54,9 +54,9 @@ public class DegreeProgramSpecializationService {
             UUID previousUserId = entity.getResponsibleUser() != null ? entity.getResponsibleUser().getUserId() : null;
             entity.setResponsibleUser(userRepository.getReferenceById(dto.getResponsibleUserId()));
             entity = degreeProgramSpecializationRepository.save(entity);
-            responsibleUserRoleService.ensureSpecializationAreaResponsibleRole(dto.getResponsibleUserId());
+            responsibleUserRoleService.ensureSpecializationAreaCoordinatorRole(dto.getResponsibleUserId());
             if (previousUserId != null && !previousUserId.equals(dto.getResponsibleUserId()))
-                responsibleUserRoleService.removeSpecializationAreaResponsibleRoleIfNotResponsible(previousUserId);
+                responsibleUserRoleService.removeSpecializationAreaCoordinatorRoleIfNotResponsible(previousUserId);
         } else {
             entity = degreeProgramSpecializationRepository.save(entity);
         }
@@ -71,6 +71,6 @@ public class DegreeProgramSpecializationService {
         UUID responsibleUserId = entity.getResponsibleUser() != null ? entity.getResponsibleUser().getUserId() : null;
         degreeProgramSpecializationRepository.deleteById(id);
         if (responsibleUserId != null)
-            responsibleUserRoleService.removeSpecializationAreaResponsibleRoleIfNotResponsible(responsibleUserId);
+            responsibleUserRoleService.removeSpecializationAreaCoordinatorRoleIfNotResponsible(responsibleUserId);
     }
 }

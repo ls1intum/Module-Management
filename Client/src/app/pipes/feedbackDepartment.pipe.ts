@@ -4,7 +4,7 @@ import { Feedback } from '../core/modules/openapi';
 @Pipe({ name: 'feedbackDepartment', standalone: true })
 export class FeedbackDepartmentPipe implements PipeTransform {
   transform(role: Feedback.RequiredRoleEnum | null | undefined): { text: string } {
-    if (role == null) return { text: 'Specialization area responsible' };
+    if (role == null) return { text: 'Specialization area coordinator' };
     switch (role) {
       case 'QUALITY_MANAGEMENT':
         return { text: 'Quality Management' };
@@ -14,8 +14,8 @@ export class FeedbackDepartmentPipe implements PipeTransform {
         return { text: 'Academic Program Advisor' };
       case 'PROGRAM_COORDINATOR':
         return { text: 'Program coordinator' };
-      case 'SPECIALIZATION_AREA_RESPONSIBLE':
-        return { text: 'Specialization area responsible' };
+      case Feedback.RequiredRoleEnum.SpecializationAreaCoordinator:
+        return { text: 'Specialization area coordinator' };
       default:
         return { text: role };
     }

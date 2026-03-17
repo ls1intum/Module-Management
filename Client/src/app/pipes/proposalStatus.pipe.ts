@@ -32,7 +32,7 @@ export class StatusInfoPipeline implements PipeTransform {
       case 'PENDING_FIRST_SUBMISSION':
         return 'This module proposal is pending submission. Please complete step 1 (basic information and degree program assignments) and submit for coordinator feedback.';
       case 'PENDING_COORDINATOR_FEEDBACK':
-        return 'Submitted for coordinator feedback. Program and area responsibles are reviewing. You can cancel and resubmit if needed.';
+        return 'Submitted for coordinator feedback. Program and area coordinators are reviewing. You can cancel and resubmit if needed.';
       case 'PENDING_FULL_SUBMISSION':
         return 'Coordinator feedback was accepted. Complete all steps and submit for full feedback (quality management, program advisor, examination board) when ready.';
       case 'PENDING_FULL_FEEDBACK':

@@ -8,6 +8,6 @@ public enum UserRole {
     PROFESSOR,
     /** User is responsible for at least one degree program; can receive and respond to feedback requests for those. */
     PROGRAM_COORDINATOR,
-    /** User is responsible for at least one area of specialization; can receive and respond to feedback requests for those. */
-    SPECIALIZATION_AREA_RESPONSIBLE
+    /** User is coordinator for at least one area of specialization; can receive and respond to feedback requests for those. */
+    SPECIALIZATION_AREA_COORDINATOR
 }

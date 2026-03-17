@@ -60,7 +60,7 @@ export interface Feedback {
     comment?: string;
 }
 export namespace Feedback {
-    export type RequiredRoleEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR' | 'PROGRAM_COORDINATOR' | 'SPECIALIZATION_AREA_RESPONSIBLE';
+    export type RequiredRoleEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR' | 'PROGRAM_COORDINATOR' | 'SPECIALIZATION_AREA_COORDINATOR';
     export const RequiredRoleEnum = {
         Admin: 'ADMIN' as RequiredRoleEnum,
         QualityManagement: 'QUALITY_MANAGEMENT' as RequiredRoleEnum,
@@ -68,7 +68,7 @@ export namespace Feedback {
         ExaminationBoard: 'EXAMINATION_BOARD' as RequiredRoleEnum,
         Professor: 'PROFESSOR' as RequiredRoleEnum,
         ProgramCoordinator: 'PROGRAM_COORDINATOR' as RequiredRoleEnum,
-        SpecializationAreaResponsible: 'SPECIALIZATION_AREA_RESPONSIBLE' as RequiredRoleEnum
+        SpecializationAreaCoordinator: 'SPECIALIZATION_AREA_COORDINATOR' as RequiredRoleEnum
     };
     export type StatusEnum = 'PENDING_FEEDBACK' | 'APPROVED' | 'FEEDBACK_GIVEN' | 'REJECTED';
     export const StatusEnum = {
