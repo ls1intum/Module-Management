@@ -32,3 +32,9 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: initialize/0011_seed_degree_program_specializations.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: changes/0012_feedback_requested_from_user.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: changes/0013_grant_program_area_responsible_role.yaml

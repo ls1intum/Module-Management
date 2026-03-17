@@ -13,6 +13,7 @@ import { User } from './user';
 export interface Feedback { 
     feedbackId?: number;
     feedbackFrom?: User;
+    invalidated?: boolean;
     requiredRole?: Feedback.RequiredRoleEnum;
     status: Feedback.StatusEnum;
     submissionDate?: string;
@@ -54,28 +55,27 @@ export interface Feedback {
     responsiblesAccepted?: boolean;
     lvSwsLecturerFeedback?: string;
     lvSwsLecturerAccepted?: boolean;
-    feedbackGiven?: boolean;
     allFeedbackPositive?: boolean;
+    feedbackGiven?: boolean;
     comment?: string;
 }
 export namespace Feedback {
-    export type RequiredRoleEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR';
+    export type RequiredRoleEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR' | 'PROGRAM_COORDINATOR' | 'SPECIALIZATION_AREA_RESPONSIBLE';
     export const RequiredRoleEnum = {
         Admin: 'ADMIN' as RequiredRoleEnum,
         QualityManagement: 'QUALITY_MANAGEMENT' as RequiredRoleEnum,
         AcademicProgramAdvisor: 'ACADEMIC_PROGRAM_ADVISOR' as RequiredRoleEnum,
         ExaminationBoard: 'EXAMINATION_BOARD' as RequiredRoleEnum,
-        Professor: 'PROFESSOR' as RequiredRoleEnum
+        Professor: 'PROFESSOR' as RequiredRoleEnum,
+        ProgramCoordinator: 'PROGRAM_COORDINATOR' as RequiredRoleEnum,
+        SpecializationAreaResponsible: 'SPECIALIZATION_AREA_RESPONSIBLE' as RequiredRoleEnum
     };
-    export type StatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'APPROVED' | 'FEEDBACK_GIVEN' | 'REJECTED' | 'OBSOLETE' | 'CANCELLED';
+    export type StatusEnum = 'PENDING_FEEDBACK' | 'APPROVED' | 'FEEDBACK_GIVEN' | 'REJECTED';
     export const StatusEnum = {
-        PendingSubmission: 'PENDING_SUBMISSION' as StatusEnum,
         PendingFeedback: 'PENDING_FEEDBACK' as StatusEnum,
         Approved: 'APPROVED' as StatusEnum,
         FeedbackGiven: 'FEEDBACK_GIVEN' as StatusEnum,
-        Rejected: 'REJECTED' as StatusEnum,
-        Obsolete: 'OBSOLETE' as StatusEnum,
-        Cancelled: 'CANCELLED' as StatusEnum
+        Rejected: 'REJECTED' as StatusEnum
     };
 }
 

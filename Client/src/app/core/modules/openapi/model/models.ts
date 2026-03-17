@@ -1,4 +1,3 @@
-export * from './add-module-version-dto';
 export * from './add-specializations-to-degree-program-dto';
 export * from './completion-service-request-dto';
 export * from './completion-service-response-dto';

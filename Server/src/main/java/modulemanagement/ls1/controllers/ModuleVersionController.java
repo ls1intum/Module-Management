@@ -39,15 +39,6 @@ public class ModuleVersionController {
         this.llmGenerationService = llmGenerationService;
     }
 
-    @GetMapping("/{moduleVersionId}")
-    @PreAuthorize("hasAnyRole('PROFESSOR')")
-    public ResponseEntity<ModuleVersionViewDTO> getModuleVersionUpdateDtoFromId(
-            @CurrentUser User user, @PathVariable Long moduleVersionId) {
-        ModuleVersionViewDTO dto = moduleVersionService.getModuleVersionUpdateDtoFromId(moduleVersionId,
-                user.getUserId());
-        return ResponseEntity.ok(dto);
-    }
-
     @PutMapping("/{moduleVersionId}")
     @PreAuthorize("hasAnyRole('PROFESSOR')")
     public ResponseEntity<ModuleVersionViewDTO> updateModuleVersion(@CurrentUser User user,
@@ -57,11 +48,11 @@ public class ModuleVersionController {
         return ResponseEntity.ok(updatedModuleVersion);
     }
 
-    @GetMapping("/view/{moduleVersionId}")
+    @GetMapping("/{moduleVersionId}")
     @PreAuthorize("hasAnyRole('PROFESSOR')")
-    public ResponseEntity<ModuleVersionViewDTO> getModuleVersionViewDto(@CurrentUser User user,
+    public ResponseEntity<ModuleVersionViewDTO> getModuleVersion(@CurrentUser User user,
             @PathVariable Long moduleVersionId) {
-        ModuleVersionViewDTO dto = moduleVersionService.getModuleVersionViewDto(moduleVersionId, user.getUserId());
+        ModuleVersionViewDTO dto = moduleVersionService.getModuleVersion(moduleVersionId, user.getUserId());
         return ResponseEntity.ok(dto);
     }
 

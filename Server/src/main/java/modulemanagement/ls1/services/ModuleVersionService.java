@@ -30,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import jakarta.persistence.EntityManager;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -58,16 +60,6 @@ public class ModuleVersionService {
         this.entityManager = entityManager;
     }
 
-    private boolean hasAccessPermission(Proposal proposal, User user) {
-        if (proposal.getCreatedBy().getUserId().equals(user.getUserId())) {
-            return true;
-        }
-
-        return user.getRoles() != null && (user.getRoles().contains(UserRole.QUALITY_MANAGEMENT) ||
-                user.getRoles().contains(UserRole.EXAMINATION_BOARD) ||
-                user.getRoles().contains(UserRole.ACADEMIC_PROGRAM_ADVISOR));
-    }
-
     @Transactional
     public ModuleVersionViewDTO updateModuleVersionFromRequest(UUID userId, Long moduleVersionId,
             ModuleVersionUpdateRequestDTO request) {
@@ -79,11 +71,91 @@ public class ModuleVersionService {
         if (!mv.getVersion().equals(mv.getProposal().getLatestModuleVersionWithContent().getVersion())) {
             throw new OptimisticLockingFailureException("Cannot update an outdated ModuleVersion");
         }
-
-        if (!mv.getStatus().equals(ModuleVersionStatus.PENDING_SUBMISSION)) {
-            throw new IllegalStateException("Cannot update a submitted ModuleVersion");
+        if (!mv.getRequiredFeedbacks().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Cannot update ModuleVersion with feedback.");
         }
 
+        applyUpdateRequest(mv, request);
+        mv = moduleVersionRepository.save(mv);
+        return ModuleVersionViewDTO.from(mv);
+    }
+
+    /**
+     * True if any step-1 field (basic info + assignments) differs between request
+     * and mv.
+     */
+    // private boolean isStep1DataChanged(ModuleVersionUpdateRequestDTO request,
+    // ModuleVersion mv) {
+    // if (!Objects.equals(nullToEmpty(request.getTitleEng()),
+    // nullToEmpty(mv.getTitleEng())))
+    // return true;
+    // if (!Objects.equals(nullToEmpty(request.getTitleDe()),
+    // nullToEmpty(mv.getTitleDe())))
+    // return true;
+    // if (!Objects.equals(request.getCredits(), mv.getCredits()))
+    // return true;
+    // if (!Objects.equals(nullToEmpty(request.getFrequencyEng()),
+    // nullToEmpty(mv.getFrequencyEng())))
+    // return true;
+    // if (!Objects.equals(request.getHoursLecture(), mv.getHoursLecture()))
+    // return true;
+    // if (!Objects.equals(request.getHoursExercise(), mv.getHoursExercise()))
+    // return true;
+    // if (!Objects.equals(request.getHoursPractical(), mv.getHoursPractical()))
+    // return true;
+    // if (!Objects.equals(request.getHoursSeminar(), mv.getHoursSeminar()))
+    // return true;
+    // if (!Objects.equals(nullToEmpty(request.getFirstSemesterAvailable()),
+    // nullToEmpty(mv.getFirstSemesterAvailable())))
+    // return true;
+    // if (!Objects.equals(nullToEmpty(request.getSuccessorModuleName()),
+    // nullToEmpty(mv.getSuccessorModuleName())))
+    // return true;
+    // if (!Objects.equals(request.getLanguageEng(), mv.getLanguageEng()))
+    // return true;
+    // if (request.getDegreeProgramAssignments() != null
+    // && !assignmentSetEquals(request.getDegreeProgramAssignments(),
+    // mv.getDegreeProgramAssignments())) {
+    // return true;
+    // }
+    // return false;
+    // }
+
+    // private static String nullToEmpty(String s) {
+    // return s == null ? "" : s.trim();
+    // }
+
+    // private static boolean
+    // assignmentSetEquals(List<ModuleDegreeProgramAssignmentDTO> requestList,
+    // List<ModuleVersionDegreeProgramAssignment> mvList) {
+    // Set<String> requestSet = new HashSet<>();
+    // if (requestList != null) {
+    // for (ModuleDegreeProgramAssignmentDTO a : requestList) {
+    // if (a != null && a.getDegreeProgramId() != null &&
+    // a.getDegreeProgramSpecializationId() != null) {
+    // requestSet.add(a.getDegreeProgramId() + "," +
+    // a.getDegreeProgramSpecializationId());
+    // }
+    // }
+    // }
+    // Set<String> mvSet = new HashSet<>();
+    // if (mvList != null) {
+    // for (ModuleVersionDegreeProgramAssignment a : mvList) {
+    // if (a.getDegreeProgram() != null && a.getDegreeProgramSpecialization() !=
+    // null) {
+    // mvSet.add(a.getDegreeProgram().getDegreeProgramId() + ","
+    // + a.getDegreeProgramSpecialization().getDegreeProgramSpecializationId());
+    // }
+    // }
+    // }
+    // return requestSet.equals(mvSet);
+    // }
+
+    /**
+     * Applies request content and degree program assignments to the given module
+     * version.
+     */
+    private void applyUpdateRequest(ModuleVersion mv, ModuleVersionUpdateRequestDTO request) {
         mv.setBulletPoints(request.getBulletPoints());
         mv.setTitleEng(request.getTitleEng());
         mv.setTitleDe(request.getTitleDe());
@@ -127,9 +199,10 @@ public class ModuleVersionService {
                             "A module cannot be assigned to the same degree program more than once.");
                 }
             }
+
             assignmentRepository.deleteByModuleVersion_ModuleVersionId(mv.getModuleVersionId());
-            entityManager.flush();
             mv.getDegreeProgramAssignments().clear();
+            entityManager.flush();
             for (ModuleDegreeProgramAssignmentDTO item : request.getDegreeProgramAssignments()) {
                 DegreeProgram program = degreeProgramRepository
                         .findWithSpecializationsByDegreeProgramId(item.getDegreeProgramId())
@@ -149,9 +222,6 @@ public class ModuleVersionService {
                 mv.getDegreeProgramAssignments().add(assignment);
             }
         }
-
-        mv = moduleVersionRepository.save(mv);
-        return ModuleVersionViewDTO.from(mv);
     }
 
     public void updateStatus(Long moduleVersionId) {
@@ -165,10 +235,22 @@ public class ModuleVersionService {
             return;
         }
 
+        List<Feedback> allFeedbacks = mv.getRequiredFeedbacks() != null ? mv.getRequiredFeedbacks() : new ArrayList<>();
+        // Coordinator feedbacks for current assignments + all role-based feedbacks (we
+        // only have one active set of pending at a time).
+        List<Feedback> coordinatorFeedbacks = allFeedbacks.stream()
+                .filter(f -> f.getDegreeProgramSpecialization() != null)
+                .toList();
+        List<Feedback> roleBased = allFeedbacks.stream()
+                .filter(f -> f.getRequiredRole() != null)
+                .toList();
+        List<Feedback> feedbacksToEvaluate = new ArrayList<>(coordinatorFeedbacks);
+        feedbacksToEvaluate.addAll(roleBased);
+
         boolean allFeedbackPositive = true;
         boolean oneFeedbackNegative = false;
         boolean oneFeedbackRejected = false;
-        for (Feedback feedback : mv.getRequiredFeedbacks()) {
+        for (Feedback feedback : feedbacksToEvaluate) {
             if (!feedback.getStatus().equals(FeedbackStatus.APPROVED)) {
                 allFeedbackPositive = false;
             }
@@ -181,12 +263,17 @@ public class ModuleVersionService {
         }
 
         if (allFeedbackPositive) {
-            mv.setStatus(ModuleVersionStatus.ACCEPTED);
-            p.setStatus(ProposalStatus.ACCEPTED);
-            mv.getProposal().setStatus(ProposalStatus.ACCEPTED);
+            boolean anyRoleBased = !roleBased.isEmpty();
+            if (anyRoleBased) {
+                mv.setStatus(ModuleVersionStatus.ACCEPTED);
+                p.setStatus(ProposalStatus.ACCEPTED);
+            } else {
+                mv.setStatus(ModuleVersionStatus.PENDING_FULL_SUBMISSION);
+                p.setStatus(ProposalStatus.PENDING_FULL_SUBMISSION);
+            }
         }
         if (oneFeedbackNegative) {
-            mv.setStatus(ModuleVersionStatus.FEEDBACK_GIVEN);
+            mv.setStatus(ModuleVersionStatus.REQUIRES_REVIEW);
             p.setStatus(ProposalStatus.REQUIRES_REVIEW);
         }
         if (oneFeedbackRejected) {
@@ -197,22 +284,7 @@ public class ModuleVersionService {
         moduleVersionRepository.save(mv);
     }
 
-    public ModuleVersionViewDTO getModuleVersionUpdateDtoFromId(Long moduleVersionId, UUID userId) {
-        var mv = moduleVersionRepository.findById(moduleVersionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Module Version not found"));
-        Proposal p = mv.getProposal();
-        if (!p.getCreatedBy().getUserId().equals(userId)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
-        }
-
-        if (p.getModuleVersions() == null || p.getModuleVersions().isEmpty()) {
-            throw new IllegalStateException("Proposal must have at least one ModuleVersion.");
-        }
-
-        return ModuleVersionViewDTO.from(mv);
-    }
-
-    public ModuleVersionViewDTO getModuleVersionViewDto(Long moduleVersionId, UUID userId) {
+    public ModuleVersionViewDTO getModuleVersion(Long moduleVersionId, UUID userId) {
         ModuleVersion mv = moduleVersionRepository.findById(moduleVersionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Could not find a module version with this ID."));
         Proposal p = mv.getProposal();
@@ -259,5 +331,17 @@ public class ModuleVersionService {
         }
 
         return pdfCreator.createProfessorModuleVersionPdf(mv);
+    }
+
+    ///
+    ///
+    private boolean hasAccessPermission(Proposal proposal, User user) {
+        if (proposal.getCreatedBy().getUserId().equals(user.getUserId())) {
+            return true;
+        }
+
+        return user.getRoles() != null && (user.getRoles().contains(UserRole.QUALITY_MANAGEMENT)
+                || user.getRoles().contains(UserRole.EXAMINATION_BOARD)
+                || user.getRoles().contains(UserRole.ACADEMIC_PROGRAM_ADVISOR));
     }
 }

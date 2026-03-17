@@ -24,6 +24,18 @@ public class Feedback {
     @JoinColumn(name = "feedback_from")
     private User feedbackFrom;
 
+    @Column(name = "invalidated")
+    private boolean invalidated;
+
+    /**
+     * When set, this feedback is for whoever is currently responsible for this
+     * specialization (position-based).
+     */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "degree_program_specialization_id")
+    @JsonIgnore
+    private DegreeProgramSpecialization degreeProgramSpecialization;
+
     @Column(name = "comment")
     private String Comment;
 
@@ -33,7 +45,8 @@ public class Feedback {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "feedback_status")
-    @NotNull private FeedbackStatus status;
+    @NotNull
+    private FeedbackStatus status;
 
     @Column(name = "submission_date")
     private LocalDateTime submissionDate;
@@ -206,23 +219,23 @@ public class Feedback {
 
     public boolean isAllFeedbackPositive() {
         return this.titleAccepted
-            && this.levelAccepted
-            && this.languageAccepted
-            && this.frequencyAccepted
-            && this.creditsAccepted
-            && this.durationAccepted
-            && this.hoursTotalAccepted
-            && this.hoursSelfStudyAccepted
-            && this.hoursPresenceAccepted
-            && this.examinationAchievementsAccepted
-            && this.repetitionAccepted
-            && this.recommendedPrerequisitesAccepted
-            && this.contentAccepted
-            && this.learningOutcomesAccepted
-            && this.teachingMethodsAccepted
-            && this.mediaAccepted
-            && this.literatureAccepted
-            && this.responsiblesAccepted
-            && this.lvSwsLecturerAccepted;
+                && this.levelAccepted
+                && this.languageAccepted
+                && this.frequencyAccepted
+                && this.creditsAccepted
+                && this.durationAccepted
+                && this.hoursTotalAccepted
+                && this.hoursSelfStudyAccepted
+                && this.hoursPresenceAccepted
+                && this.examinationAchievementsAccepted
+                && this.repetitionAccepted
+                && this.recommendedPrerequisitesAccepted
+                && this.contentAccepted
+                && this.learningOutcomesAccepted
+                && this.teachingMethodsAccepted
+                && this.mediaAccepted
+                && this.literatureAccepted
+                && this.responsiblesAccepted
+                && this.lvSwsLecturerAccepted;
     }
 }

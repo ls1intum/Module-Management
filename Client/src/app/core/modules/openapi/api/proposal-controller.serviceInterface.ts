@@ -11,7 +11,6 @@ import { HttpHeaders }                                       from '@angular/comm
 
 import { Observable }                                        from 'rxjs';
 
-import { AddModuleVersionDTO } from '../model/models';
 import { ProposalRequestDTO } from '../model/models';
 import { ProposalViewDTO } from '../model/models';
 import { ProposalsCompactDTO } from '../model/models';
@@ -24,20 +23,6 @@ import { Configuration }                                     from '../configurat
 export interface ProposalControllerServiceInterface {
     defaultHeaders: HttpHeaders;
     configuration: Configuration;
-
-    /**
-     * 
-     * 
-     * @param addModuleVersionDTO 
-     */
-    addModuleVersion(addModuleVersionDTO: AddModuleVersionDTO, extraHttpRequestParams?: any): Observable<ProposalViewDTO>;
-
-    /**
-     * 
-     * 
-     * @param proposalId 
-     */
-    cancelSubmission(proposalId: number, extraHttpRequestParams?: any): Observable<ProposalViewDTO>;
 
     /**
      * 
@@ -71,6 +56,13 @@ export interface ProposalControllerServiceInterface {
      * 
      * @param proposalId 
      */
-    submitProposal(proposalId: number, extraHttpRequestParams?: any): Observable<ProposalViewDTO>;
+    requestCoordinatorsFeedback(proposalId: number, extraHttpRequestParams?: any): Observable<ProposalViewDTO>;
+
+    /**
+     * 
+     * 
+     * @param proposalId 
+     */
+    requestFullFeedback(proposalId: number, extraHttpRequestParams?: any): Observable<ProposalViewDTO>;
 
 }

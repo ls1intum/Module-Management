@@ -14,7 +14,7 @@ export interface SimilarModuleDTO {
     titleEng?: string;
     levelEng?: string;
     languageEng?: string;
-    semesterAvailability?: string;
+    frequencyEng?: string;
     credits?: number;
     duration?: string;
     hoursTotal?: number;

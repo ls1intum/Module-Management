@@ -1,13 +1,6 @@
 <div class="module-edit-layout" style="padding: 1rem 0">
   <aside class="module-edit-stepper-column">
-    <app-module-edit-stepper
-      [steps]="MODULE_EDIT_STEPS"
-      [currentIndex]="currentStepIndex()"
-      [stepCompleted]="stepCompleted()"
-      [feedbacks]="currentVersionFeedbacks()"
-      [status]="moduleVersionStatus()"
-      (stepChange)="goToStep($event)"
-    />
+    <app-module-edit-stepper [steps]="MODULE_EDIT_STEPS" [currentIndex]="currentStepIndex()" [stepStatuses]="stepsStatuses()" (stepChange)="goToStep($event)" />
   </aside>
   <div class="module-edit-form-column">
     <h1 class="text-2xl mb-4">{{ moduleVersionDto()?.titleEng ? 'Edit Proposal for ' + moduleVersionDto()?.titleEng : 'Create New Module Proposal' }}</h1>
@@ -31,10 +24,10 @@
             </label>
             @if (moduleVersionId && hasFeedback('titleFeedback')) {
               <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
                   @if (feedback.titleFeedback) {
                     <p>
-                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                       {{ feedback.titleFeedback }}
                     </p>
                   }
@@ -123,10 +116,10 @@
             <label class="text-xl">Level</label>
             @if (moduleVersionId && hasFeedback('levelFeedback')) {
               <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
                   @if (feedback.levelFeedback) {
                     <p>
-                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                       {{ feedback.levelFeedback }}
                     </p>
                   }
@@ -150,10 +143,10 @@
             <label class="text-xl">Language</label>
             @if (moduleVersionId && hasFeedback('languageFeedback')) {
               <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
                   @if (feedback.languageFeedback) {
                     <p>
-                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                       {{ feedback.languageFeedback }}
                     </p>
                   }
@@ -212,14 +205,62 @@
       }
       @if (currentStepIndex() === 1) {
         <div class="space-y-6">
+          @if (isCreateMode()) {
+            <p-message severity="info" variant="outlined">
+              Complete the first step and create the proposal. After saving, you can use this step to submit for feedback from program coordinators and area responsibles.
+            </p-message>
+          } @else {
+            <p class="text-lg mb-4">
+              Submit to request feedback from program coordinators and area responsibles (first submission). One feedback is required per chosen degree program and area. Complete
+              step 1 first, then use the button below. You can cancel and resubmit later if needed.
+            </p>
+            @if (!isFirstStepComplete()) {
+              <p-message severity="warn" variant="outlined">
+                Complete step 1: fill basic information and add at least one degree program assignment. Then you can submit for coordinator feedback.
+              </p-message>
+            }
+            <!-- @else if (coordinatorFeedbacksForCurrentAssignments().length > 0) {
+              <div class="mb-4">
+                <label class="text-xl block mb-2">Coordinator feedback status (one per chosen program/area)</label>
+                <ul class="space-y-2 list-none p-0 m-0">
+                  @for (fb of coordinatorFeedbacksForCurrentAssignments(); track fb.feedbackId) {
+                    <li class="flex items-center gap-2 flex-wrap">
+                      <span class="font-medium">{{ fb.requestedFromUserName ?? (fb.feedbackRole | feedbackDepartment).text }}:</span>
+                      <p-tag
+                        [value]="(fb.feedbackStatus ?? 'PENDING_FEEDBACK' | feedbackStatus).text"
+                        [severity]="(fb.feedbackStatus ?? 'PENDING_FEEDBACK' | feedbackStatus).severity"
+                      />
+                    </li>
+                  }
+                </ul>
+              </div>
+            } -->
+            <div class="flex flex-wrap gap-2">
+              @if (canRequestCoordinatorsFeedback()) {
+                <p-button
+                  type="button"
+                  severity="success"
+                  label="Submit for feedback"
+                  icon="pi pi-send"
+                  (onClick)="requestCoordinatorsFeedback()"
+                  [loading]="loading()"
+                  [disabled]="loading()"
+                ></p-button>
+              }
+            </div>
+          }
+        </div>
+      }
+      @if (currentStepIndex() === 2) {
+        <div class="space-y-6">
           <div>
             <label class="text-xl">Duration</label>
             @if (moduleVersionId && hasFeedback('durationFeedback')) {
               <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
                   @if (feedback.durationFeedback) {
                     <p>
-                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                       {{ feedback.durationFeedback }}
                     </p>
                   }
@@ -243,10 +284,10 @@
             <label class="text-xl">Repetition</label>
             @if (moduleVersionId && hasFeedback('repetitionFeedback')) {
               <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
                   @if (feedback.repetitionFeedback) {
                     <p>
-                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                       {{ feedback.repetitionFeedback }}
                     </p>
                   }
@@ -270,10 +311,10 @@
               <label class="text-xl">Credits</label>
               @if (moduleVersionId && hasFeedback('creditsFeedback')) {
                 <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                  @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @for (feedback of feedbacks(); track feedback.feedbackId) {
                     @if (feedback.creditsFeedback) {
                       <p>
-                        <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                        <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                         {{ feedback.creditsFeedback }}
                       </p>
                     }
@@ -288,10 +329,10 @@
               <label class="text-xl">Total Hours</label>
               @if (moduleVersionId && hasFeedback('hoursTotalFeedback')) {
                 <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                  @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @for (feedback of feedbacks(); track feedback.feedbackId) {
                     @if (feedback.hoursTotalFeedback) {
                       <p>
-                        <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                        <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                         {{ feedback.hoursTotalFeedback }}
                       </p>
                     }
@@ -306,10 +347,10 @@
               <label class="text-xl">Self-Study Hours</label>
               @if (moduleVersionId && hasFeedback('hoursSelfStudyFeedback')) {
                 <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                  @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @for (feedback of feedbacks(); track feedback.feedbackId) {
                     @if (feedback.hoursSelfStudyFeedback) {
                       <p>
-                        <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                        <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                         {{ feedback.hoursSelfStudyFeedback }}
                       </p>
                     }
@@ -324,10 +365,10 @@
               <label class="text-xl">Presence Hours</label>
               @if (moduleVersionId && hasFeedback('hoursPresenceFeedback')) {
                 <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                  @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                  @for (feedback of feedbacks(); track feedback.feedbackId) {
                     @if (feedback.hoursPresenceFeedback) {
                       <p>
-                        <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                        <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                         {{ feedback.hoursPresenceFeedback }}
                       </p>
                     }
@@ -341,16 +382,16 @@
           </div>
         </div>
       }
-      @if (currentStepIndex() === 2) {
+      @if (currentStepIndex() === 3) {
         <div class="space-y-6">
           <div>
             <label class="text-xl">Examination Achievements</label>
             @if (moduleVersionId && hasFeedback('examinationAchievementsFeedback')) {
               <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
                   @if (feedback.examinationAchievementsFeedback) {
                     <p>
-                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                       {{ feedback.examinationAchievementsFeedback }}
                     </p>
                   }
@@ -392,10 +433,10 @@
             <label class="text-xl">Recommended Prerequisites</label>
             @if (moduleVersionId && hasFeedback('recommendedPrerequisitesFeedback')) {
               <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
                   @if (feedback.recommendedPrerequisitesFeedback) {
                     <p>
-                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                       {{ feedback.recommendedPrerequisitesFeedback }}
                     </p>
                   }
@@ -408,16 +449,16 @@
           </div>
         </div>
       }
-      @if (currentStepIndex() === 3) {
+      @if (currentStepIndex() === 4) {
         <div class="space-y-6">
           <div>
             <label class="text-xl">Module Content</label>
             @if (moduleVersionId && hasFeedback('contentFeedback')) {
               <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
                   @if (feedback.contentFeedback) {
                     <p>
-                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                       {{ feedback.contentFeedback }}
                     </p>
                   }
@@ -450,10 +491,10 @@
             <label class="text-xl">Learning Outcomes</label>
             @if (moduleVersionId && hasFeedback('learningOutcomesFeedback')) {
               <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
                   @if (feedback.learningOutcomesFeedback) {
                     <p>
-                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                       {{ feedback.learningOutcomesFeedback }}
                     </p>
                   }
@@ -486,10 +527,10 @@
             <label class="text-xl">Teaching Methods</label>
             @if (moduleVersionId && hasFeedback('teachingMethodsFeedback')) {
               <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
                   @if (feedback.teachingMethodsFeedback) {
                     <p>
-                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                       {{ feedback.teachingMethodsFeedback }}
                     </p>
                   }
@@ -520,16 +561,16 @@
           </div>
         </div>
       }
-      @if (currentStepIndex() === 4) {
+      @if (currentStepIndex() === 5) {
         <div class="space-y-6">
           <div>
             <label class="text-xl">Media used</label>
             @if (moduleVersionId && hasFeedback('mediaFeedback')) {
               <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
                   @if (feedback.mediaFeedback) {
                     <p>
-                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                       {{ feedback.mediaFeedback }}
                     </p>
                   }
@@ -545,10 +586,10 @@
             <label class="text-xl">Literature</label>
             @if (moduleVersionId && hasFeedback('literatureFeedback')) {
               <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
                   @if (feedback.literatureFeedback) {
                     <p>
-                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                       {{ feedback.literatureFeedback }}
                     </p>
                   }
@@ -564,10 +605,10 @@
             <label class="text-xl">Responsibles</label>
             @if (moduleVersionId && hasFeedback('responsiblesFeedback')) {
               <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
                   @if (feedback.responsiblesFeedback) {
                     <p>
-                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                       {{ feedback.responsiblesFeedback }}
                     </p>
                   }
@@ -583,10 +624,10 @@
             <label class="text-xl">Lecturer</label>
             @if (moduleVersionId && hasFeedback('lvSwsLecturerFeedback')) {
               <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackRole) {
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
                   @if (feedback.lvSwsLecturerFeedback) {
                     <p>
-                      <span class="underline">{{ (feedback.feedbackRole! | feedbackDepartment).text }}:</span>
+                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
                       {{ feedback.lvSwsLecturerFeedback }}
                     </p>
                   }
@@ -597,6 +638,53 @@
               <textarea pTextarea formControlName="lvSwsLecturerEng" placeholder="Who will hold the lectures?" rows="4" fluid [autoResize]="true"></textarea>
             </div>
           </div>
+        </div>
+      }
+
+      @if (currentStepIndex() === 6) {
+        <div class="space-y-6">
+          @if (isCreateMode()) {
+            <p-message severity="info" variant="outlined">
+              Complete all steps and get coordinator feedback accepted first. Then you can submit for full feedback (quality management, program advisor, examination board).
+            </p-message>
+          } @else {
+            <p class="text-lg mb-4">
+              Submit for full feedback from quality management, academic program advisor, and examination board. This requires all steps to be completed and all program/area
+              coordinator feedback to be accepted.
+            </p>
+            <!-- @if (coordinatorFeedbacksForCurrentAssignments().length > 0 && !allCoordinatorFeedbacksAccepted()) {
+              <p-message severity="warn" variant="outlined">
+                All coordinator feedback must be accepted before you can submit for full feedback. Complete the first submission step and wait for approvals.
+              </p-message>
+            }
+            @if (currentVersionFeedbacks().length > 0) {
+              <div class="mb-4">
+                <label class="text-xl block mb-2">Feedback status</label>
+                <ul class="space-y-2 list-none p-0 m-0">
+                  @for (fb of currentVersionFeedbacks(); track fb.feedbackId) {
+                    <li class="flex items-center gap-2 flex-wrap">
+                      <span class="font-medium">{{ fb.requestedFromUserName ?? (fb.feedbackRole | feedbackDepartment).text }}:</span>
+                      <p-tag
+                        [value]="(fb.feedbackStatus ?? 'PENDING_FEEDBACK' | feedbackStatus).text"
+                        [severity]="(fb.feedbackStatus ?? 'PENDING_FEEDBACK' | feedbackStatus).severity"
+                      />
+                    </li>
+                  }
+                </ul>
+              </div>
+            } -->
+            @if (canRequestFullFeedback()) {
+              <p-button
+                type="button"
+                severity="success"
+                label="Submit for full feedback"
+                icon="pi pi-send"
+                (onClick)="requestFullFeedback()"
+                [loading]="loading()"
+                [disabled]="loading()"
+              ></p-button>
+            }
+          }
         </div>
       }
 
@@ -619,9 +707,6 @@
           }
           @if (!isCreateMode() && currentStepIndex() < MODULE_EDIT_STEPS.length - 1) {
             <p-button type="button" severity="contrast" (onClick)="goToStep(currentStepIndex() + 1)">Next</p-button>
-          }
-          @if (!isCreateMode() && currentStepIndex() === MODULE_EDIT_STEPS.length - 1 && canSubmitForFeedback()) {
-            <p-button type="button" severity="success" (onClick)="submitForFeedback()" [disabled]="loading()">Submit for feedback</p-button>
           }
           @if (!isCreateMode()) {
             <p-button type="submit" severity="contrast" [disabled]="loading()">

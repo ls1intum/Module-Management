@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0012_feedback_requested_from_user
+      author: module-management
+      changes:
+        - addColumn:
+            tableName: feedback
+            columns:
+              - column:
+                  name: degree_program_specialization_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: feedback_degree_program_specialization_fk
+                    references: degree_program_specialization(degree_program_specialization_id)
+              - column:
+                  name: invalidated
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+                    defaultValueBoolean: false
+
+        - dropNotNullConstraint:
+            tableName: feedback
+            columnName: required_role
+            columnDataType: VARCHAR(255)

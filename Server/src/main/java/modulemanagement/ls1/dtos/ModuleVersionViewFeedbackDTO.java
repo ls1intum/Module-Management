@@ -10,13 +10,16 @@ import java.time.LocalDateTime;
 
 @Data
 public class ModuleVersionViewFeedbackDTO {
-    @NotNull private Long feedbackId;
+    @NotNull
+    private Long feedbackId;
     private String feedbackFromFirstName;
     private String feedbackFromLastName;
     private String rejectionComment;
     private UserRole feedbackRole;
+    private String requestedFromUserName;
     private FeedbackStatus feedbackStatus;
     private LocalDateTime submissionDate;
+    private Long degreeProgramSpecializationId;
 
     private String titleFeedback;
     private String levelFeedback;
@@ -47,8 +50,17 @@ public class ModuleVersionViewFeedbackDTO {
         }
         dto.setRejectionComment(f.getComment());
         dto.setFeedbackRole(f.getRequiredRole());
+        if (f.getDegreeProgramSpecialization() != null
+                && f.getDegreeProgramSpecialization().getResponsibleUser() != null) {
+            var resp = f.getDegreeProgramSpecialization().getResponsibleUser();
+            dto.setRequestedFromUserName(resp.getFirstName() + " " + resp.getLastName() + " ("
+                    + f.getDegreeProgramSpecialization().getName() + ")");
+        }
         dto.setFeedbackStatus(f.getStatus());
         dto.setSubmissionDate(f.getSubmissionDate());
+        if (f.getDegreeProgramSpecialization() != null) {
+            dto.setDegreeProgramSpecializationId(f.getDegreeProgramSpecialization().getDegreeProgramSpecializationId());
+        }
         dto.setTitleFeedback(f.getTitleFeedback());
         dto.setLevelFeedback(f.getLevelFeedback());
         dto.setLanguageFeedback(f.getLanguageFeedback());

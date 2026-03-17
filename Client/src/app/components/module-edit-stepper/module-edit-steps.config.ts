@@ -1,3 +1,12 @@
+/** Status of a step in the stepper; determines how the step is displayed (number, check, or pending color). */
+export const StepperStatus = {
+  Default: 'default',
+  Pending: 'pending',
+  Completed: 'completed'
+} as const;
+
+export type StepperStatus = (typeof StepperStatus)[keyof typeof StepperStatus];
+
 export interface ModuleEditStepConfig {
   id: string;
   title: string;
@@ -27,6 +36,11 @@ export const MODULE_EDIT_STEPS: ModuleEditStepConfig[] = [
     requiredControlNames: ['titleEng']
   },
   {
+    id: 'submit-coordinator-feedback',
+    title: 'Submit for coordinator feedback',
+    controlNames: []
+  },
+  {
     id: 'schedule-workload',
     title: 'Schedule & workload',
     controlNames: ['duration', 'repetitionEng', 'hoursTotal', 'hoursSelfStudy', 'hoursPresence', 'credits']
@@ -45,5 +59,16 @@ export const MODULE_EDIT_STEPS: ModuleEditStepConfig[] = [
     id: 'media-literature',
     title: 'Media, literature & responsibles',
     controlNames: ['mediaEng', 'literatureEng', 'responsiblesEng', 'lvSwsLecturerEng']
+  },
+  {
+    id: 'submit-full-feedback',
+    title: 'Submit for full feedback',
+    controlNames: []
   }
+];
+
+/** Steps for the module overview (view) page: edit steps + Feedbacks as final step. */
+export const MODULE_VIEW_STEPS: ModuleEditStepConfig[] = [
+  ...MODULE_EDIT_STEPS,
+  { id: 'feedbacks', title: 'Feedbacks', controlNames: [] }
 ];

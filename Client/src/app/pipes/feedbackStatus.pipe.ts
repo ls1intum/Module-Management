@@ -11,13 +11,6 @@ export class FeedbackStatusPipe implements PipeTransform {
     severity: Tag['severity'];
   } {
     switch (status) {
-      case 'PENDING_SUBMISSION':
-        return {
-          text: 'Pending Submission',
-          normalColor: 'bg-gray-500 text-white',
-          fadedColor: 'bg-gray-300 text-white',
-          severity: 'secondary'
-        };
       case 'PENDING_FEEDBACK':
         return {
           text: 'Pending Feedback',
@@ -46,20 +39,7 @@ export class FeedbackStatusPipe implements PipeTransform {
           fadedColor: 'bg-red-300 text-white',
           severity: 'danger'
         };
-      case 'OBSOLETE':
-        return {
-          text: 'Obsolete',
-          normalColor: 'bg-gray-300 text-gray-600',
-          fadedColor: 'bg-gray-200 text-gray-600',
-          severity: 'secondary'
-        };
-      case 'CANCELLED':
-        return {
-          text: 'Cancelled',
-          normalColor: 'bg-gray-400 text-white',
-          fadedColor: 'bg-gray-300 text-white',
-          severity: 'secondary'
-        };
+
       default:
         return {
           text: status,

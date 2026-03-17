@@ -2,7 +2,7 @@ import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import type { ModuleEditStepConfig } from './module-edit-steps.config';
-import type { ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
+import { StepperStatus } from './module-edit-steps.config';
 
 @Component({
   selector: 'app-module-edit-stepper',
@@ -12,11 +12,11 @@ import type { ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
   styleUrl: './module-edit-stepper.component.css'
 })
 export class ModuleEditStepperComponent {
+  readonly StepperStatus = StepperStatus;
+
   steps = input.required<ModuleEditStepConfig[]>();
   currentIndex = input.required<number>();
-  stepCompleted = input.required<boolean[]>();
-  feedbacks = input<ModuleVersionViewFeedbackDTO[] | undefined>([]);
-  status = input<string | undefined>();
+  stepStatuses = input.required<StepperStatus[]>();
 
   stepChange = output<number>();
 

@@ -5,6 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { ProposalBaseComponent } from '../../components/create-edit-base/create-edit-base.component';
 import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
+import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
 import { ToggleButtonGroupComponent } from '../../components/toggle-button-group/toggle-button-group.component';
 import { ModuleEditStepperComponent } from '../../components/module-edit-stepper/module-edit-stepper.component';
 import { ModuleDegreeProgramAssignmentDTO, ProposalRequestDTO } from '../../core/modules/openapi';
@@ -15,6 +16,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TagModule } from 'primeng/tag';
 
 @Component({
   selector: 'app-proposal-create',
@@ -24,6 +26,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     FormsModule,
     RouterModule,
     FeedbackDepartmentPipe,
+    FeedbackStatusPipe,
     ToggleButtonGroupComponent,
     ModuleEditStepperComponent,
     ButtonModule,
@@ -32,7 +35,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     InputNumberModule,
     MessageModule,
     SelectModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    TagModule
   ],
   templateUrl: '../../components/create-edit-base/create-edit-base.component.html',
   styleUrl: '../../components/create-edit-base/create-edit-base-layout.css'

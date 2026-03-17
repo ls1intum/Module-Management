@@ -9,9 +9,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface DegreeProgramSpecializationRepository extends JpaRepository<DegreeProgramSpecialization, Long> {
+
+    boolean existsByResponsibleUser_UserId(UUID userId);
+
+    List<DegreeProgramSpecialization> findByResponsibleUser_UserId(UUID userId);
 
     @EntityGraph(attributePaths = { "responsibleUser" })
     @Query("SELECT s FROM DegreeProgramSpecialization s")

@@ -8,13 +8,15 @@ import {
   ProposalControllerService,
   ModuleVersionViewDTO,
   CompletionServiceResponseDTO,
-  ModuleVersionViewFeedbackDTO
+  ModuleVersionViewFeedbackDTO,
+  ProposalViewDTO
 } from '../../core/modules/openapi';
 import { DegreeProgramsControllerService } from '../../core/modules/openapi/api/degree-programs-controller.service';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
-import { MODULE_EDIT_STEPS } from '../module-edit-stepper/module-edit-steps.config';
+import { MODULE_EDIT_STEPS, StepperStatus } from '../module-edit-stepper/module-edit-steps.config';
+import { BreadcrumbLabelsService } from '../breadcrumb/breadcrumb-labels.service';
 
 @Component({
   template: ''
@@ -26,6 +28,7 @@ export abstract class ProposalBaseComponent {
   protected moduleVersionService = inject(ModuleVersionControllerService);
   protected proposalService = inject(ProposalControllerService);
   protected degreeProgramsService = inject(DegreeProgramsControllerService);
+  protected breadcrumbLabels = inject(BreadcrumbLabelsService);
 
   readonly MODULE_EDIT_STEPS = MODULE_EDIT_STEPS;
 
@@ -46,19 +49,27 @@ export abstract class ProposalBaseComponent {
   /** Updated on form valueChanges so stepCompleted computed re-runs when user types. */
   private formValueVersion = signal(0);
 
-  stepCompleted = computed(() => {
+  stepsStatuses = computed(() => {
     this.formValueVersion();
     const form = this.proposalForm;
     const assignmentsList = this.assignments();
-    return MODULE_EDIT_STEPS.map((step, index) => {
-      const allFieldsFilled = step.controlNames.every((name) => this.controlHasValue(form.get(name)));
+    return MODULE_EDIT_STEPS.map((step) => {
       if (step.id === 'basic') {
-        const hasCompleteAssignment = assignmentsList.some(
-          (a) => a.degreeProgramId != null && a.degreeProgramSpecializationId != null
-        );
-        return allFieldsFilled && hasCompleteAssignment;
+        const allFieldsFilled = step.controlNames.every((name) => this.controlHasValue(form.get(name)));
+        const hasCompleteAssignment = assignmentsList.some((a) => a.degreeProgramId != null && a.degreeProgramSpecializationId != null);
+        if (allFieldsFilled && hasCompleteAssignment) {
+          return StepperStatus.Completed;
+        } else {
+          return StepperStatus.Default;
+        }
       }
-      return allFieldsFilled;
+      if (step.id === 'submit-coordinator-feedback') {
+        return StepperStatus.Default;
+      }
+      if (step.id === 'submit-full-feedback') {
+        return StepperStatus.Default;
+      }
+      return step.controlNames.every((name) => this.controlHasValue(form.get(name))) ? StepperStatus.Completed : StepperStatus.Default;
     });
   });
 
@@ -76,23 +87,31 @@ export abstract class ProposalBaseComponent {
     return dto && 'status' in dto ? (dto as ModuleVersionViewDTO).status : undefined;
   });
 
-  currentVersionFeedbacks = computed(() => {
-    const dto = this.moduleVersionDto();
-    return dto && 'feedbacks' in dto ? ((dto as ModuleVersionViewDTO).feedbacks ?? []) : [];
+  /** First step (basic + assignments) is complete. */
+  isFirstStepComplete = computed(() => this.stepsStatuses()[0] === StepperStatus.Completed);
+
+  /** Can submit for feedback (never submitted yet). */
+  canRequestCoordinatorsFeedback = computed(() => {
+    const status = this.moduleVersionStatus();
+    return status === 'PENDING_FIRST_SUBMISSION' && this.isFirstStepComplete();
   });
 
-  canSubmitForFeedback = computed(() => {
-    const dto = this.moduleVersionDto();
-    const status = dto && 'status' in dto ? (dto as ModuleVersionViewDTO).status : null;
-    return status === 'PENDING_SUBMISSION' && this.proposalForm.valid;
+  /** All form steps (basic, schedule, exam, content, media) are complete – not the two submission steps. */
+  allFormStepsComplete = computed(() => {
+    const completed = this.stepsStatuses();
+    return (
+      completed[0] === StepperStatus.Completed &&
+      completed[2] === StepperStatus.Completed &&
+      completed[3] === StepperStatus.Completed &&
+      completed[4] === StepperStatus.Completed &&
+      completed[5] === StepperStatus.Completed
+    );
   });
 
-  private _syncAssignmentsFromDto = effect(() => {
-    const dto = this.moduleVersionDto();
-    if (dto && 'degreeProgramAssignments' in dto && Array.isArray((dto as ModuleVersionViewDTO).degreeProgramAssignments)) {
-      const list = (dto as ModuleVersionViewDTO).degreeProgramAssignments ?? [];
-      this.assignments.set(list.map((a) => ({ degreeProgramId: a.degreeProgramId ?? null, degreeProgramSpecializationId: a.degreeProgramSpecializationId ?? null })));
-    }
+  /** Can submit for full feedback (second submission): PENDING_FULL_SUBMISSION, all steps done, all coordinator feedback accepted. */
+  canRequestFullFeedback = computed(() => {
+    const status = this.moduleVersionStatus();
+    return status === 'PENDING_FULL_SUBMISSION' && this.allFormStepsComplete();
   });
 
   showPrompt: { [key: string]: boolean } = {
@@ -100,13 +119,6 @@ export abstract class ProposalBaseComponent {
     content: false,
     learning: false,
     teaching: false
-  };
-
-  fieldMapping: { [key: string]: string } = {
-    content: 'contentEng',
-    examination: 'examinationAchievementsEng',
-    learning: 'learningOutcomesEng',
-    teaching: 'teachingMethodsEng'
   };
 
   togglePromptField(field: string) {
@@ -213,13 +225,53 @@ export abstract class ProposalBaseComponent {
     this.setAssignmentSpecialization(rowIndex, null);
   }
 
-  submitForFeedback(): void {
+  requestCoordinatorsFeedback(): void {
     const dto = this.moduleVersionDto();
     const proposalId = dto && 'proposalId' in dto ? (dto as ModuleVersionViewDTO).proposalId : null;
     if (proposalId == null) return;
-    this.proposalService.submitProposal(proposalId).subscribe({
-      next: () => this.router.navigate(['/proposals/view', proposalId]),
-      error: (err: HttpErrorResponse) => this.error.set(err.error?.message ?? err.error ?? 'Failed to submit')
+    this.loading.set(true);
+    this.error.set(null);
+    this.proposalService.requestCoordinatorsFeedback(proposalId).subscribe({
+      next: (response: ProposalViewDTO) => {
+        this.moduleVersionDto.set(response);
+        // When backend created a new version (immutable versioning), switch to editing the new version
+        const newId = response?.latestModuleVersion?.moduleVersionId;
+        if (newId != null && newId !== this.moduleVersionId) {
+          this.moduleVersionId = newId;
+          this.breadcrumbLabels.versionLabel.set(response?.latestVersion != null ? `Version ${response.latestVersion}` : null);
+          this.router.navigate(['/proposals/view', proposalId, 'version', newId, 'edit'], { replaceUrl: true });
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        this.error.set(err.error?.message ?? err.error ?? 'Failed to submit');
+        this.loading.set(false);
+      },
+      complete: () => this.loading.set(false)
+    });
+  }
+
+  requestFullFeedback(): void {
+    const dto = this.moduleVersionDto();
+    const proposalId = dto && 'proposalId' in dto ? (dto as ModuleVersionViewDTO).proposalId : null;
+    if (proposalId == null) return;
+    this.loading.set(true);
+    this.error.set(null);
+    this.proposalService.requestFullFeedback(proposalId).subscribe({
+      next: (response: ProposalViewDTO) => {
+        this.moduleVersionDto.set(response);
+        // When backend created a new version (immutable versioning), switch to editing the new version
+        const newId = response?.latestModuleVersion?.moduleVersionId;
+        if (newId != null && newId !== this.moduleVersionId) {
+          this.moduleVersionId = newId;
+          this.breadcrumbLabels.versionLabel.set(response?.latestVersion != null ? `Version ${response.latestVersion}` : null);
+          this.router.navigate(['/proposals/view', proposalId, 'version', newId, 'edit'], { replaceUrl: true });
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        this.error.set(err.error?.message ?? err.error ?? 'Failed to submit for full feedback');
+        this.loading.set(false);
+      },
+      complete: () => this.loading.set(false)
     });
   }
 

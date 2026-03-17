@@ -1,8 +1,15 @@
 <nav class="stepper-nav">
   @for (step of steps(); track step.id; let i = $index) {
-    <button type="button" class="step-item" [class.step-item--active]="i === currentIndex()" [class.step-item--completed]="stepCompleted()[i]" (click)="goToStep(i)">
+    <button
+      type="button"
+      class="step-item"
+      [class.step-item--active]="i === currentIndex()"
+      [class.step-item--completed]="stepStatuses()[i] === StepperStatus.Completed"
+      [class.step-item--pending]="stepStatuses()[i] === StepperStatus.Pending"
+      (click)="goToStep(i)"
+    >
       <span class="step-number">
-        @if (stepCompleted()[i]) {
+        @if (stepStatuses()[i] === StepperStatus.Completed) {
           <i class="pi pi-check"></i>
         } @else {
           {{ i + 1 }}

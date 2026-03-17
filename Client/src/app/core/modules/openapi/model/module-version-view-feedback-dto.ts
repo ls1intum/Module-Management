@@ -15,8 +15,10 @@ export interface ModuleVersionViewFeedbackDTO {
     feedbackFromLastName?: string;
     rejectionComment?: string;
     feedbackRole?: ModuleVersionViewFeedbackDTO.FeedbackRoleEnum;
+    requestedFromUserName?: string;
     feedbackStatus?: ModuleVersionViewFeedbackDTO.FeedbackStatusEnum;
     submissionDate?: string;
+    degreeProgramSpecializationId?: number;
     titleFeedback?: string;
     levelFeedback?: string;
     languageFeedback?: string;
@@ -38,23 +40,22 @@ export interface ModuleVersionViewFeedbackDTO {
     lvSwsLecturerFeedback?: string;
 }
 export namespace ModuleVersionViewFeedbackDTO {
-    export type FeedbackRoleEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR';
+    export type FeedbackRoleEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR' | 'PROGRAM_COORDINATOR' | 'SPECIALIZATION_AREA_RESPONSIBLE';
     export const FeedbackRoleEnum = {
         Admin: 'ADMIN' as FeedbackRoleEnum,
         QualityManagement: 'QUALITY_MANAGEMENT' as FeedbackRoleEnum,
         AcademicProgramAdvisor: 'ACADEMIC_PROGRAM_ADVISOR' as FeedbackRoleEnum,
         ExaminationBoard: 'EXAMINATION_BOARD' as FeedbackRoleEnum,
-        Professor: 'PROFESSOR' as FeedbackRoleEnum
+        Professor: 'PROFESSOR' as FeedbackRoleEnum,
+        ProgramCoordinator: 'PROGRAM_COORDINATOR' as FeedbackRoleEnum,
+        SpecializationAreaResponsible: 'SPECIALIZATION_AREA_RESPONSIBLE' as FeedbackRoleEnum
     };
-    export type FeedbackStatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'APPROVED' | 'FEEDBACK_GIVEN' | 'REJECTED' | 'OBSOLETE' | 'CANCELLED';
+    export type FeedbackStatusEnum = 'PENDING_FEEDBACK' | 'APPROVED' | 'FEEDBACK_GIVEN' | 'REJECTED';
     export const FeedbackStatusEnum = {
-        PendingSubmission: 'PENDING_SUBMISSION' as FeedbackStatusEnum,
         PendingFeedback: 'PENDING_FEEDBACK' as FeedbackStatusEnum,
         Approved: 'APPROVED' as FeedbackStatusEnum,
         FeedbackGiven: 'FEEDBACK_GIVEN' as FeedbackStatusEnum,
-        Rejected: 'REJECTED' as FeedbackStatusEnum,
-        Obsolete: 'OBSOLETE' as FeedbackStatusEnum,
-        Cancelled: 'CANCELLED' as FeedbackStatusEnum
+        Rejected: 'REJECTED' as FeedbackStatusEnum
     };
 }
 

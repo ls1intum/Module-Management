@@ -32,6 +32,12 @@
   color: white;
 }
 
+/* Feedback step(s): yellow/orange when at least one feedback is pending */
+.step-item--pending .step-number {
+  background: var(--p-warn-color, #eab308);
+  color: var(--p-primary-contrast-color, #1a1a1a);
+}
+
 .step-number {
   flex-shrink: 0;
   width: 1.75rem;

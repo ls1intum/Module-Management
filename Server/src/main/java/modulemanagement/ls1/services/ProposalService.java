@@ -1,6 +1,5 @@
 package modulemanagement.ls1.services;
 
-import jakarta.validation.Valid;
 import modulemanagement.ls1.dtos.*;
 import modulemanagement.ls1.enums.*;
 import modulemanagement.ls1.models.DegreeProgram;
@@ -18,16 +17,19 @@ import modulemanagement.ls1.shared.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Validated
 public class ProposalService {
 
     private final ProposalRepository proposalRepository;
@@ -48,7 +50,7 @@ public class ProposalService {
         Proposal p = new Proposal();
         p.setCreatedBy(user);
         p.setCreationDate(LocalDateTime.now());
-        p.setStatus(ProposalStatus.PENDING_SUBMISSION);
+        p.setStatus(ProposalStatus.PENDING_FIRST_SUBMISSION);
         p = proposalRepository.save(p);
 
         ModuleVersion mv = new ModuleVersion();
@@ -56,7 +58,7 @@ public class ProposalService {
         mv.setModuleId(null);
         mv.setCreationDate(LocalDateTime.now());
         mv.setProposal(p);
-        mv.setStatus(ModuleVersionStatus.PENDING_SUBMISSION);
+        mv.setStatus(ModuleVersionStatus.PENDING_FIRST_SUBMISSION);
         mv.setBulletPoints(request.getBulletPoints());
         mv.setTitleEng(request.getTitleEng());
         mv.setTitleDe(request.getTitleDe());
@@ -88,7 +90,6 @@ public class ProposalService {
         mv.setLiteratureEng(request.getLiteratureEng());
         mv.setResponsiblesEng(request.getResponsiblesEng());
         mv.setLvSwsLecturerEng(request.getLvSwsLecturerEng());
-        mv = moduleVersionRepository.save(mv);
 
         if (request.getDegreeProgramAssignments() != null && !request.getDegreeProgramAssignments().isEmpty()) {
             List<Long> programIds = request.getDegreeProgramAssignments().stream()
@@ -116,56 +117,17 @@ public class ProposalService {
                 assignment.setDegreeProgramSpecialization(spec);
                 mv.getDegreeProgramAssignments().add(assignment);
             }
-            moduleVersionRepository.save(mv);
         }
 
-        List<Feedback> feedbacks = new ArrayList<>();
-        createNewFeedbacks(mv, feedbacks);
-        feedbacks = feedbackRepository.saveAll(feedbacks);
-        mv.setRequiredFeedbacks(feedbacks);
+        mv.setRequiredFeedbacks(new ArrayList<>());
         moduleVersionRepository.save(mv);
-        p.addModuleVersion(mv);
-        proposalRepository.save(p);
-        return ProposalViewDTO.from(p);
-    }
-
-    public static void createNewFeedbacks(ModuleVersion mv, List<Feedback> feedbacks) {
-        for (UserRole ad : UserRole.values()) {
-            if (ad.equals(UserRole.PROFESSOR) || ad.equals(UserRole.ADMIN))
-                continue;
-            Feedback feedback = new Feedback();
-            feedback.setStatus(FeedbackStatus.PENDING_SUBMISSION);
-            feedback.setRequiredRole(ad);
-            feedback.setModuleVersion(mv);
-            feedbacks.add(feedback);
-        }
-    }
-
-    public ProposalViewDTO addModuleVersion(UUID userId, @Valid AddModuleVersionDTO request) {
-        Proposal p = proposalRepository.findById(request.getProposalId())
-                .orElseThrow(() -> new ResourceNotFoundException("Proposal not found"));
-        if (!userId.equals(p.getCreatedBy().getUserId()))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-                    "You cannot add a module version to a module you did not create.");
-        if (!p.getStatus().equals(ProposalStatus.REQUIRES_REVIEW))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "You can only add a new module version, if the proposal requires a review.");
-
-        for (Feedback f : p.getLatestModuleVersionWithContent().getRequiredFeedbacks()) {
-            if (f.getStatus().equals(FeedbackStatus.PENDING_FEEDBACK)) {
-                f.setStatus(FeedbackStatus.OBSOLETE);
-            }
-        }
-
-        p.addNewModuleVersion();
+        p.getModuleVersions().add(mv);
         proposalRepository.save(p);
         return ProposalViewDTO.from(p);
     }
 
     public List<ProposalsCompactDTO> getCompactProposalsOfUser(UUID userId) {
-        return proposalRepository.findAll()
-                .stream()
-                .filter(proposal -> proposal.getCreatedBy().getUserId().equals(userId))
+        return proposalRepository.findByCreatedBy_UserId(userId).stream()
                 .map(p -> new ProposalsCompactDTO(
                         p.getProposalId(),
                         p.getCreatedBy().getFirstName(),
@@ -190,7 +152,8 @@ public class ProposalService {
 
     }
 
-    public ProposalViewDTO submitProposal(Long proposalId, UUID userId) {
+    @Transactional
+    public ProposalViewDTO requestCoordinatorsFeedback(Long proposalId, UUID userId) {
         Proposal proposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> new IllegalArgumentException("No proposal with id " + proposalId + " found"));
         if (!proposal.getCreatedBy().getUserId().equals(userId)) {
@@ -202,64 +165,102 @@ public class ProposalService {
 
         ModuleVersion mv = proposal.getLatestModuleVersionWithContent();
 
-        if (!mv.getStatus().equals(ModuleVersionStatus.PENDING_SUBMISSION)) {
-            throw new IllegalStateException("Proposal is not pending submission. It is " + mv.getStatus() + ".");
+        if (!mv.getStatus().equals(ModuleVersionStatus.PENDING_FIRST_SUBMISSION)) {
+            throw new IllegalStateException("Proposal is not pending first submission. It is " + mv.getStatus() + ".");
         }
 
-        if (!mv.isCompleted()) {
-            throw new IllegalStateException("All required fields in ModuleVersion must be filled.");
+        if (!mv.isFirstStepComplete()) {
+            throw new IllegalStateException(
+                    "Step 1 must be complete: English title and at least one degree program assignment with a chosen specialization.");
         }
 
-        mv.setStatus(ModuleVersionStatus.PENDING_FEEDBACK);
-        proposal.setStatus(ProposalStatus.PENDING_FEEDBACK);
-        List<Feedback> feedbacks = mv.getRequiredFeedbacks();
-        for (Feedback feedback : feedbacks) {
+        List<Feedback> requiredFeedbacks = new ArrayList<>();
+
+        for (ModuleVersionDegreeProgramAssignment assignment : mv.getDegreeProgramAssignments()) {
+            var spec = assignment.getDegreeProgramSpecialization();
+            Feedback feedback = new Feedback();
             feedback.setStatus(FeedbackStatus.PENDING_FEEDBACK);
+            feedback.setDegreeProgramSpecialization(spec);
+            feedback.setRequiredRole(null);
+            feedback.setModuleVersion(mv);
+            requiredFeedbacks.add(feedbackRepository.save(feedback));
         }
-        feedbackRepository.saveAll(feedbacks);
+
+        mv.setStatus(ModuleVersionStatus.PENDING_COORDINATOR_FEEDBACK);
+        proposal.setStatus(ProposalStatus.PENDING_COORDINATOR_FEEDBACK);
         moduleVersionRepository.save(mv);
+
+        // to keep the version with requested feedback immutable
+        proposal.addNewModuleVersion();
         proposalRepository.save(proposal);
+
         return ProposalViewDTO.from(proposal);
     }
 
-    public ProposalViewDTO cancelSubmission(Long proposalId, UUID userId) {
+    /**
+     * Roles that receive feedback in the second submission (after coordinator
+     * feedback is accepted).
+     */
+    private static final Set<UserRole> FULL_FEEDBACK_ROLES = Set.of(
+            UserRole.QUALITY_MANAGEMENT,
+            UserRole.ACADEMIC_PROGRAM_ADVISOR,
+            UserRole.EXAMINATION_BOARD);
+
+    @Transactional
+    public ProposalViewDTO requestFullFeedback(Long proposalId, UUID userId) {
         Proposal proposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> new IllegalArgumentException("No proposal with id " + proposalId + " found"));
-
         if (!proposal.getCreatedBy().getUserId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
         }
+        if (proposal.getModuleVersions() == null || proposal.getModuleVersions().isEmpty()) {
+            throw new IllegalStateException("Proposal must have at least one ModuleVersion.");
+        }
 
         ModuleVersion mv = proposal.getLatestModuleVersionWithContent();
-        if (!mv.getStatus().equals(ModuleVersionStatus.PENDING_FEEDBACK)) {
+        if (!mv.getStatus().equals(ModuleVersionStatus.PENDING_FULL_SUBMISSION)) {
             throw new IllegalStateException(
-                    "Only submitted proposals can cancel their submission. This proposal is " + mv.getStatus() + ".");
+                    "Proposal must be in PENDING_FULL_SUBMISSION (coordinator feedback accepted). It is "
+                            + mv.getStatus() + ".");
+        }
+        if (!mv.isCompleted()) {
+            throw new IllegalStateException("All steps must be completed before submitting for full feedback.");
         }
 
-        boolean oneFeedbackNotPending = false;
-        for (Feedback f : mv.getRequiredFeedbacks()) {
-            if (!f.getStatus().equals(FeedbackStatus.PENDING_FEEDBACK)) {
-                oneFeedbackNotPending = true;
-                break;
-            }
+        List<Feedback> requiredFeedbacks = mv.getRequiredFeedbacks() != null ? mv.getRequiredFeedbacks()
+                : new ArrayList<>();
+        List<Feedback> coordinatorFeedbacks = requiredFeedbacks.stream()
+                .filter(f -> f.getDegreeProgramSpecialization() != null)
+                .toList();
+        if (coordinatorFeedbacks.isEmpty()) {
+            throw new IllegalStateException(
+                    "No coordinator feedbacks for current assignments. Submit for coordinator feedback first.");
+        }
+        boolean allCoordinatorAccepted = coordinatorFeedbacks.stream()
+                .allMatch(f -> f.getStatus() == FeedbackStatus.APPROVED);
+        if (!allCoordinatorAccepted) {
+            throw new IllegalStateException(
+                    "All feedback from program and area coordinators (for current assignments) must be accepted before submitting for full feedback.");
         }
 
-        if (oneFeedbackNotPending) {
-            for (Feedback f : mv.getRequiredFeedbacks()) {
-                if (f.getStatus().equals(FeedbackStatus.PENDING_FEEDBACK)) {
-                    f.setStatus(FeedbackStatus.CANCELLED);
-                }
-            }
-            mv.setStatus(ModuleVersionStatus.CANCELLED);
-            proposal.setStatus(ProposalStatus.REQUIRES_REVIEW);
-        } else {
-            for (Feedback f : mv.getRequiredFeedbacks()) {
-                f.setStatus(FeedbackStatus.PENDING_SUBMISSION);
-            }
-            mv.setStatus(ModuleVersionStatus.PENDING_SUBMISSION);
-            proposal.setStatus(ProposalStatus.PENDING_SUBMISSION);
+        // Create new feedbacks (one per role); do not reuse old ones.
+        for (UserRole role : FULL_FEEDBACK_ROLES) {
+            Feedback feedback = new Feedback();
+            feedback.setStatus(FeedbackStatus.PENDING_FEEDBACK);
+            feedback.setRequiredRole(role);
+            feedback.setDegreeProgramSpecialization(null);
+            feedback.setModuleVersion(mv);
+            requiredFeedbacks.add(feedbackRepository.save(feedback));
         }
+
+        mv.setStatus(ModuleVersionStatus.PENDING_FULL_FEEDBACK);
+        proposal.setStatus(ProposalStatus.PENDING_FULL_FEEDBACK);
+        moduleVersionRepository.save(mv);
+
+        // to keep the version with requested feedback immutable
+        proposal.addNewModuleVersion();
         proposalRepository.save(proposal);
+
         return ProposalViewDTO.from(proposal);
     }
 
@@ -269,9 +270,9 @@ public class ProposalService {
         if (!p.getCreatedBy().getUserId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
         }
-        if (p.getStatus() != ProposalStatus.PENDING_SUBMISSION) {
+        if (!p.getStatus().equals(ProposalStatus.PENDING_FIRST_SUBMISSION)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "You can only delete a proposal that is not already submit. This module proposal is "
+                    "You can only delete a proposal that is not already submitted. This module proposal is "
                             + p.getStatus() + ".");
         }
         proposalRepository.delete(p);

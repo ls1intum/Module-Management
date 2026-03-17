@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { ModuleVersionControllerService, ModuleVersionViewDTO, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
 import { BreadcrumbLabelsService } from '../../components/breadcrumb/breadcrumb-labels.service';
+import { ModuleEditStepperComponent } from '../../components/module-edit-stepper/module-edit-stepper.component';
+import { MODULE_VIEW_STEPS, StepperStatus } from '../../components/module-edit-stepper/module-edit-steps.config';
 import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
 import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
 import { ModuleVersionStatusPipe } from '../../pipes/moduleVersionStatus.pipe';
@@ -29,6 +31,7 @@ export interface ModuleField {
   imports: [
     CommonModule,
     RouterModule,
+    ModuleEditStepperComponent,
     ModuleVersionStatusPipe,
     FeedbackStatusPipe,
     FeedbackDepartmentPipe,
@@ -39,7 +42,8 @@ export interface ModuleField {
     CardModule,
     PanelModule
   ],
-  templateUrl: './module-version-view.component.html'
+  templateUrl: './module-version-view.component.html',
+  styleUrl: './module-version-view.component.css'
 })
 export class ModuleVersionViewComponent {
   route = inject(ActivatedRoute);
@@ -52,14 +56,24 @@ export class ModuleVersionViewComponent {
   moduleVersionStatus = ModuleVersionViewDTO.StatusEnum;
   error = signal<string | null>(null);
 
+  readonly MODULE_VIEW_STEPS = MODULE_VIEW_STEPS;
+  currentStepIndex = signal(0);
+
   moduleFields: ModuleField[] = [
     { key: 'titleEng', label: 'Title', section: 'basic', feedbackKey: 'titleFeedback' },
+    { key: 'titleDe', label: 'Title (German)', section: 'basic' },
     { key: 'levelEng', label: 'Level', section: 'basic', feedbackKey: 'levelFeedback' },
     { key: 'languageEng', label: 'Language', section: 'basic', feedbackKey: 'languageFeedback' },
     { key: 'frequencyEng', label: 'Frequency', section: 'basic', feedbackKey: 'frequencyFeedback' },
+    { key: 'credits', label: 'Credits', section: 'hours', feedbackKey: 'creditsFeedback' },
+    { key: 'hoursLecture', label: 'Hours (Lecture)', section: 'basic' },
+    { key: 'hoursExercise', label: 'Hours (Exercise)', section: 'basic' },
+    { key: 'hoursPractical', label: 'Hours (Practical)', section: 'basic' },
+    { key: 'hoursSeminar', label: 'Hours (Seminar)', section: 'basic' },
+    { key: 'firstSemesterAvailable', label: 'First semester available', section: 'basic' },
+    { key: 'successorModuleName', label: 'Successor module', section: 'basic' },
     { key: 'duration', label: 'Duration', section: 'basic', feedbackKey: 'durationFeedback' },
     { key: 'repetitionEng', label: 'Repetition', section: 'basic', feedbackKey: 'repetitionFeedback' },
-    { key: 'credits', label: 'Credits', section: 'hours', feedbackKey: 'creditsFeedback' },
     { key: 'hoursTotal', label: 'Total Hours', section: 'hours', feedbackKey: 'hoursTotalFeedback' },
     { key: 'hoursSelfStudy', label: 'Self-Study Hours', section: 'hours', feedbackKey: 'hoursSelfStudyFeedback' },
     { key: 'hoursPresence', label: 'Presence Hours', section: 'hours', feedbackKey: 'hoursPresenceFeedback' },
@@ -89,6 +103,28 @@ export class ModuleVersionViewComponent {
     { key: 'lvSwsLecturerEng', label: 'Lecturer', section: 'content', isLongText: true, feedbackKey: 'lvSwsLecturerFeedback' }
   ];
 
+  stepStatuses = computed(() => {
+    const dto = this.moduleVersionDto();
+    if (!dto) return MODULE_VIEW_STEPS.map(() => StepperStatus.Default);
+
+    return MODULE_VIEW_STEPS.map((step, index) => {
+      if (step.id === 'feedbacks') return StepperStatus.Default;
+      if (step.id === 'submit-coordinator-feedback') return StepperStatus.Default;
+      if (step.id === 'submit-full-feedback') return StepperStatus.Default;
+
+      const keys = MODULE_VIEW_STEPS[index].controlNames as (keyof ModuleVersionViewDTO)[];
+      if (!keys?.length) return StepperStatus.Default;
+      const allFilled = keys.every((k) => {
+        const v = dto[k];
+        if (v === undefined || v === null) return false;
+        if (typeof v === 'string') return v.trim() !== '';
+        if (typeof v === 'number') return true;
+        return true;
+      });
+      return allFilled ? StepperStatus.Completed : StepperStatus.Default;
+    });
+  });
+
   constructor() {
     const params = this.route.snapshot.paramMap;
     this.proposalId = params.get('id');
@@ -97,9 +133,19 @@ export class ModuleVersionViewComponent {
     this.fetchModuleVersionViewDto(this.moduleVersionId);
   }
 
+  goToStep(index: number) {
+    this.currentStepIndex.set(index);
+  }
+
+  getFieldsForViewStep(stepIndex: number): ModuleField[] {
+    const keys = MODULE_VIEW_STEPS[stepIndex].controlNames as (keyof ModuleVersionViewDTO)[];
+    if (!keys?.length) return [];
+    return this.moduleFields.filter((f) => keys.includes(f.key));
+  }
+
   private fetchModuleVersionViewDto(moduleVersionId: number) {
     this.loading.set(true);
-    this.moduleVersionService.getModuleVersionViewDto(moduleVersionId).subscribe({
+    this.moduleVersionService.getModuleVersion(moduleVersionId).subscribe({
       next: (data: ModuleVersionViewDTO) => {
         this.moduleVersionDto.set(data);
         const version = data?.version;

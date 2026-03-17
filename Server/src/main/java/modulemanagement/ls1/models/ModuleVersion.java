@@ -144,6 +144,26 @@ public class ModuleVersion {
     private List<ModuleVersionDegreeProgramAssignment> degreeProgramAssignments = new ArrayList<>();
 
     @JsonIgnore
+    public boolean isFirstStepComplete() {
+        if (StringUtils.isEmpty(titleEng) || StringUtils.isEmpty(titleDe))
+            return false;
+        if (credits == null)
+            return false;
+        if (StringUtils.isEmpty(frequencyEng))
+            return false;
+        if (hoursLecture == null || hoursExercise == null || hoursPractical == null || hoursSeminar == null)
+            return false;
+        if (StringUtils.isEmpty(firstSemesterAvailable) || StringUtils.isEmpty(successorModuleName))
+            return false;
+        if (languageEng == null)
+            return false;
+        if (degreeProgramAssignments == null || degreeProgramAssignments.isEmpty())
+            return false;
+        return degreeProgramAssignments.stream()
+                .allMatch(a -> a.getDegreeProgramSpecialization() != null && a.getDegreeProgram() != null);
+    }
+
+    @JsonIgnore
     public boolean isCompleted() {
         return !StringUtils.isEmpty(titleEng)
                 && !StringUtils.isEmpty(levelEng)
@@ -166,7 +186,4 @@ public class ModuleVersion {
                 && !StringUtils.isEmpty(lvSwsLecturerEng);
     }
 
-    public boolean isFeedbackGiven() {
-        return this.getStatus() == ModuleVersionStatus.FEEDBACK_GIVEN;
-    }
 }

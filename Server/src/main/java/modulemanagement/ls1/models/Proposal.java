@@ -3,13 +3,10 @@ package modulemanagement.ls1.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
 import modulemanagement.ls1.dtos.ModuleVersionViewFeedbackDTO;
-import modulemanagement.ls1.enums.ModuleVersionStatus;
 import modulemanagement.ls1.enums.ProposalStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import modulemanagement.ls1.services.ProposalService;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,11 +38,6 @@ public class Proposal {
     private List<ModuleVersion> moduleVersions = new ArrayList<>();
 
     @JsonIgnore
-    public void addModuleVersion(ModuleVersion moduleVersion) {
-        moduleVersions.add(moduleVersion);
-    }
-
-    @JsonIgnore
     public ModuleVersion getLatestModuleVersionWithContent() {
         return moduleVersions.stream().max(Comparator.comparing(ModuleVersion::getVersion)).orElse(null);
     }
@@ -62,7 +54,7 @@ public class Proposal {
         newMv.setProposal(this);
         newMv.setVersion(latestMv.getVersion() + 1);
         newMv.setCreationDate(LocalDateTime.now());
-        newMv.setStatus(ModuleVersionStatus.PENDING_SUBMISSION);
+        newMv.setStatus(latestMv.getStatus());
         newMv.setBulletPoints(latestMv.getBulletPoints());
         newMv.setTitleEng(latestMv.getTitleEng());
         newMv.setTitleDe(latestMv.getTitleDe());
@@ -100,27 +92,22 @@ public class Proposal {
                 newMv.getDegreeProgramAssignments().add(newAssig);
             }
         }
-        List<Feedback> requiredFeedbacks = new ArrayList<>();
-        ProposalService.createNewFeedbacks(newMv, requiredFeedbacks);
-        newMv.setRequiredFeedbacks(requiredFeedbacks);
-        addModuleVersion(newMv);
-        this.setStatus(ProposalStatus.PENDING_SUBMISSION);
+        newMv.setRequiredFeedbacks(new ArrayList<>());
+        moduleVersions.add(newMv);
     }
 
     public List<ModuleVersionViewFeedbackDTO> getPreviousModuleVersionFeedback() {
         List<ModuleVersion> mvs = this.getModuleVersions();
         Collections.reverse(mvs);
         for (ModuleVersion mv : mvs) {
-            if (mv.isFeedbackGiven()) {
-                List<ModuleVersionViewFeedbackDTO> previousFeedbacks = new ArrayList<>();
-                List<Feedback> feedbacks = mv.getRequiredFeedbacks();
-                for (Feedback feedback : feedbacks) {
-                    if (feedback.isFeedbackGiven()) {
-                        previousFeedbacks.add(ModuleVersionViewFeedbackDTO.from(feedback));
-                    }
+            List<ModuleVersionViewFeedbackDTO> previousFeedbacks = new ArrayList<>();
+            List<Feedback> feedbacks = mv.getRequiredFeedbacks();
+            for (Feedback feedback : feedbacks) {
+                if (feedback.isFeedbackGiven()) {
+                    previousFeedbacks.add(ModuleVersionViewFeedbackDTO.from(feedback));
                 }
-                return previousFeedbacks;
             }
+            return previousFeedbacks;
         }
         return Collections.emptyList();
     }

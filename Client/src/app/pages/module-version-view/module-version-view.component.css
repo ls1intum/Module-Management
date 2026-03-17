@@ -1,0 +1,23 @@
+.module-edit-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .module-edit-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.module-edit-stepper-column {
+  position: sticky;
+  top: 1rem;
+  align-self: start;
+}
+
+.module-edit-form-column {
+  min-width: 0;
+}

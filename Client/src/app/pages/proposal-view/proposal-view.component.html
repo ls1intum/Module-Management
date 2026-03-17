@@ -83,33 +83,13 @@
         </td>
         <td>
           <div class="flex gap-2">
-            @if (proposal.latestModuleVersion!.isComplete && proposal.latestModuleVersion!.status == moduleStatusEnum.PendingSubmission) {
-              <p-button label="Submit" severity="success" (onClick)="submitProposal()" (click)="$event.stopPropagation()" />
-            }
-            @if (proposal.latestModuleVersion!.status === moduleStatusEnum.FeedbackGiven || proposal.latestModuleVersion!.status === moduleStatusEnum.Rejected) {
-              <p-button
-                label="View Feedback"
-                severity="contrast"
-                outlined
-                [routerLink]="['/proposals/view', proposal.proposalId, 'version', proposal.latestModuleVersion!.moduleVersionId]"
-                (click)="$event.stopPropagation()"
-              />
-            }
-            @if (proposal.latestModuleVersion!.status === moduleStatusEnum.PendingSubmission) {
-              <p-button
-                label="Edit"
-                outlined
-                severity="contrast"
-                [routerLink]="['/proposals/view', proposal.proposalId, 'version', proposal.latestModuleVersion!.moduleVersionId, 'edit']"
-                (click)="$event.stopPropagation()"
-              />
-            }
-            @if (proposal.latestModuleVersion!.status === moduleStatusEnum.PendingFeedback) {
-              <p-button label="Cancel" severity="danger" outlined (onClick)="cancelProposal()" (click)="$event.stopPropagation()" />
-            }
-            @if (proposal.status === proposalStatusEnum.RequiresReview) {
-              <p-button label="Create New Version" severity="contrast" outlined (onClick)="addNewModuleVersion()" (click)="$event.stopPropagation()" />
-            }
+            <p-button
+              label="Edit"
+              outlined
+              severity="contrast"
+              [routerLink]="['/proposals/view', proposal.proposalId, 'version', proposal.latestModuleVersion!.moduleVersionId, 'edit']"
+              (click)="$event.stopPropagation()"
+            />
             <p-button
               label="Overlaps"
               outlined
