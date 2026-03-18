@@ -265,6 +265,12 @@ export abstract class ProposalBaseComponent {
         // When backend created a new version (immutable versioning), switch to editing the new version
         const newId = response?.latestModuleVersion?.moduleVersionId;
         if (newId != null && newId !== this.moduleVersionId) {
+      
+          this.moduleVersionService.getPreviousModuleVersionFeedback(newId).subscribe({
+            next: (feedbacks) => this.feedbacks.set([...feedbacks]),
+            error: (err: HttpErrorResponse) => this.error.set(err.error)
+          });
+
           this.moduleVersionId = newId;
           this.breadcrumbLabels.versionLabel.set(response?.latestVersion != null ? `Version ${response.latestVersion}` : null);
           this.router.navigate(['/proposals', proposalId, 'version', newId, 'edit'], { replaceUrl: true });
@@ -290,6 +296,12 @@ export abstract class ProposalBaseComponent {
         // When backend created a new version (immutable versioning), switch to editing the new version
         const newId = response?.latestModuleVersion?.moduleVersionId;
         if (newId != null && newId !== this.moduleVersionId) {
+          // Refresh feedbacks so the next step reflects statuses from the freezed version.
+          this.moduleVersionService.getPreviousModuleVersionFeedback(newId).subscribe({
+            next: (feedbacks) => this.feedbacks.set([...feedbacks]),
+            error: (err: HttpErrorResponse) => this.error.set(err.error)
+          });
+
           this.moduleVersionId = newId;
           this.breadcrumbLabels.versionLabel.set(response?.latestVersion != null ? `Version ${response.latestVersion}` : null);
           this.router.navigate(['/proposals', proposalId, 'version', newId, 'edit'], { replaceUrl: true });

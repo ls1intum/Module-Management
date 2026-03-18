@@ -81,7 +81,7 @@
                   "
                   tooltipPosition="top"
                   class="w-8 h-8 mr-2 rounded"
-                  [ngClass]="feedback.invalidated ? (feedback.status | feedbackStatus).fadedColor : (feedback.status | feedbackStatus).normalColor"
+                  [ngClass]="feedback.invalidated ? 'bg-gray-300 text-white' : (feedback.status | feedbackStatus).color"
                 ></div>
               }
             }
@@ -144,7 +144,7 @@
                   "
                   tooltipPosition="top"
                   class="w-8 h-8 mr-2 rounded"
-                  [ngClass]="feedback.invalidated ? (feedback.status | feedbackStatus).fadedColor : (feedback.status | feedbackStatus).normalColor"
+                  [ngClass]="feedback.invalidated ? 'bg-gray-300 text-white' : (feedback.status | feedbackStatus).color"
                 ></div>
               }
             }

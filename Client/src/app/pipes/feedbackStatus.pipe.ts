@@ -6,45 +6,39 @@ import { Tag } from 'primeng/tag';
 export class FeedbackStatusPipe implements PipeTransform {
   transform(status: Feedback.StatusEnum | ModuleVersionViewFeedbackDTO.FeedbackStatusEnum): {
     text: string;
-    normalColor: string;
-    fadedColor: string;
+    color: string;
     severity: Tag['severity'];
   } {
     switch (status) {
       case 'PENDING_FEEDBACK':
         return {
           text: 'Pending Feedback',
-          normalColor: 'bg-yellow-500 text-white',
-          fadedColor: 'bg-yellow-300 text-white',
+          color: 'bg-yellow-500 text-white',
           severity: 'warn'
         };
       case 'APPROVED':
         return {
           text: 'Approved',
-          normalColor: 'bg-green-500 text-white',
-          fadedColor: 'bg-green-300 text-white',
+          color: 'bg-green-500 text-white',
           severity: 'success'
         };
       case 'FEEDBACK_GIVEN':
         return {
           text: 'Feedback given',
-          normalColor: 'bg-blue-500 text-white',
-          fadedColor: 'bg-blue-300 text-white',
+          color: 'bg-blue-500 text-white',
           severity: 'info'
         };
       case 'REJECTED':
         return {
           text: 'Rejected',
-          normalColor: 'bg-red-500 text-white',
-          fadedColor: 'bg-red-300 text-white',
+          color: 'bg-red-500 text-white',
           severity: 'danger'
         };
 
       default:
         return {
           text: status,
-          normalColor: 'bg-gray-400 text-white',
-          fadedColor: 'bg-gray-300 text-white',
+          color: 'bg-gray-400 text-white',
           severity: 'secondary'
         };
     }
