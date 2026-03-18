@@ -2,6 +2,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { Component, inject, signal } from '@angular/core';
 import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, FeedbackDTO, GiveFeedbackDTO, ModuleVersionControllerService } from '../../core/modules/openapi';
+import { BreadcrumbLabelsService } from '../../components/breadcrumb/breadcrumb-labels.service';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
@@ -24,6 +25,7 @@ export class FeedbackViewComponent {
   feedbackService = inject(FeedbackControllerService);
   messageService = inject(MessageService);
   moduleVersionService = inject(ModuleVersionControllerService);
+  private breadcrumbLabels = inject(BreadcrumbLabelsService);
   feedbackForm: FormGroup;
   feedbackId: number | null = null;
   moduleVersion = signal<ModuleVersionUpdateRequestDTO | null>(null);
@@ -121,7 +123,10 @@ export class FeedbackViewComponent {
     this.loading.set(true);
     if (feedbackId) {
       this.feedbackService.getModuleVersionOfFeedback(feedbackId).subscribe({
-        next: (response: ModuleVersionUpdateRequestDTO) => this.moduleVersion.set(response),
+        next: (response: ModuleVersionUpdateRequestDTO) => {
+          this.moduleVersion.set(response);
+          this.breadcrumbLabels.feedbackLabel.set(response?.titleEng ?? null);
+        },
         error: (err: HttpErrorResponse) => this.error.set(err.error),
         complete: () => this.loading.set(false)
       });

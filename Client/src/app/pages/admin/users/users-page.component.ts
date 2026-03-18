@@ -11,12 +11,12 @@ import { ToastModule } from 'primeng/toast';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-admin-users-page',
+  selector: 'app-users-page',
   standalone: true,
   imports: [FormsModule, TableModule, MultiSelectModule, InputTextModule, ButtonModule, ToastModule],
-  templateUrl: './admin-users-page.component.html'
+  templateUrl: './users-page.component.html'
 })
-export class AdminUsersPageComponent {
+export class UsersPageComponent {
   private readonly adminUserControllerService = inject(AdminUserControllerService);
   private readonly messageService = inject(MessageService);
 
@@ -24,6 +24,7 @@ export class AdminUsersPageComponent {
   totalRecords = signal(0);
   loading = signal(false);
   savingUserId = signal<string | null>(null);
+  searchField = '';
   searchQuery = '';
   currentPageSize = signal(10);
   firstRowIndex = signal(0);
@@ -33,27 +34,26 @@ export class AdminUsersPageComponent {
   }));
 
   constructor() {
-    this.loadUsers(0, this.currentPageSize(), this.searchQuery);
+    this.loadUsers();
   }
 
   async pageChange(event: TablePageEvent) {
     const first = event.first ?? 0;
-    const rows = event.rows ?? this.currentPageSize();
-    this.currentPageSize.set(rows);
     this.firstRowIndex.set(first);
-    const page = rows > 0 ? Math.floor(first / rows) : 0;
-    await this.loadUsers(page, rows, this.searchQuery);
+    const page = this.currentPageSize() > 0 ? Math.floor(first / this.currentPageSize()) : 0;
+    await this.loadUsers(page);
   }
 
   runSearch() {
     this.firstRowIndex.set(0);
-    this.loadUsers(0, this.currentPageSize(), this.searchQuery);
+    this.searchQuery = this.searchField;
+    this.loadUsers(0);
   }
 
-  async loadUsers(page = 0, size = 10, search?: string) {
+  async loadUsers(page = 0) {
     this.loading.set(true);
     try {
-      const res = await firstValueFrom(this.adminUserControllerService.getUsers(page, size, search?.trim() || undefined));
+      const res = await firstValueFrom(this.adminUserControllerService.getUsers(page, this.currentPageSize(), this.searchQuery?.trim() || undefined));
       this.users.set(res.content ?? []);
       this.totalRecords.set(res.totalElements ?? 0);
     } catch (e) {

@@ -511,7 +511,7 @@
 
     <div class="flex justify-between">
       <p-button (onClick)="goBack()" severity="secondary" [outlined]="true">Cancel</p-button>
-      <p-button type="submit" severity="contrast" [disabled]="proposalForm.invalid || loading">
+      <p-button type="submit" severity="contrast" [disabled]="proposalForm.invalid || loading()">
         {{ loading() ? 'Saving...' : moduleVersionDto() ? 'Update Proposal' : 'Create Proposal' }}
       </p-button>
     </div>

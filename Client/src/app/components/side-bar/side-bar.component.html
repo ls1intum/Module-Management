@@ -9,6 +9,14 @@
         [style]="{ width: '100%' }"
         styleClass="sidebar-btn justify-start"
       />
+      <p-button
+        label="Degree Programs"
+        icon="pi pi-book"
+        [routerLink]="['/admin/degree-programs']"
+        [severity]="isActive('/admin/degree-programs') ? 'contrast' : 'secondary'"
+        [style]="{ width: '100%' }"
+        styleClass="sidebar-btn justify-start"
+      />
     }
     @if (isProfessor()) {
       <p-button

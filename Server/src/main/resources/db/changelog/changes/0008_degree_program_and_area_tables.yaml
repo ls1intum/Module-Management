@@ -1,0 +1,83 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0008-degree-program-and-area
+      author: system
+      changes:
+        - createTable:
+            tableName: degree_program
+            columns:
+              - column:
+                  name: degree_program_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: responsible_user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: degree_program
+            baseColumnNames: responsible_user_id
+            referencedTableName: app_user
+            referencedColumnNames: user_id
+            constraintName: degree_program_responsible_user_fk
+        - createTable:
+            tableName: degree_program_specialization
+            columns:
+              - column:
+                  name: degree_program_specialization_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: responsible_user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: degree_program_specialization
+            baseColumnNames: responsible_user_id
+            referencedTableName: app_user
+            referencedColumnNames: user_id
+            constraintName: degree_program_specialization_responsible_user_fk
+        - createTable:
+            tableName: degree_program_specialization_assignment
+            columns:
+              - column:
+                  name: degree_program_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: degree_program_specialization_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: degree_program_specialization_assignment
+            baseColumnNames: degree_program_id
+            referencedTableName: degree_program
+            referencedColumnNames: degree_program_id
+            constraintName: deg_prog_spec_assign_program_fk
+        - addForeignKeyConstraint:
+            baseTableName: degree_program_specialization_assignment
+            baseColumnNames: degree_program_specialization_id
+            referencedTableName: degree_program_specialization
+            referencedColumnNames: degree_program_specialization_id
+            constraintName: deg_prog_spec_assign_spec_fk
+            onDelete: CASCADE

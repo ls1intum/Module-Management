@@ -1,0 +1,63 @@
+<p-toast />
+
+<h2 class="text-2xl mb-6">All specializations</h2>
+<p class="text-muted-foreground mb-6">Create and manage the full list of areas of specializations for all degree programs. They can be assigned to any degree program in each program's page.</p>
+
+<div class="mb-4">
+  <p-button label="Add specialization" icon="pi pi-plus" (onClick)="openCreate()" severity="contrast" />
+</div>
+
+<p-table [value]="specializations()" [loading]="loading()" [tableStyle]="{ 'min-width': '50rem' }">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Name</th>
+      <th>Responsible user</th>
+      <th style="width: 10rem">Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-spec>
+    <tr>
+      <td>{{ spec.name }}</td>
+      <td>{{ userLabel(spec) }}</td>
+      <td>
+        <p-button icon="pi pi-pencil" (onClick)="openEdit(spec)" [rounded]="true" [text]="true" severity="secondary" class="mr-1" />
+        <p-button icon="pi pi-trash" (onClick)="deleteSpecialization(spec)" [rounded]="true" [text]="true" severity="danger" />
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="3" class="text-center py-8 text-muted-foreground">No specializations yet. Add one to get started.</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog
+  [header]="editMode() ? 'Edit specialization' : 'Add specialization'"
+  [visible]="dialogVisible()"
+  (visibleChange)="dialogVisible.set($event)"
+  [modal]="true"
+  [style]="{ width: '24rem' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="flex flex-col gap-4">
+    <div>
+      <label class="block text-sm font-medium mb-1">Name</label>
+      <input pInputText [ngModel]="name()" (ngModelChange)="name.set($event)" class="w-full" placeholder="Degree program specialization name" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium mb-1">Responsible user</label>
+      <app-users-select
+        [ngModel]="responsibleUserId()"
+        (ngModelChange)="responsibleUserId.set($event)"
+        [selectedUser]="selectedSpecialization()?.responsibleUser ?? null"
+        styleClass="w-full"
+      />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" severity="secondary" (onClick)="dialogVisible.set(false)" />
+    <p-button label="Save" (onClick)="saveSpecialization()" />
+  </ng-template>
+</p-dialog>

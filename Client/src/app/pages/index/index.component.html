@@ -34,6 +34,10 @@
           <p class="text-sm text-muted-foreground mb-4">Manage users and assign roles.</p>
           <p-button label="Users" icon="pi pi-users" [routerLink]="['/admin/users']" severity="contrast" />
         </p-panel>
+        <p-panel header="Degree Programs">
+          <p class="text-sm text-muted-foreground mb-4">Manage degree programs and their areas of specialization.</p>
+          <p-button label="Degree Programs" icon="pi pi-book" [routerLink]="['/admin/degree-programs']" severity="contrast" />
+        </p-panel>
       }
       @if (isProfessor()) {
         <p-panel header="Module Proposals">

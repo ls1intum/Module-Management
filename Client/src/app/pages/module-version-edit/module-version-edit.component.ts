@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -6,6 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { ProposalBaseComponent } from '../../components/create-edit-base/create-edit-base.component';
 import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
 import { ModuleVersionUpdateRequestDTO, ModuleVersionUpdateResponseDTO, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
+import { BreadcrumbLabelsService } from '../../components/breadcrumb/breadcrumb-labels.service';
 import { ToggleButtonGroupComponent } from '../../components/toggle-button-group/toggle-button-group.component';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -34,6 +35,7 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
   override moduleVersionId: number;
   moduleLoading = false;
   feedbackLoading = false;
+  private breadcrumbLabels = inject(BreadcrumbLabelsService);
 
   constructor(route: ActivatedRoute) {
     super();
@@ -48,6 +50,9 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
       next: (response: ModuleVersionUpdateRequestDTO) => {
         this.proposalForm.patchValue(response);
         this.moduleVersionDto.set(response);
+        const version = response?.version;
+        this.breadcrumbLabels.proposalTitle.set(response?.titleEng ?? null);
+        this.breadcrumbLabels.versionLabel.set(version != null ? `Version ${version}` : null);
       },
       error: (err: HttpErrorResponse) => this.error.set(err.error),
       complete: () => {
