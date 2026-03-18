@@ -71,10 +71,10 @@ public class FeedbackService {
 
     public List<FeedbackListItemDto> getAllFeedbacksForUser(User user) {
         List<Feedback> roleBased = user.getRoles() != null && !user.getRoles().isEmpty()
-                ? feedbackRepository.findByRequiredRoleInAndStatus(user.getRoles(), FeedbackStatus.PENDING_FEEDBACK)
+                ? feedbackRepository.findByRequiredRoleInAndStatusAndInvalidatedFalse(user.getRoles(), FeedbackStatus.PENDING_FEEDBACK)
                 : Collections.emptyList();
         List<Feedback> bySpecialization = feedbackRepository
-                .findByDegreeProgramSpecialization_ResponsibleUser_UserIdAndStatus(user.getUserId(),
+                .findByDegreeProgramSpecialization_ResponsibleUser_UserIdAndStatusAndInvalidatedFalse(user.getUserId(),
                         FeedbackStatus.PENDING_FEEDBACK);
         return Stream.of(roleBased.stream(), bySpecialization.stream())
                 .flatMap(s -> s)
@@ -99,6 +99,9 @@ public class FeedbackService {
     private Feedback getPendingFeedback(Long feedbackId) {
         Feedback feedback = feedbackRepository.findById(feedbackId)
                 .orElseThrow(() -> new ResourceNotFoundException("Feedback not found"));
+        if (feedback.isInvalidated()) {
+            throw new IllegalStateException("This feedback has been invalidated.");
+        }
         if (feedback.getStatus() != FeedbackStatus.PENDING_FEEDBACK) {
             throw new IllegalStateException("This module is not " + FeedbackStatus.PENDING_FEEDBACK);
         }

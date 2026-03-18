@@ -23,6 +23,7 @@ import modulemanagement.ls1.repositories.ModuleVersionRepository;
 import modulemanagement.ls1.repositories.ProposalRepository;
 import modulemanagement.ls1.shared.PdfCreator;
 import modulemanagement.ls1.shared.ResourceNotFoundException;
+import modulemanagement.ls1.shared.ModuleVersionStepsChangeDetector;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
@@ -78,81 +79,36 @@ public class ModuleVersionService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Cannot update ModuleVersion with feedback.");
         }
 
+        boolean step1Changed = ModuleVersionStepsChangeDetector.isStep1DataChanged(request, mv);
+
         applyUpdateRequest(mv, request);
+
+        if (step1Changed) {
+            invalidateActiveFeedbacksAndResetStatuses(mv);
+        }
+
         mv = moduleVersionRepository.save(mv);
         return ModuleVersionViewDTO.from(mv);
     }
 
-    /**
-     * True if any step-1 field (basic info + assignments) differs between request
-     * and mv.
-     */
-    // private boolean isStep1DataChanged(ModuleVersionUpdateRequestDTO request,
-    // ModuleVersion mv) {
-    // if (!Objects.equals(nullToEmpty(request.getTitleEng()),
-    // nullToEmpty(mv.getTitleEng())))
-    // return true;
-    // if (!Objects.equals(nullToEmpty(request.getTitleDe()),
-    // nullToEmpty(mv.getTitleDe())))
-    // return true;
-    // if (!Objects.equals(request.getCredits(), mv.getCredits()))
-    // return true;
-    // if (!Objects.equals(nullToEmpty(request.getFrequencyEng()),
-    // nullToEmpty(mv.getFrequencyEng())))
-    // return true;
-    // if (!Objects.equals(request.getHoursLecture(), mv.getHoursLecture()))
-    // return true;
-    // if (!Objects.equals(request.getHoursExercise(), mv.getHoursExercise()))
-    // return true;
-    // if (!Objects.equals(request.getHoursPractical(), mv.getHoursPractical()))
-    // return true;
-    // if (!Objects.equals(request.getHoursSeminar(), mv.getHoursSeminar()))
-    // return true;
-    // if (!Objects.equals(nullToEmpty(request.getFirstSemesterAvailable()),
-    // nullToEmpty(mv.getFirstSemesterAvailable())))
-    // return true;
-    // if (!Objects.equals(nullToEmpty(request.getSuccessorModuleName()),
-    // nullToEmpty(mv.getSuccessorModuleName())))
-    // return true;
-    // if (!Objects.equals(request.getLanguageEng(), mv.getLanguageEng()))
-    // return true;
-    // if (request.getDegreeProgramAssignments() != null
-    // && !assignmentSetEquals(request.getDegreeProgramAssignments(),
-    // mv.getDegreeProgramAssignments())) {
-    // return true;
-    // }
-    // return false;
-    // }
+    private void invalidateActiveFeedbacksAndResetStatuses(ModuleVersion mv) {
+        Proposal proposal = mv.getProposal();
 
-    // private static String nullToEmpty(String s) {
-    // return s == null ? "" : s.trim();
-    // }
+        List<Feedback> activeFeedbacks = feedbackRepository
+                .findByModuleVersion_Proposal_ProposalIdAndInvalidatedFalse(proposal.getProposalId());
+        if (activeFeedbacks == null || activeFeedbacks.isEmpty()) {
+            return;
+        }
 
-    // private static boolean
-    // assignmentSetEquals(List<ModuleDegreeProgramAssignmentDTO> requestList,
-    // List<ModuleVersionDegreeProgramAssignment> mvList) {
-    // Set<String> requestSet = new HashSet<>();
-    // if (requestList != null) {
-    // for (ModuleDegreeProgramAssignmentDTO a : requestList) {
-    // if (a != null && a.getDegreeProgramId() != null &&
-    // a.getDegreeProgramSpecializationId() != null) {
-    // requestSet.add(a.getDegreeProgramId() + "," +
-    // a.getDegreeProgramSpecializationId());
-    // }
-    // }
-    // }
-    // Set<String> mvSet = new HashSet<>();
-    // if (mvList != null) {
-    // for (ModuleVersionDegreeProgramAssignment a : mvList) {
-    // if (a.getDegreeProgram() != null && a.getDegreeProgramSpecialization() !=
-    // null) {
-    // mvSet.add(a.getDegreeProgram().getDegreeProgramId() + ","
-    // + a.getDegreeProgramSpecialization().getDegreeProgramSpecializationId());
-    // }
-    // }
-    // }
-    // return requestSet.equals(mvSet);
-    // }
+        for (Feedback f : activeFeedbacks) {
+            f.setInvalidated(true);
+        }
+        feedbackRepository.saveAll(activeFeedbacks);
+
+        proposal.setStatus(ProposalStatus.PENDING_FIRST_SUBMISSION);
+        mv.setStatus(ModuleVersionStatus.PENDING_FIRST_SUBMISSION);
+        proposalRepository.save(proposal);
+    }
 
     /**
      * Applies request content and degree program assignments to the given module
@@ -239,12 +195,16 @@ public class ModuleVersionService {
         }
 
         List<Feedback> allFeedbacks = mv.getRequiredFeedbacks() != null ? mv.getRequiredFeedbacks() : new ArrayList<>();
+        // Invalidated feedbacks must not affect proposal/module version status.
+        List<Feedback> nonInvalidatedFeedbacks = allFeedbacks.stream()
+                .filter(f -> f != null && !f.isInvalidated())
+                .toList();
         // Coordinator feedbacks for current assignments + all role-based feedbacks (we
         // only have one active set of pending at a time).
-        List<Feedback> coordinatorFeedbacks = allFeedbacks.stream()
+        List<Feedback> coordinatorFeedbacks = nonInvalidatedFeedbacks.stream()
                 .filter(f -> f.getDegreeProgramSpecialization() != null)
                 .toList();
-        List<Feedback> roleBased = allFeedbacks.stream()
+        List<Feedback> roleBased = nonInvalidatedFeedbacks.stream()
                 .filter(f -> f.getRequiredRole() != null)
                 .toList();
         List<Feedback> feedbacksToEvaluate = new ArrayList<>(coordinatorFeedbacks);

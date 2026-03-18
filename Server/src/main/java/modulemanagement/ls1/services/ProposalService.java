@@ -230,7 +230,7 @@ public class ProposalService {
         List<Feedback> requiredFeedbacks = mv.getRequiredFeedbacks() != null ? mv.getRequiredFeedbacks()
                 : new ArrayList<>();
         List<Feedback> coordinatorFeedbacks = requiredFeedbacks.stream()
-                .filter(f -> f.getDegreeProgramSpecialization() != null)
+                .filter(f -> f.getDegreeProgramSpecialization() != null && !f.isInvalidated())
                 .toList();
         if (coordinatorFeedbacks.isEmpty()) {
             throw new IllegalStateException(

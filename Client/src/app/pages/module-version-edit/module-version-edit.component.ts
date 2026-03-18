@@ -105,7 +105,11 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
       degreeProgramAssignments
     };
     this.moduleVersionService.updateModuleVersion(this.moduleVersionId, payload).subscribe({
-      next: (response: ModuleVersionViewDTO) => this.moduleVersionDto.set(response),
+      next: (response: ModuleVersionViewDTO) => {
+        this.moduleVersionDto.set(response);
+        // Step-1 changes can invalidate previous feedbacks; refresh so the UI reflects it.
+        this.fetchPreviousModuleVersionFeedback(this.moduleVersionId);
+      },
       error: (err: HttpErrorResponse) => this.error.set(err.error),
       complete: () => this.loading.set(false)
     });

@@ -72,10 +72,16 @@
             @if (proposal.latestModuleVersion!.feedbackList!.length) {
               @for (feedback of proposal.latestModuleVersion!.feedbackList; track feedback.requiredRole) {
                 <div
-                  [pTooltip]="'Feedback from ' + (feedback.requiredRole! | feedbackDepartment).text + ': ' + (feedback.status | feedbackStatus).text"
+                  [pTooltip]="
+                    'Feedback from ' +
+                    (feedback.requiredRole! | feedbackDepartment).text +
+                    ': ' +
+                    (feedback.status | feedbackStatus).text +
+                    (feedback.invalidated ? ' (Obsolete)' : '')
+                  "
                   tooltipPosition="top"
                   class="w-8 h-8 mr-2 rounded"
-                  [class]="(feedback.status | feedbackStatus).normalColor"
+                  [ngClass]="feedback.invalidated ? (feedback.status | feedbackStatus).fadedColor : (feedback.status | feedbackStatus).normalColor"
                 ></div>
               }
             }
@@ -129,10 +135,16 @@
             @if (version.feedbackList?.length) {
               @for (feedback of version.feedbackList; track feedback.requiredRole) {
                 <div
-                  [pTooltip]="'Feedback from ' + (feedback.requiredRole! | feedbackDepartment).text + ': ' + (feedback.status | feedbackStatus).text"
+                  [pTooltip]="
+                    'Feedback from ' +
+                    (feedback.requiredRole! | feedbackDepartment).text +
+                    ': ' +
+                    (feedback.status | feedbackStatus).text +
+                    (feedback.invalidated ? ' (Obsolete)' : '')
+                  "
                   tooltipPosition="top"
-                  class="w-8 h-8 mr-2 rounded opacity-60"
-                  [class]="(feedback.status | feedbackStatus).fadedColor"
+                  class="w-8 h-8 mr-2 rounded"
+                  [ngClass]="feedback.invalidated ? (feedback.status | feedbackStatus).fadedColor : (feedback.status | feedbackStatus).normalColor"
                 ></div>
               }
             }

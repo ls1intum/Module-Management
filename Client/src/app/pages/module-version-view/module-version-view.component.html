@@ -86,10 +86,7 @@
 
       @if (currentStepIndex() === 1) {
         <p-card header="Submit for coordinator feedback">
-          <p class="mb-4">
-            First submission: request feedback from program coordinators and area coordinators (one per chosen degree program/area). Feedback is tied to the module version that was
-            submitted (immutable). When viewing the latest version, status below is from the previous submitted version.
-          </p>
+          <p class="mb-4">First submission: request feedback from program coordinators and area coordinators (one per chosen degree program/area).</p>
           @if (coordinatorFeedbacksForStep1().feedbacks.length > 0) {
             <div class="space-y-2">
               <p class="font-medium">Coordinator feedback status {{ coordinatorFeedbacksForStep1().fromPrevious ? '(from previous version)' : '(this version)' }}</p>
