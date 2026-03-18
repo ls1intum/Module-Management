@@ -42,7 +42,8 @@ public class AdminUserService {
         if (currentRoles.contains(UserRole.PROGRAM_COORDINATOR) && !newRoles.contains(UserRole.PROGRAM_COORDINATOR)) {
             responsibleUserRoleService.unassignFromAllPrograms(userId);
         }
-        if (currentRoles.contains(UserRole.SPECIALIZATION_AREA_COORDINATOR) && !newRoles.contains(UserRole.SPECIALIZATION_AREA_COORDINATOR)) {
+        if (currentRoles.contains(UserRole.SPECIALIZATION_AREA_COORDINATOR)
+                && !newRoles.contains(UserRole.SPECIALIZATION_AREA_COORDINATOR)) {
             responsibleUserRoleService.unassignFromAllSpecializations(userId);
         }
         user.setRoles(dto.getRoles());

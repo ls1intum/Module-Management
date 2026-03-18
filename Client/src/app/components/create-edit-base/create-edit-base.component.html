@@ -343,7 +343,12 @@
                         />
                       </div>
                       @if (fb.feedbackStatus === 'REJECTED' && fb.rejectionComment) {
-                        <feedback-message [authorDisplay]="fb | feedbackAuthorDisplay" [authorUserName]="fb.requestedFromUserName ?? null" [feedbackText]="fb.rejectionComment" styleClass="mt-2" />
+                        <feedback-message
+                          [authorDisplay]="fb | feedbackAuthorDisplay"
+                          [authorUserName]="fb.requestedFromUserName ?? null"
+                          [feedbackText]="fb.rejectionComment"
+                          styleClass="mt-2"
+                        />
                       }
                     </li>
                   }

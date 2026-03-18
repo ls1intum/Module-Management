@@ -58,13 +58,15 @@ public class DegreeProgramsController {
     public ResponseEntity<DegreeProgramDTO> addSpecializationsToDegreeProgram(
             @PathVariable Long degreeProgramId,
             @Valid @RequestBody AddSpecializationsToDegreeProgramDTO dto) {
-        return ResponseEntity.ok(degreeProgramService.addSpecializationsToDegreeProgram(degreeProgramId, dto.getDegreeProgramSpecializationIds()));
+        return ResponseEntity.ok(degreeProgramService.addSpecializationsToDegreeProgram(degreeProgramId,
+                dto.getDegreeProgramSpecializationIds()));
     }
 
     @DeleteMapping("/{degreeProgramId}/degree-program-specializations/{degreeProgramSpecializationId}")
     public ResponseEntity<DegreeProgramDTO> removeSpecializationFromDegreeProgram(
             @PathVariable Long degreeProgramId,
             @PathVariable Long degreeProgramSpecializationId) {
-        return ResponseEntity.ok(degreeProgramService.removeSpecializationFromDegreeProgram(degreeProgramId, degreeProgramSpecializationId));
+        return ResponseEntity.ok(degreeProgramService.removeSpecializationFromDegreeProgram(degreeProgramId,
+                degreeProgramSpecializationId));
     }
 }

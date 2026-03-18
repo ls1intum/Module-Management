@@ -66,7 +66,8 @@ public class DegreeProgramService {
         if (dto.getName() != null)
             program.setName(dto.getName());
         if (dto.getResponsibleUserId() != null) {
-            UUID previousUserId = program.getResponsibleUser() != null ? program.getResponsibleUser().getUserId() : null;
+            UUID previousUserId = program.getResponsibleUser() != null ? program.getResponsibleUser().getUserId()
+                    : null;
             program.setResponsibleUser(userRepository.getReferenceById(dto.getResponsibleUserId()));
             program = degreeProgramRepository.save(program);
             responsibleUserRoleService.ensureProgramCoordinatorRole(dto.getResponsibleUserId());

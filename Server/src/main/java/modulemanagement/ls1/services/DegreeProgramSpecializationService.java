@@ -64,7 +64,8 @@ public class DegreeProgramSpecializationService {
     }
 
     public void deleteDegreeProgramSpecialization(Long id) {
-        DegreeProgramSpecialization entity = degreeProgramSpecializationRepository.findByIdWithResponsibleUser(id).orElse(null);
+        DegreeProgramSpecialization entity = degreeProgramSpecializationRepository.findByIdWithResponsibleUser(id)
+                .orElse(null);
         if (entity == null) {
             throw new ResourceNotFoundException("Degree program specialization not found: " + id);
         }
