@@ -2,14 +2,12 @@ package modulemanagement.ls1.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
-import modulemanagement.ls1.dtos.ModuleVersionViewFeedbackDTO;
 import modulemanagement.ls1.enums.ProposalStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -96,19 +94,4 @@ public class Proposal {
         moduleVersions.add(newMv);
     }
 
-    public List<ModuleVersionViewFeedbackDTO> getPreviousModuleVersionFeedback() {
-        List<ModuleVersion> mvs = this.getModuleVersions();
-        Collections.reverse(mvs);
-        for (ModuleVersion mv : mvs) {
-            List<ModuleVersionViewFeedbackDTO> previousFeedbacks = new ArrayList<>();
-            List<Feedback> feedbacks = mv.getRequiredFeedbacks();
-            for (Feedback feedback : feedbacks) {
-                if (feedback.isFeedbackGiven()) {
-                    previousFeedbacks.add(ModuleVersionViewFeedbackDTO.from(feedback));
-                }
-            }
-            return previousFeedbacks;
-        }
-        return Collections.emptyList();
-    }
 }

@@ -17,6 +17,7 @@ import modulemanagement.ls1.models.ModuleVersionDegreeProgramAssignment;
 import modulemanagement.ls1.models.Proposal;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.repositories.DegreeProgramRepository;
+import modulemanagement.ls1.repositories.FeedbackRepository;
 import modulemanagement.ls1.repositories.ModuleVersionDegreeProgramAssignmentRepository;
 import modulemanagement.ls1.repositories.ModuleVersionRepository;
 import modulemanagement.ls1.repositories.ProposalRepository;
@@ -45,17 +46,19 @@ public class ModuleVersionService {
     private final OverlapDetectionService overlapDetectionService;
     private final PdfCreator pdfCreator;
     private final EntityManager entityManager;
+    private final FeedbackRepository feedbackRepository;
 
     public ModuleVersionService(ModuleVersionRepository moduleVersionRepository,
             ModuleVersionDegreeProgramAssignmentRepository assignmentRepository,
             DegreeProgramRepository degreeProgramRepository, ProposalRepository proposalRepository,
             OverlapDetectionService overlapDetectionService, PdfCreator pdfCreator,
-            EntityManager entityManager) {
+            EntityManager entityManager, FeedbackRepository feedbackRepository) {
         this.moduleVersionRepository = moduleVersionRepository;
         this.assignmentRepository = assignmentRepository;
         this.degreeProgramRepository = degreeProgramRepository;
         this.proposalRepository = proposalRepository;
         this.overlapDetectionService = overlapDetectionService;
+        this.feedbackRepository = feedbackRepository;
         this.pdfCreator = pdfCreator;
         this.entityManager = entityManager;
     }
@@ -311,8 +314,9 @@ public class ModuleVersionService {
         if (!proposal.getCreatedBy().getUserId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
         }
-
-        return proposal.getPreviousModuleVersionFeedback();
+        List<Feedback> list = feedbackRepository
+                .findByModuleVersion_Proposal_ProposalIdAndInvalidatedFalse(proposal.getProposalId());
+        return list.stream().map(ModuleVersionViewFeedbackDTO::from).toList();
     }
 
     public Resource generateReviewerModuleVersionPdf(Long moduleVersionId, User user) {

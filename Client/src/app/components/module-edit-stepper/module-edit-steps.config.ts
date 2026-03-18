@@ -1,8 +1,11 @@
+import { Action } from 'rxjs/internal/scheduler/Action';
+
 /** Status of a step in the stepper; determines how the step is displayed (number, check, or pending color). */
 export const StepperStatus = {
   Default: 'default',
   Pending: 'pending',
-  Completed: 'completed'
+  Completed: 'completed',
+  ActionRequired: 'action-required'
 } as const;
 
 export type StepperStatus = (typeof StepperStatus)[keyof typeof StepperStatus];
@@ -65,10 +68,4 @@ export const MODULE_EDIT_STEPS: ModuleEditStepConfig[] = [
     title: 'Submit for full feedback',
     controlNames: []
   }
-];
-
-/** Steps for the module overview (view) page: edit steps + Feedbacks as final step. */
-export const MODULE_VIEW_STEPS: ModuleEditStepConfig[] = [
-  ...MODULE_EDIT_STEPS,
-  { id: 'feedbacks', title: 'Feedbacks', controlNames: [] }
 ];

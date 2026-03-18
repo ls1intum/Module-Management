@@ -622,7 +622,7 @@ export class ModuleVersionControllerService implements ModuleVersionControllerSe
             }
         }
 
-        let localVarPath = `/api/module-versions/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}/previous-module-version-feedback`;
+        let localVarPath = `/api/module-versions/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}/previous-module-versions-feedback`;
         return this.httpClient.request<Array<ModuleVersionViewFeedbackDTO>>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,

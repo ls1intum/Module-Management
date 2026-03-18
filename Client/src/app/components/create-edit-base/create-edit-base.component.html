@@ -219,11 +219,13 @@
                 Complete step 1: fill basic information and add at least one degree program assignment. Then you can submit for coordinator feedback.
               </p-message>
             }
-            <!-- @else if (coordinatorFeedbacksForCurrentAssignments().length > 0) {
+            @if (coordinatorFeedbacksForStep1().feedbacks.length > 0) {
               <div class="mb-4">
-                <label class="text-xl block mb-2">Coordinator feedback status (one per chosen program/area)</label>
+                <label class="text-xl block mb-2">
+                  Coordinator feedback status (one per chosen program/area) {{ coordinatorFeedbacksForStep1().fromPrevious ? '(from previous version)' : '(this version)' }}
+                </label>
                 <ul class="space-y-2 list-none p-0 m-0">
-                  @for (fb of coordinatorFeedbacksForCurrentAssignments(); track fb.feedbackId) {
+                  @for (fb of coordinatorFeedbacksForStep1().feedbacks; track fb.feedbackId) {
                     <li class="flex items-center gap-2 flex-wrap">
                       <span class="font-medium">{{ fb.requestedFromUserName ?? (fb.feedbackRole | feedbackDepartment).text }}:</span>
                       <p-tag
@@ -234,7 +236,7 @@
                   }
                 </ul>
               </div>
-            } -->
+            }
             <div class="flex flex-wrap gap-2">
               @if (canRequestCoordinatorsFeedback()) {
                 <p-button

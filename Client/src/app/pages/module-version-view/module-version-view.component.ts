@@ -5,7 +5,7 @@ import { RouterModule, ActivatedRoute } from '@angular/router';
 import { ModuleVersionControllerService, ModuleVersionViewDTO, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
 import { BreadcrumbLabelsService } from '../../components/breadcrumb/breadcrumb-labels.service';
 import { ModuleEditStepperComponent } from '../../components/module-edit-stepper/module-edit-stepper.component';
-import { MODULE_VIEW_STEPS, StepperStatus } from '../../components/module-edit-stepper/module-edit-steps.config';
+import { MODULE_EDIT_STEPS, StepperStatus } from '../../components/module-edit-stepper/module-edit-steps.config';
 import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
 import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
 import { ModuleVersionStatusPipe } from '../../pipes/moduleVersionStatus.pipe';
@@ -56,8 +56,33 @@ export class ModuleVersionViewComponent {
   moduleVersionStatus = ModuleVersionViewDTO.StatusEnum;
   error = signal<string | null>(null);
 
-  readonly MODULE_VIEW_STEPS = MODULE_VIEW_STEPS;
+  readonly MODULE_EDIT_STEPS = MODULE_EDIT_STEPS;
   currentStepIndex = signal(0);
+
+  /** Coordinator feedbacks for this version (for current assignments). From moduleVersionDto().feedbacks. */
+  coordinatorFeedbacksForCurrentAssignments = computed(() => {
+    const dto = this.moduleVersionDto();
+    const feedbacks = dto?.feedbacks ?? [];
+    const coordinator = feedbacks.filter((f) => f.feedbackRole == null);
+    const specIds = new Set(dto?.degreeProgramAssignments?.map((a) => a.degreeProgramSpecializationId).filter((id): id is number => id != null) ?? []);
+    if (specIds.size === 0) return coordinator;
+    return coordinator.filter((f) => f.degreeProgramSpecializationId != null && specIds.has(f.degreeProgramSpecializationId));
+  });
+
+  /** Previous module version feedback (all non-invalidated for proposal). Fetched when loading; used when current version has no feedbacks yet. */
+  previousVersionFeedbacks = signal<ModuleVersionViewFeedbackDTO[]>([]);
+
+  /** Coordinator feedbacks to show in step 1: current version if any, otherwise previous version feedback (so latest MV still shows status). */
+  coordinatorFeedbacksForStep1 = computed(() => {
+    const fromCurrent = this.coordinatorFeedbacksForCurrentAssignments();
+    if (fromCurrent.length > 0) return { feedbacks: fromCurrent, fromPrevious: false };
+    const prev = this.previousVersionFeedbacks();
+    const coordinator = prev.filter((f) => f.feedbackRole == null);
+    const dto = this.moduleVersionDto();
+    const specIds = new Set(dto?.degreeProgramAssignments?.map((a) => a.degreeProgramSpecializationId).filter((id): id is number => id != null) ?? []);
+    const filtered = specIds.size === 0 ? coordinator : coordinator.filter((f) => f.degreeProgramSpecializationId != null && specIds.has(f.degreeProgramSpecializationId));
+    return { feedbacks: filtered, fromPrevious: true };
+  });
 
   moduleFields: ModuleField[] = [
     { key: 'titleEng', label: 'Title', section: 'basic', feedbackKey: 'titleFeedback' },
@@ -105,14 +130,22 @@ export class ModuleVersionViewComponent {
 
   stepStatuses = computed(() => {
     const dto = this.moduleVersionDto();
-    if (!dto) return MODULE_VIEW_STEPS.map(() => StepperStatus.Default);
+    if (!dto) return MODULE_EDIT_STEPS.map(() => StepperStatus.Default);
 
-    return MODULE_VIEW_STEPS.map((step, index) => {
+    return MODULE_EDIT_STEPS.map((step, index) => {
       if (step.id === 'feedbacks') return StepperStatus.Default;
-      if (step.id === 'submit-coordinator-feedback') return StepperStatus.Default;
+      if (step.id === 'submit-coordinator-feedback') {
+        const feedbacks = this.coordinatorFeedbacksForStep1().feedbacks;
+        if (feedbacks.length === 0) return StepperStatus.Default;
+        const hasRejection = feedbacks.some((fb) => fb.feedbackStatus === ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.Rejected);
+        if (hasRejection) return StepperStatus.ActionRequired;
+        const allApproved = feedbacks.every((fb) => fb.feedbackStatus === ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.Approved);
+        return allApproved ? StepperStatus.Completed : StepperStatus.Pending;
+      }
+
       if (step.id === 'submit-full-feedback') return StepperStatus.Default;
 
-      const keys = MODULE_VIEW_STEPS[index].controlNames as (keyof ModuleVersionViewDTO)[];
+      const keys = MODULE_EDIT_STEPS[index].controlNames as (keyof ModuleVersionViewDTO)[];
       if (!keys?.length) return StepperStatus.Default;
       const allFilled = keys.every((k) => {
         const v = dto[k];
@@ -131,6 +164,7 @@ export class ModuleVersionViewComponent {
     const versionId = params.get('versionId');
     this.moduleVersionId = Number(versionId);
     this.fetchModuleVersionViewDto(this.moduleVersionId);
+    this.fetchPreviousVersionsFeedbacks(this.moduleVersionId);
   }
 
   goToStep(index: number) {
@@ -138,7 +172,7 @@ export class ModuleVersionViewComponent {
   }
 
   getFieldsForViewStep(stepIndex: number): ModuleField[] {
-    const keys = MODULE_VIEW_STEPS[stepIndex].controlNames as (keyof ModuleVersionViewDTO)[];
+    const keys = MODULE_EDIT_STEPS[stepIndex].controlNames as (keyof ModuleVersionViewDTO)[];
     if (!keys?.length) return [];
     return this.moduleFields.filter((f) => keys.includes(f.key));
   }
@@ -157,6 +191,11 @@ export class ModuleVersionViewComponent {
     });
   }
 
+  private fetchPreviousVersionsFeedbacks(moduleVersionId: number) {
+    this.moduleVersionService.getPreviousModuleVersionFeedback(moduleVersionId).subscribe({
+      next: (list) => this.previousVersionFeedbacks.set(list)
+    });
+  }
   pdfExport() {
     const mvid = this.moduleVersionId;
     if (!mvid) {

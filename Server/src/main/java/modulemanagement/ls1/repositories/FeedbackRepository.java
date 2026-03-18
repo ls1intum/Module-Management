@@ -16,4 +16,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
 
     /** Feedbacks for specializations that this user is currently responsible for (position-based). */
     List<Feedback> findByDegreeProgramSpecialization_ResponsibleUser_UserIdAndStatus(UUID userId, FeedbackStatus status);
+
+    /** All feedbacks for a proposal that are not invalidated (for display on view/edit). */
+    List<Feedback> findByModuleVersion_Proposal_ProposalIdAndInvalidatedFalse(Long proposalId);
 }

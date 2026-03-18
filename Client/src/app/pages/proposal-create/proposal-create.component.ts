@@ -72,7 +72,7 @@ export class ProposalCreateComponent extends ProposalBaseComponent {
       const proposalId = res.proposalId;
       const moduleVersionId = res.latestModuleVersion?.moduleVersionId;
       if (proposalId != null && moduleVersionId != null) {
-        await this.router.navigate(['/proposals/view', proposalId, 'version', moduleVersionId, 'edit'], { queryParams: { created: true } });
+        await this.router.navigate(['/proposals', proposalId, 'version', moduleVersionId, 'edit'], { queryParams: { created: true } });
       } else {
         this.error.set('Unexpected response from server.');
       }

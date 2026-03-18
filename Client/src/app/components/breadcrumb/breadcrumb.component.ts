@@ -85,37 +85,38 @@ export class BreadcrumbComponent {
       return items;
     }
 
-    if (segments[1] === 'view' && segments[2]) {
-      const proposalId = segments[2];
-      const proposalLabel = (this.breadcrumbLabels.proposalTitle() ?? '').trim() || `Proposal ${proposalId}`;
+    // segments[1] is proposal id (e.g. /proposals/123 or /proposals/123/version/456/edit)
+    const proposalId = segments[1];
+    if (!proposalId) return items;
+
+    const proposalLabel = (this.breadcrumbLabels.proposalTitle() ?? '').trim() || `Proposal ${proposalId}`;
+    items.push({
+      label: proposalLabel,
+      routerLink: ['/proposals', proposalId]
+    });
+
+    if (segments.length <= 2) return items;
+
+    if (segments[2] === 'version' && segments[3]) {
+      const versionId = segments[3];
+      const versionSegmentLabel = (this.breadcrumbLabels.versionLabel() ?? '').trim() || `Version ${versionId}`;
       items.push({
-        label: proposalLabel,
-        routerLink: ['/proposals/view', proposalId]
+        label: versionSegmentLabel,
+        routerLink: ['/proposals', proposalId, 'version', versionId]
       });
 
-      if (segments.length <= 3) return items;
+      if (segments.length <= 4) return items;
 
-      if (segments[3] === 'version' && segments[4]) {
-        const versionId = segments[4];
-        const versionSegmentLabel = (this.breadcrumbLabels.versionLabel() ?? '').trim() || `Version ${versionId}`;
+      if (segments[4] === 'edit') {
+        items.push({ label: 'Edit', routerLink: ['/proposals', proposalId, 'version', versionId, 'edit'] });
+        return items;
+      }
+      if (segments[4] === 'overlap') {
         items.push({
-          label: versionSegmentLabel,
-          routerLink: ['/proposals/view', proposalId, 'version', versionId]
+          label: 'Similar Modules',
+          routerLink: ['/proposals', proposalId, 'version', versionId, 'overlap']
         });
-
-        if (segments.length <= 5) return items;
-
-        if (segments[5] === 'edit') {
-          items.push({ label: 'Edit', routerLink: ['/proposals/view', proposalId, 'version', versionId, 'edit'] });
-          return items;
-        }
-        if (segments[5] === 'overlap') {
-          items.push({
-            label: 'Similar Modules',
-            routerLink: ['/proposals/view', proposalId, 'version', versionId, 'overlap']
-          });
-          return items;
-        }
+        return items;
       }
     }
 

@@ -38,6 +38,11 @@
   color: var(--p-primary-contrast-color, #1a1a1a);
 }
 
+.step-item--action-required .step-number {
+  background: var(--p-error-color, #ef4444);
+  color: white;
+}
+
 .step-number {
   flex-shrink: 0;
   width: 1.75rem;
@@ -57,31 +62,3 @@
   font-size: 1rem;
 }
 
-.step-feedbacks {
-  display: flex;
-  gap: 0.25rem;
-}
-
-.feedback-dot {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 50%;
-  background: var(--p-surface-400, #adb5bd);
-}
-
-.feedback-dot--PENDING_SUBMISSION {
-  background: #94a3b8;
-}
-
-.feedback-dot--PENDING_FEEDBACK {
-  background: #eab308;
-}
-
-.feedback-dot--APPROVED,
-.feedback-dot--FEEDBACK_GIVEN {
-  background: #22c55e;
-}
-
-.feedback-dot--REJECTED {
-  background: #ef4444;
-}

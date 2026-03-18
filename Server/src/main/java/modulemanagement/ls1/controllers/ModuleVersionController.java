@@ -56,13 +56,13 @@ public class ModuleVersionController {
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("/{id}/previous-module-version-feedback")
+    @GetMapping("/{id}/previous-module-versions-feedback")
     @PreAuthorize("hasAnyRole('PROFESSOR')")
     public ResponseEntity<List<ModuleVersionViewFeedbackDTO>> getPreviousModuleVersionFeedback(
             @CurrentUser User user, @PathVariable Long id) {
-        List<ModuleVersionViewFeedbackDTO> lastRejectionReasons = moduleVersionService
+        List<ModuleVersionViewFeedbackDTO> previousFeedbacks = moduleVersionService
                 .getPreviousModuleVersionFeedback(user.getUserId(), id);
-        return ResponseEntity.ok(lastRejectionReasons);
+        return ResponseEntity.ok(previousFeedbacks);
     }
 
     @PostMapping("/generate/content")

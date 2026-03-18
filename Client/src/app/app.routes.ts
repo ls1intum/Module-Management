@@ -25,10 +25,10 @@ export const routes: Routes = [
     children: [
       { path: '', component: ProfessorHomePageComponent },
       { path: 'create', component: ProposalCreateComponent },
-      { path: 'view/:id', component: ProposalViewComponent },
-      { path: 'view/:id/version/:versionId', component: ModuleVersionViewComponent },
-      { path: 'view/:id/version/:versionId/edit', component: ModuleVersionEditComponent },
-      { path: 'view/:id/version/:versionId/overlap', component: SimilarModulesPage }
+      { path: ':id', component: ProposalViewComponent },
+      { path: ':id/version/:versionId', component: ModuleVersionViewComponent },
+      { path: ':id/version/:versionId/edit', component: ModuleVersionEditComponent },
+      { path: ':id/version/:versionId/overlap', component: SimilarModulesPage }
     ]
   },
   {

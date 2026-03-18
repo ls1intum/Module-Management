@@ -5,6 +5,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProposalBaseComponent } from '../../components/create-edit-base/create-edit-base.component';
 import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
+import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
 import { ModuleEditStepperComponent } from '../../components/module-edit-stepper/module-edit-stepper.component';
 import { ModuleDegreeProgramAssignmentDTO, ModuleVersionUpdateRequestDTO, ModuleVersionViewDTO, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
 import { ToggleButtonGroupComponent } from '../../components/toggle-button-group/toggle-button-group.component';
@@ -26,6 +27,7 @@ import { TagModule } from 'primeng/tag';
     CommonModule,
     RouterModule,
     FeedbackDepartmentPipe,
+    FeedbackStatusPipe,
     ToggleButtonGroupComponent,
     ModuleEditStepperComponent,
     ButtonModule,

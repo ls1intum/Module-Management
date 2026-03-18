@@ -59,7 +59,7 @@
       </tr>
     </ng-template>
     <ng-template #body let-version>
-      <tr [pSelectableRow]="version" [routerLink]="['/proposals/view', proposal.proposalId, 'version', proposal.latestModuleVersion!.moduleVersionId]">
+      <tr [pSelectableRow]="version" [routerLink]="['/proposals', proposal.proposalId, 'version', proposal.latestModuleVersion!.moduleVersionId]">
         <td>{{ proposal.latestVersion }}</td>
         <td>
           {{ proposal.latestModuleVersion!.titleEng }}
@@ -87,14 +87,14 @@
               label="Edit"
               outlined
               severity="contrast"
-              [routerLink]="['/proposals/view', proposal.proposalId, 'version', proposal.latestModuleVersion!.moduleVersionId, 'edit']"
+              [routerLink]="['/proposals', proposal.proposalId, 'version', proposal.latestModuleVersion!.moduleVersionId, 'edit']"
               (click)="$event.stopPropagation()"
             />
             <p-button
               label="Overlaps"
               outlined
               severity="contrast"
-              [routerLink]="['/proposals/view', proposal.proposalId, 'version', proposal.latestModuleVersion?.moduleVersionId, 'overlap']"
+              [routerLink]="['/proposals', proposal.proposalId, 'version', proposal.latestModuleVersion?.moduleVersionId, 'overlap']"
               (click)="$event.stopPropagation()"
             />
           </div>
@@ -116,7 +116,7 @@
       </tr>
     </ng-template>
     <ng-template #body let-version>
-      <tr [pSelectableRow]="version" [routerLink]="['/proposals/view', proposal.proposalId, 'version', version.moduleVersionId]">
+      <tr [pSelectableRow]="version" [routerLink]="['/proposals', proposal.proposalId, 'version', version.moduleVersionId]">
         <td class="text-muted-foreground">{{ version.version }}</td>
         <td class="text-muted-foreground">
           {{ version.titleEng }}
@@ -144,7 +144,7 @@
               label="View Feedback"
               severity="contrast"
               outlined
-              [routerLink]="['/proposals/view', proposal.proposalId, 'version', version.moduleVersionId]"
+              [routerLink]="['/proposals', proposal.proposalId, 'version', version.moduleVersionId]"
               (click)="$event.stopPropagation()"
             />
           </div>

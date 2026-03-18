@@ -14,7 +14,7 @@
 } @else if (moduleVersionDto(); as moduleVersionDto) {
   <div class="module-edit-layout" style="padding: 1rem 0">
     <aside class="module-edit-stepper-column">
-      <app-module-edit-stepper [steps]="MODULE_VIEW_STEPS" [currentIndex]="currentStepIndex()" [stepStatuses]="stepStatuses()" (stepChange)="goToStep($event)" />
+      <app-module-edit-stepper [steps]="MODULE_EDIT_STEPS" [currentIndex]="currentStepIndex()" [stepStatuses]="stepStatuses()" (stepChange)="goToStep($event)" />
     </aside>
     <div class="module-edit-form-column space-y-6">
       <h2 class="text-2xl">Overview of '{{ moduleVersionDto.titleEng }}' - Version {{ moduleVersionDto.version }}</h2>
@@ -22,10 +22,10 @@
         <p-button label="Export PDF" severity="contrast" (onClick)="pdfExport()" />
         <div class="flex gap-2">
           @if (proposalId) {
-            <p-button label="Check Overlaps" severity="contrast" outlined [routerLink]="['/proposals/view', proposalId, 'version', moduleVersionId, 'overlap']" />
+            <p-button label="Check Overlaps" severity="contrast" outlined [routerLink]="['/proposals', proposalId, 'version', moduleVersionId, 'overlap']" />
           }
           @if (isLatestVersion() && proposalId) {
-            <p-button label="Edit Module Version" severity="contrast" [routerLink]="['/proposals/view', proposalId, 'version', moduleVersionId, 'edit']" />
+            <p-button label="Edit Module Version" severity="contrast" [routerLink]="['/proposals', proposalId, 'version', moduleVersionId, 'edit']" />
           }
         </div>
       </div>
@@ -85,16 +85,16 @@
       }
 
       @if (currentStepIndex() === 1) {
-        <!-- <p-card header="Submit for coordinator feedback">
+        <p-card header="Submit for coordinator feedback">
           <p class="mb-4">
-            First submission: request feedback from program coordinators and area coordinators (one per chosen degree program/area). On this overview you see only coordinator
-            feedback status.
+            First submission: request feedback from program coordinators and area coordinators (one per chosen degree program/area). Feedback is tied to the module version that was
+            submitted (immutable). When viewing the latest version, status below is from the previous submitted version.
           </p>
-          @if (coordinatorFeedbacksForCurrentAssignments().length > 0) {
+          @if (coordinatorFeedbacksForStep1().feedbacks.length > 0) {
             <div class="space-y-2">
-              <p class="font-medium">Coordinator feedback status (one per chosen program/area)</p>
+              <p class="font-medium">Coordinator feedback status {{ coordinatorFeedbacksForStep1().fromPrevious ? '(from previous version)' : '(this version)' }}</p>
               <ul class="space-y-2 list-none p-0 m-0">
-                @for (fb of coordinatorFeedbacksForCurrentAssignments(); track fb.feedbackId) {
+                @for (fb of coordinatorFeedbacksForStep1().feedbacks; track fb.feedbackId) {
                   <li class="flex items-center gap-2 flex-wrap">
                     <span class="font-medium">{{ fb.requestedFromUserName ?? (fb.feedbackRole | feedbackDepartment).text }}:</span>
                     <p-tag
@@ -107,10 +107,10 @@
             </div>
           } @else {
             <p class="text-muted-foreground">
-              No coordinator feedback requests yet. Edit the module version, complete step 1, and use "Submit for coordinator feedback" to request feedback.
+              No coordinator feedback yet. Edit the module version, complete step 1, and use "Submit for coordinator feedback" to request feedback.
             </p>
           }
-        </p-card> -->
+        </p-card>
       }
 
       @if (currentStepIndex() === 2) {

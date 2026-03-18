@@ -64,8 +64,14 @@ export abstract class ProposalBaseComponent {
         }
       }
       if (step.id === 'submit-coordinator-feedback') {
-        return StepperStatus.Default;
+        const feedbacks = this.coordinatorFeedbacksForStep1().feedbacks;
+        if (feedbacks.length === 0) return StepperStatus.Default;
+        const hasRejection = feedbacks.some((fb) => fb.feedbackStatus === ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.Rejected);
+        if (hasRejection) return StepperStatus.ActionRequired;
+        const allApproved = feedbacks.every((fb) => fb.feedbackStatus === ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.Approved);
+        return allApproved ? StepperStatus.Completed : StepperStatus.Pending;
       }
+
       if (step.id === 'submit-full-feedback') {
         return StepperStatus.Default;
       }
@@ -112,6 +118,28 @@ export abstract class ProposalBaseComponent {
   canRequestFullFeedback = computed(() => {
     const status = this.moduleVersionStatus();
     return status === 'PENDING_FULL_SUBMISSION' && this.allFormStepsComplete();
+  });
+
+  /** Coordinator feedbacks for this version (for current assignments). From moduleVersionDto().feedbacks. */
+  coordinatorFeedbacksForCurrentAssignmentsFromDto = computed(() => {
+    const dto = this.moduleVersionDto();
+    const feedbacks = (dto as ModuleVersionViewDTO)?.feedbacks ?? [];
+    const coordinator = feedbacks.filter((f) => f.feedbackRole == null);
+    const specIds = new Set((dto as ModuleVersionViewDTO)?.degreeProgramAssignments?.map((a) => a.degreeProgramSpecializationId).filter((id): id is number => id != null) ?? []);
+    if (specIds.size === 0) return coordinator;
+    return coordinator.filter((f) => f.degreeProgramSpecializationId != null && specIds.has(f.degreeProgramSpecializationId));
+  });
+
+  /** Coordinator feedbacks to show in step 1: current version if any, otherwise previous version (feedbacks() from API). */
+  coordinatorFeedbacksForStep1 = computed(() => {
+    const fromDto = this.coordinatorFeedbacksForCurrentAssignmentsFromDto();
+    if (fromDto.length > 0) return { feedbacks: fromDto, fromPrevious: false };
+    const prev = this.feedbacks() ?? [];
+    const coordinator = prev.filter((f) => f.feedbackRole == null);
+    const dto = this.moduleVersionDto() as ModuleVersionViewDTO | null;
+    const specIds = new Set(dto?.degreeProgramAssignments?.map((a) => a.degreeProgramSpecializationId).filter((id): id is number => id != null) ?? []);
+    const filtered = specIds.size === 0 ? coordinator : coordinator.filter((f) => f.degreeProgramSpecializationId != null && specIds.has(f.degreeProgramSpecializationId));
+    return { feedbacks: filtered, fromPrevious: true };
   });
 
   showPrompt: { [key: string]: boolean } = {
@@ -239,7 +267,7 @@ export abstract class ProposalBaseComponent {
         if (newId != null && newId !== this.moduleVersionId) {
           this.moduleVersionId = newId;
           this.breadcrumbLabels.versionLabel.set(response?.latestVersion != null ? `Version ${response.latestVersion}` : null);
-          this.router.navigate(['/proposals/view', proposalId, 'version', newId, 'edit'], { replaceUrl: true });
+          this.router.navigate(['/proposals', proposalId, 'version', newId, 'edit'], { replaceUrl: true });
         }
       },
       error: (err: HttpErrorResponse) => {
@@ -264,7 +292,7 @@ export abstract class ProposalBaseComponent {
         if (newId != null && newId !== this.moduleVersionId) {
           this.moduleVersionId = newId;
           this.breadcrumbLabels.versionLabel.set(response?.latestVersion != null ? `Version ${response.latestVersion}` : null);
-          this.router.navigate(['/proposals/view', proposalId, 'version', newId, 'edit'], { replaceUrl: true });
+          this.router.navigate(['/proposals', proposalId, 'version', newId, 'edit'], { replaceUrl: true });
         }
       },
       error: (err: HttpErrorResponse) => {
