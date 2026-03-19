@@ -18,7 +18,6 @@ import modulemanagement.ls1.models.Proposal;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.repositories.DegreeProgramRepository;
 import modulemanagement.ls1.repositories.FeedbackRepository;
-import modulemanagement.ls1.repositories.ModuleVersionDegreeProgramAssignmentRepository;
 import modulemanagement.ls1.repositories.ModuleVersionRepository;
 import modulemanagement.ls1.repositories.ProposalRepository;
 import modulemanagement.ls1.shared.PdfCreator;
@@ -32,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import jakarta.persistence.EntityManager;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -41,21 +39,18 @@ import java.util.stream.Collectors;
 @Service
 public class ModuleVersionService {
     private final ModuleVersionRepository moduleVersionRepository;
-    private final ModuleVersionDegreeProgramAssignmentRepository assignmentRepository;
     private final DegreeProgramRepository degreeProgramRepository;
     private final ProposalRepository proposalRepository;
     private final OverlapDetectionService overlapDetectionService;
     private final PdfCreator pdfCreator;
-    private final EntityManager entityManager;
     private final FeedbackRepository feedbackRepository;
+    private final EntityManager entityManager;
 
     public ModuleVersionService(ModuleVersionRepository moduleVersionRepository,
-            ModuleVersionDegreeProgramAssignmentRepository assignmentRepository,
             DegreeProgramRepository degreeProgramRepository, ProposalRepository proposalRepository,
             OverlapDetectionService overlapDetectionService, PdfCreator pdfCreator,
-            EntityManager entityManager, FeedbackRepository feedbackRepository) {
+            FeedbackRepository feedbackRepository, EntityManager entityManager) {
         this.moduleVersionRepository = moduleVersionRepository;
-        this.assignmentRepository = assignmentRepository;
         this.degreeProgramRepository = degreeProgramRepository;
         this.proposalRepository = proposalRepository;
         this.overlapDetectionService = overlapDetectionService;
@@ -159,7 +154,6 @@ public class ModuleVersionService {
                 }
             }
 
-            assignmentRepository.deleteByModuleVersion_ModuleVersionId(mv.getModuleVersionId());
             mv.getDegreeProgramAssignments().clear();
             entityManager.flush();
             for (ModuleDegreeProgramAssignmentDTO item : request.getDegreeProgramAssignments()) {
