@@ -23,6 +23,7 @@ export interface ModuleField {
   isLongText?: boolean;
   hasPrompt?: keyof ModuleVersionViewDTO;
   feedbackKey?: string;
+  promptFeedbackKey?: keyof ModuleVersionViewFeedbackDTO;
 }
 
 @Component({
@@ -86,42 +87,44 @@ export class ModuleVersionViewComponent {
 
   moduleFields: ModuleField[] = [
     { key: 'titleEng', label: 'Title', section: 'basic', feedbackKey: 'titleFeedback' },
-    { key: 'titleDe', label: 'Title (German)', section: 'basic' },
+    { key: 'titleDe', label: 'Title (German)', section: 'basic', feedbackKey: 'titleDeFeedback' },
     { key: 'levelEng', label: 'Level', section: 'basic', feedbackKey: 'levelFeedback' },
     { key: 'languageEng', label: 'Language', section: 'basic', feedbackKey: 'languageFeedback' },
     { key: 'frequencyEng', label: 'Frequency', section: 'basic', feedbackKey: 'frequencyFeedback' },
     { key: 'credits', label: 'Credits', section: 'hours', feedbackKey: 'creditsFeedback' },
-    { key: 'hoursLecture', label: 'Hours (Lecture)', section: 'basic' },
-    { key: 'hoursExercise', label: 'Hours (Exercise)', section: 'basic' },
-    { key: 'hoursPractical', label: 'Hours (Practical)', section: 'basic' },
-    { key: 'hoursSeminar', label: 'Hours (Seminar)', section: 'basic' },
-    { key: 'firstSemesterAvailable', label: 'First semester available', section: 'basic' },
-    { key: 'successorModuleName', label: 'Successor module', section: 'basic' },
+    { key: 'hoursLecture', label: 'Hours (Lecture)', section: 'basic', feedbackKey: 'hoursLectureFeedback' },
+    { key: 'hoursExercise', label: 'Hours (Exercise)', section: 'basic', feedbackKey: 'hoursExerciseFeedback' },
+    { key: 'hoursPractical', label: 'Hours (Practical)', section: 'basic', feedbackKey: 'hoursPracticalFeedback' },
+    { key: 'hoursSeminar', label: 'Hours (Seminar)', section: 'basic', feedbackKey: 'hoursSeminarFeedback' },
+    { key: 'firstSemesterAvailable', label: 'First semester available', section: 'basic', feedbackKey: 'firstSemesterAvailableFeedback' },
+    { key: 'successorModuleName', label: 'Successor module', section: 'basic', feedbackKey: 'successorModuleNameFeedback' },
     { key: 'duration', label: 'Duration', section: 'basic', feedbackKey: 'durationFeedback' },
     { key: 'repetitionEng', label: 'Repetition', section: 'basic', feedbackKey: 'repetitionFeedback' },
     { key: 'hoursTotal', label: 'Total Hours', section: 'hours', feedbackKey: 'hoursTotalFeedback' },
     { key: 'hoursSelfStudy', label: 'Self-Study Hours', section: 'hours', feedbackKey: 'hoursSelfStudyFeedback' },
     { key: 'hoursPresence', label: 'Presence Hours', section: 'hours', feedbackKey: 'hoursPresenceFeedback' },
-    { key: 'bulletPoints', label: 'Key Points', section: 'content', isLongText: true },
+    { key: 'bulletPoints', label: 'Key Points', section: 'content', isLongText: true, feedbackKey: 'bulletPointsFeedback' },
     {
       key: 'examinationAchievementsEng',
       label: 'Examination Achievements',
       section: 'content',
       isLongText: true,
       hasPrompt: 'examinationAchievementsPromptEng',
-      feedbackKey: 'examinationAchievementsFeedback'
+      feedbackKey: 'examinationAchievementsFeedback',
+      promptFeedbackKey: 'examinationAchievementsPromptFeedback'
     },
     { key: 'recommendedPrerequisitesEng', label: 'Recommended Prerequisites', section: 'content', isLongText: true, feedbackKey: 'recommendedPrerequisitesFeedback' },
-    { key: 'contentEng', label: 'Module Content', section: 'content', isLongText: true, hasPrompt: 'contentPromptEng', feedbackKey: 'contentFeedback' },
+    { key: 'contentEng', label: 'Module Content', section: 'content', isLongText: true, hasPrompt: 'contentPromptEng', feedbackKey: 'contentFeedback', promptFeedbackKey: 'contentPromptFeedback' },
     {
       key: 'learningOutcomesEng',
       label: 'Learning Outcomes',
       section: 'content',
       isLongText: true,
       hasPrompt: 'learningOutcomesPromptEng',
-      feedbackKey: 'learningOutcomesFeedback'
+      feedbackKey: 'learningOutcomesFeedback',
+      promptFeedbackKey: 'learningOutcomesPromptFeedback'
     },
-    { key: 'teachingMethodsEng', label: 'Teaching Methods', section: 'content', isLongText: true, hasPrompt: 'teachingMethodsPromptEng', feedbackKey: 'teachingMethodsFeedback' },
+    { key: 'teachingMethodsEng', label: 'Teaching Methods', section: 'content', isLongText: true, hasPrompt: 'teachingMethodsPromptEng', feedbackKey: 'teachingMethodsFeedback', promptFeedbackKey: 'teachingMethodsPromptFeedback' },
     { key: 'mediaEng', label: 'Media', section: 'content', isLongText: true, feedbackKey: 'mediaFeedback' },
     { key: 'literatureEng', label: 'Literature', section: 'content', isLongText: true, feedbackKey: 'literatureFeedback' },
     { key: 'responsiblesEng', label: 'Responsibles', section: 'content', isLongText: true, feedbackKey: 'responsiblesFeedback' },
@@ -269,5 +272,17 @@ export class ModuleVersionViewComponent {
     if (!field?.feedbackKey) return '';
 
     return String(feedback[field.feedbackKey as keyof ModuleVersionViewFeedbackDTO] || '');
+  }
+
+  getFeedbacksByKey(feedbackKey: keyof ModuleVersionViewFeedbackDTO): ModuleVersionViewFeedbackDTO[] {
+    if (!this.moduleVersionDto()?.feedbacks) return [];
+    return this.moduleVersionDto()!.feedbacks!.filter((feedback) => {
+      const value = feedback[feedbackKey];
+      return value !== null && value !== undefined && value !== '';
+    });
+  }
+
+  getFeedbackContentByKey(feedback: ModuleVersionViewFeedbackDTO, feedbackKey: keyof ModuleVersionViewFeedbackDTO): string {
+    return String(feedback[feedbackKey] || '');
   }
 }
