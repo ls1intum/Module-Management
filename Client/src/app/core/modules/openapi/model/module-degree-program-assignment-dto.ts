@@ -12,5 +12,7 @@
 export interface ModuleDegreeProgramAssignmentDTO { 
     degreeProgramId: number;
     degreeProgramSpecializationId: number;
+    degreeProgramName?: string;
+    degreeProgramSpecializationName?: string;
 }
 

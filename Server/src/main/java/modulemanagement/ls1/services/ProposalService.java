@@ -180,6 +180,7 @@ public class ProposalService {
             var spec = assignment.getDegreeProgramSpecialization();
             Feedback feedback = new Feedback();
             feedback.setStatus(FeedbackStatus.PENDING_FEEDBACK);
+            feedback.setCreatedAt(LocalDateTime.now());
             feedback.setDegreeProgramSpecialization(spec);
             feedback.setRequiredRole(null);
             feedback.setModuleVersion(mv);
@@ -247,6 +248,7 @@ public class ProposalService {
         for (UserRole role : FULL_FEEDBACK_ROLES) {
             Feedback feedback = new Feedback();
             feedback.setStatus(FeedbackStatus.PENDING_FEEDBACK);
+            feedback.setCreatedAt(LocalDateTime.now());
             feedback.setRequiredRole(role);
             feedback.setDegreeProgramSpecialization(null);
             feedback.setModuleVersion(mv);

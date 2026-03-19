@@ -1,22 +1,47 @@
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Component, inject, signal } from '@angular/core';
-import { FeedbackControllerService, ModuleVersionViewDTO, FeedbackDTO, GiveFeedbackDTO, ModuleVersionControllerService } from '../../core/modules/openapi';
+import {
+  FeedbackControllerService,
+  ModuleVersionViewDTO,
+  FeedbackDTO,
+  GiveFeedbackDTO,
+  ModuleVersionControllerService,
+  ModuleVersionViewFeedbackDTO
+} from '../../core/modules/openapi';
 import { BreadcrumbLabelsService } from '../../components/breadcrumb/breadcrumb-labels.service';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DatePipe } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
 import { MessageModule } from 'primeng/message';
+import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
+import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
 
 @Component({
   selector: 'app-feedback-view',
   standalone: true,
-  imports: [FormsModule, RouterModule, ButtonModule, TextareaModule, DialogModule, ToastModule, ProgressSpinnerModule, TooltipModule, MessageModule],
+  imports: [
+    FormsModule,
+    RouterModule,
+    ButtonModule,
+    TagModule,
+    TextareaModule,
+    DialogModule,
+    ToastModule,
+    ProgressSpinnerModule,
+    TooltipModule,
+    MessageModule,
+    FeedbackStatusPipe,
+    FeedbackDepartmentPipe,
+    DatePipe
+  ],
   templateUrl: './feedback-view.component.html'
 })
 export class FeedbackViewComponent {
@@ -28,6 +53,7 @@ export class FeedbackViewComponent {
   feedbackForm: FormGroup;
   feedbackId: number | null = null;
   moduleVersion = signal<ModuleVersionViewDTO | null>(null);
+  currentFeedback = signal<ModuleVersionViewFeedbackDTO | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
   rejectionReason: string = '';
@@ -124,6 +150,9 @@ export class FeedbackViewComponent {
       this.feedbackService.getModuleVersionOfFeedback(feedbackId).subscribe({
         next: (response: ModuleVersionViewDTO) => {
           this.moduleVersion.set(response);
+          const found =
+            response.feedbacks?.find((f) => f.feedbackId === feedbackId) ?? null;
+          this.currentFeedback.set(found);
           this.breadcrumbLabels.feedbackLabel.set(response?.titleEng ?? null);
         },
         error: (err: HttpErrorResponse) => this.error.set(err.error),

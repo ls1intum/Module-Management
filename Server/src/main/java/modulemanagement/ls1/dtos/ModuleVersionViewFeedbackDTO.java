@@ -18,6 +18,7 @@ public class ModuleVersionViewFeedbackDTO {
     private UserRole feedbackRole;
     private String requestedFromUserName;
     private FeedbackStatus feedbackStatus;
+    private LocalDateTime createdAt;
     private LocalDateTime submissionDate;
     private Long degreeProgramSpecializationId;
 
@@ -57,6 +58,7 @@ public class ModuleVersionViewFeedbackDTO {
                     + f.getDegreeProgramSpecialization().getName() + ")");
         }
         dto.setFeedbackStatus(f.getStatus());
+        dto.setCreatedAt(f.getCreatedAt());
         dto.setSubmissionDate(f.getSubmissionDate());
         if (f.getDegreeProgramSpecialization() != null) {
             dto.setDegreeProgramSpecializationId(f.getDegreeProgramSpecialization().getDegreeProgramSpecializationId());

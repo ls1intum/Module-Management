@@ -17,6 +17,7 @@ export interface ModuleVersionViewFeedbackDTO {
     feedbackRole?: ModuleVersionViewFeedbackDTO.FeedbackRoleEnum;
     requestedFromUserName?: string;
     feedbackStatus?: ModuleVersionViewFeedbackDTO.FeedbackStatusEnum;
+    createdAt?: string;
     submissionDate?: string;
     degreeProgramSpecializationId?: number;
     titleFeedback?: string;

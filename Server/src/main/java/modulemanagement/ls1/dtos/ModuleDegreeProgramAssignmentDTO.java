@@ -9,4 +9,6 @@ public class ModuleDegreeProgramAssignmentDTO {
     private Long degreeProgramId;
     @NotNull
     private Long degreeProgramSpecializationId;
+    private String degreeProgramName;
+    private String degreeProgramSpecializationName;
 }

@@ -17,6 +17,7 @@ export interface Feedback {
     requiredRole?: Feedback.RequiredRoleEnum;
     status: Feedback.StatusEnum;
     submissionDate?: string;
+    createdAt?: string;
     titleFeedback?: string;
     titleAccepted?: boolean;
     levelFeedback?: string;

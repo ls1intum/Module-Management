@@ -80,8 +80,10 @@ public class ModuleVersionViewDTO {
                     .map(a -> {
                         ModuleDegreeProgramAssignmentDTO item = new ModuleDegreeProgramAssignmentDTO();
                         item.setDegreeProgramId(a.getDegreeProgram().getDegreeProgramId());
+                        item.setDegreeProgramName(a.getDegreeProgram().getName());
                         item.setDegreeProgramSpecializationId(
                                 a.getDegreeProgramSpecialization().getDegreeProgramSpecializationId());
+                        item.setDegreeProgramSpecializationName(a.getDegreeProgramSpecialization().getName());
                         return item;
                     })
                     .collect(Collectors.toList());

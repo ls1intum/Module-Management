@@ -51,6 +51,9 @@ public class Feedback {
     @Column(name = "submission_date")
     private LocalDateTime submissionDate;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
     @ManyToOne
     @JoinColumn(name = "module_version_id", nullable = false)
     @JsonIgnore
