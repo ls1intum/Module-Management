@@ -62,31 +62,3 @@ databaseChangeLog:
                   name: successor_module_name_accepted
                   type: BOOLEAN
                   defaultValueBoolean: false
-              - column:
-                  name: examination_prompt_feedback
-                  type: CLOB
-              - column:
-                  name: examination_prompt_accepted
-                  type: BOOLEAN
-                  defaultValueBoolean: false
-              - column:
-                  name: content_prompt_feedback
-                  type: CLOB
-              - column:
-                  name: content_prompt_accepted
-                  type: BOOLEAN
-                  defaultValueBoolean: false
-              - column:
-                  name: learning_prompt_feedback
-                  type: CLOB
-              - column:
-                  name: learning_prompt_accepted
-                  type: BOOLEAN
-                  defaultValueBoolean: false
-              - column:
-                  name: teaching_prompt_feedback
-                  type: CLOB
-              - column:
-                  name: teaching_prompt_accepted
-                  type: BOOLEAN
-                  defaultValueBoolean: false

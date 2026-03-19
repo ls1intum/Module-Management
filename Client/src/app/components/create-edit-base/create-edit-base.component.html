@@ -527,18 +527,6 @@
               </p-button>
             </div>
             @if (showPrompt['examination']) {
-              @if (moduleVersionId && hasFeedback('examinationAchievementsPromptFeedback')) {
-                <p-message severity="error" variant="outlined" styleClass="my-2 inline-block w-fit">
-                  @for (feedback of feedbacks(); track feedback.feedbackId) {
-                    @if (feedback.examinationAchievementsPromptFeedback) {
-                      <p>
-                        <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                        {{ feedback.examinationAchievementsPromptFeedback }}
-                      </p>
-                    }
-                  }
-                </p-message>
-              }
               <div class="mt-2 mb-2">
                 <textarea
                   pTextarea
@@ -597,18 +585,6 @@
               <p-button type="button" severity="contrast" size="small" (onClick)="generateContent()" [disabled]="loading()">Generate Content</p-button>
             </div>
             @if (showPrompt['content']) {
-              @if (moduleVersionId && hasFeedback('contentPromptFeedback')) {
-                <p-message severity="error" variant="outlined" styleClass="my-2 inline-block w-fit">
-                  @for (feedback of feedbacks(); track feedback.feedbackId) {
-                    @if (feedback.contentPromptFeedback) {
-                      <p>
-                        <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                        {{ feedback.contentPromptFeedback }}
-                      </p>
-                    }
-                  }
-                </p-message>
-              }
               <div class="mt-2">
                 <textarea
                   pTextarea
@@ -645,18 +621,6 @@
               <p-button type="button" severity="contrast" size="small" (onClick)="generateLearningOutcomes()" [disabled]="loading()">Generate Learning Outcomes</p-button>
             </div>
             @if (showPrompt['learning']) {
-              @if (moduleVersionId && hasFeedback('learningOutcomesPromptFeedback')) {
-                <p-message severity="error" variant="outlined" styleClass="my-2 inline-block w-fit">
-                  @for (feedback of feedbacks(); track feedback.feedbackId) {
-                    @if (feedback.learningOutcomesPromptFeedback) {
-                      <p>
-                        <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                        {{ feedback.learningOutcomesPromptFeedback }}
-                      </p>
-                    }
-                  }
-                </p-message>
-              }
               <div class="mt-2">
                 <textarea
                   pTextarea
@@ -693,18 +657,6 @@
               <p-button type="button" severity="contrast" size="small" (onClick)="generateTeachingMethods()" [disabled]="loading()">Generate Teaching Methods</p-button>
             </div>
             @if (showPrompt['teaching']) {
-              @if (moduleVersionId && hasFeedback('teachingMethodsPromptFeedback')) {
-                <p-message severity="error" variant="outlined" styleClass="my-2 inline-block w-fit">
-                  @for (feedback of feedbacks(); track feedback.feedbackId) {
-                    @if (feedback.teachingMethodsPromptFeedback) {
-                      <p>
-                        <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                        {{ feedback.teachingMethodsPromptFeedback }}
-                      </p>
-                    }
-                  }
-                </p-message>
-              }
               <div class="mt-2">
                 <textarea
                   pTextarea

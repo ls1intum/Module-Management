@@ -146,16 +146,6 @@
                   <p-panel class="mt-4" header="Generation Prompt:">
                     <p class="text-base italic">{{ getModuleVersionProperty(field.hasPrompt) }}</p>
                   </p-panel>
-                  @if (field.promptFeedbackKey && getFeedbacksByKey(field.promptFeedbackKey).length > 0) {
-                    <div class="mt-3 space-y-2">
-                      @for (feedback of getFeedbacksByKey(field.promptFeedbackKey); track feedback.feedbackId) {
-                        <div class="feedback-callout">
-                          <p class="feedback-author">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}</p>
-                          <p class="feedback-text">{{ getFeedbackContentByKey(feedback, field.promptFeedbackKey) }}</p>
-                        </div>
-                      }
-                    </div>
-                  }
                 }
                 @if (field.feedbackKey && getFieldFeedbacks(field.key).length > 0) {
                   <div class="mt-3 space-y-2">
@@ -185,16 +175,6 @@
                   <p-panel class="mt-4" header="Generation Prompt:">
                     <p class="text-base italic">{{ getModuleVersionProperty(field.hasPrompt) }}</p>
                   </p-panel>
-                  @if (field.promptFeedbackKey && getFeedbacksByKey(field.promptFeedbackKey).length > 0) {
-                    <div class="mt-3 space-y-2">
-                      @for (feedback of getFeedbacksByKey(field.promptFeedbackKey); track feedback.feedbackId) {
-                        <div class="feedback-callout">
-                          <p class="feedback-author">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}</p>
-                          <p class="feedback-text">{{ getFeedbackContentByKey(feedback, field.promptFeedbackKey) }}</p>
-                        </div>
-                      }
-                    </div>
-                  }
                 }
                 @if (field.feedbackKey && getFieldFeedbacks(field.key).length > 0) {
                   <div class="mt-3 space-y-2">

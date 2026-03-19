@@ -23,7 +23,6 @@ export interface ModuleField {
   isLongText?: boolean;
   hasPrompt?: keyof ModuleVersionViewDTO;
   feedbackKey?: string;
-  promptFeedbackKey?: keyof ModuleVersionViewFeedbackDTO;
 }
 
 @Component({
@@ -110,21 +109,19 @@ export class ModuleVersionViewComponent {
       section: 'content',
       isLongText: true,
       hasPrompt: 'examinationAchievementsPromptEng',
-      feedbackKey: 'examinationAchievementsFeedback',
-      promptFeedbackKey: 'examinationAchievementsPromptFeedback'
+      feedbackKey: 'examinationAchievementsFeedback'
     },
     { key: 'recommendedPrerequisitesEng', label: 'Recommended Prerequisites', section: 'content', isLongText: true, feedbackKey: 'recommendedPrerequisitesFeedback' },
-    { key: 'contentEng', label: 'Module Content', section: 'content', isLongText: true, hasPrompt: 'contentPromptEng', feedbackKey: 'contentFeedback', promptFeedbackKey: 'contentPromptFeedback' },
+    { key: 'contentEng', label: 'Module Content', section: 'content', isLongText: true, hasPrompt: 'contentPromptEng', feedbackKey: 'contentFeedback' },
     {
       key: 'learningOutcomesEng',
       label: 'Learning Outcomes',
       section: 'content',
       isLongText: true,
       hasPrompt: 'learningOutcomesPromptEng',
-      feedbackKey: 'learningOutcomesFeedback',
-      promptFeedbackKey: 'learningOutcomesPromptFeedback'
+      feedbackKey: 'learningOutcomesFeedback'
     },
-    { key: 'teachingMethodsEng', label: 'Teaching Methods', section: 'content', isLongText: true, hasPrompt: 'teachingMethodsPromptEng', feedbackKey: 'teachingMethodsFeedback', promptFeedbackKey: 'teachingMethodsPromptFeedback' },
+    { key: 'teachingMethodsEng', label: 'Teaching Methods', section: 'content', isLongText: true, hasPrompt: 'teachingMethodsPromptEng', feedbackKey: 'teachingMethodsFeedback' },
     { key: 'mediaEng', label: 'Media', section: 'content', isLongText: true, feedbackKey: 'mediaFeedback' },
     { key: 'literatureEng', label: 'Literature', section: 'content', isLongText: true, feedbackKey: 'literatureFeedback' },
     { key: 'responsiblesEng', label: 'Responsibles', section: 'content', isLongText: true, feedbackKey: 'responsiblesFeedback' },
@@ -274,15 +271,4 @@ export class ModuleVersionViewComponent {
     return String(feedback[field.feedbackKey as keyof ModuleVersionViewFeedbackDTO] || '');
   }
 
-  getFeedbacksByKey(feedbackKey: keyof ModuleVersionViewFeedbackDTO): ModuleVersionViewFeedbackDTO[] {
-    if (!this.moduleVersionDto()?.feedbacks) return [];
-    return this.moduleVersionDto()!.feedbacks!.filter((feedback) => {
-      const value = feedback[feedbackKey];
-      return value !== null && value !== undefined && value !== '';
-    });
-  }
-
-  getFeedbackContentByKey(feedback: ModuleVersionViewFeedbackDTO, feedbackKey: keyof ModuleVersionViewFeedbackDTO): string {
-    return String(feedback[feedbackKey] || '');
-  }
 }

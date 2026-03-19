@@ -169,11 +169,6 @@ public class Feedback {
     @Column(name = "examination_accepted")
     private boolean examinationAchievementsAccepted;
 
-    @Column(name = "examination_prompt_feedback", columnDefinition = "CLOB")
-    private String examinationAchievementsPromptFeedback;
-
-    @Column(name = "examination_prompt_accepted")
-    private boolean examinationAchievementsPromptAccepted;
 
     @Column(name = "repetition_feedback", columnDefinition = "CLOB")
     private String repetitionFeedback;
@@ -193,11 +188,6 @@ public class Feedback {
     @Column(name = "content_accepted")
     private boolean contentAccepted;
 
-    @Column(name = "content_prompt_feedback", columnDefinition = "CLOB")
-    private String contentPromptFeedback;
-
-    @Column(name = "content_prompt_accepted")
-    private boolean contentPromptAccepted;
 
     @Column(name = "learning_feedback", columnDefinition = "CLOB")
     private String learningOutcomesFeedback;
@@ -205,11 +195,6 @@ public class Feedback {
     @Column(name = "learning_accepted")
     private boolean learningOutcomesAccepted;
 
-    @Column(name = "learning_prompt_feedback", columnDefinition = "CLOB")
-    private String learningOutcomesPromptFeedback;
-
-    @Column(name = "learning_prompt_accepted")
-    private boolean learningOutcomesPromptAccepted;
 
     @Column(name = "teaching_feedback", columnDefinition = "CLOB")
     private String teachingMethodsFeedback;
@@ -217,11 +202,6 @@ public class Feedback {
     @Column(name = "teaching_accepted")
     private boolean teachingMethodsAccepted;
 
-    @Column(name = "teaching_prompt_feedback", columnDefinition = "CLOB")
-    private String teachingMethodsPromptFeedback;
-
-    @Column(name = "teaching_prompt_accepted")
-    private boolean teachingMethodsPromptAccepted;
 
     @Column(name = "media_feedback", columnDefinition = "CLOB")
     private String mediaFeedback;
@@ -288,24 +268,16 @@ public class Feedback {
         this.successorModuleNameAccepted = dto.isSuccessorModuleNameAccepted();
         this.examinationAchievementsFeedback = dto.getExaminationAchievementsFeedback();
         this.examinationAchievementsAccepted = dto.isExaminationAchievementsAccepted();
-        this.examinationAchievementsPromptFeedback = dto.getExaminationAchievementsPromptFeedback();
-        this.examinationAchievementsPromptAccepted = dto.isExaminationAchievementsPromptAccepted();
         this.repetitionFeedback = dto.getRepetitionFeedback();
         this.repetitionAccepted = dto.isRepetitionAccepted();
         this.recommendedPrerequisitesFeedback = dto.getRecommendedPrerequisitesFeedback();
         this.recommendedPrerequisitesAccepted = dto.isRecommendedPrerequisitesAccepted();
         this.contentFeedback = dto.getContentFeedback();
         this.contentAccepted = dto.isContentAccepted();
-        this.contentPromptFeedback = dto.getContentPromptFeedback();
-        this.contentPromptAccepted = dto.isContentPromptAccepted();
         this.learningOutcomesFeedback = dto.getLearningOutcomesFeedback();
         this.learningOutcomesAccepted = dto.isLearningOutcomesAccepted();
-        this.learningOutcomesPromptFeedback = dto.getLearningOutcomesPromptFeedback();
-        this.learningOutcomesPromptAccepted = dto.isLearningOutcomesPromptAccepted();
         this.teachingMethodsFeedback = dto.getTeachingMethodsFeedback();
         this.teachingMethodsAccepted = dto.isTeachingMethodsAccepted();
-        this.teachingMethodsPromptFeedback = dto.getTeachingMethodsPromptFeedback();
-        this.teachingMethodsPromptAccepted = dto.isTeachingMethodsPromptAccepted();
         this.mediaFeedback = dto.getMediaFeedback();
         this.mediaAccepted = dto.isMediaAccepted();
         this.literatureFeedback = dto.getLiteratureFeedback();
@@ -335,15 +307,11 @@ public class Feedback {
                 && this.firstSemesterAvailableAccepted
                 && this.successorModuleNameAccepted
                 && this.examinationAchievementsAccepted
-                && this.examinationAchievementsPromptAccepted
                 && this.repetitionAccepted
                 && this.recommendedPrerequisitesAccepted
                 && this.contentAccepted
-                && this.contentPromptAccepted
                 && this.learningOutcomesAccepted
-                && this.learningOutcomesPromptAccepted
                 && this.teachingMethodsAccepted
-                && this.teachingMethodsPromptAccepted
                 && this.mediaAccepted
                 && this.literatureAccepted
                 && this.responsiblesAccepted

@@ -38,15 +38,11 @@ export interface ModuleVersionViewFeedbackDTO {
     firstSemesterAvailableFeedback?: string;
     successorModuleNameFeedback?: string;
     examinationAchievementsFeedback?: string;
-    examinationAchievementsPromptFeedback?: string;
     repetitionFeedback?: string;
     recommendedPrerequisitesFeedback?: string;
     contentFeedback?: string;
-    contentPromptFeedback?: string;
     learningOutcomesFeedback?: string;
-    learningOutcomesPromptFeedback?: string;
     teachingMethodsFeedback?: string;
-    teachingMethodsPromptFeedback?: string;
     mediaFeedback?: string;
     literatureFeedback?: string;
     responsiblesFeedback?: string;
