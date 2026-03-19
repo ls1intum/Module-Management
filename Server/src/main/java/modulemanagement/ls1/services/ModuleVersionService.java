@@ -155,7 +155,7 @@ public class ModuleVersionService {
             }
 
             mv.getDegreeProgramAssignments().clear();
-            entityManager.flush();
+th            entityManager.flush();
             for (ModuleDegreeProgramAssignmentDTO item : request.getDegreeProgramAssignments()) {
                 DegreeProgram program = degreeProgramRepository
                         .findWithSpecializationsByDegreeProgramId(item.getDegreeProgramId())

@@ -38,3 +38,6 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: changes/0013_grant_program_area_responsible_role.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: changes/0014_feedback_additional_fields.yaml

@@ -23,6 +23,8 @@ public class ModuleVersionViewFeedbackDTO {
     private Long degreeProgramSpecializationId;
 
     private String titleFeedback;
+    private String titleDeFeedback;
+    private String bulletPointsFeedback;
     private String levelFeedback;
     private String languageFeedback;
     private String frequencyFeedback;
@@ -31,12 +33,22 @@ public class ModuleVersionViewFeedbackDTO {
     private String hoursTotalFeedback;
     private String hoursSelfStudyFeedback;
     private String hoursPresenceFeedback;
+    private String hoursLectureFeedback;
+    private String hoursExerciseFeedback;
+    private String hoursPracticalFeedback;
+    private String hoursSeminarFeedback;
+    private String firstSemesterAvailableFeedback;
+    private String successorModuleNameFeedback;
     private String examinationAchievementsFeedback;
+    private String examinationAchievementsPromptFeedback;
     private String repetitionFeedback;
     private String recommendedPrerequisitesFeedback;
     private String contentFeedback;
+    private String contentPromptFeedback;
     private String learningOutcomesFeedback;
+    private String learningOutcomesPromptFeedback;
     private String teachingMethodsFeedback;
+    private String teachingMethodsPromptFeedback;
     private String mediaFeedback;
     private String literatureFeedback;
     private String responsiblesFeedback;
@@ -64,6 +76,8 @@ public class ModuleVersionViewFeedbackDTO {
             dto.setDegreeProgramSpecializationId(f.getDegreeProgramSpecialization().getDegreeProgramSpecializationId());
         }
         dto.setTitleFeedback(f.getTitleFeedback());
+        dto.setTitleDeFeedback(f.getTitleDeFeedback());
+        dto.setBulletPointsFeedback(f.getBulletPointsFeedback());
         dto.setLevelFeedback(f.getLevelFeedback());
         dto.setLanguageFeedback(f.getLanguageFeedback());
         dto.setFrequencyFeedback(f.getFrequencyFeedback());
@@ -72,12 +86,22 @@ public class ModuleVersionViewFeedbackDTO {
         dto.setHoursTotalFeedback(f.getHoursTotalFeedback());
         dto.setHoursSelfStudyFeedback(f.getHoursSelfStudyFeedback());
         dto.setHoursPresenceFeedback(f.getHoursPresenceFeedback());
+        dto.setHoursLectureFeedback(f.getHoursLectureFeedback());
+        dto.setHoursExerciseFeedback(f.getHoursExerciseFeedback());
+        dto.setHoursPracticalFeedback(f.getHoursPracticalFeedback());
+        dto.setHoursSeminarFeedback(f.getHoursSeminarFeedback());
+        dto.setFirstSemesterAvailableFeedback(f.getFirstSemesterAvailableFeedback());
+        dto.setSuccessorModuleNameFeedback(f.getSuccessorModuleNameFeedback());
         dto.setExaminationAchievementsFeedback(f.getExaminationAchievementsFeedback());
+        dto.setExaminationAchievementsPromptFeedback(f.getExaminationAchievementsPromptFeedback());
         dto.setRepetitionFeedback(f.getRepetitionFeedback());
         dto.setRecommendedPrerequisitesFeedback(f.getRecommendedPrerequisitesFeedback());
         dto.setContentFeedback(f.getContentFeedback());
+        dto.setContentPromptFeedback(f.getContentPromptFeedback());
         dto.setLearningOutcomesFeedback(f.getLearningOutcomesFeedback());
+        dto.setLearningOutcomesPromptFeedback(f.getLearningOutcomesPromptFeedback());
         dto.setTeachingMethodsFeedback(f.getTeachingMethodsFeedback());
+        dto.setTeachingMethodsPromptFeedback(f.getTeachingMethodsPromptFeedback());
         dto.setMediaFeedback(f.getMediaFeedback());
         dto.setLiteratureFeedback(f.getLiteratureFeedback());
         dto.setResponsiblesFeedback(f.getResponsiblesFeedback());

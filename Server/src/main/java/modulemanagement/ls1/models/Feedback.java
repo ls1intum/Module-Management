@@ -67,6 +67,18 @@ public class Feedback {
     @Column(name = "title_accepted")
     private boolean titleAccepted;
 
+    @Column(name = "title_de_feedback", columnDefinition = "CLOB")
+    private String titleDeFeedback;
+
+    @Column(name = "title_de_accepted")
+    private boolean titleDeAccepted;
+
+    @Column(name = "bullet_points_feedback", columnDefinition = "CLOB")
+    private String bulletPointsFeedback;
+
+    @Column(name = "bullet_points_accepted")
+    private boolean bulletPointsAccepted;
+
     @Column(name = "level_feedback")
     private String levelFeedback;
 
@@ -115,11 +127,53 @@ public class Feedback {
     @Column(name = "hours_presence_accepted")
     private boolean hoursPresenceAccepted;
 
+    @Column(name = "hours_lecture_feedback", columnDefinition = "CLOB")
+    private String hoursLectureFeedback;
+
+    @Column(name = "hours_lecture_accepted")
+    private boolean hoursLectureAccepted;
+
+    @Column(name = "hours_exercise_feedback", columnDefinition = "CLOB")
+    private String hoursExerciseFeedback;
+
+    @Column(name = "hours_exercise_accepted")
+    private boolean hoursExerciseAccepted;
+
+    @Column(name = "hours_practical_feedback", columnDefinition = "CLOB")
+    private String hoursPracticalFeedback;
+
+    @Column(name = "hours_practical_accepted")
+    private boolean hoursPracticalAccepted;
+
+    @Column(name = "hours_seminar_feedback", columnDefinition = "CLOB")
+    private String hoursSeminarFeedback;
+
+    @Column(name = "hours_seminar_accepted")
+    private boolean hoursSeminarAccepted;
+
+    @Column(name = "first_semester_available_feedback", columnDefinition = "CLOB")
+    private String firstSemesterAvailableFeedback;
+
+    @Column(name = "first_semester_available_accepted")
+    private boolean firstSemesterAvailableAccepted;
+
+    @Column(name = "successor_module_name_feedback", columnDefinition = "CLOB")
+    private String successorModuleNameFeedback;
+
+    @Column(name = "successor_module_name_accepted")
+    private boolean successorModuleNameAccepted;
+
     @Column(name = "examination_feedback", columnDefinition = "CLOB")
     private String examinationAchievementsFeedback;
 
     @Column(name = "examination_accepted")
     private boolean examinationAchievementsAccepted;
+
+    @Column(name = "examination_prompt_feedback", columnDefinition = "CLOB")
+    private String examinationAchievementsPromptFeedback;
+
+    @Column(name = "examination_prompt_accepted")
+    private boolean examinationAchievementsPromptAccepted;
 
     @Column(name = "repetition_feedback", columnDefinition = "CLOB")
     private String repetitionFeedback;
@@ -139,17 +193,35 @@ public class Feedback {
     @Column(name = "content_accepted")
     private boolean contentAccepted;
 
+    @Column(name = "content_prompt_feedback", columnDefinition = "CLOB")
+    private String contentPromptFeedback;
+
+    @Column(name = "content_prompt_accepted")
+    private boolean contentPromptAccepted;
+
     @Column(name = "learning_feedback", columnDefinition = "CLOB")
     private String learningOutcomesFeedback;
 
     @Column(name = "learning_accepted")
     private boolean learningOutcomesAccepted;
 
+    @Column(name = "learning_prompt_feedback", columnDefinition = "CLOB")
+    private String learningOutcomesPromptFeedback;
+
+    @Column(name = "learning_prompt_accepted")
+    private boolean learningOutcomesPromptAccepted;
+
     @Column(name = "teaching_feedback", columnDefinition = "CLOB")
     private String teachingMethodsFeedback;
 
     @Column(name = "teaching_accepted")
     private boolean teachingMethodsAccepted;
+
+    @Column(name = "teaching_prompt_feedback", columnDefinition = "CLOB")
+    private String teachingMethodsPromptFeedback;
+
+    @Column(name = "teaching_prompt_accepted")
+    private boolean teachingMethodsPromptAccepted;
 
     @Column(name = "media_feedback", columnDefinition = "CLOB")
     private String mediaFeedback;
@@ -182,6 +254,10 @@ public class Feedback {
     public void insert(FeedbackDTO dto) {
         this.titleFeedback = dto.getTitleFeedback();
         this.titleAccepted = dto.isTitleAccepted();
+        this.titleDeFeedback = dto.getTitleDeFeedback();
+        this.titleDeAccepted = dto.isTitleDeAccepted();
+        this.bulletPointsFeedback = dto.getBulletPointsFeedback();
+        this.bulletPointsAccepted = dto.isBulletPointsAccepted();
         this.levelFeedback = dto.getLevelFeedback();
         this.levelAccepted = dto.isLevelAccepted();
         this.languageFeedback = dto.getLanguageFeedback();
@@ -198,18 +274,38 @@ public class Feedback {
         this.hoursSelfStudyAccepted = dto.isHoursSelfStudyAccepted();
         this.hoursPresenceFeedback = dto.getHoursPresenceFeedback();
         this.hoursPresenceAccepted = dto.isHoursPresenceAccepted();
+        this.hoursLectureFeedback = dto.getHoursLectureFeedback();
+        this.hoursLectureAccepted = dto.isHoursLectureAccepted();
+        this.hoursExerciseFeedback = dto.getHoursExerciseFeedback();
+        this.hoursExerciseAccepted = dto.isHoursExerciseAccepted();
+        this.hoursPracticalFeedback = dto.getHoursPracticalFeedback();
+        this.hoursPracticalAccepted = dto.isHoursPracticalAccepted();
+        this.hoursSeminarFeedback = dto.getHoursSeminarFeedback();
+        this.hoursSeminarAccepted = dto.isHoursSeminarAccepted();
+        this.firstSemesterAvailableFeedback = dto.getFirstSemesterAvailableFeedback();
+        this.firstSemesterAvailableAccepted = dto.isFirstSemesterAvailableAccepted();
+        this.successorModuleNameFeedback = dto.getSuccessorModuleNameFeedback();
+        this.successorModuleNameAccepted = dto.isSuccessorModuleNameAccepted();
         this.examinationAchievementsFeedback = dto.getExaminationAchievementsFeedback();
         this.examinationAchievementsAccepted = dto.isExaminationAchievementsAccepted();
+        this.examinationAchievementsPromptFeedback = dto.getExaminationAchievementsPromptFeedback();
+        this.examinationAchievementsPromptAccepted = dto.isExaminationAchievementsPromptAccepted();
         this.repetitionFeedback = dto.getRepetitionFeedback();
         this.repetitionAccepted = dto.isRepetitionAccepted();
         this.recommendedPrerequisitesFeedback = dto.getRecommendedPrerequisitesFeedback();
         this.recommendedPrerequisitesAccepted = dto.isRecommendedPrerequisitesAccepted();
         this.contentFeedback = dto.getContentFeedback();
         this.contentAccepted = dto.isContentAccepted();
+        this.contentPromptFeedback = dto.getContentPromptFeedback();
+        this.contentPromptAccepted = dto.isContentPromptAccepted();
         this.learningOutcomesFeedback = dto.getLearningOutcomesFeedback();
         this.learningOutcomesAccepted = dto.isLearningOutcomesAccepted();
+        this.learningOutcomesPromptFeedback = dto.getLearningOutcomesPromptFeedback();
+        this.learningOutcomesPromptAccepted = dto.isLearningOutcomesPromptAccepted();
         this.teachingMethodsFeedback = dto.getTeachingMethodsFeedback();
         this.teachingMethodsAccepted = dto.isTeachingMethodsAccepted();
+        this.teachingMethodsPromptFeedback = dto.getTeachingMethodsPromptFeedback();
+        this.teachingMethodsPromptAccepted = dto.isTeachingMethodsPromptAccepted();
         this.mediaFeedback = dto.getMediaFeedback();
         this.mediaAccepted = dto.isMediaAccepted();
         this.literatureFeedback = dto.getLiteratureFeedback();
@@ -222,6 +318,8 @@ public class Feedback {
 
     public boolean isAllFeedbackPositive() {
         return this.titleAccepted
+                && this.titleDeAccepted
+                && this.bulletPointsAccepted
                 && this.levelAccepted
                 && this.languageAccepted
                 && this.frequencyAccepted
@@ -230,12 +328,22 @@ public class Feedback {
                 && this.hoursTotalAccepted
                 && this.hoursSelfStudyAccepted
                 && this.hoursPresenceAccepted
+                && this.hoursLectureAccepted
+                && this.hoursExerciseAccepted
+                && this.hoursPracticalAccepted
+                && this.hoursSeminarAccepted
+                && this.firstSemesterAvailableAccepted
+                && this.successorModuleNameAccepted
                 && this.examinationAchievementsAccepted
+                && this.examinationAchievementsPromptAccepted
                 && this.repetitionAccepted
                 && this.recommendedPrerequisitesAccepted
                 && this.contentAccepted
+                && this.contentPromptAccepted
                 && this.learningOutcomesAccepted
+                && this.learningOutcomesPromptAccepted
                 && this.teachingMethodsAccepted
+                && this.teachingMethodsPromptAccepted
                 && this.mediaAccepted
                 && this.literatureAccepted
                 && this.responsiblesAccepted
