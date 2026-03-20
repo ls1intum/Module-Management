@@ -6,6 +6,7 @@ export * from './create-degree-program-specialization-dto';
 export * from './degree-program-dto';
 export * from './degree-program-specialization-dto';
 export * from './feedback';
+export * from './feedback-compact-dto';
 export * from './feedback-dto';
 export * from './feedback-list-item-dto';
 export * from './give-feedback-dto';

@@ -28,6 +28,7 @@ model/create-degree-program-dto.ts
 model/create-degree-program-specialization-dto.ts
 model/degree-program-dto.ts
 model/degree-program-specialization-dto.ts
+model/feedback-compact-dto.ts
 model/feedback-dto.ts
 model/feedback-list-item-dto.ts
 model/feedback.ts

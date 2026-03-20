@@ -6,7 +6,7 @@ import { ModuleVersionControllerService, ModuleVersionViewDTO, ModuleVersionView
 import { BreadcrumbLabelsService } from '../../components/breadcrumb/breadcrumb-labels.service';
 import { ModuleEditStepperComponent } from '../../components/module-edit-stepper/module-edit-stepper.component';
 import { MODULE_EDIT_STEPS, StepperStatus } from '../../components/module-edit-stepper/module-edit-steps.config';
-import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
+import { FeedbackAuthorDisplayPipe } from '../../pipes/feedbackAuthorDisplay.pipe';
 import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
 import { ModuleVersionStatusPipe } from '../../pipes/moduleVersionStatus.pipe';
 import { ButtonModule } from 'primeng/button';
@@ -14,6 +14,7 @@ import { TagModule } from 'primeng/tag';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageModule } from 'primeng/message';
 import { CardModule } from 'primeng/card';
+import { FeedbackMessageComponent } from '../../components/feedback-message/feedback-message.component';
 import { PanelModule } from 'primeng/panel';
 
 export interface ModuleField {
@@ -34,12 +35,13 @@ export interface ModuleField {
     ModuleEditStepperComponent,
     ModuleVersionStatusPipe,
     FeedbackStatusPipe,
-    FeedbackDepartmentPipe,
+    FeedbackAuthorDisplayPipe,
     ButtonModule,
     TagModule,
     ProgressSpinnerModule,
     MessageModule,
     CardModule,
+    FeedbackMessageComponent,
     PanelModule
   ],
   templateUrl: './module-version-view.component.html',

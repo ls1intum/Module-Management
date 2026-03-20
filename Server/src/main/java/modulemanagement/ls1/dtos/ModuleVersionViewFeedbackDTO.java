@@ -17,6 +17,7 @@ public class ModuleVersionViewFeedbackDTO {
     private String rejectionComment;
     private UserRole feedbackRole;
     private String requestedFromUserName;
+    private String requestedFromSpecializationName;
     private FeedbackStatus feedbackStatus;
     private LocalDateTime createdAt;
     private LocalDateTime submissionDate;
@@ -59,11 +60,13 @@ public class ModuleVersionViewFeedbackDTO {
         }
         dto.setRejectionComment(f.getComment());
         dto.setFeedbackRole(f.getRequiredRole());
-        if (f.getDegreeProgramSpecialization() != null
-                && f.getDegreeProgramSpecialization().getResponsibleUser() != null) {
-            var resp = f.getDegreeProgramSpecialization().getResponsibleUser();
-            dto.setRequestedFromUserName(resp.getFirstName() + " " + resp.getLastName() + " ("
-                    + f.getDegreeProgramSpecialization().getName() + ")");
+        if (f.getDegreeProgramSpecialization() != null) {
+            var spec = f.getDegreeProgramSpecialization();
+            dto.setRequestedFromSpecializationName(spec.getName());
+            if (spec.getResponsibleUser() != null) {
+                var resp = spec.getResponsibleUser();
+                dto.setRequestedFromUserName(resp.getFirstName() + " " + resp.getLastName());
+            }
         }
         dto.setFeedbackStatus(f.getStatus());
         dto.setCreatedAt(f.getCreatedAt());

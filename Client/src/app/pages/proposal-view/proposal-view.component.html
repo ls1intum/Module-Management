@@ -70,18 +70,12 @@
         <td>
           <div class="flex">
             @if (proposal.latestModuleVersion!.feedbackList!.length) {
-              @for (feedback of proposal.latestModuleVersion!.feedbackList; track feedback.requiredRole) {
+              @for (feedback of proposal.latestModuleVersion!.feedbackList; track feedback.feedbackId ?? $index) {
                 <div
-                  [pTooltip]="
-                    'Feedback from ' +
-                    (feedback.requiredRole! | feedbackDepartment).text +
-                    ': ' +
-                    (feedback.status | feedbackStatus).text +
-                    (feedback.invalidated ? ' (Obsolete)' : '')
-                  "
+                  [pTooltip]="'Feedback from ' + (feedback | feedbackAuthorDisplay) + ': ' + ((feedback.status ?? 'PENDING_FEEDBACK') | feedbackStatus).text + (feedback.invalidated ? ' (Obsolete)' : '')"
                   tooltipPosition="top"
                   class="w-8 h-8 mr-2 rounded"
-                  [ngClass]="feedback.invalidated ? 'bg-gray-300 text-white' : (feedback.status | feedbackStatus).color"
+                  [ngClass]="feedback.invalidated ? 'bg-gray-300 text-white' : ((feedback.status ?? 'PENDING_FEEDBACK') | feedbackStatus).color"
                 ></div>
               }
             }
@@ -133,18 +127,12 @@
         <td>
           <div class="flex">
             @if (version.feedbackList?.length) {
-              @for (feedback of version.feedbackList; track feedback.requiredRole) {
+              @for (feedback of version.feedbackList; track feedback.feedbackId ?? $index) {
                 <div
-                  [pTooltip]="
-                    'Feedback from ' +
-                    (feedback.requiredRole! | feedbackDepartment).text +
-                    ': ' +
-                    (feedback.status | feedbackStatus).text +
-                    (feedback.invalidated ? ' (Obsolete)' : '')
-                  "
+                  [pTooltip]="'Feedback from ' + (feedback | feedbackAuthorDisplay) + ': ' + ((feedback.status ?? 'PENDING_FEEDBACK') | feedbackStatus).text + (feedback.invalidated ? ' (Obsolete)' : '')"
                   tooltipPosition="top"
                   class="w-8 h-8 mr-2 rounded"
-                  [ngClass]="feedback.invalidated ? 'bg-gray-300 text-white' : (feedback.status | feedbackStatus).color"
+                  [ngClass]="feedback.invalidated ? 'bg-gray-300 text-white' : ((feedback.status ?? 'PENDING_FEEDBACK') | feedbackStatus).color"
                 ></div>
               }
             }

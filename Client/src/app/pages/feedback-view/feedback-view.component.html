@@ -31,7 +31,7 @@
 
           <div>
             <p class="text-sm text-muted-foreground">Requested From</p>
-            <p>{{ (fb.feedbackRole | feedbackDepartment).text }} {{ fb.requestedFromUserName ?? 'N/A' }}</p>
+            <p>{{ (fb | feedbackAuthorDisplay) || 'N/A' }}</p>
           </div>
         </div>
 

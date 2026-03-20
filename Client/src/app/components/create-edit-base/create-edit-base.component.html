@@ -23,16 +23,16 @@
               <span class="text-red-500">*</span>
             </label>
             @if (moduleVersionId && hasFeedback('titleFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="feedback-message my-3 block">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.titleFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.titleFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.titleFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.titleFeedback"
+                    styleClass="my-3 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2">
               <input pInputText formControlName="titleEng" placeholder="Title (English)" class="w-full" />
@@ -44,16 +44,16 @@
           <div>
             <label class="text-xl">Title (German)</label>
             @if (moduleVersionId && hasFeedback('titleDeFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.titleDeFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.titleDeFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.titleDeFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.titleDeFeedback"
+                    styleClass="my-3 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2">
               <input pInputText formControlName="titleDe" placeholder="Modulbezeichnung auf Deutsch" class="w-full" />
@@ -62,16 +62,16 @@
           <div>
             <label class="text-xl">Key Points</label>
             @if (moduleVersionId && hasFeedback('bulletPointsFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.bulletPointsFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.bulletPointsFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.bulletPointsFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.bulletPointsFeedback"
+                    styleClass="my-3 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2">
               <textarea
@@ -95,16 +95,16 @@
           <div>
             <label class="text-xl">Frequency</label>
             @if (moduleVersionId && hasFeedback('frequencyFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.frequencyFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.frequencyFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.frequencyFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.frequencyFeedback"
+                    styleClass="my-3 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2">
               <app-toggle-button-group
@@ -125,64 +125,64 @@
               <div>
                 <label class="text-l text-muted-foreground">Lecture (V)</label>
                 @if (moduleVersionId && hasFeedback('hoursLectureFeedback')) {
-                  <p-message severity="error" variant="outlined" styleClass="feedback-message my-3 block">
-                    @for (feedback of feedbacks(); track feedback.feedbackId) {
-                      @if (feedback.hoursLectureFeedback) {
-                        <p>
-                          <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                          {{ feedback.hoursLectureFeedback }}
-                        </p>
-                      }
+                  @for (feedback of feedbacks(); track feedback.feedbackId) {
+                    @if (feedback.hoursLectureFeedback) {
+                      <feedback-message
+                        [authorDisplay]="feedback | feedbackAuthorDisplay"
+                        [authorUserName]="feedback.requestedFromUserName ?? null"
+                        [feedbackText]="feedback.hoursLectureFeedback"
+                        styleClass="my-2 block"
+                      />
                     }
-                  </p-message>
+                  }
                 }
                 <div class="mt-2"><p-inputNumber formControlName="hoursLecture" [min]="0" placeholder="0" class="w-full" inputStyleClass="w-full"></p-inputNumber></div>
               </div>
               <div>
                 <label class="text-l text-muted-foreground">Exercise (Ü)</label>
                 @if (moduleVersionId && hasFeedback('hoursExerciseFeedback')) {
-                  <p-message severity="error" variant="outlined" styleClass="my-2 inline-block w-fit">
-                    @for (feedback of feedbacks(); track feedback.feedbackId) {
-                      @if (feedback.hoursExerciseFeedback) {
-                        <p>
-                          <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                          {{ feedback.hoursExerciseFeedback }}
-                        </p>
-                      }
+                  @for (feedback of feedbacks(); track feedback.feedbackId) {
+                    @if (feedback.hoursExerciseFeedback) {
+                      <feedback-message
+                        [authorDisplay]="feedback | feedbackAuthorDisplay"
+                        [authorUserName]="feedback.requestedFromUserName ?? null"
+                        [feedbackText]="feedback.hoursExerciseFeedback"
+                        styleClass="my-2 block"
+                      />
                     }
-                  </p-message>
+                  }
                 }
                 <div class="mt-2"><p-inputNumber formControlName="hoursExercise" [min]="0" placeholder="0" class="w-full" inputStyleClass="w-full"></p-inputNumber></div>
               </div>
               <div>
                 <label class="text-l text-muted-foreground">Practical (P)</label>
                 @if (moduleVersionId && hasFeedback('hoursPracticalFeedback')) {
-                  <p-message severity="error" variant="outlined" styleClass="my-2 inline-block w-fit">
-                    @for (feedback of feedbacks(); track feedback.feedbackId) {
-                      @if (feedback.hoursPracticalFeedback) {
-                        <p>
-                          <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                          {{ feedback.hoursPracticalFeedback }}
-                        </p>
-                      }
+                  @for (feedback of feedbacks(); track feedback.feedbackId) {
+                    @if (feedback.hoursPracticalFeedback) {
+                      <feedback-message
+                        [authorDisplay]="feedback | feedbackAuthorDisplay"
+                        [authorUserName]="feedback.requestedFromUserName ?? null"
+                        [feedbackText]="feedback.hoursPracticalFeedback"
+                        styleClass="my-2 block"
+                      />
                     }
-                  </p-message>
+                  }
                 }
                 <div class="mt-2"><p-inputNumber formControlName="hoursPractical" [min]="0" placeholder="0" class="w-full" inputStyleClass="w-full"></p-inputNumber></div>
               </div>
               <div>
                 <label class="text-l text-muted-foreground">Seminar (S)</label>
                 @if (moduleVersionId && hasFeedback('hoursSeminarFeedback')) {
-                  <p-message severity="error" variant="outlined" styleClass="my-2 inline-block w-fit">
-                    @for (feedback of feedbacks(); track feedback.feedbackId) {
-                      @if (feedback.hoursSeminarFeedback) {
-                        <p>
-                          <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                          {{ feedback.hoursSeminarFeedback }}
-                        </p>
-                      }
+                  @for (feedback of feedbacks(); track feedback.feedbackId) {
+                    @if (feedback.hoursSeminarFeedback) {
+                      <feedback-message
+                        [authorDisplay]="feedback | feedbackAuthorDisplay"
+                        [authorUserName]="feedback.requestedFromUserName ?? null"
+                        [feedbackText]="feedback.hoursSeminarFeedback"
+                        styleClass="my-2 block"
+                      />
                     }
-                  </p-message>
+                  }
                 }
                 <div class="mt-2"><p-inputNumber formControlName="hoursSeminar" [min]="0" placeholder="0" class="w-full" inputStyleClass="w-full"></p-inputNumber></div>
               </div>
@@ -191,48 +191,48 @@
           <div>
             <label class="text-xl">First semester available</label>
             @if (moduleVersionId && hasFeedback('firstSemesterAvailableFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.firstSemesterAvailableFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.firstSemesterAvailableFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.firstSemesterAvailableFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.firstSemesterAvailableFeedback"
+                    styleClass="my-3 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2"><input pInputText formControlName="firstSemesterAvailable" placeholder="e.g. WiSe 2025" class="w-full" /></div>
           </div>
           <div>
             <label class="text-xl">Successor module name</label>
             @if (moduleVersionId && hasFeedback('successorModuleNameFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.successorModuleNameFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.successorModuleNameFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.successorModuleNameFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.successorModuleNameFeedback"
+                    styleClass="my-3 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2"><input pInputText formControlName="successorModuleName" placeholder="Title of the successor module" class="w-full" /></div>
           </div>
           <!-- <div>
             <label class="text-xl">Level</label>
             @if (moduleVersionId && hasFeedback('levelFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.levelFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.levelFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.levelFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.levelFeedback"
+                    styleClass="my-4 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2">
               <app-toggle-button-group
@@ -250,16 +250,16 @@
           <!-- <div>
             <label class="text-xl">Language</label>
             @if (moduleVersionId && hasFeedback('languageFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.languageFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.languageFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.languageFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.languageFeedback"
+                    styleClass="my-4 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2">
               <app-toggle-button-group
@@ -334,12 +334,17 @@
                 </label>
                 <ul class="space-y-2 list-none p-0 m-0">
                   @for (fb of coordinatorFeedbacksForStep1().feedbacks; track fb.feedbackId) {
-                    <li class="flex items-center gap-2 flex-wrap">
-                      <span class="font-medium">{{ fb.requestedFromUserName ?? (fb.feedbackRole | feedbackDepartment).text }}:</span>
-                      <p-tag
-                        [value]="(fb.feedbackStatus ?? 'PENDING_FEEDBACK' | feedbackStatus).text"
-                        [severity]="(fb.feedbackStatus ?? 'PENDING_FEEDBACK' | feedbackStatus).severity"
-                      />
+                    <li>
+                      <div class="flex items-center gap-2 flex-wrap">
+                        <span class="font-medium">{{ fb | feedbackAuthorDisplay }}:</span>
+                        <p-tag
+                          [value]="(fb.feedbackStatus ?? 'PENDING_FEEDBACK' | feedbackStatus).text"
+                          [severity]="(fb.feedbackStatus ?? 'PENDING_FEEDBACK' | feedbackStatus).severity"
+                        />
+                      </div>
+                      @if (fb.feedbackStatus === 'REJECTED' && fb.rejectionComment) {
+                        <feedback-message authorDisplay="Rejection reason" [feedbackText]="fb.rejectionComment" styleClass="mt-2 block" />
+                      }
                     </li>
                   }
                 </ul>
@@ -366,16 +371,16 @@
           <div>
             <label class="text-xl">Duration</label>
             @if (moduleVersionId && hasFeedback('durationFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.durationFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.durationFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.durationFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.durationFeedback"
+                    styleClass="my-3 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2">
               <app-toggle-button-group
@@ -393,16 +398,16 @@
           <div>
             <label class="text-xl">Repetition</label>
             @if (moduleVersionId && hasFeedback('repetitionFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.repetitionFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.repetitionFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.repetitionFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.repetitionFeedback"
+                    styleClass="my-3 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2">
               <app-toggle-button-group
@@ -420,16 +425,16 @@
             <div>
               <label class="text-xl">Credits</label>
               @if (moduleVersionId && hasFeedback('creditsFeedback')) {
-                <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                  @for (feedback of feedbacks(); track feedback.feedbackId) {
-                    @if (feedback.creditsFeedback) {
-                      <p>
-                        <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                        {{ feedback.creditsFeedback }}
-                      </p>
-                    }
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
+                  @if (feedback.creditsFeedback) {
+                    <feedback-message
+                      [authorDisplay]="feedback | feedbackAuthorDisplay"
+                      [authorUserName]="feedback.requestedFromUserName ?? null"
+                      [feedbackText]="feedback.creditsFeedback"
+                      styleClass="my-3 block"
+                    />
                   }
-                </p-message>
+                }
               }
               <div class="mt-2">
                 <p-inputNumber formControlName="credits" placeholder="Credits" class="w-full" [style]="{ width: '100%' }"></p-inputNumber>
@@ -438,16 +443,16 @@
             <div>
               <label class="text-xl">Total Hours</label>
               @if (moduleVersionId && hasFeedback('hoursTotalFeedback')) {
-                <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                  @for (feedback of feedbacks(); track feedback.feedbackId) {
-                    @if (feedback.hoursTotalFeedback) {
-                      <p>
-                        <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                        {{ feedback.hoursTotalFeedback }}
-                      </p>
-                    }
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
+                  @if (feedback.hoursTotalFeedback) {
+                    <feedback-message
+                      [authorDisplay]="feedback | feedbackAuthorDisplay"
+                      [authorUserName]="feedback.requestedFromUserName ?? null"
+                      [feedbackText]="feedback.hoursTotalFeedback"
+                      styleClass="my-3 block"
+                    />
                   }
-                </p-message>
+                }
               }
               <div class="mt-2">
                 <p-inputNumber formControlName="hoursTotal" placeholder="Total Hours" class="w-full" [style]="{ width: '100%' }"></p-inputNumber>
@@ -456,16 +461,16 @@
             <div>
               <label class="text-xl">Self-Study Hours</label>
               @if (moduleVersionId && hasFeedback('hoursSelfStudyFeedback')) {
-                <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                  @for (feedback of feedbacks(); track feedback.feedbackId) {
-                    @if (feedback.hoursSelfStudyFeedback) {
-                      <p>
-                        <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                        {{ feedback.hoursSelfStudyFeedback }}
-                      </p>
-                    }
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
+                  @if (feedback.hoursSelfStudyFeedback) {
+                    <feedback-message
+                      [authorDisplay]="feedback | feedbackAuthorDisplay"
+                      [authorUserName]="feedback.requestedFromUserName ?? null"
+                      [feedbackText]="feedback.hoursSelfStudyFeedback"
+                      styleClass="my-3 block"
+                    />
                   }
-                </p-message>
+                }
               }
               <div class="mt-2">
                 <p-inputNumber formControlName="hoursSelfStudy" placeholder="Self-Study Hours" class="w-full" [style]="{ width: '100%' }"></p-inputNumber>
@@ -474,16 +479,16 @@
             <div>
               <label class="text-xl">Presence Hours</label>
               @if (moduleVersionId && hasFeedback('hoursPresenceFeedback')) {
-                <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                  @for (feedback of feedbacks(); track feedback.feedbackId) {
-                    @if (feedback.hoursPresenceFeedback) {
-                      <p>
-                        <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                        {{ feedback.hoursPresenceFeedback }}
-                      </p>
-                    }
+                @for (feedback of feedbacks(); track feedback.feedbackId) {
+                  @if (feedback.hoursPresenceFeedback) {
+                    <feedback-message
+                      [authorDisplay]="feedback | feedbackAuthorDisplay"
+                      [authorUserName]="feedback.requestedFromUserName ?? null"
+                      [feedbackText]="feedback.hoursPresenceFeedback"
+                      styleClass="my-3 block"
+                    />
                   }
-                </p-message>
+                }
               }
               <div class="mt-2">
                 <p-inputNumber formControlName="hoursPresence" placeholder="Presence Hours" class="w-full" [style]="{ width: '100%' }"></p-inputNumber>
@@ -497,16 +502,16 @@
           <div>
             <label class="text-xl">Examination Achievements</label>
             @if (moduleVersionId && hasFeedback('examinationAchievementsFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.examinationAchievementsFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.examinationAchievementsFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.examinationAchievementsFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.examinationAchievementsFeedback"
+                    styleClass="my-3 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2">
               <textarea
@@ -542,16 +547,16 @@
           <div>
             <label class="text-xl">Recommended Prerequisites</label>
             @if (moduleVersionId && hasFeedback('recommendedPrerequisitesFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.recommendedPrerequisitesFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.recommendedPrerequisitesFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.recommendedPrerequisitesFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.recommendedPrerequisitesFeedback"
+                    styleClass="my-3 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2">
               <textarea pTextarea formControlName="recommendedPrerequisitesEng" placeholder="What are participants expected to know?" rows="4" fluid [autoResize]="true"></textarea>
@@ -564,16 +569,16 @@
           <div>
             <label class="text-xl">Module Content</label>
             @if (moduleVersionId && hasFeedback('contentFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.contentFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.contentFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.contentFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.contentFeedback"
+                    styleClass="my-3 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2">
               <textarea pTextarea formControlName="contentEng" placeholder="What is the module about?" rows="4" fluid [autoResize]="true"></textarea>
@@ -600,16 +605,16 @@
           <div>
             <label class="text-xl">Learning Outcomes</label>
             @if (moduleVersionId && hasFeedback('learningOutcomesFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.learningOutcomesFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.learningOutcomesFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.learningOutcomesFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.learningOutcomesFeedback"
+                    styleClass="my-3 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2">
               <textarea pTextarea formControlName="learningOutcomesEng" placeholder="What will the participants learn?" rows="4" fluid [autoResize]="true"></textarea>
@@ -636,16 +641,16 @@
           <div>
             <label class="text-xl">Teaching Methods</label>
             @if (moduleVersionId && hasFeedback('teachingMethodsFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.teachingMethodsFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.teachingMethodsFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.teachingMethodsFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.teachingMethodsFeedback"
+                    styleClass="my-3 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2">
               <textarea pTextarea formControlName="teachingMethodsEng" placeholder="How will the content be taught?" rows="4" fluid [autoResize]="true"></textarea>
@@ -676,16 +681,16 @@
           <div>
             <label class="text-xl">Media used</label>
             @if (moduleVersionId && hasFeedback('mediaFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.mediaFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.mediaFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.mediaFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.mediaFeedback"
+                    styleClass="my-3 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2">
               <textarea pTextarea formControlName="mediaEng" placeholder="What media will be used?" rows="4" fluid [autoResize]="true"></textarea>
@@ -695,16 +700,16 @@
           <div>
             <label class="text-xl">Literature</label>
             @if (moduleVersionId && hasFeedback('literatureFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.literatureFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.literatureFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.literatureFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.literatureFeedback"
+                    styleClass="my-3 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2">
               <textarea pTextarea formControlName="literatureEng" placeholder="What literature is reccommended?" rows="4" fluid [autoResize]="true"></textarea>
@@ -714,16 +719,16 @@
           <div>
             <label class="text-xl">Responsibles</label>
             @if (moduleVersionId && hasFeedback('responsiblesFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.responsiblesFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.responsiblesFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.responsiblesFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.responsiblesFeedback"
+                    styleClass="my-3 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2">
               <textarea pTextarea formControlName="responsiblesEng" placeholder="Who is responsible for the module?" rows="4" fluid [autoResize]="true"></textarea>
@@ -733,16 +738,16 @@
           <div>
             <label class="text-xl">Lecturer</label>
             @if (moduleVersionId && hasFeedback('lvSwsLecturerFeedback')) {
-              <p-message severity="error" variant="outlined" styleClass="my-4 inline-block w-fit">
-                @for (feedback of feedbacks(); track feedback.feedbackId) {
-                  @if (feedback.lvSwsLecturerFeedback) {
-                    <p>
-                      <span class="underline">{{ feedback.requestedFromUserName ?? (feedback.feedbackRole | feedbackDepartment).text }}:</span>
-                      {{ feedback.lvSwsLecturerFeedback }}
-                    </p>
-                  }
+              @for (feedback of feedbacks(); track feedback.feedbackId) {
+                @if (feedback.lvSwsLecturerFeedback) {
+                  <feedback-message
+                    [authorDisplay]="feedback | feedbackAuthorDisplay"
+                    [authorUserName]="feedback.requestedFromUserName ?? null"
+                    [feedbackText]="feedback.lvSwsLecturerFeedback"
+                    styleClass="my-3 block"
+                  />
                 }
-              </p-message>
+              }
             }
             <div class="mt-2">
               <textarea pTextarea formControlName="lvSwsLecturerEng" placeholder="Who will hold the lectures?" rows="4" fluid [autoResize]="true"></textarea>
@@ -773,7 +778,7 @@
                 <ul class="space-y-2 list-none p-0 m-0">
                   @for (fb of currentVersionFeedbacks(); track fb.feedbackId) {
                     <li class="flex items-center gap-2 flex-wrap">
-                      <span class="font-medium">{{ fb.requestedFromUserName ?? (fb.feedbackRole | feedbackDepartment).text }}:</span>
+                      <span class="font-medium">{{ fb | feedbackAuthorDisplay }}:</span>
                       <p-tag
                         [value]="(fb.feedbackStatus ?? 'PENDING_FEEDBACK' | feedbackStatus).text"
                         [severity]="(fb.feedbackStatus ?? 'PENDING_FEEDBACK' | feedbackStatus).severity"

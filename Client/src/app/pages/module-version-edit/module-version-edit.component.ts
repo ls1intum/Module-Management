@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProposalBaseComponent } from '../../components/create-edit-base/create-edit-base.component';
-import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
+import { FeedbackAuthorDisplayPipe } from '../../pipes/feedbackAuthorDisplay.pipe';
 import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
 import { ModuleEditStepperComponent } from '../../components/module-edit-stepper/module-edit-stepper.component';
 import { ModuleDegreeProgramAssignmentDTO, ModuleVersionUpdateRequestDTO, ModuleVersionViewDTO, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
@@ -17,6 +17,7 @@ import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TagModule } from 'primeng/tag';
+import { FeedbackMessageComponent } from '../../components/feedback-message/feedback-message.component';
 
 @Component({
   selector: 'app-module-version-edit',
@@ -26,7 +27,7 @@ import { TagModule } from 'primeng/tag';
     FormsModule,
     CommonModule,
     RouterModule,
-    FeedbackDepartmentPipe,
+    FeedbackAuthorDisplayPipe,
     FeedbackStatusPipe,
     ToggleButtonGroupComponent,
     ModuleEditStepperComponent,
@@ -37,7 +38,8 @@ import { TagModule } from 'primeng/tag';
     MessageModule,
     SelectModule,
     ProgressSpinnerModule,
-    TagModule
+    TagModule,
+    FeedbackMessageComponent
   ],
   templateUrl: '../../components/create-edit-base/create-edit-base.component.html',
   styleUrl: '../../components/create-edit-base/create-edit-base-layout.css'

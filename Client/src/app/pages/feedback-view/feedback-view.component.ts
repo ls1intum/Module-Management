@@ -21,8 +21,8 @@ import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
 import { MessageModule } from 'primeng/message';
+import { FeedbackAuthorDisplayPipe } from '../../pipes/feedbackAuthorDisplay.pipe';
 import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
-import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
 
 @Component({
   selector: 'app-feedback-view',
@@ -38,8 +38,8 @@ import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
     ProgressSpinnerModule,
     TooltipModule,
     MessageModule,
+    FeedbackAuthorDisplayPipe,
     FeedbackStatusPipe,
-    FeedbackDepartmentPipe,
     DatePipe
   ],
   templateUrl: './feedback-view.component.html'
@@ -174,8 +174,7 @@ export class FeedbackViewComponent {
       this.feedbackService.getModuleVersionOfFeedback(feedbackId).subscribe({
         next: (response: ModuleVersionViewDTO) => {
           this.moduleVersion.set(response);
-          const found =
-            response.feedbacks?.find((f) => f.feedbackId === feedbackId) ?? null;
+          const found = response.feedbacks?.find((f) => f.feedbackId === feedbackId) ?? null;
           this.currentFeedback.set(found);
           this.breadcrumbLabels.feedbackLabel.set(response?.titleEng ?? null);
         },

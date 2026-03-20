@@ -16,6 +16,7 @@ export interface ModuleVersionViewFeedbackDTO {
     rejectionComment?: string;
     feedbackRole?: ModuleVersionViewFeedbackDTO.FeedbackRoleEnum;
     requestedFromUserName?: string;
+    requestedFromSpecializationName?: string;
     feedbackStatus?: ModuleVersionViewFeedbackDTO.FeedbackStatusEnum;
     createdAt?: string;
     submissionDate?: string;

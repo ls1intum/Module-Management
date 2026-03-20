@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { StatusInfoPipeline, StatusDisplayPipe } from '../../pipes/proposalStatus.pipe';
 import { ModuleVersionStatusPipe } from '../../pipes/moduleVersionStatus.pipe';
 import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
-import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
+import { FeedbackAuthorDisplayPipe } from '../../pipes/feedbackAuthorDisplay.pipe';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
@@ -27,7 +27,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ToastModule,
     TooltipModule,
     FeedbackStatusPipe,
-    FeedbackDepartmentPipe,
+    FeedbackAuthorDisplayPipe,
     RouterModule,
     CommonModule,
     StatusDisplayPipe,
