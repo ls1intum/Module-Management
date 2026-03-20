@@ -29,7 +29,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.titleFeedback"
-                    styleClass="my-3 block"
+                    styleClass="my-3"
                   />
                 }
               }
@@ -50,7 +50,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.titleDeFeedback"
-                    styleClass="my-3 block"
+                    styleClass="my-3"
                   />
                 }
               }
@@ -68,7 +68,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.bulletPointsFeedback"
-                    styleClass="my-3 block"
+                    styleClass="my-3"
                   />
                 }
               }
@@ -101,7 +101,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.frequencyFeedback"
-                    styleClass="my-3 block"
+                    styleClass="my-3"
                   />
                 }
               }
@@ -197,7 +197,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.firstSemesterAvailableFeedback"
-                    styleClass="my-3 block"
+                    styleClass="my-3"
                   />
                 }
               }
@@ -213,7 +213,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.successorModuleNameFeedback"
-                    styleClass="my-3 block"
+                    styleClass="my-3"
                   />
                 }
               }
@@ -229,7 +229,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.levelFeedback"
-                    styleClass="my-4 block"
+                    styleClass="my-4"
                   />
                 }
               }
@@ -256,7 +256,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.languageFeedback"
-                    styleClass="my-4 block"
+                    styleClass="my-4"
                   />
                 }
               }
@@ -343,7 +343,7 @@
                         />
                       </div>
                       @if (fb.feedbackStatus === 'REJECTED' && fb.rejectionComment) {
-                        <feedback-message authorDisplay="Rejection reason" [feedbackText]="fb.rejectionComment" styleClass="mt-2 block" />
+                        <feedback-message [authorDisplay]="fb | feedbackAuthorDisplay" [authorUserName]="fb.requestedFromUserName ?? null" [feedbackText]="fb.rejectionComment" styleClass="mt-2" />
                       }
                     </li>
                   }
@@ -377,7 +377,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.durationFeedback"
-                    styleClass="my-3 block"
+                    styleClass="my-3"
                   />
                 }
               }
@@ -404,7 +404,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.repetitionFeedback"
-                    styleClass="my-3 block"
+                    styleClass="my-3"
                   />
                 }
               }
@@ -431,7 +431,7 @@
                       [authorDisplay]="feedback | feedbackAuthorDisplay"
                       [authorUserName]="feedback.requestedFromUserName ?? null"
                       [feedbackText]="feedback.creditsFeedback"
-                      styleClass="my-3 block"
+                      styleClass="my-3"
                     />
                   }
                 }
@@ -449,7 +449,7 @@
                       [authorDisplay]="feedback | feedbackAuthorDisplay"
                       [authorUserName]="feedback.requestedFromUserName ?? null"
                       [feedbackText]="feedback.hoursTotalFeedback"
-                      styleClass="my-3 block"
+                      styleClass="my-3"
                     />
                   }
                 }
@@ -467,7 +467,7 @@
                       [authorDisplay]="feedback | feedbackAuthorDisplay"
                       [authorUserName]="feedback.requestedFromUserName ?? null"
                       [feedbackText]="feedback.hoursSelfStudyFeedback"
-                      styleClass="my-3 block"
+                      styleClass="my-3"
                     />
                   }
                 }
@@ -485,7 +485,7 @@
                       [authorDisplay]="feedback | feedbackAuthorDisplay"
                       [authorUserName]="feedback.requestedFromUserName ?? null"
                       [feedbackText]="feedback.hoursPresenceFeedback"
-                      styleClass="my-3 block"
+                      styleClass="my-3"
                     />
                   }
                 }
@@ -508,7 +508,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.examinationAchievementsFeedback"
-                    styleClass="my-3 block"
+                    styleClass="my-3"
                   />
                 }
               }
@@ -553,7 +553,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.recommendedPrerequisitesFeedback"
-                    styleClass="my-3 block"
+                    styleClass="my-3"
                   />
                 }
               }
@@ -575,7 +575,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.contentFeedback"
-                    styleClass="my-3 block"
+                    styleClass="my-3"
                   />
                 }
               }
@@ -611,7 +611,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.learningOutcomesFeedback"
-                    styleClass="my-3 block"
+                    styleClass="my-3"
                   />
                 }
               }
@@ -647,7 +647,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.teachingMethodsFeedback"
-                    styleClass="my-3 block"
+                    styleClass="my-3"
                   />
                 }
               }
@@ -687,7 +687,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.mediaFeedback"
-                    styleClass="my-3 block"
+                    styleClass="my-3"
                   />
                 }
               }
@@ -706,7 +706,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.literatureFeedback"
-                    styleClass="my-3 block"
+                    styleClass="my-3"
                   />
                 }
               }
@@ -725,7 +725,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.responsiblesFeedback"
-                    styleClass="my-3 block"
+                    styleClass="my-3"
                   />
                 }
               }
@@ -744,7 +744,7 @@
                     [authorDisplay]="feedback | feedbackAuthorDisplay"
                     [authorUserName]="feedback.requestedFromUserName ?? null"
                     [feedbackText]="feedback.lvSwsLecturerFeedback"
-                    styleClass="my-3 block"
+                    styleClass="my-3"
                   />
                 }
               }

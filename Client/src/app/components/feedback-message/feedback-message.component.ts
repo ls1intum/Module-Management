@@ -1,4 +1,5 @@
 import { Component, computed, input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { AvatarModule } from 'primeng/avatar';
 import { MessageModule } from 'primeng/message';
 import { TooltipModule } from 'primeng/tooltip';
@@ -6,14 +7,16 @@ import { TooltipModule } from 'primeng/tooltip';
 @Component({
   selector: 'feedback-message',
   standalone: true,
-  imports: [AvatarModule, MessageModule, TooltipModule],
+  imports: [CommonModule, AvatarModule, MessageModule, TooltipModule],
   template: `
-    <p-message severity="error" variant="outlined" [closable]="true" [styleClass]="styleClass()">
-      <div class="flex items-center gap-2">
-        <p-avatar [label]="initials()" [pTooltip]="authorDisplay()" tooltipPosition="top" size="normal" shape="square" />
-        <span>{{ feedbackText() }}</span>
-      </div>
-    </p-message>
+    <div class="w-fit min-w-40" [ngClass]="styleClass()">
+      <p-message severity="error" variant="outlined" [closable]="true">
+        <div class="flex items-center gap-2">
+          <p-avatar [label]="initials()" [pTooltip]="authorDisplay()" tooltipPosition="top" size="normal" shape="square" />
+          <span>{{ feedbackText() }}</span>
+        </div>
+      </p-message>
+    </div>
   `
 })
 export class FeedbackMessageComponent {
@@ -24,7 +27,7 @@ export class FeedbackMessageComponent {
   /** The feedback/rejection text content. */
   feedbackText = input.required<string>();
   /** Optional extra CSS classes for the p-message wrapper. */
-  styleClass = input<string>('block');
+  styleClass = input<string>('');
 
   /** Initials only from authorUserName (person's name). Role labels produce no initials. */
   initials = computed(() => {
