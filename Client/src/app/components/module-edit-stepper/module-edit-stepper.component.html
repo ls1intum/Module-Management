@@ -1,21 +1,13 @@
 <nav class="stepper-nav">
   @for (step of steps(); track step.id; let i = $index) {
-    <button
-      type="button"
-      class="step-item"
-      [class.step-item--active]="i === currentIndex()"
-      [class.step-item--completed]="stepStatuses()[i] === StepperStatus.Completed"
-      [class.step-item--pending]="stepStatuses()[i] === StepperStatus.Pending"
-      [class.step-item--action-required]="stepStatuses()[i] === StepperStatus.ActionRequired"
-      (click)="goToStep(i)"
-    >
-      <span class="step-number">
-        @if (stepStatuses()[i] === StepperStatus.Completed) {
-          <i class="pi pi-check"></i>
-        } @else {
-          {{ i + 1 }}
-        }
-      </span>
+    <button type="button" class="step-item" [class.step-item--active]="i === currentIndex()" (click)="goToStep(i)">
+      <p-avatar
+        [label]="stepStatuses()[i] === StepperStatus.Completed ? undefined : (i + 1).toString()"
+        [icon]="stepStatuses()[i] === StepperStatus.Completed ? 'pi pi-check' : undefined"
+        shape="circle"
+        size="normal"
+        [style]="getStepAvatarStyle(i)"
+      />
       <span class="step-title">{{ step.title }}</span>
     </button>
   }

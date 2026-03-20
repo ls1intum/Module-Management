@@ -27,35 +27,6 @@
   background: var(--p-content-hover-background, #f8f9fa);
 }
 
-.step-item--completed .step-number {
-  background: var(--p-success-color, #22c55e);
-  color: white;
-}
-
-/* Feedback step(s): yellow/orange when at least one feedback is pending */
-.step-item--pending .step-number {
-  background: var(--p-warn-color, #eab308);
-  color: var(--p-primary-contrast-color, #1a1a1a);
-}
-
-.step-item--action-required .step-number {
-  background: var(--p-error-color, #ef4444);
-  color: white;
-}
-
-.step-number {
-  flex-shrink: 0;
-  width: 1.75rem;
-  height: 1.75rem;
-  border-radius: 50%;
-  background: var(--p-surface-200, #e9ecef);
-  color: var(--p-text-muted-color, #6c757d);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  font-weight: 600;
-}
 
 .step-title {
   flex: 1;
