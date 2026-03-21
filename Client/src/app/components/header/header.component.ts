@@ -4,6 +4,7 @@ import { SecurityStore } from '../../core/security/security-store.service';
 import { ThemeService } from '../../core/theme/theme.service';
 import { SidebarService } from '../side-bar/sidebar.service';
 import { ButtonModule } from 'primeng/button';
+import { ButtonGroupModule } from 'primeng/buttongroup';
 import { AvatarModule } from 'primeng/avatar';
 import { MenuModule } from 'primeng/menu';
 import { TooltipModule } from 'primeng/tooltip';
@@ -13,7 +14,7 @@ import { MenuItem } from 'primeng/api';
   selector: 'app-header',
   templateUrl: './header.component.html',
   standalone: true,
-  imports: [RouterLink, ButtonModule, AvatarModule, MenuModule, TooltipModule]
+  imports: [RouterLink, ButtonModule, ButtonGroupModule, AvatarModule, MenuModule, TooltipModule]
 })
 export class HeaderComponent {
   securityStore = inject(SecurityStore);
@@ -45,6 +46,10 @@ export class HeaderComponent {
 
   signIn() {
     this.securityStore.signIn();
+  }
+
+  signInWithPasskey() {
+    this.securityStore.signInWithPasskey();
   }
 
   signOut() {

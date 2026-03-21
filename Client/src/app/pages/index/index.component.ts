@@ -1,15 +1,17 @@
 import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { ButtonGroupModule } from 'primeng/buttongroup';
 import { DividerModule } from 'primeng/divider';
 import { PanelModule } from 'primeng/panel';
+import { TooltipModule } from 'primeng/tooltip';
 import { SecurityStore } from '../../core/security/security-store.service';
 import { isAdminRole, isProfessorRole, isReviewerRole } from '../../core/shared/user-role.utils';
 
 @Component({
   selector: 'index-component',
   standalone: true,
-  imports: [RouterModule, ButtonModule, DividerModule, PanelModule],
+  imports: [RouterModule, ButtonModule, ButtonGroupModule, DividerModule, PanelModule, TooltipModule],
   templateUrl: './index.component.html'
 })
 export class IndexComponent {

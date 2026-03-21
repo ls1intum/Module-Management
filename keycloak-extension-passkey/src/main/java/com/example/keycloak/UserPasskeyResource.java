@@ -19,6 +19,7 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.jboss.logging.Logger;
+import org.keycloak.OAuth2Constants;
 import org.keycloak.common.util.Base64Url;
 import org.keycloak.credential.CredentialModel;
 import org.keycloak.credential.CredentialProvider;
@@ -36,13 +37,16 @@ import org.keycloak.models.credential.WebAuthnCredentialModel;
 import org.keycloak.protocol.oidc.TokenManager;
 import org.keycloak.representations.AccessToken;
 import org.keycloak.representations.RefreshToken;
+import org.keycloak.services.Urls;
 import org.keycloak.services.util.DefaultClientSessionContext;
 
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -389,6 +393,15 @@ public class UserPasskeyResource {
         return user.credentialManager().isValid(cred);
     }
 
+    /** Same idea as standard auth: include openid + default client scopes so aud/roles mappers apply. */
+    private String buildScopeParameterForClient(ClientModel client) {
+        LinkedHashSet<String> scopeNames = new LinkedHashSet<>();
+        scopeNames.add(OAuth2Constants.SCOPE_OPENID);
+        scopeNames.addAll(client.getClientScopes(true).keySet());
+        scopeNames.addAll(client.getClientScopes(false).keySet());
+        return String.join(" ", scopeNames);
+    }
+
     private Response generateTokensResponse(UserModel user) {
         try {
             RealmModel realm = session.getContext().getRealm();
@@ -408,8 +421,9 @@ public class UserPasskeyResource {
                 clientSession = session.sessions().createClientSession(realm, client, userSession);
             }
 
+            String scopeParameter = buildScopeParameterForClient(client);
             ClientSessionContext clientSessionCtx = DefaultClientSessionContext.fromClientSessionAndScopeParameter(
-                    clientSession, "", session);
+                    clientSession, scopeParameter, session);
 
             if (session.getContext().getClient() == null) {
                 logger.error("Client context is still null after setting.");
@@ -419,6 +433,14 @@ public class UserPasskeyResource {
             TokenManager tokenManager = new TokenManager();
             AccessToken accessToken = tokenManager.createClientAccessToken(
                     session, realm, client, user, userSession, clientSessionCtx);
+
+            var keycloakUri = session.getContext().getUri();
+            if (keycloakUri != null && keycloakUri.getBaseUri() != null) {
+                URI base = keycloakUri.getBaseUri();
+                accessToken.issuer(Urls.realmIssuer(base, realm.getName()).toString());
+            } else {
+                logger.warn("Keycloak URI context missing; token will have no iss (resource server will reject)");
+            }
 
             String accessTokenString = session.tokens().encode(accessToken);
             RefreshToken refreshToken = new RefreshToken(accessToken);

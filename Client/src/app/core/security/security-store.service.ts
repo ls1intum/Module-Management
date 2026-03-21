@@ -5,12 +5,14 @@ import { PasskeyExtensionService } from './passkey-extension.service';
 import { firstValueFrom } from 'rxjs';
 import { UserControllerService, User } from '../modules/openapi';
 import { Passkey } from './keycloak-credentials.types';
+import { MessageService } from 'primeng/api';
 
 @Injectable({ providedIn: 'root' })
 export class SecurityStore {
   keycloakService = inject(KeycloakService);
   passkeyExtension = inject(PasskeyExtensionService);
   userControllerService = inject(UserControllerService);
+  private readonly messageService = inject(MessageService);
 
   isLoading = signal(false);
   user = signal<User | undefined>(undefined);
@@ -33,9 +35,12 @@ export class SecurityStore {
     if (isLoggedIn) {
       this.loadPasskeys();
       try {
-        const user = await firstValueFrom(this.userControllerService.getCurrentUser());
+        const user = await firstValueFrom(
+          this.userControllerService.getCurrentUser('body', false, { transferCache: false })
+        );
         this.user.set(user);
       } catch (error) {
+        this.messageService.add({ severity: 'error', summary: 'Sign-in', detail: 'Something went wrong' });
         console.error('error fetching user details', error);
         this.user.set(undefined);
       }
@@ -43,8 +48,30 @@ export class SecurityStore {
     this.isLoading.set(false);
   }
 
+  async signInWithTum(returnUrl?: string) {
+    await this.keycloakService.loginWithTumRedirect(returnUrl);
+  }
+
   async signIn(returnUrl?: string) {
-    await this.keycloakService.login(returnUrl);
+    await this.signInWithTum(returnUrl);
+  }
+
+  async signInWithPasskey(): Promise<void> {
+    this.isLoading.set(true);
+    try {
+      const tokens = await this.passkeyExtension.signInWithPasskey();
+      this.keycloakService.applyPasskeyTokens(tokens.access_token, tokens.refresh_token);
+      await this.loadPasskeys();
+      const user = await firstValueFrom(
+        this.userControllerService.getCurrentUser('body', false, { transferCache: false })
+      );
+      this.user.set(user);
+    } catch (error) {
+      this.messageService.add({ severity: 'error', summary: 'Sign-in', detail: 'Something went wrong' });
+      console.error(error);
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   async signOut() {

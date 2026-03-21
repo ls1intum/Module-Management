@@ -3,8 +3,8 @@ import { environment } from '../../../../environments/environment';
 import { KeycloakService } from './keycloak.service';
 
 /**
- * In-app WebAuthn passkey registration via Keycloak realm extension
- * {@code /realms/{realm}/passkey/save} (no redirect to Keycloak login UI).
+ * In-app WebAuthn via Keycloak realm extension (same flow as ba-test-keycloak {@code public/app.js}):
+ * register: {@code /passkey/challenge} + {@code /passkey/save}; sign-in: {@code /passkey/get-credential-id} + {@code /passkey/authenticate}.
  */
 @Injectable({ providedIn: 'root' })
 export class PasskeyExtensionService {
@@ -112,5 +112,59 @@ export class PasskeyExtensionService {
     }
 
     await kc.updateToken(-1);
+  }
+
+  /**
+   * Sign in with passkey only (no Keycloak UI redirect). Returns tokens from {@code POST /passkey/authenticate}.
+   */
+  async signInWithPasskey(): Promise<{ access_token: string; refresh_token: string }> {
+    const optionsResponse = await fetch(this.getUrl('get-credential-id'));
+    const res = (await optionsResponse.json()) as { challenge?: string; credentialId?: string; error?: string };
+    if (!optionsResponse.ok) {
+      throw new Error(res?.error || `Failed to get passkey options (${optionsResponse.status})`);
+    }
+    if (!res.challenge) {
+      throw new Error('Invalid challenge response from server');
+    }
+
+    const publicKey: PublicKeyCredentialRequestOptions = {
+      challenge: this.base64UrlToUint8Array(res.challenge) as BufferSource,
+      userVerification: 'preferred'
+    };
+    if (res.credentialId) {
+      publicKey.allowCredentials = [
+        { type: 'public-key', id: this.base64UrlToUint8Array(res.credentialId) as BufferSource }
+      ];
+    }
+
+    const credential = (await navigator.credentials.get({ publicKey })) as PublicKeyCredential | null;
+    if (!credential?.response) {
+      throw new Error('Passkey sign-in was cancelled or failed.');
+    }
+
+    const ar = credential.response as AuthenticatorAssertionResponse;
+    const payload = {
+      credentialId: this.bufferToBase64Url(credential.rawId),
+      rawId: this.bufferToBase64Url(credential.rawId),
+      clientDataJSON: this.bufferToBase64Url(ar.clientDataJSON),
+      authenticatorData: this.bufferToBase64Url(ar.authenticatorData),
+      signature: this.bufferToBase64Url(ar.signature),
+      challenge: res.challenge
+    };
+
+    const authRes = await fetch(this.getUrl('authenticate'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const authResult = (await authRes.json()) as { access_token?: string; refresh_token?: string; error?: string };
+    if (!authRes.ok) {
+      throw new Error(authResult?.error || `Passkey authentication failed (${authRes.status})`);
+    }
+    if (!authResult.access_token || !authResult.refresh_token) {
+      throw new Error('Invalid token response from server');
+    }
+    return { access_token: authResult.access_token, refresh_token: authResult.refresh_token };
   }
 }
