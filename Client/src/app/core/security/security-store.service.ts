@@ -7,6 +7,10 @@ import { UserControllerService, User } from '../modules/openapi';
 import { Passkey } from './keycloak-credentials.types';
 import { MessageService } from 'primeng/api';
 
+function passkeyDialogDismissedStorageKey(sub: string): string {
+  return `mm_passkey_dialog_dismissed_${sub}`;
+}
+
 @Injectable({ providedIn: 'root' })
 export class SecurityStore {
   keycloakService = inject(KeycloakService);
@@ -17,6 +21,7 @@ export class SecurityStore {
   isLoading = signal(false);
   user = signal<User | undefined>(undefined);
   passkeys = signal<Passkey[]>([]);
+  passkeyDialogVisible = signal(false);
 
   constructor() {
     this.onInit();
@@ -33,19 +38,45 @@ export class SecurityStore {
     const isLoggedIn = await this.keycloakService.init();
 
     if (isLoggedIn) {
-      this.loadPasskeys();
+      await this.loadPasskeys();
       try {
-        const user = await firstValueFrom(
-          this.userControllerService.getCurrentUser('body', false, { transferCache: false })
-        );
+        const user = await firstValueFrom(this.userControllerService.getCurrentUser());
         this.user.set(user);
       } catch (error) {
         this.messageService.add({ severity: 'error', summary: 'Sign-in', detail: 'Something went wrong' });
         console.error('error fetching user details', error);
         this.user.set(undefined);
       }
+      this.evaluatePasskeyDialogAfterTumLogin();
     }
     this.isLoading.set(false);
+  }
+
+  closePasskeyDialog(dontShowAgain: boolean): void {
+    if (!this.passkeyDialogVisible()) {
+      return;
+    }
+    if (dontShowAgain) {
+      const sub = this.keycloakService.keycloak.tokenParsed?.sub;
+      if (sub) {
+        localStorage.setItem(passkeyDialogDismissedStorageKey(sub), '1');
+      }
+    }
+    this.passkeyDialogVisible.set(false);
+  }
+
+  private evaluatePasskeyDialogAfterTumLogin(): void {
+    if (this.passkeys().length > 0) {
+      return;
+    }
+    const sub = this.keycloakService.keycloak.tokenParsed?.sub;
+    if (!sub) {
+      return;
+    }
+    if (localStorage.getItem(passkeyDialogDismissedStorageKey(sub)) === '1') {
+      return;
+    }
+    this.passkeyDialogVisible.set(true);
   }
 
   async signInWithTum(returnUrl?: string) {
@@ -62,9 +93,7 @@ export class SecurityStore {
       const tokens = await this.passkeyExtension.signInWithPasskey();
       this.keycloakService.applyPasskeyTokens(tokens.access_token, tokens.refresh_token);
       await this.loadPasskeys();
-      const user = await firstValueFrom(
-        this.userControllerService.getCurrentUser('body', false, { transferCache: false })
-      );
+      const user = await firstValueFrom(this.userControllerService.getCurrentUser());
       this.user.set(user);
     } catch (error) {
       this.messageService.add({ severity: 'error', summary: 'Sign-in', detail: 'Something went wrong' });
@@ -78,6 +107,7 @@ export class SecurityStore {
     await this.keycloakService.logout();
     this.user.set(undefined);
     this.passkeys.set([]);
+    this.passkeyDialogVisible.set(false);
   }
 
   async registerPasskey(_returnUrl?: string) {
@@ -88,7 +118,7 @@ export class SecurityStore {
   async deletePasskey(credentialId: string) {
     try {
       await firstValueFrom(this.keycloakService.deleteCredential(credentialId));
-      this.loadPasskeys();
+      await this.loadPasskeys();
     } catch (error) {
       console.error('Error deleting passkey:', error);
     }
