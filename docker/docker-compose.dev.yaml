@@ -51,6 +51,17 @@ services:
       - module-management-network
     restart: unless-stopped
 
+  # Optional: capture SMTP locally (UI http://localhost:8025). Run the server with
+  # POSTFIX_HOST=localhost POSTFIX_PORT=1025 MAIL_ENABLED=true (see .example.env).
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: module-management-mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - module-management-network
+    restart: unless-stopped
 
 volumes:
   postgres_data:

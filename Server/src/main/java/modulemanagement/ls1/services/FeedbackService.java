@@ -25,9 +25,11 @@ import java.util.stream.Stream;
 @Validated
 public class FeedbackService {
     private final FeedbackRepository feedbackRepository;
+    private final MailingService mailingService;
 
-    public FeedbackService(FeedbackRepository feedbackRepository) {
+    public FeedbackService(FeedbackRepository feedbackRepository, MailingService mailingService) {
         this.feedbackRepository = feedbackRepository;
+        this.mailingService = mailingService;
     }
 
     public Feedback Accept(Long feedbackId, User user) {
@@ -39,6 +41,7 @@ public class FeedbackService {
         feedback.setSubmissionDate(LocalDateTime.now());
         feedback.setStatus(FeedbackStatus.APPROVED);
         feedback = feedbackRepository.save(feedback);
+        mailingService.sendProfessorFeedbackReceivedNotification(feedback);
         return feedback;
     }
 
@@ -53,6 +56,7 @@ public class FeedbackService {
         boolean positive = feedback.isAllFeedbackPositive();
         feedback.setStatus(positive ? FeedbackStatus.APPROVED : FeedbackStatus.FEEDBACK_GIVEN);
         feedback = feedbackRepository.save(feedback);
+        mailingService.sendProfessorFeedbackReceivedNotification(feedback);
         return feedback;
     }
 
@@ -66,6 +70,7 @@ public class FeedbackService {
         feedback.setStatus(FeedbackStatus.REJECTED);
         feedback.setComment(comment);
         feedback = feedbackRepository.save(feedback);
+        mailingService.sendProfessorFeedbackReceivedNotification(feedback);
         return feedback;
     }
 

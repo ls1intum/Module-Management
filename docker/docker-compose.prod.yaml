@@ -70,6 +70,15 @@ services:
       - EMBEDDING_MODEL_NAME=onnx-community/embeddinggemma-300M-ONNX
       - CHAT_MODEL_SOURCE=AzureOpenAiChatModel
       - EMBEDDING_MODEL_SOURCE=OpenAiEmbeddingModel
+      - POSTFIX_HOST=postfix
+      - POSTFIX_PORT=25
+      - POSTFIX_USERNAME=${POSTFIX_USERNAME}
+      - POSTFIX_PASSWORD=${POSTFIX_PASSWORD}
+      - MAIL_STARTTLS_ENABLE=${MAIL_STARTTLS_ENABLE}
+      - MAIL_STARTTLS_REQUIRED=${MAIL_STARTTLS_REQUIRED}
+      - MAIL_ENABLED=true
+      - MAIL_SENDER=${MAIL_SENDER}
+      - CLIENT_HOST=${CLIENT_HOST}
     volumes:
       - embeddings_cache:/app/data/cache
     networks:

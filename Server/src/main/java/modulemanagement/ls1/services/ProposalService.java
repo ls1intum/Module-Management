@@ -36,13 +36,16 @@ public class ProposalService {
     private final ModuleVersionRepository moduleVersionRepository;
     private final FeedbackRepository feedbackRepository;
     private final DegreeProgramRepository degreeProgramRepository;
+    private final MailingService mailingService;
 
     public ProposalService(ProposalRepository proposalRepository, ModuleVersionRepository moduleVersionRepository,
-            FeedbackRepository feedbackRepository, DegreeProgramRepository degreeProgramRepository) {
+            FeedbackRepository feedbackRepository, DegreeProgramRepository degreeProgramRepository,
+            MailingService mailingService) {
         this.proposalRepository = proposalRepository;
         this.moduleVersionRepository = moduleVersionRepository;
         this.feedbackRepository = feedbackRepository;
         this.degreeProgramRepository = degreeProgramRepository;
+        this.mailingService = mailingService;
     }
 
     @Transactional
@@ -194,6 +197,9 @@ public class ProposalService {
         // to keep the version with requested feedback immutable
         proposal.addNewModuleVersion();
         proposalRepository.save(proposal);
+        mailingService.sendReviewerRequestNotification(
+                requiredFeedbacks,
+                mv.getTitleEng() != null ? mv.getTitleEng() : "Untitled module");
 
         return ProposalViewDTO.from(proposal);
     }
@@ -245,6 +251,7 @@ public class ProposalService {
         }
 
         // Create new feedbacks (one per role); do not reuse old ones.
+        List<Feedback> newFullFeedbackRequests = new ArrayList<>();
         for (UserRole role : FULL_FEEDBACK_ROLES) {
             Feedback feedback = new Feedback();
             feedback.setStatus(FeedbackStatus.PENDING_FEEDBACK);
@@ -252,7 +259,9 @@ public class ProposalService {
             feedback.setRequiredRole(role);
             feedback.setDegreeProgramSpecialization(null);
             feedback.setModuleVersion(mv);
-            requiredFeedbacks.add(feedbackRepository.save(feedback));
+            Feedback saved = feedbackRepository.save(feedback);
+            requiredFeedbacks.add(saved);
+            newFullFeedbackRequests.add(saved);
         }
 
         mv.setStatus(ModuleVersionStatus.PENDING_FULL_FEEDBACK);
@@ -262,6 +271,9 @@ public class ProposalService {
         // to keep the version with requested feedback immutable
         proposal.addNewModuleVersion();
         proposalRepository.save(proposal);
+        mailingService.sendReviewerRequestNotification(
+                newFullFeedbackRequests,
+                mv.getTitleEng() != null ? mv.getTitleEng() : "Untitled module");
 
         return ProposalViewDTO.from(proposal);
     }
