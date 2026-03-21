@@ -48,6 +48,7 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
   override moduleVersionId: number;
   moduleLoading = false;
   feedbackLoading = false;
+  private breadcrumbLabels = inject(BreadcrumbLabelsService);
 
   constructor(route: ActivatedRoute) {
     super();
