@@ -66,10 +66,13 @@ export abstract class ProposalBaseComponent {
       if (step.id === 'submit-coordinator-feedback') {
         const feedbacks = this.coordinatorFeedbacksForStep1().feedbacks;
         if (feedbacks.length === 0) return StepperStatus.Default;
-        const hasRejection = feedbacks.some((fb) => fb.feedbackStatus === ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.Rejected);
-        if (hasRejection) return StepperStatus.ActionRequired;
-        const allApproved = feedbacks.every((fb) => fb.feedbackStatus === ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.Approved);
-        return allApproved ? StepperStatus.Completed : StepperStatus.Pending;
+        const pending = ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.PendingFeedback;
+        const approved = ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.Approved;
+        const hasPending = feedbacks.some((fb) => (fb.feedbackStatus ?? pending) === pending);
+        if (hasPending) return StepperStatus.Pending;
+        const hasAccepted = feedbacks.some((fb) => fb.feedbackStatus === approved);
+        if (hasAccepted) return StepperStatus.Completed;
+        return StepperStatus.ActionRequired;
       }
 
       if (step.id === 'submit-full-feedback') {
