@@ -1,0 +1,7 @@
+# Slim context for docker/keycloak/Dockerfile (build context: Module-Management root)
+Client/node_modules
+Client/dist
+Server/build
+Server/.gradle
+**/.git
+.git

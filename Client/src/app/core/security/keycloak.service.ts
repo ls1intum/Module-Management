@@ -62,10 +62,6 @@ export class KeycloakService {
     return this.keycloak.logout({ redirectUri: environment.redirect });
   }
 
-  registerPasskey(returnUrl?: string) {
-    return this.keycloak.login({ redirectUri: window.location.origin + (returnUrl || ''), action: 'webauthn-register-passwordless' });
-  }
-
   getCredentials() {
     const url = `${environment.keycloak.url}/realms/${environment.keycloak.realm}/account/credentials`;
     return this.http.get<KeycloakCredentialType[]>(url);

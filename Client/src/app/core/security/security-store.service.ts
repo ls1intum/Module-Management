@@ -1,6 +1,7 @@
 import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformServer } from '@angular/common';
 import { KeycloakService } from './keycloak.service';
+import { PasskeyExtensionService } from './passkey-extension.service';
 import { firstValueFrom } from 'rxjs';
 import { UserControllerService, User } from '../modules/openapi';
 import { Passkey } from './keycloak-credentials.types';
@@ -8,6 +9,7 @@ import { Passkey } from './keycloak-credentials.types';
 @Injectable({ providedIn: 'root' })
 export class SecurityStore {
   keycloakService = inject(KeycloakService);
+  passkeyExtension = inject(PasskeyExtensionService);
   userControllerService = inject(UserControllerService);
 
   isLoading = signal(false);
@@ -51,8 +53,9 @@ export class SecurityStore {
     this.passkeys.set([]);
   }
 
-  async registerPasskey(returnUrl?: string) {
-    return await this.keycloakService.registerPasskey(returnUrl);
+  async registerPasskey(_returnUrl?: string) {
+    await this.passkeyExtension.registerPasskeyInBrowser();
+    await this.loadPasskeys();
   }
 
   async deletePasskey(credentialId: string) {
