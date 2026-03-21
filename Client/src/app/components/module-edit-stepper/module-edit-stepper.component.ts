@@ -33,8 +33,11 @@ export class ModuleEditStepperComponent {
     if (status === StepperStatus.Pending) {
       return { ...base, 'background-color': 'var(--p-warn-color, #eab308)', color: 'var(--p-primary-contrast-color, #1a1a1a)' };
     }
-    if (status === StepperStatus.ActionRequired) {
+    if (status === StepperStatus.Rejected) {
       return { ...base, 'background-color': 'var(--p-error-color, #ef4444)', color: 'white' };
+    }
+    if (status === StepperStatus.FeedbackGiven) {
+      return { ...base, 'background-color': 'var(--p-blue-500, #3b82f6)', color: 'white' };
     }
     return { ...base, 'background-color': 'var(--p-surface-200, #e9ecef)', color: 'var(--p-text-muted-color, #6c757d)' };
   }

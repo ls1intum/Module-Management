@@ -214,13 +214,19 @@ public class ModuleVersionService {
 
     /**
      * Coordinator phase only (no role-based feedbacks on this module version yet).
-     * 1) Any pending → PENDING_COORDINATOR_FEEDBACK
-     * 2) No pending + at least one approved → PENDING_FULL_SUBMISSION
-     * 3) No pending + no approved + at least one FEEDBACK_GIVEN →
-     * COORDINATOR_FEEDBACK_GIVEN
-     * 4) Otherwise (all rejected) → REJECTED
+     * 1) At least one rejected → REJECTED
+     * 2) Else at least one pending → PENDING_COORDINATOR_FEEDBACK
+     * 3) Else all accepted → PENDING_FULL_SUBMISSION
+     * 4) Else → COORDINATOR_FEEDBACK_GIVEN (e.g. all FEEDBACK_GIVEN, no approval/rejection)
      */
     private void applyCoordinatorFeedbackStatus(List<Feedback> coordinatorFeedbacks, ModuleVersion mv, Proposal p) {
+        boolean hasRejected = coordinatorFeedbacks.stream()
+                .anyMatch(f -> f.getStatus() == FeedbackStatus.REJECTED);
+        if (hasRejected) {
+            mv.setStatus(ModuleVersionStatus.REJECTED);
+            p.setStatus(ProposalStatus.REJECTED);
+            return;
+        }
         boolean hasPending = coordinatorFeedbacks.stream()
                 .anyMatch(f -> f.getStatus() == FeedbackStatus.PENDING_FEEDBACK);
         if (hasPending) {
@@ -228,22 +234,15 @@ public class ModuleVersionService {
             p.setStatus(ProposalStatus.PENDING_COORDINATOR_FEEDBACK);
             return;
         }
-        boolean hasApproved = coordinatorFeedbacks.stream()
-                .anyMatch(f -> f.getStatus() == FeedbackStatus.APPROVED);
-        if (hasApproved) {
+        boolean allApproved = coordinatorFeedbacks.stream()
+                .allMatch(f -> f.getStatus() == FeedbackStatus.APPROVED);
+        if (allApproved) {
             mv.setStatus(ModuleVersionStatus.PENDING_FULL_SUBMISSION);
             p.setStatus(ProposalStatus.PENDING_FULL_SUBMISSION);
             return;
         }
-        boolean hasFeedbackGiven = coordinatorFeedbacks.stream()
-                .anyMatch(f -> f.getStatus() == FeedbackStatus.FEEDBACK_GIVEN);
-        if (hasFeedbackGiven) {
-            mv.setStatus(ModuleVersionStatus.COORDINATOR_FEEDBACK_GIVEN);
-            p.setStatus(ProposalStatus.COORDINATOR_FEEDBACK_GIVEN);
-            return;
-        }
-        mv.setStatus(ModuleVersionStatus.REJECTED);
-        p.setStatus(ProposalStatus.REJECTED);
+        mv.setStatus(ModuleVersionStatus.COORDINATOR_FEEDBACK_GIVEN);
+        p.setStatus(ProposalStatus.COORDINATOR_FEEDBACK_GIVEN);
     }
 
     /**

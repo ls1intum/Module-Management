@@ -141,11 +141,11 @@ export class ModuleVersionViewComponent {
         if (feedbacks.length === 0) return StepperStatus.Default;
         const pending = ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.PendingFeedback;
         const approved = ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.Approved;
-        const hasPending = feedbacks.some((fb) => (fb.feedbackStatus ?? pending) === pending);
-        if (hasPending) return StepperStatus.Pending;
-        const hasAccepted = feedbacks.some((fb) => fb.feedbackStatus === approved);
-        if (hasAccepted) return StepperStatus.Completed;
-        return StepperStatus.ActionRequired;
+        const rejected = ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.Rejected;
+        if (feedbacks.some((fb) => fb.feedbackStatus === rejected)) return StepperStatus.Rejected;
+        if (feedbacks.some((fb) => (fb.feedbackStatus ?? pending) === pending)) return StepperStatus.Pending;
+        if (feedbacks.every((fb) => fb.feedbackStatus === approved)) return StepperStatus.Completed;
+        return StepperStatus.FeedbackGiven;
       }
 
       if (step.id === 'submit-full-feedback') return StepperStatus.Default;
@@ -275,5 +275,4 @@ export class ModuleVersionViewComponent {
 
     return String(feedback[field.feedbackKey as keyof ModuleVersionViewFeedbackDTO] || '');
   }
-
 }

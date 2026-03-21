@@ -1,11 +1,11 @@
-import { Action } from 'rxjs/internal/scheduler/Action';
-
 /** Status of a step in the stepper; determines how the step is displayed (number, check, or pending color). */
 export const StepperStatus = {
   Default: 'default',
   Pending: 'pending',
+  /** Coordinator phase: responses in without full approval (e.g. FEEDBACK_GIVEN). */
+  FeedbackGiven: 'feedback-given',
   Completed: 'completed',
-  ActionRequired: 'action-required'
+  Rejected: 'rejected'
 } as const;
 
 export type StepperStatus = (typeof StepperStatus)[keyof typeof StepperStatus];

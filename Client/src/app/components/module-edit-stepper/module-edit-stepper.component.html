@@ -2,8 +2,18 @@
   @for (step of steps(); track step.id; let i = $index) {
     <button type="button" class="step-item" [class.step-item--active]="i === currentIndex()" (click)="goToStep(i)">
       <p-avatar
-        [label]="stepStatuses()[i] === StepperStatus.Completed ? undefined : (i + 1).toString()"
-        [icon]="stepStatuses()[i] === StepperStatus.Completed ? 'pi pi-check' : undefined"
+        [label]="
+          stepStatuses()[i] === StepperStatus.Completed || stepStatuses()[i] === StepperStatus.FeedbackGiven
+            ? undefined
+            : (i + 1).toString()
+        "
+        [icon]="
+          stepStatuses()[i] === StepperStatus.Completed
+            ? 'pi pi-check'
+            : stepStatuses()[i] === StepperStatus.FeedbackGiven
+              ? 'pi pi-comments'
+              : undefined
+        "
         shape="circle"
         size="normal"
         [style]="getStepAvatarStyle(i)"
