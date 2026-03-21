@@ -105,22 +105,14 @@ export abstract class ProposalBaseComponent {
     return status === 'PENDING_FIRST_SUBMISSION' && this.isFirstStepComplete();
   });
 
-  /** All form steps (basic, schedule, exam, content, media) are complete – not the two submission steps. */
-  allFormStepsComplete = computed(() => {
-    const completed = this.stepsStatuses();
-    return (
-      completed[0] === StepperStatus.Completed &&
-      completed[2] === StepperStatus.Completed &&
-      completed[3] === StepperStatus.Completed &&
-      completed[4] === StepperStatus.Completed &&
-      completed[5] === StepperStatus.Completed
-    );
-  });
-
   /** Can submit for full feedback (second submission): PENDING_FULL_SUBMISSION, all steps done, all coordinator feedback accepted. */
   canRequestFullFeedback = computed(() => {
-    const status = this.moduleVersionStatus();
-    return status === 'PENDING_FULL_SUBMISSION' && this.allFormStepsComplete();
+    return (
+      this.moduleVersionStatus() === 'PENDING_FULL_SUBMISSION' &&
+      this.stepsStatuses()
+        .slice(0, 6)
+        .every((s) => s === StepperStatus.Completed)
+    );
   });
 
   /** Coordinator feedbacks for this version (for current assignments). From moduleVersionDto().feedbacks. */
