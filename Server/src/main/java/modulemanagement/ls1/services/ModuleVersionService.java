@@ -184,61 +184,110 @@ public class ModuleVersionService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Proposal was cancelled by the submitter.");
         }
         Proposal p = mv.getProposal();
-        if (!mv.equals(p.getLatestModuleVersionWithContent())) {
-            return;
-        }
 
         List<Feedback> allFeedbacks = mv.getRequiredFeedbacks() != null ? mv.getRequiredFeedbacks() : new ArrayList<>();
         // Invalidated feedbacks must not affect proposal/module version status.
         List<Feedback> nonInvalidatedFeedbacks = allFeedbacks.stream()
                 .filter(f -> f != null && !f.isInvalidated())
                 .toList();
-        // Coordinator feedbacks for current assignments + all role-based feedbacks (we
-        // only have one active set of pending at a time).
         List<Feedback> coordinatorFeedbacks = nonInvalidatedFeedbacks.stream()
                 .filter(f -> f.getDegreeProgramSpecialization() != null)
                 .toList();
         List<Feedback> roleBased = nonInvalidatedFeedbacks.stream()
                 .filter(f -> f.getRequiredRole() != null)
                 .toList();
-        List<Feedback> feedbacksToEvaluate = new ArrayList<>(coordinatorFeedbacks);
-        feedbacksToEvaluate.addAll(roleBased);
 
-        boolean allFeedbackPositive = true;
-        boolean oneFeedbackNegative = false;
-        boolean oneFeedbackRejected = false;
-        for (Feedback feedback : feedbacksToEvaluate) {
-            if (!feedback.getStatus().equals(FeedbackStatus.APPROVED)) {
-                allFeedbackPositive = false;
-            }
-            if (feedback.getStatus().equals(FeedbackStatus.FEEDBACK_GIVEN)) {
-                oneFeedbackNegative = true;
-            }
-            if (feedback.getStatus().equals(FeedbackStatus.REJECTED)) {
-                oneFeedbackRejected = true;
-            }
+        if (coordinatorFeedbacks.isEmpty() && roleBased.isEmpty()) {
+            return;
         }
 
-        if (allFeedbackPositive) {
-            boolean anyRoleBased = !roleBased.isEmpty();
-            if (anyRoleBased) {
-                mv.setStatus(ModuleVersionStatus.ACCEPTED);
-                p.setStatus(ProposalStatus.ACCEPTED);
-            } else {
-                mv.setStatus(ModuleVersionStatus.PENDING_FULL_SUBMISSION);
-                p.setStatus(ProposalStatus.PENDING_FULL_SUBMISSION);
-            }
+        if (!roleBased.isEmpty()) {
+            applyFullFeedbackRoleStatus(roleBased, mv, p);
+        } else {
+            applyCoordinatorFeedbackStatus(coordinatorFeedbacks, mv, p);
         }
-        if (oneFeedbackNegative) {
-            mv.setStatus(ModuleVersionStatus.REQUIRES_REVIEW);
-            p.setStatus(ProposalStatus.REQUIRES_REVIEW);
-        }
-        if (oneFeedbackRejected) {
-            mv.setStatus(ModuleVersionStatus.REJECTED);
-            p.setStatus(ProposalStatus.REJECTED);
-        }
+
+        syncWorkflowStatusToLatestModuleVersion(p, mv);
         proposalRepository.save(p);
         moduleVersionRepository.save(mv);
+    }
+
+    /**
+     * Coordinator phase only (no role-based feedbacks on this module version yet).
+     * 1) Any pending → PENDING_COORDINATOR_FEEDBACK
+     * 2) No pending + at least one approved → PENDING_FULL_SUBMISSION
+     * 3) No pending + no approved + at least one FEEDBACK_GIVEN →
+     * COORDINATOR_FEEDBACK_GIVEN
+     * 4) Otherwise (all rejected) → REJECTED
+     */
+    private void applyCoordinatorFeedbackStatus(List<Feedback> coordinatorFeedbacks, ModuleVersion mv, Proposal p) {
+        boolean hasPending = coordinatorFeedbacks.stream()
+                .anyMatch(f -> f.getStatus() == FeedbackStatus.PENDING_FEEDBACK);
+        if (hasPending) {
+            mv.setStatus(ModuleVersionStatus.PENDING_COORDINATOR_FEEDBACK);
+            p.setStatus(ProposalStatus.PENDING_COORDINATOR_FEEDBACK);
+            return;
+        }
+        boolean hasApproved = coordinatorFeedbacks.stream()
+                .anyMatch(f -> f.getStatus() == FeedbackStatus.APPROVED);
+        if (hasApproved) {
+            mv.setStatus(ModuleVersionStatus.PENDING_FULL_SUBMISSION);
+            p.setStatus(ProposalStatus.PENDING_FULL_SUBMISSION);
+            return;
+        }
+        boolean hasFeedbackGiven = coordinatorFeedbacks.stream()
+                .anyMatch(f -> f.getStatus() == FeedbackStatus.FEEDBACK_GIVEN);
+        if (hasFeedbackGiven) {
+            mv.setStatus(ModuleVersionStatus.COORDINATOR_FEEDBACK_GIVEN);
+            p.setStatus(ProposalStatus.COORDINATOR_FEEDBACK_GIVEN);
+            return;
+        }
+        mv.setStatus(ModuleVersionStatus.REJECTED);
+        p.setStatus(ProposalStatus.REJECTED);
+    }
+
+    /**
+     * Second submission: QM / advisor / examination board feedbacks.
+     */
+    private void applyFullFeedbackRoleStatus(List<Feedback> roleBased, ModuleVersion mv, Proposal p) {
+        boolean hasRejected = roleBased.stream()
+                .anyMatch(f -> f.getStatus() == FeedbackStatus.REJECTED);
+        if (hasRejected) {
+            mv.setStatus(ModuleVersionStatus.REJECTED);
+            p.setStatus(ProposalStatus.REJECTED);
+            return;
+        }
+
+        boolean hasPending = roleBased.stream()
+                .anyMatch(f -> f.getStatus() == FeedbackStatus.PENDING_FEEDBACK);
+        if (hasPending) {
+            mv.setStatus(ModuleVersionStatus.PENDING_FULL_FEEDBACK);
+            p.setStatus(ProposalStatus.PENDING_FULL_FEEDBACK);
+            return;
+        }
+        boolean allApproved = roleBased.stream()
+                .allMatch(f -> f.getStatus() == FeedbackStatus.APPROVED);
+        if (allApproved) {
+            mv.setStatus(ModuleVersionStatus.ACCEPTED);
+            p.setStatus(ProposalStatus.ACCEPTED);
+            return;
+        }
+
+        mv.setStatus(ModuleVersionStatus.REQUIRES_REVIEW);
+        p.setStatus(ProposalStatus.REQUIRES_REVIEW);
+    }
+
+    /**
+     * After coordinator feedback, a newer draft module version may exist; keep its
+     * workflow status aligned with the version that holds the feedbacks.
+     */
+    private void syncWorkflowStatusToLatestModuleVersion(Proposal p, ModuleVersion mvWithFeedbacks) {
+        ModuleVersion latest = p.getLatestModuleVersionWithContent();
+        if (latest == null || latest.getModuleVersionId().equals(mvWithFeedbacks.getModuleVersionId())) {
+            return;
+        }
+        latest.setStatus(mvWithFeedbacks.getStatus());
+        moduleVersionRepository.save(latest);
     }
 
     public ModuleVersionViewDTO getModuleVersion(Long moduleVersionId, UUID userId) {

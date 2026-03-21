@@ -9,6 +9,8 @@ export class StatusDisplayPipe implements PipeTransform {
         return { text: 'Pending first submission', severity: 'secondary' };
       case 'PENDING_COORDINATOR_FEEDBACK':
         return { text: 'Pending coordinator feedback', severity: 'warn' };
+      case 'COORDINATOR_FEEDBACK_GIVEN':
+        return { text: 'Coordinator feedback given', severity: 'info' };
       case 'PENDING_FULL_SUBMISSION':
         return { text: 'Pending full submission', severity: 'secondary' };
       case 'PENDING_FULL_FEEDBACK':
@@ -33,6 +35,8 @@ export class StatusInfoPipeline implements PipeTransform {
         return 'This module proposal is pending submission. Please complete step 1 (basic information and degree program assignments) and submit for coordinator feedback.';
       case 'PENDING_COORDINATOR_FEEDBACK':
         return 'Submitted for coordinator feedback. Program and area coordinators are reviewing. You can cancel and resubmit if needed.';
+      case 'COORDINATOR_FEEDBACK_GIVEN':
+        return 'All coordinators have responded. None gave approval, but at least one gave feedback without approval; review their comments and update your module if needed.';
       case 'PENDING_FULL_SUBMISSION':
         return 'Coordinator feedback was accepted. Complete all steps and submit for full feedback (quality management, program advisor, examination board) when ready.';
       case 'PENDING_FULL_FEEDBACK':

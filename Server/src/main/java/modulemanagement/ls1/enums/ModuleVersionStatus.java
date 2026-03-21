@@ -8,6 +8,11 @@ public enum ModuleVersionStatus {
      */
     PENDING_COORDINATOR_FEEDBACK,
     /**
+     * All coordinator responses are in; at least one gave non-approval feedback and
+     * none approved yet.
+     */
+    COORDINATOR_FEEDBACK_GIVEN,
+    /**
      * Coordinator feedback accepted; professor has not yet submitted for full
      * feedback.
      */

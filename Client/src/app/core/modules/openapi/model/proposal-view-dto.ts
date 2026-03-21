@@ -19,10 +19,11 @@ export interface ProposalViewDTO {
     oldModuleVersions?: Array<ModuleVersionCompactDTO>;
 }
 export namespace ProposalViewDTO {
-    export type StatusEnum = 'PENDING_FIRST_SUBMISSION' | 'PENDING_COORDINATOR_FEEDBACK' | 'PENDING_FULL_SUBMISSION' | 'PENDING_FULL_FEEDBACK' | 'ACCEPTED' | 'REQUIRES_REVIEW' | 'REJECTED' | 'CANCELLED';
+    export type StatusEnum = 'PENDING_FIRST_SUBMISSION' | 'PENDING_COORDINATOR_FEEDBACK' | 'COORDINATOR_FEEDBACK_GIVEN' | 'PENDING_FULL_SUBMISSION' | 'PENDING_FULL_FEEDBACK' | 'ACCEPTED' | 'REQUIRES_REVIEW' | 'REJECTED' | 'CANCELLED';
     export const StatusEnum = {
         PendingFirstSubmission: 'PENDING_FIRST_SUBMISSION' as StatusEnum,
         PendingCoordinatorFeedback: 'PENDING_COORDINATOR_FEEDBACK' as StatusEnum,
+        CoordinatorFeedbackGiven: 'COORDINATOR_FEEDBACK_GIVEN' as StatusEnum,
         PendingFullSubmission: 'PENDING_FULL_SUBMISSION' as StatusEnum,
         PendingFullFeedback: 'PENDING_FULL_FEEDBACK' as StatusEnum,
         Accepted: 'ACCEPTED' as StatusEnum,

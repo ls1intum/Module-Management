@@ -28,6 +28,13 @@ export class ModuleVersionStatusPipe implements PipeTransform {
           fadedColor: 'bg-yellow-300',
           severity: 'warn'
         };
+      case ModuleVersionCompactDTO.StatusEnum.CoordinatorFeedbackGiven:
+        return {
+          text: 'Coordinator feedback given',
+          normalColor: 'bg-blue-500',
+          fadedColor: 'bg-blue-300',
+          severity: 'info'
+        };
       case ModuleVersionCompactDTO.StatusEnum.PendingFullSubmission:
         return {
           text: 'Pending full submission',
@@ -48,6 +55,13 @@ export class ModuleVersionStatusPipe implements PipeTransform {
           normalColor: 'bg-green-500',
           fadedColor: 'bg-green-300',
           severity: 'success'
+        };
+      case ModuleVersionCompactDTO.StatusEnum.RequiresReview:
+        return {
+          text: 'Requires review',
+          normalColor: 'bg-sky-500',
+          fadedColor: 'bg-sky-300',
+          severity: 'info'
         };
       case ModuleVersionCompactDTO.StatusEnum.Rejected:
         return {
