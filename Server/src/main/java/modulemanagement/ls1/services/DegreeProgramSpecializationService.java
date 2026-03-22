@@ -16,15 +16,15 @@ public class DegreeProgramSpecializationService {
 
     private final DegreeProgramSpecializationRepository degreeProgramSpecializationRepository;
     private final UserRepository userRepository;
-    private final ResponsibleUserRoleService responsibleUserRoleService;
+    private final UserRolesSyncService userRolesSyncService;
 
     public DegreeProgramSpecializationService(
             DegreeProgramSpecializationRepository degreeProgramSpecializationRepository,
             UserRepository userRepository,
-            ResponsibleUserRoleService responsibleUserRoleService) {
+            UserRolesSyncService userRolesSyncService) {
         this.degreeProgramSpecializationRepository = degreeProgramSpecializationRepository;
         this.userRepository = userRepository;
-        this.responsibleUserRoleService = responsibleUserRoleService;
+        this.userRolesSyncService = userRolesSyncService;
     }
 
     public List<DegreeProgramSpecializationDTO> getAllDegreeProgramSpecializations() {
@@ -38,7 +38,7 @@ public class DegreeProgramSpecializationService {
         entity.setName(dto.getName());
         entity.setResponsibleUser(userRepository.getReferenceById(dto.getResponsibleUserId()));
         entity = degreeProgramSpecializationRepository.save(entity);
-        responsibleUserRoleService.ensureSpecializationAreaCoordinatorRole(dto.getResponsibleUserId());
+        userRolesSyncService.ensureSpecializationAreaCoordinatorRole(dto.getResponsibleUserId());
         return DegreeProgramSpecializationDTO.fromEntity(
                 degreeProgramSpecializationRepository
                         .findByIdWithResponsibleUser(entity.getDegreeProgramSpecializationId()).orElse(entity));
@@ -54,9 +54,9 @@ public class DegreeProgramSpecializationService {
             UUID previousUserId = entity.getResponsibleUser() != null ? entity.getResponsibleUser().getUserId() : null;
             entity.setResponsibleUser(userRepository.getReferenceById(dto.getResponsibleUserId()));
             entity = degreeProgramSpecializationRepository.save(entity);
-            responsibleUserRoleService.ensureSpecializationAreaCoordinatorRole(dto.getResponsibleUserId());
+            userRolesSyncService.ensureSpecializationAreaCoordinatorRole(dto.getResponsibleUserId());
             if (previousUserId != null && !previousUserId.equals(dto.getResponsibleUserId()))
-                responsibleUserRoleService.removeSpecializationAreaCoordinatorRoleIfNotResponsible(previousUserId);
+                userRolesSyncService.removeSpecializationAreaCoordinatorRoleIfNotResponsible(previousUserId);
         } else {
             entity = degreeProgramSpecializationRepository.save(entity);
         }
@@ -72,6 +72,6 @@ public class DegreeProgramSpecializationService {
         UUID responsibleUserId = entity.getResponsibleUser() != null ? entity.getResponsibleUser().getUserId() : null;
         degreeProgramSpecializationRepository.deleteById(id);
         if (responsibleUserId != null)
-            responsibleUserRoleService.removeSpecializationAreaCoordinatorRoleIfNotResponsible(responsibleUserId);
+            userRolesSyncService.removeSpecializationAreaCoordinatorRoleIfNotResponsible(responsibleUserId);
     }
 }

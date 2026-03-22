@@ -19,11 +19,11 @@ import java.util.UUID;
 public class AdminUserService {
 
     private final UserRepository userRepository;
-    private final ResponsibleUserRoleService responsibleUserRoleService;
+    private final UserRolesSyncService userRolesSyncService;
 
-    public AdminUserService(UserRepository userRepository, ResponsibleUserRoleService responsibleUserRoleService) {
+    public AdminUserService(UserRepository userRepository, UserRolesSyncService userRolesSyncService) {
         this.userRepository = userRepository;
-        this.responsibleUserRoleService = responsibleUserRoleService;
+        this.userRolesSyncService = userRolesSyncService;
     }
 
     public PageResponseDTO<UserDTO> getUsersPage(Pageable pageable, String search) {
@@ -40,11 +40,14 @@ public class AdminUserService {
         List<UserRole> currentRoles = user.getRoles() != null ? user.getRoles() : List.of();
         List<UserRole> newRoles = dto.getRoles() != null ? dto.getRoles() : List.of();
         if (currentRoles.contains(UserRole.PROGRAM_COORDINATOR) && !newRoles.contains(UserRole.PROGRAM_COORDINATOR)) {
-            responsibleUserRoleService.unassignFromAllPrograms(userId);
+            userRolesSyncService.unassignFromAllPrograms(userId);
         }
         if (currentRoles.contains(UserRole.SPECIALIZATION_AREA_COORDINATOR)
                 && !newRoles.contains(UserRole.SPECIALIZATION_AREA_COORDINATOR)) {
-            responsibleUserRoleService.unassignFromAllSpecializations(userId);
+            userRolesSyncService.unassignFromAllSpecializations(userId);
+        }
+        if (currentRoles.contains(UserRole.EXAMINATION_BOARD) && !newRoles.contains(UserRole.EXAMINATION_BOARD)) {
+            userRolesSyncService.unassignFromAllExaminationBoards(userId);
         }
         user.setRoles(dto.getRoles());
         user = userRepository.save(user);

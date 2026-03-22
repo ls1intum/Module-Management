@@ -8,4 +8,5 @@ import java.util.UUID;
 public class UpdateDegreeProgramDTO {
     private String name;
     private UUID responsibleUserId;
+    private Long examinationBoardId;
 }
