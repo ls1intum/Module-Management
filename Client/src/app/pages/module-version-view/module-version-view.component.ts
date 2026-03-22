@@ -16,6 +16,11 @@ import { MessageModule } from 'primeng/message';
 import { CardModule } from 'primeng/card';
 import { FeedbackMessageComponent } from '../../components/feedback-message/feedback-message.component';
 import { PanelModule } from 'primeng/panel';
+import {
+  coordinatorFeedbackStepStatus,
+  examinationBoardFeedbackStepStatus,
+  qualityManagementFeedbackStepStatus
+} from '../../components/module-edit-stepper/module-version-stepper-status.util';
 
 export interface ModuleField {
   key: keyof ModuleVersionViewDTO;
@@ -135,20 +140,15 @@ export class ModuleVersionViewComponent {
     if (!dto) return MODULE_EDIT_STEPS.map(() => StepperStatus.Default);
 
     return MODULE_EDIT_STEPS.map((step, index) => {
-      if (step.id === 'feedbacks') return StepperStatus.Default;
       if (step.id === 'submit-coordinator-feedback') {
-        const feedbacks = this.coordinatorFeedbacksForStep1().feedbacks;
-        if (feedbacks.length === 0) return StepperStatus.Default;
-        const pending = ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.PendingFeedback;
-        const approved = ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.Approved;
-        const rejected = ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.Rejected;
-        if (feedbacks.some((fb) => fb.feedbackStatus === rejected)) return StepperStatus.Rejected;
-        if (feedbacks.some((fb) => (fb.feedbackStatus ?? pending) === pending)) return StepperStatus.Pending;
-        if (feedbacks.every((fb) => fb.feedbackStatus === approved)) return StepperStatus.Completed;
-        return StepperStatus.FeedbackGiven;
+        return coordinatorFeedbackStepStatus(dto.status);
       }
-
-      if (step.id === 'submit-full-feedback') return StepperStatus.Default;
+      if (step.id === 'submit-examination-board-feedback') {
+        return examinationBoardFeedbackStepStatus(dto.status);
+      }
+      if (step.id === 'submit-full-feedback') {
+        return qualityManagementFeedbackStepStatus(dto.status);
+      }
 
       const keys = MODULE_EDIT_STEPS[index].controlNames as (keyof ModuleVersionViewDTO)[];
       if (!keys?.length) return StepperStatus.Default;

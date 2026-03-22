@@ -5,16 +5,22 @@ import { Tag } from 'primeng/tag';
 export class StatusDisplayPipe implements PipeTransform {
   transform(status: ProposalViewDTO.StatusEnum): { text: string; severity: Tag['severity'] } {
     switch (status) {
-      case 'PENDING_FIRST_SUBMISSION':
-        return { text: 'Pending first submission', severity: 'secondary' };
-      case 'PENDING_COORDINATOR_FEEDBACK':
-        return { text: 'Pending coordinator feedback', severity: 'warn' };
-      case 'COORDINATOR_FEEDBACK_GIVEN':
-        return { text: 'Coordinator feedback given', severity: 'info' };
-      case 'PENDING_FULL_SUBMISSION':
-        return { text: 'Pending full submission', severity: 'secondary' };
-      case 'PENDING_FULL_FEEDBACK':
-        return { text: 'Pending full feedback', severity: 'warn' };
+      case 'WAITING_FOR_COORDINATORS_SUBMISSION':
+        return { text: 'Waiting for coordinator submission', severity: 'secondary' };
+      case 'PENDING_COORDINATORS_FEEDBACK':
+        return { text: 'Pending coordinators feedback', severity: 'warn' };
+      case 'COORDINATORS_FEEDBACK_GIVEN':
+        return { text: 'Coordinators feedback given', severity: 'info' };
+      case 'WAITING_FOR_EXAMINATION_BOARD_SUBMISSION':
+        return { text: 'Waiting for examination board submission', severity: 'secondary' };
+      case 'PENDING_EXAMINATION_BOARD_FEEDBACK':
+        return { text: 'Pending examination board feedback', severity: 'warn' };
+      case 'EXAMINATION_BOARD_FEEDBACK_GIVEN':
+        return { text: 'Examination board feedback given', severity: 'info' };
+      case 'WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION':
+        return { text: 'Waiting for quality management submission', severity: 'secondary' };
+      case 'PENDING_QUALITY_MANAGEMENT_FEEDBACK':
+        return { text: 'Pending quality management feedback', severity: 'warn' };
       case 'ACCEPTED':
         return { text: 'Accepted', severity: 'success' };
       case 'REQUIRES_REVIEW':
@@ -31,16 +37,22 @@ export class StatusDisplayPipe implements PipeTransform {
 export class StatusInfoPipeline implements PipeTransform {
   transform(status: ProposalViewDTO.StatusEnum): string {
     switch (status) {
-      case 'PENDING_FIRST_SUBMISSION':
-        return 'This module proposal is pending submission. Please complete step 1 (basic information and degree program assignments) and submit for coordinator feedback.';
-      case 'PENDING_COORDINATOR_FEEDBACK':
-        return 'Submitted for coordinator feedback. Program and area coordinators are reviewing. You can cancel and resubmit if needed.';
-      case 'COORDINATOR_FEEDBACK_GIVEN':
-        return 'All coordinators have responded. None gave approval, but at least one gave feedback without approval; review their comments and update your module if needed.';
-      case 'PENDING_FULL_SUBMISSION':
-        return 'Coordinator feedback was accepted. Complete all steps and submit for full feedback (quality management, program advisor, examination board) when ready.';
-      case 'PENDING_FULL_FEEDBACK':
-        return 'This module proposal is submitted and waiting for review. You can cancel the submission if needed.';
+      case 'WAITING_FOR_COORDINATORS_SUBMISSION':
+        return 'Complete step 1 and submit for coordinator feedback when ready.';
+      case 'PENDING_COORDINATORS_FEEDBACK':
+        return 'Submitted for coordinator feedback. Program and area coordinators are reviewing.';
+      case 'COORDINATORS_FEEDBACK_GIVEN':
+        return 'All coordinators have responded; at least one response needs your attention before approval.';
+      case 'WAITING_FOR_EXAMINATION_BOARD_SUBMISSION':
+        return 'Coordinator feedback was accepted. Complete all steps, then submit for examination board feedback.';
+      case 'PENDING_EXAMINATION_BOARD_FEEDBACK':
+        return 'Waiting for examination board feedback.';
+      case 'EXAMINATION_BOARD_FEEDBACK_GIVEN':
+        return 'Examination board has responded; review feedback before requesting quality management feedback.';
+      case 'WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION':
+        return 'Examination board feedback is complete. Submit for quality management feedback.';
+      case 'PENDING_QUALITY_MANAGEMENT_FEEDBACK':
+        return 'Waiting for quality management feedback.';
       case 'ACCEPTED':
         return 'This module is approved.';
       case 'REQUIRES_REVIEW':

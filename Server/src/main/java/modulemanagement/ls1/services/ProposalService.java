@@ -53,7 +53,7 @@ public class ProposalService {
         Proposal p = new Proposal();
         p.setCreatedBy(user);
         p.setCreationDate(LocalDateTime.now());
-        p.setStatus(ProposalStatus.PENDING_FIRST_SUBMISSION);
+        p.setStatus(ProposalStatus.WAITING_FOR_COORDINATORS_SUBMISSION);
         p = proposalRepository.save(p);
 
         ModuleVersion mv = new ModuleVersion();
@@ -61,7 +61,7 @@ public class ProposalService {
         mv.setModuleId(null);
         mv.setCreationDate(LocalDateTime.now());
         mv.setProposal(p);
-        mv.setStatus(ModuleVersionStatus.PENDING_FIRST_SUBMISSION);
+        mv.setStatus(ModuleVersionStatus.WAITING_FOR_COORDINATORS_SUBMISSION);
         mv.setBulletPoints(request.getBulletPoints());
         mv.setTitleEng(request.getTitleEng());
         mv.setTitleDe(request.getTitleDe());
@@ -168,8 +168,9 @@ public class ProposalService {
 
         ModuleVersion mv = proposal.getLatestModuleVersionWithContent();
 
-        if (!mv.getStatus().equals(ModuleVersionStatus.PENDING_FIRST_SUBMISSION)) {
-            throw new IllegalStateException("Proposal is not pending first submission. It is " + mv.getStatus() + ".");
+        if (!mv.getStatus().equals(ModuleVersionStatus.WAITING_FOR_COORDINATORS_SUBMISSION)) {
+            throw new IllegalStateException(
+                    "Proposal is not waiting for coordinator submission. It is " + mv.getStatus() + ".");
         }
 
         if (!mv.isFirstStepComplete()) {
@@ -190,8 +191,8 @@ public class ProposalService {
             requiredFeedbacks.add(feedbackRepository.save(feedback));
         }
 
-        mv.setStatus(ModuleVersionStatus.PENDING_COORDINATOR_FEEDBACK);
-        proposal.setStatus(ProposalStatus.PENDING_COORDINATOR_FEEDBACK);
+        mv.setStatus(ModuleVersionStatus.PENDING_COORDINATORS_FEEDBACK);
+        proposal.setStatus(ProposalStatus.PENDING_COORDINATORS_FEEDBACK);
         moduleVersionRepository.save(mv);
 
         // to keep the version with requested feedback immutable
@@ -225,7 +226,7 @@ public class ProposalService {
         }
 
         ModuleVersion mv = proposal.getLatestModuleVersionWithContent();
-        if (!mv.getStatus().equals(ModuleVersionStatus.PENDING_FULL_SUBMISSION)) {
+        if (!mv.getStatus().equals(ModuleVersionStatus.WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION)) {
             throw new IllegalStateException(
                     "Proposal must be in PENDING_FULL_SUBMISSION (coordinator feedback accepted). It is "
                             + mv.getStatus() + ".");
@@ -264,11 +265,10 @@ public class ProposalService {
             newFullFeedbackRequests.add(saved);
         }
 
-        mv.setStatus(ModuleVersionStatus.PENDING_FULL_FEEDBACK);
-        proposal.setStatus(ProposalStatus.PENDING_FULL_FEEDBACK);
+        mv.setStatus(ModuleVersionStatus.WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION);
+        proposal.setStatus(ProposalStatus.WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION);
         moduleVersionRepository.save(mv);
 
-        // to keep the version with requested feedback immutable
         proposal.addNewModuleVersion();
         proposalRepository.save(proposal);
         mailingService.sendReviewerRequestNotification(
@@ -284,7 +284,7 @@ public class ProposalService {
         if (!p.getCreatedBy().getUserId().equals(userId)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Unauthorized access");
         }
-        if (!p.getStatus().equals(ProposalStatus.PENDING_FIRST_SUBMISSION)) {
+        if (!p.getStatus().equals(ProposalStatus.WAITING_FOR_COORDINATORS_SUBMISSION)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "You can only delete a proposal that is not already submitted. This module proposal is "
                             + p.getStatus() + ".");

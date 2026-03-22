@@ -16,7 +16,9 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MODULE_EDIT_STEPS, StepperStatus } from '../module-edit-stepper/module-edit-steps.config';
+import { coordinatorFeedbackStepStatus, examinationBoardFeedbackStepStatus, qualityManagementFeedbackStepStatus } from '../module-edit-stepper/module-version-stepper-status.util';
 import { BreadcrumbLabelsService } from '../breadcrumb/breadcrumb-labels.service';
+import { Observable } from 'rxjs';
 
 @Component({
   template: ''
@@ -53,6 +55,7 @@ export abstract class ProposalBaseComponent {
     this.formValueVersion();
     const form = this.proposalForm;
     const assignmentsList = this.assignments();
+    const mvStatus = this.moduleVersionStatus();
     return MODULE_EDIT_STEPS.map((step) => {
       if (step.id === 'basic') {
         const allFieldsFilled = step.controlNames.every((name) => this.controlHasValue(form.get(name)));
@@ -64,19 +67,13 @@ export abstract class ProposalBaseComponent {
         }
       }
       if (step.id === 'submit-coordinator-feedback') {
-        const feedbacks = this.coordinatorFeedbacksForStep1().feedbacks;
-        if (feedbacks.length === 0) return StepperStatus.Default;
-        const pending = ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.PendingFeedback;
-        const approved = ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.Approved;
-        const rejected = ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.Rejected;
-        if (feedbacks.some((fb) => fb.feedbackStatus === rejected)) return StepperStatus.Rejected;
-        if (feedbacks.some((fb) => (fb.feedbackStatus ?? pending) === pending)) return StepperStatus.Pending;
-        if (feedbacks.every((fb) => fb.feedbackStatus === approved)) return StepperStatus.Completed;
-        return StepperStatus.FeedbackGiven;
+        return coordinatorFeedbackStepStatus(mvStatus);
       }
-
+      if (step.id === 'submit-examination-board-feedback') {
+        return examinationBoardFeedbackStepStatus(mvStatus);
+      }
       if (step.id === 'submit-full-feedback') {
-        return StepperStatus.Default;
+        return qualityManagementFeedbackStepStatus(mvStatus);
       }
       return step.controlNames.every((name) => this.controlHasValue(form.get(name))) ? StepperStatus.Completed : StepperStatus.Default;
     });
@@ -102,17 +99,21 @@ export abstract class ProposalBaseComponent {
   /** Can submit for feedback (never submitted yet). */
   canRequestCoordinatorsFeedback = computed(() => {
     const status = this.moduleVersionStatus();
-    return status === 'PENDING_FIRST_SUBMISSION' && this.isFirstStepComplete();
+    return status === 'WAITING_FOR_COORDINATORS_SUBMISSION' && this.isFirstStepComplete();
   });
 
-  /** Can submit for full feedback (second submission): PENDING_FULL_SUBMISSION, all steps done, all coordinator feedback accepted. */
-  canRequestFullFeedback = computed(() => {
-    return (
-      this.moduleVersionStatus() === 'PENDING_FULL_SUBMISSION' &&
-      this.stepsStatuses()
-        .slice(0, 6)
-        .every((s) => s === StepperStatus.Completed)
-    );
+  /** Steps 0–5 must be complete to request examination board feedback. */
+  canRequestExaminationBoardFeedback = computed(() => {
+    const statuses = this.stepsStatuses();
+    const throughContentSteps = statuses.slice(0, 6);
+    return this.moduleVersionStatus() === 'WAITING_FOR_EXAMINATION_BOARD_SUBMISSION' && throughContentSteps.every((s) => s === StepperStatus.Completed);
+  });
+
+  /** All steps before quality submission (indices 0–6) complete, including examination board step. */
+  canRequestQualityAdvisorFeedback = computed(() => {
+    const statuses = this.stepsStatuses();
+    const beforeQualityAdvisor = statuses.slice(0, MODULE_EDIT_STEPS.length - 1);
+    return this.moduleVersionStatus() === 'WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION' && beforeQualityAdvisor.every((s) => s === StepperStatus.Completed);
   });
 
   /** Coordinator feedbacks for this version (for current assignments). From moduleVersionDto().feedbacks. */

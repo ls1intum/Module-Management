@@ -100,8 +100,8 @@ public class ModuleVersionService {
         }
         feedbackRepository.saveAll(activeFeedbacks);
 
-        proposal.setStatus(ProposalStatus.PENDING_FIRST_SUBMISSION);
-        mv.setStatus(ModuleVersionStatus.PENDING_FIRST_SUBMISSION);
+        proposal.setStatus(ProposalStatus.WAITING_FOR_COORDINATORS_SUBMISSION);
+        mv.setStatus(ModuleVersionStatus.WAITING_FOR_COORDINATORS_SUBMISSION);
         proposalRepository.save(proposal);
     }
 
@@ -215,9 +215,10 @@ public class ModuleVersionService {
     /**
      * Coordinator phase only (no role-based feedbacks on this module version yet).
      * 1) At least one rejected → REJECTED
-     * 2) Else at least one pending → PENDING_COORDINATOR_FEEDBACK
-     * 3) Else all accepted → PENDING_FULL_SUBMISSION
-     * 4) Else → COORDINATOR_FEEDBACK_GIVEN (e.g. all FEEDBACK_GIVEN, no approval/rejection)
+     * 2) Else at least one pending → PENDING_COORDINATORS_FEEDBACK
+     * 3) Else all accepted → WAITING_FOR_EXAMINATION_BOARD_SUBMISSION
+     * 4) Else → COORDINATORS_FEEDBACK_GIVEN (e.g. all FEEDBACK_GIVEN, no
+     * approval/rejection)
      */
     private void applyCoordinatorFeedbackStatus(List<Feedback> coordinatorFeedbacks, ModuleVersion mv, Proposal p) {
         boolean hasRejected = coordinatorFeedbacks.stream()
@@ -230,19 +231,19 @@ public class ModuleVersionService {
         boolean hasPending = coordinatorFeedbacks.stream()
                 .anyMatch(f -> f.getStatus() == FeedbackStatus.PENDING_FEEDBACK);
         if (hasPending) {
-            mv.setStatus(ModuleVersionStatus.PENDING_COORDINATOR_FEEDBACK);
-            p.setStatus(ProposalStatus.PENDING_COORDINATOR_FEEDBACK);
+            mv.setStatus(ModuleVersionStatus.PENDING_COORDINATORS_FEEDBACK);
+            p.setStatus(ProposalStatus.PENDING_COORDINATORS_FEEDBACK);
             return;
         }
         boolean allApproved = coordinatorFeedbacks.stream()
                 .allMatch(f -> f.getStatus() == FeedbackStatus.APPROVED);
         if (allApproved) {
-            mv.setStatus(ModuleVersionStatus.PENDING_FULL_SUBMISSION);
-            p.setStatus(ProposalStatus.PENDING_FULL_SUBMISSION);
+            mv.setStatus(ModuleVersionStatus.WAITING_FOR_EXAMINATION_BOARD_SUBMISSION);
+            p.setStatus(ProposalStatus.WAITING_FOR_EXAMINATION_BOARD_SUBMISSION);
             return;
         }
-        mv.setStatus(ModuleVersionStatus.COORDINATOR_FEEDBACK_GIVEN);
-        p.setStatus(ProposalStatus.COORDINATOR_FEEDBACK_GIVEN);
+        mv.setStatus(ModuleVersionStatus.COORDINATORS_FEEDBACK_GIVEN);
+        p.setStatus(ProposalStatus.COORDINATORS_FEEDBACK_GIVEN);
     }
 
     /**
@@ -260,8 +261,8 @@ public class ModuleVersionService {
         boolean hasPending = roleBased.stream()
                 .anyMatch(f -> f.getStatus() == FeedbackStatus.PENDING_FEEDBACK);
         if (hasPending) {
-            mv.setStatus(ModuleVersionStatus.PENDING_FULL_FEEDBACK);
-            p.setStatus(ProposalStatus.PENDING_FULL_FEEDBACK);
+            mv.setStatus(ModuleVersionStatus.WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION);
+            p.setStatus(ProposalStatus.WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION);
             return;
         }
         boolean allApproved = roleBased.stream()

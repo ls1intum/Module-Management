@@ -87,7 +87,7 @@
 
       @if (currentStepIndex() === 1) {
         <p-card header="Submit for coordinator feedback">
-          <p class="mb-4">First submission: request feedback from program coordinators and area coordinators (one per chosen degree program/area).</p>
+          <p class="mb-4">Request feedback from program coordinators and area coordinators (one per chosen degree program/area).</p>
           @if (coordinatorFeedbacksForStep1().feedbacks.length > 0) {
             <div class="space-y-2">
               <p class="font-medium">Coordinator feedback status {{ coordinatorFeedbacksForStep1().fromPrevious ? '(from previous version)' : '(this version)' }}</p>
@@ -102,7 +102,12 @@
                       />
                     </div>
                     @if (fb.feedbackStatus === 'REJECTED' && fb.rejectionComment) {
-                      <feedback-message [authorDisplay]="fb | feedbackAuthorDisplay" [authorUserName]="fb.requestedFromUserName ?? null" [feedbackText]="fb.rejectionComment" styleClass="mt-2" />
+                      <feedback-message
+                        [authorDisplay]="fb | feedbackAuthorDisplay"
+                        [authorUserName]="fb.requestedFromUserName ?? null"
+                        [feedbackText]="fb.rejectionComment"
+                        styleClass="mt-2"
+                      />
                     }
                   </li>
                 }
@@ -229,11 +234,14 @@
       }
 
       @if (currentStepIndex() === 6) {
+        <p-card header="Submit for examination board feedback">
+          <p class="mb-4">Request feedback from the examination boards of the chosen degree programs.</p>
+        </p-card>
+      }
+
+      @if (currentStepIndex() === 7) {
         <p-card header="Submit for full feedback">
-          <p class="mb-4">
-            Second submission: after all steps are complete and coordinator feedback is accepted, you can submit for feedback from quality management, academic program advisor, and
-            examination board.
-          </p>
+          <p class="mb-4">Request feedback from quality management feedback.</p>
           @if (moduleVersionDto.feedbacks?.length) {
             <div class="space-y-2">
               <p class="font-medium">Feedback status</p>
@@ -248,7 +256,12 @@
                       />
                     </div>
                     @if (fb.feedbackStatus === 'REJECTED' && fb.rejectionComment) {
-                      <feedback-message [authorDisplay]="fb | feedbackAuthorDisplay" [authorUserName]="fb.requestedFromUserName ?? null" [feedbackText]="fb.rejectionComment" styleClass="mt-2" />
+                      <feedback-message
+                        [authorDisplay]="fb | feedbackAuthorDisplay"
+                        [authorUserName]="fb.requestedFromUserName ?? null"
+                        [feedbackText]="fb.rejectionComment"
+                        styleClass="mt-2"
+                      />
                     }
                   </li>
                 }

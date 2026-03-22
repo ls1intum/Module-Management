@@ -4,23 +4,36 @@ public enum ProposalStatus {
     /**
      * Professor has not yet submitted for coordinator feedback (first submission).
      */
-    PENDING_FIRST_SUBMISSION,
+    WAITING_FOR_COORDINATORS_SUBMISSION,
     /**
      * Submitted for coordinator feedback; waiting for program/area coordinators.
      */
-    PENDING_COORDINATOR_FEEDBACK,
+    PENDING_COORDINATORS_FEEDBACK,
     /**
      * All coordinator responses are in; at least one gave non-approval feedback and
      * none approved yet.
      */
-    COORDINATOR_FEEDBACK_GIVEN,
+    COORDINATORS_FEEDBACK_GIVEN,
     /**
-     * Coordinator feedback accepted; professor has not yet submitted for full
-     * feedback.
+     * Coordinator feedback accepted; professor has not yet submitted for
+     * examination
+     * board feedback.
      */
-    PENDING_FULL_SUBMISSION,
-    /** Submitted for full feedback; waiting for QM, advisor, examination board. */
-    PENDING_FULL_FEEDBACK,
+    WAITING_FOR_EXAMINATION_BOARD_SUBMISSION,
+    /** Submitted for examination board feedback; waiting for examination board. */
+    PENDING_EXAMINATION_BOARD_FEEDBACK,
+    /**
+     * Examination board responses are in; at least one is not approval (e.g.
+     * FEEDBACK_GIVEN), or mixed.
+     */
+    EXAMINATION_BOARD_FEEDBACK_GIVEN,
+    /**
+     * All examination board feedbacks approved; professor has not yet submitted for
+     * quality management feedback.
+     */
+    WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION,
+    /** Submitted for quality management feedback. */
+    PENDING_QUALITY_MANAGEMENT_FEEDBACK,
     ACCEPTED,
     REQUIRES_REVIEW,
     REJECTED,
