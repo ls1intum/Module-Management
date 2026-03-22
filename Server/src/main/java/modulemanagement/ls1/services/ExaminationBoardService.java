@@ -34,9 +34,9 @@ public class ExaminationBoardService {
         this.userRolesSyncService = userRolesSyncService;
     }
 
-    public List<ExaminationBoardDTO> getAllExaminationBoards() {
-        return examinationBoardRepository.findAllWithMembers().stream()
-                .map(ExaminationBoardDTO::fromEntity)
+    public List<ExaminationBoardSummaryDTO> getAllExaminationBoards() {
+        return examinationBoardRepository.findAll().stream()
+                .map(ExaminationBoardSummaryDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 

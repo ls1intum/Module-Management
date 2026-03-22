@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DialogModule } from 'primeng/dialog';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { SelectModule } from 'primeng/select';
 import { TooltipModule } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
@@ -13,9 +14,11 @@ import { firstValueFrom } from 'rxjs';
 import {
   DegreeProgramSpecializationsControllerService,
   DegreeProgramsControllerService,
+  ExaminationBoardControllerService,
   type CreateDegreeProgramSpecializationDTO,
   type DegreeProgramDTO,
-  type DegreeProgramSpecializationDTO
+  type DegreeProgramSpecializationDTO,
+  type ExaminationBoardSummaryDTO
 } from '../../../core/modules/openapi';
 import { UsersSelectComponent } from '../../../components/users-select/users-select.component';
 import { BreadcrumbLabelsService } from '../../../components/breadcrumb/breadcrumb-labels.service';
@@ -23,13 +26,14 @@ import { BreadcrumbLabelsService } from '../../../components/breadcrumb/breadcru
 @Component({
   selector: 'app-degree-program-details-page',
   standalone: true,
-  imports: [RouterLink, FormsModule, TableModule, ButtonModule, InputTextModule, DialogModule, MultiSelectModule, TooltipModule, ToastModule, UsersSelectComponent],
+  imports: [RouterLink, FormsModule, TableModule, ButtonModule, InputTextModule, DialogModule, MultiSelectModule, SelectModule, TooltipModule, ToastModule, UsersSelectComponent],
   templateUrl: './degree-program-details-page.component.html'
 })
 export class DegreeProgramDetailsPageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly degreeProgramsService = inject(DegreeProgramsControllerService);
   private readonly specializationsService = inject(DegreeProgramSpecializationsControllerService);
+  private readonly examinationBoardsService = inject(ExaminationBoardControllerService);
   private readonly messageService = inject(MessageService);
   private readonly breadcrumbLabels = inject(BreadcrumbLabelsService);
 
@@ -42,6 +46,13 @@ export class DegreeProgramDetailsPageComponent {
 
   programName = signal('');
   programResponsibleUserId = signal<string | null>(null);
+
+  allExaminationBoards = signal<ExaminationBoardSummaryDTO[]>([]);
+  programExaminationBoardId = signal<number | null>(null);
+  examinationBoardOptions = computed(() => {
+    const boards = this.allExaminationBoards();
+    return [{ label: '— No examination board —', value: null as number | null }, ...boards.map((b) => ({ label: b.name ?? '', value: b.examinationBoardId }))];
+  });
 
   newSpecName = signal('');
   newSpecResponsibleUserId = signal<string | null>(null);
@@ -65,10 +76,15 @@ export class DegreeProgramDetailsPageComponent {
   async loadProgram(id: number) {
     this.loading.set(true);
     try {
-      const program = await firstValueFrom(this.degreeProgramsService.getDegreeProgram(id));
+      const [program, boards] = await Promise.all([
+        firstValueFrom(this.degreeProgramsService.getDegreeProgram(id)),
+        firstValueFrom(this.examinationBoardsService.getAllExaminationBoards())
+      ]);
       this.program.set(program);
+      this.allExaminationBoards.set(boards ?? []);
       this.programName.set(program.name ?? '');
       this.programResponsibleUserId.set(program.responsibleUser.userId ?? null);
+      this.programExaminationBoardId.set(program.examinationBoard?.examinationBoardId ?? null);
       this.breadcrumbLabels.degreeProgramName.set(program.name ?? null);
       await this.loadAllSpecializations();
     } catch (e) {
@@ -90,7 +106,13 @@ export class DegreeProgramDetailsPageComponent {
     }
     this.savingProgram.set(true);
     try {
-      await firstValueFrom(this.degreeProgramsService.updateDegreeProgram(prog.degreeProgramId, { name: nameVal, responsibleUserId: userIdVal }));
+      await firstValueFrom(
+        this.degreeProgramsService.updateDegreeProgram(prog.degreeProgramId, {
+          name: nameVal,
+          responsibleUserId: userIdVal,
+          examinationBoardId: this.programExaminationBoardId() ?? undefined
+        })
+      );
       this.messageService.add({ severity: 'success', summary: 'Updated', detail: 'Program details saved.' });
       await this.loadProgram(prog.degreeProgramId);
     } catch (e) {

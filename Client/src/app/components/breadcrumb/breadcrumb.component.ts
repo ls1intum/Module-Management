@@ -48,6 +48,20 @@ export class BreadcrumbComponent {
       return items;
     }
 
+    if (segments[1] === 'examination-boards') {
+      items.push({ label: 'Examination boards', routerLink: ['/admin/examination-boards'] });
+      if (segments.length > 2 && segments[2] && segments[2] !== 'specializations') {
+        const boardId = segments[2];
+        const label =
+          (this.breadcrumbLabels.examinationBoardName() ?? '').trim() || `Board ${boardId}`;
+        items.push({
+          label,
+          routerLink: ['/admin/examination-boards', boardId]
+        });
+      }
+      return items;
+    }
+
     if (segments[1] === 'degree-programs') {
       items.push({ label: 'Degree Programs', routerLink: ['/admin/degree-programs'] });
       if (segments.length <= 2) return items;

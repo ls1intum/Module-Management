@@ -21,7 +21,7 @@ public class ExaminationBoardController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ExaminationBoardDTO>> getAllExaminationBoards() {
+    public ResponseEntity<List<ExaminationBoardSummaryDTO>> getAllExaminationBoards() {
         return ResponseEntity.ok(examinationBoardService.getAllExaminationBoards());
     }
 

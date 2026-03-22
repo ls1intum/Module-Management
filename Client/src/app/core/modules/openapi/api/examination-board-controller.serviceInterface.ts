@@ -13,6 +13,7 @@ import { Observable }                                        from 'rxjs';
 
 import { CreateExaminationBoardDTO } from '../model/models';
 import { ExaminationBoardDTO } from '../model/models';
+import { ExaminationBoardSummaryDTO } from '../model/models';
 import { UpdateExaminationBoardDTO } from '../model/models';
 
 
@@ -42,7 +43,7 @@ export interface ExaminationBoardControllerServiceInterface {
      * 
      * 
      */
-    getAllExaminationBoards(extraHttpRequestParams?: any): Observable<Array<ExaminationBoardDTO>>;
+    getAllExaminationBoards(extraHttpRequestParams?: any): Observable<Array<ExaminationBoardSummaryDTO>>;
 
     /**
      * 

@@ -21,6 +21,8 @@ import { CreateExaminationBoardDTO } from '../model/create-examination-board-dto
 // @ts-ignore
 import { ExaminationBoardDTO } from '../model/examination-board-dto';
 // @ts-ignore
+import { ExaminationBoardSummaryDTO } from '../model/examination-board-summary-dto';
+// @ts-ignore
 import { UpdateExaminationBoardDTO } from '../model/update-examination-board-dto';
 
 // @ts-ignore
@@ -236,9 +238,9 @@ export class ExaminationBoardControllerService implements ExaminationBoardContro
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAllExaminationBoards(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ExaminationBoardDTO>>;
-    public getAllExaminationBoards(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ExaminationBoardDTO>>>;
-    public getAllExaminationBoards(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ExaminationBoardDTO>>>;
+    public getAllExaminationBoards(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ExaminationBoardSummaryDTO>>;
+    public getAllExaminationBoards(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ExaminationBoardSummaryDTO>>>;
+    public getAllExaminationBoards(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ExaminationBoardSummaryDTO>>>;
     public getAllExaminationBoards(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
@@ -278,7 +280,7 @@ export class ExaminationBoardControllerService implements ExaminationBoardContro
         }
 
         let localVarPath = `/api/admin/examination-boards`;
-        return this.httpClient.request<Array<ExaminationBoardDTO>>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<Array<ExaminationBoardSummaryDTO>>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

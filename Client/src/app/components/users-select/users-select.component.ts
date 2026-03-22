@@ -25,6 +25,8 @@ export class UsersSelectComponent implements ControlValueAccessor {
   styleClass = input<string>('');
   /** When the selected user is not yet in the loaded list, pass this so they are displayed like other options. */
   selectedUser = input<ResponsibleUserDTO | null>(null);
+  /** User IDs to omit from the list (e.g. users already assigned elsewhere). */
+  excludeUserIds = input<string[]>([]);
 
   constructor() {
     this.loadUsers();
@@ -48,12 +50,15 @@ export class UsersSelectComponent implements ControlValueAccessor {
   }
 
   userOptions = computed(() => {
-    const list = this.users().map((u) => ({
-      label: this.formatUserLabel(u),
-      value: u.userId
-    }));
+    const exclude = new Set(this.excludeUserIds().filter((id): id is string => !!id));
+    const list = this.users()
+      .filter((u) => u.userId && !exclude.has(u.userId))
+      .map((u) => ({
+        label: this.formatUserLabel(u),
+        value: u.userId
+      }));
     const current = this.value();
-    if (current && !list.some((o) => o.value === current)) {
+    if (current && !exclude.has(current) && !list.some((o) => o.value === current)) {
       const u = this.selectedUser();
       const label = u ? this.formatUserLabel(u) : current;
       return [{ label, value: current }, ...list];

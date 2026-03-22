@@ -1,0 +1,72 @@
+<h2 class="text-2xl mb-4">Examination boards</h2>
+<p class="text-muted-foreground mb-6">Create examination boards and edit a board to manage members. Link boards to degree programs on each program’s detail page.</p>
+
+<div class="flex flex-wrap justify-between items-center gap-3 mb-3">
+  <h3 class="text-lg font-medium m-0">All boards</h3>
+  <p-button label="Create examination board" icon="pi pi-plus" (onClick)="openCreateDialog()" [disabled]="loading()" severity="contrast" />
+</div>
+
+@if (!loading()) {
+  <p-table [value]="boards()" [tableStyle]="{ 'min-width': '40rem' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Name</th>
+        <th style="width: 12rem">Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-b>
+      <tr>
+        <td>
+          @if (b.examinationBoardId != null) {
+            <a [routerLink]="['/admin/examination-boards', b.examinationBoardId]" class="font-medium text-primary hover:underline">
+              {{ b.name }}
+            </a>
+          } @else {
+            {{ b.name }}
+          }
+        </td>
+        <td>
+          @if (b.examinationBoardId != null) {
+            <a [routerLink]="['/admin/examination-boards', b.examinationBoardId]" class="no-underline">
+              <p-button label="Edit" icon="pi pi-pencil" [rounded]="true" [text]="true" severity="secondary" class="mr-1" />
+            </a>
+            <p-button
+              icon="pi pi-trash"
+              pTooltip="Delete"
+              (onClick)="deleteBoard(b)"
+              [rounded]="true"
+              [text]="true"
+              severity="danger"
+            />
+          }
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="2" class="text-muted-foreground py-6">No examination boards yet.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+} @else {
+  <p class="text-muted-foreground">Loading…</p>
+}
+
+<p-dialog
+  header="Create examination board"
+  [visible]="createDialogVisible()"
+  (visibleChange)="onCreateDialogVisibleChange($event)"
+  [modal]="true"
+  [style]="{ width: 'min(28rem, 96vw)' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="flex flex-col gap-3 py-2">
+    <label class="text-sm font-medium">Name</label>
+    <input pInputText [(ngModel)]="createBoardName" class="w-full" placeholder="Board name" (keydown.enter)="createBoard()" />
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" severity="secondary" (onClick)="closeCreateDialog()" />
+    <p-button label="Create" icon="pi pi-check" (onClick)="createBoard()" [loading]="saving()" />
+  </ng-template>
+</p-dialog>
