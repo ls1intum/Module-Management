@@ -59,7 +59,7 @@
       </tr>
     </ng-template>
     <ng-template #body let-version>
-      <tr [pSelectableRow]="version" [routerLink]="['/proposals/view', proposal.proposalId, 'version', proposal.latestModuleVersion!.moduleVersionId]">
+      <tr [pSelectableRow]="version" [routerLink]="['/proposals', proposal.proposalId, 'version', proposal.latestModuleVersion!.moduleVersionId]">
         <td>{{ proposal.latestVersion }}</td>
         <td>
           {{ proposal.latestModuleVersion!.titleEng }}
@@ -70,12 +70,12 @@
         <td>
           <div class="flex">
             @if (proposal.latestModuleVersion!.feedbackList!.length) {
-              @for (feedback of proposal.latestModuleVersion!.feedbackList; track feedback.requiredRole) {
+              @for (feedback of proposal.latestModuleVersion!.feedbackList; track feedback.feedbackId ?? $index) {
                 <div
-                  [pTooltip]="'Feedback from ' + (feedback.requiredRole! | feedbackDepartment).text + ': ' + (feedback.status | feedbackStatus).text"
+                  [pTooltip]="'Feedback from ' + (feedback | feedbackAuthorDisplay) + ': ' + ((feedback.status ?? 'PENDING_FEEDBACK') | feedbackStatus).text + (feedback.invalidated ? ' (Obsolete)' : '')"
                   tooltipPosition="top"
                   class="w-8 h-8 mr-2 rounded"
-                  [class]="(feedback.status | feedbackStatus).normalColor"
+                  [ngClass]="feedback.invalidated ? 'bg-gray-300 text-white' : ((feedback.status ?? 'PENDING_FEEDBACK') | feedbackStatus).color"
                 ></div>
               }
             }
@@ -83,38 +83,18 @@
         </td>
         <td>
           <div class="flex gap-2">
-            @if (proposal.latestModuleVersion!.isComplete && proposal.latestModuleVersion!.status == moduleStatusEnum.PendingSubmission) {
-              <p-button label="Submit" severity="success" (onClick)="submitProposal()" (click)="$event.stopPropagation()" />
-            }
-            @if (proposal.latestModuleVersion!.status === moduleStatusEnum.FeedbackGiven || proposal.latestModuleVersion!.status === moduleStatusEnum.Rejected) {
-              <p-button
-                label="View Feedback"
-                severity="contrast"
-                outlined
-                [routerLink]="['/proposals/view', proposal.proposalId, 'version', proposal.latestModuleVersion!.moduleVersionId]"
-                (click)="$event.stopPropagation()"
-              />
-            }
-            @if (proposal.latestModuleVersion!.status === moduleStatusEnum.PendingSubmission) {
-              <p-button
-                label="Edit"
-                outlined
-                severity="contrast"
-                [routerLink]="['/proposals/view', proposal.proposalId, 'version', proposal.latestModuleVersion!.moduleVersionId, 'edit']"
-                (click)="$event.stopPropagation()"
-              />
-            }
-            @if (proposal.latestModuleVersion!.status === moduleStatusEnum.PendingFeedback) {
-              <p-button label="Cancel" severity="danger" outlined (onClick)="cancelProposal()" (click)="$event.stopPropagation()" />
-            }
-            @if (proposal.status === proposalStatusEnum.RequiresReview) {
-              <p-button label="Create New Version" severity="contrast" outlined (onClick)="addNewModuleVersion()" (click)="$event.stopPropagation()" />
-            }
+            <p-button
+              label="Edit"
+              outlined
+              severity="contrast"
+              [routerLink]="['/proposals', proposal.proposalId, 'version', proposal.latestModuleVersion!.moduleVersionId, 'edit']"
+              (click)="$event.stopPropagation()"
+            />
             <p-button
               label="Overlaps"
               outlined
               severity="contrast"
-              [routerLink]="['/proposals/view', proposal.proposalId, 'version', proposal.latestModuleVersion?.moduleVersionId, 'overlap']"
+              [routerLink]="['/proposals', proposal.proposalId, 'version', proposal.latestModuleVersion?.moduleVersionId, 'overlap']"
               (click)="$event.stopPropagation()"
             />
           </div>
@@ -136,7 +116,7 @@
       </tr>
     </ng-template>
     <ng-template #body let-version>
-      <tr [pSelectableRow]="version" [routerLink]="['/proposals/view', proposal.proposalId, 'version', version.moduleVersionId]">
+      <tr [pSelectableRow]="version" [routerLink]="['/proposals', proposal.proposalId, 'version', version.moduleVersionId]">
         <td class="text-muted-foreground">{{ version.version }}</td>
         <td class="text-muted-foreground">
           {{ version.titleEng }}
@@ -147,12 +127,12 @@
         <td>
           <div class="flex">
             @if (version.feedbackList?.length) {
-              @for (feedback of version.feedbackList; track feedback.requiredRole) {
+              @for (feedback of version.feedbackList; track feedback.feedbackId ?? $index) {
                 <div
-                  [pTooltip]="'Feedback from ' + (feedback.requiredRole! | feedbackDepartment).text + ': ' + (feedback.status | feedbackStatus).text"
+                  [pTooltip]="'Feedback from ' + (feedback | feedbackAuthorDisplay) + ': ' + ((feedback.status ?? 'PENDING_FEEDBACK') | feedbackStatus).text + (feedback.invalidated ? ' (Obsolete)' : '')"
                   tooltipPosition="top"
-                  class="w-8 h-8 mr-2 rounded opacity-60"
-                  [class]="(feedback.status | feedbackStatus).fadedColor"
+                  class="w-8 h-8 mr-2 rounded"
+                  [ngClass]="feedback.invalidated ? 'bg-gray-300 text-white' : ((feedback.status ?? 'PENDING_FEEDBACK') | feedbackStatus).color"
                 ></div>
               }
             }
@@ -164,7 +144,7 @@
               label="View Feedback"
               severity="contrast"
               outlined
-              [routerLink]="['/proposals/view', proposal.proposalId, 'version', version.moduleVersionId]"
+              [routerLink]="['/proposals', proposal.proposalId, 'version', version.moduleVersionId]"
               (click)="$event.stopPropagation()"
             />
           </div>

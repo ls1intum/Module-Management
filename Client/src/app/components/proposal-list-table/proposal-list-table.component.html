@@ -8,7 +8,7 @@
     </tr>
   </ng-template>
   <ng-template #body let-proposal>
-    <tr [pSelectableRow]="proposal" [routerLink]="['/proposals/view', proposal.proposalId]">
+    <tr [pSelectableRow]="proposal" [routerLink]="['/proposals', proposal.proposalId]">
       <td>{{ proposal.proposalId }}</td>
       <td>
         {{ proposal.latestTitle }}
@@ -17,7 +17,7 @@
         <p-tag [value]="(proposal.status! | statusDisplay).text" [severity]="(proposal.status! | statusDisplay).severity" />
       </td>
       <td>
-        <p-button severity="contrast" label="View" styleClass="p-button-outlined" [routerLink]="['/proposals/view', proposal.proposalId]" />
+        <p-button severity="contrast" label="View" styleClass="p-button-outlined" [routerLink]="['/proposals', proposal.proposalId]" />
       </td>
     </tr>
   </ng-template>

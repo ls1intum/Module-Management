@@ -1,0 +1,61 @@
+databaseChangeLog:
+  # Seed degree programs (responsible_user_id = admin user from 0006)
+  - changeSet:
+      id: 0010-seed-degree-programs
+      author: system
+      changes:
+        - insert:
+            tableName: degree_program
+            columns:
+              - column: { name: name, value: "B.Sc. Informatics" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program
+            columns:
+              - column: { name: name, value: "B.Sc. Informatics: Games Engineering" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program
+            columns:
+              - column: { name: name, value: "B.Sc. Information Systems" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program
+            columns:
+              - column: { name: name, value: "M.Sc. Informatics" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program
+            columns:
+              - column: { name: name, value: "M.Sc. Informatics: Games Engineering" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program
+            columns:
+              - column: { name: name, value: "M.Sc. Information Systems" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program
+            columns:
+              - column: { name: name, value: "M.Sc. Data Engineering and Analytics" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program
+            columns:
+              - column: { name: name, value: "B.Sc. and M.Sc. Information Engineering (Campus Heilbronn)" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program
+            columns:
+              - column: { name: name, value: "B.Sc. and M.Sc. Bioinformatics" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program
+            columns:
+              - column: { name: name, value: "M.Sc. Robotics, Cognition, Intelligence" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }
+        - insert:
+            tableName: degree_program
+            columns:
+              - column: { name: name, value: "M.Sc. Computational Science and Engineering" }
+              - column: { name: responsible_user_id, value: "f47ac10b-58cc-4372-a567-0e02b2c3d479" }

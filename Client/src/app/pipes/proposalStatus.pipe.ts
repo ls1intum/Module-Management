@@ -1,14 +1,20 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Proposal } from '../core/modules/openapi';
+import { ProposalViewDTO } from '../core/modules/openapi';
 import { Tag } from 'primeng/tag';
 @Pipe({ name: 'statusDisplay', standalone: true })
 export class StatusDisplayPipe implements PipeTransform {
-  transform(status: Proposal.StatusEnum): { text: string; severity: Tag['severity'] } {
+  transform(status: ProposalViewDTO.StatusEnum): { text: string; severity: Tag['severity'] } {
     switch (status) {
-      case 'PENDING_SUBMISSION':
-        return { text: 'Pending Submission', severity: 'secondary' };
-      case 'PENDING_FEEDBACK':
-        return { text: 'Pending Feedback', severity: 'warn' };
+      case 'PENDING_FIRST_SUBMISSION':
+        return { text: 'Pending first submission', severity: 'secondary' };
+      case 'PENDING_COORDINATOR_FEEDBACK':
+        return { text: 'Pending coordinator feedback', severity: 'warn' };
+      case 'COORDINATOR_FEEDBACK_GIVEN':
+        return { text: 'Coordinator feedback given', severity: 'info' };
+      case 'PENDING_FULL_SUBMISSION':
+        return { text: 'Pending full submission', severity: 'secondary' };
+      case 'PENDING_FULL_FEEDBACK':
+        return { text: 'Pending full feedback', severity: 'warn' };
       case 'ACCEPTED':
         return { text: 'Accepted', severity: 'success' };
       case 'REQUIRES_REVIEW':
@@ -16,27 +22,33 @@ export class StatusDisplayPipe implements PipeTransform {
       case 'REJECTED':
         return { text: 'Rejected', severity: 'danger' };
       default:
-        return { text: status, severity: 'secondary' };
+        return { text: status ?? '', severity: 'secondary' };
     }
   }
 }
 
 @Pipe({ name: 'statusInfo', standalone: true })
 export class StatusInfoPipeline implements PipeTransform {
-  transform(status: Proposal.StatusEnum): string {
+  transform(status: ProposalViewDTO.StatusEnum): string {
     switch (status) {
-      case 'PENDING_SUBMISSION':
-        return 'This module proposal is pending submission. Please fill all module information fields and submit the module proposal. After submission the necessary staff will be notified to review your proposal.';
-      case 'PENDING_FEEDBACK':
-        return 'This module proposal is submitted and waiting for review by the necessary staff. Please wait for their feedback. If you made a mistake you can cancel the submission. If a staff member already gave feedback, you will need to create a new module version for consistency. New module versions copy the content of the previously submitted module version.';
+      case 'PENDING_FIRST_SUBMISSION':
+        return 'This module proposal is pending submission. Please complete step 1 (basic information and degree program assignments) and submit for coordinator feedback.';
+      case 'PENDING_COORDINATOR_FEEDBACK':
+        return 'Submitted for coordinator feedback. Program and area coordinators are reviewing. You can cancel and resubmit if needed.';
+      case 'COORDINATOR_FEEDBACK_GIVEN':
+        return 'All coordinators have responded. None gave approval, but at least one gave feedback without approval; review their comments and update your module if needed.';
+      case 'PENDING_FULL_SUBMISSION':
+        return 'Coordinator feedback was accepted. Complete all steps and submit for full feedback (quality management, program advisor, examination board) when ready.';
+      case 'PENDING_FULL_FEEDBACK':
+        return 'This module proposal is submitted and waiting for review. You can cancel the submission if needed.';
       case 'ACCEPTED':
         return 'This module is approved.';
       case 'REQUIRES_REVIEW':
-        return 'This module proposal requires your review. It was either rejected by a staff member, or you canceled it after a staff member already gave feedback. Please create a new module version and update your proposal by the rejection feedback.';
+        return 'This module proposal requires your review. Create a new module version and update by the rejection feedback.';
       case 'REJECTED':
-        return 'This proposal was rejected. You cannot modify this module proposal anymore.';
+        return 'This proposal was rejected. Create a new module version to resubmit.';
       default:
-        return status;
+        return status ?? '';
     }
   }
 }

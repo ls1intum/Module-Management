@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -31,7 +32,8 @@ public class ModuleVersion {
     private LocalDateTime creationDate;
 
     @Column(name = "status")
-    @NotNull private ModuleVersionStatus status;
+    @NotNull
+    private ModuleVersionStatus status;
 
     @Column(name = "bullet_points", columnDefinition = "CLOB")
     private String bulletPoints;
@@ -39,6 +41,27 @@ public class ModuleVersion {
     // --------MODULE_FIELDS----------
     @Column(name = "title_eng")
     private String titleEng;
+
+    @Column(name = "title_de")
+    private String titleDe;
+
+    @Column(name = "hours_lecture")
+    private Integer hoursLecture;
+
+    @Column(name = "hours_exercise")
+    private Integer hoursExercise;
+
+    @Column(name = "hours_practical")
+    private Integer hoursPractical;
+
+    @Column(name = "hours_seminar")
+    private Integer hoursSeminar;
+
+    @Column(name = "first_semester_available")
+    private String firstSemesterAvailable;
+
+    @Column(name = "successor_module_name")
+    private String successorModuleName;
 
     @Column(name = "level_eng")
     private String levelEng;
@@ -117,6 +140,29 @@ public class ModuleVersion {
     @OneToMany(mappedBy = "moduleVersion", cascade = CascadeType.ALL)
     private List<Feedback> requiredFeedbacks;
 
+    @OneToMany(mappedBy = "moduleVersion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ModuleVersionDegreeProgramAssignment> degreeProgramAssignments = new ArrayList<>();
+
+    @JsonIgnore
+    public boolean isFirstStepComplete() {
+        if (StringUtils.isEmpty(titleEng) || StringUtils.isEmpty(titleDe))
+            return false;
+        if (credits == null)
+            return false;
+        if (StringUtils.isEmpty(frequencyEng))
+            return false;
+        if (hoursLecture == null || hoursExercise == null || hoursPractical == null || hoursSeminar == null)
+            return false;
+        if (StringUtils.isEmpty(firstSemesterAvailable) || StringUtils.isEmpty(successorModuleName))
+            return false;
+        if (languageEng == null)
+            return false;
+        if (degreeProgramAssignments == null || degreeProgramAssignments.isEmpty())
+            return false;
+        return degreeProgramAssignments.stream()
+                .allMatch(a -> a.getDegreeProgramSpecialization() != null && a.getDegreeProgram() != null);
+    }
+
     @JsonIgnore
     public boolean isCompleted() {
         return !StringUtils.isEmpty(titleEng)
@@ -140,7 +186,4 @@ public class ModuleVersion {
                 && !StringUtils.isEmpty(lvSwsLecturerEng);
     }
 
-    public boolean isFeedbackGiven() {
-        return this.getStatus() == ModuleVersionStatus.FEEDBACK_GIVEN;
-    }
 }

@@ -15,7 +15,7 @@ import { Feedback } from '../model/models';
 import { FeedbackDTO } from '../model/models';
 import { FeedbackListItemDto } from '../model/models';
 import { GiveFeedbackDTO } from '../model/models';
-import { ModuleVersionUpdateRequestDTO } from '../model/models';
+import { ModuleVersionViewDTO } from '../model/models';
 
 
 import { Configuration }                                     from '../configuration';
@@ -51,7 +51,7 @@ export interface FeedbackControllerServiceInterface {
      * 
      * @param feedbackId 
      */
-    getModuleVersionOfFeedback(feedbackId: number, extraHttpRequestParams?: any): Observable<ModuleVersionUpdateRequestDTO>;
+    getModuleVersionOfFeedback(feedbackId: number, extraHttpRequestParams?: any): Observable<ModuleVersionViewDTO>;
 
     /**
      * 

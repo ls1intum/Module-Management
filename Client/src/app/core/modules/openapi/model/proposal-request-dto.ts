@@ -7,15 +7,24 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ModuleDegreeProgramAssignmentDTO } from './module-degree-program-assignment-dto';
 
 
 export interface ProposalRequestDTO { 
     bulletPoints?: string;
     titleEng: string;
+    titleDe?: string;
     levelEng?: string;
     languageEng?: ProposalRequestDTO.LanguageEngEnum;
     frequencyEng?: string;
     credits?: number;
+    hoursLecture?: number;
+    hoursExercise?: number;
+    hoursPractical?: number;
+    hoursSeminar?: number;
+    firstSemesterAvailable?: string;
+    successorModuleName?: string;
+    degreeProgramAssignments?: Array<ModuleDegreeProgramAssignmentDTO>;
     duration?: string;
     hoursTotal?: number;
     hoursSelfStudy?: number;

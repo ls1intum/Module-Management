@@ -2,7 +2,7 @@ package modulemanagement.ls1.controllers;
 
 import modulemanagement.ls1.dtos.FeedbackDTO;
 import modulemanagement.ls1.dtos.FeedbackListItemDto;
-import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
+import modulemanagement.ls1.dtos.ModuleVersionViewDTO;
 import modulemanagement.ls1.dtos.GiveFeedbackDTO;
 import modulemanagement.ls1.models.Feedback;
 import modulemanagement.ls1.models.User;
@@ -31,21 +31,21 @@ public class FeedbackController {
     }
 
     @GetMapping("/for-authenticated-user")
-    @PreAuthorize("hasAnyRole('QUALITY_MANAGEMENT', 'ACADEMIC_PROGRAM_ADVISOR', 'EXAMINATION_BOARD')")
+    @PreAuthorize("hasAnyRole('QUALITY_MANAGEMENT', 'ACADEMIC_PROGRAM_ADVISOR', 'EXAMINATION_BOARD', 'PROGRAM_COORDINATOR', 'SPECIALIZATION_AREA_COORDINATOR')")
     public ResponseEntity<List<FeedbackListItemDto>> getFeedbacksForAuthenticatedUser(@CurrentUser User user) {
         List<FeedbackListItemDto> feedbacks = feedbackService.getAllFeedbacksForUser(user);
         return ResponseEntity.ok(feedbacks);
     }
 
     @GetMapping("/module-version-of-feedback/{feedbackId}")
-    @PreAuthorize("hasAnyRole('QUALITY_MANAGEMENT', 'ACADEMIC_PROGRAM_ADVISOR', 'EXAMINATION_BOARD')")
-    public ResponseEntity<ModuleVersionUpdateRequestDTO> getModuleVersionOfFeedback(@PathVariable Long feedbackId) {
-        ModuleVersionUpdateRequestDTO dto = feedbackService.getModuleVersionOfFeedback(feedbackId);
+    @PreAuthorize("hasAnyRole('QUALITY_MANAGEMENT', 'ACADEMIC_PROGRAM_ADVISOR', 'EXAMINATION_BOARD', 'PROGRAM_COORDINATOR', 'SPECIALIZATION_AREA_COORDINATOR')")
+    public ResponseEntity<ModuleVersionViewDTO> getModuleVersionOfFeedback(@CurrentUser User user, @PathVariable Long feedbackId) {
+        ModuleVersionViewDTO dto = feedbackService.getModuleVersionOfFeedback(feedbackId, user);
         return ResponseEntity.ok(dto);
     }
 
     @PutMapping("/{feedbackId}/accept")
-    @PreAuthorize("hasAnyRole('QUALITY_MANAGEMENT', 'ACADEMIC_PROGRAM_ADVISOR', 'EXAMINATION_BOARD')")
+    @PreAuthorize("hasAnyRole('QUALITY_MANAGEMENT', 'ACADEMIC_PROGRAM_ADVISOR', 'EXAMINATION_BOARD', 'PROGRAM_COORDINATOR', 'SPECIALIZATION_AREA_COORDINATOR')")
     public ResponseEntity<Feedback> approveFeedback(@CurrentUser User user, @PathVariable Long feedbackId) {
         Feedback updatedFeedback = feedbackService.Accept(feedbackId, user);
         moduleVersionService.updateStatus(updatedFeedback.getModuleVersion().getModuleVersionId());
@@ -53,7 +53,7 @@ public class FeedbackController {
     }
 
     @PutMapping("/{feedbackId}/give-feedback")
-    @PreAuthorize("hasAnyRole('QUALITY_MANAGEMENT', 'ACADEMIC_PROGRAM_ADVISOR', 'EXAMINATION_BOARD')")
+    @PreAuthorize("hasAnyRole('QUALITY_MANAGEMENT', 'ACADEMIC_PROGRAM_ADVISOR', 'EXAMINATION_BOARD', 'PROGRAM_COORDINATOR', 'SPECIALIZATION_AREA_COORDINATOR')")
     public ResponseEntity<Feedback> giveFeedback(@CurrentUser User user, @PathVariable Long feedbackId,
             @Valid @RequestBody FeedbackDTO givenFeedback) {
         Feedback updatedFeedback = feedbackService.GiveFeedback(feedbackId, user, givenFeedback);
@@ -62,7 +62,7 @@ public class FeedbackController {
     }
 
     @PutMapping("/{feedbackId}/reject")
-    @PreAuthorize("hasAnyRole('QUALITY_MANAGEMENT', 'ACADEMIC_PROGRAM_ADVISOR', 'EXAMINATION_BOARD')")
+    @PreAuthorize("hasAnyRole('QUALITY_MANAGEMENT', 'ACADEMIC_PROGRAM_ADVISOR', 'EXAMINATION_BOARD', 'PROGRAM_COORDINATOR', 'SPECIALIZATION_AREA_COORDINATOR')")
     public ResponseEntity<Feedback> rejectFeedback(@CurrentUser User user, @PathVariable Long feedbackId,
             @Valid @RequestBody GiveFeedbackDTO request) {
         Feedback updatedFeedback = feedbackService.RejectFeedback(feedbackId, user, request.getComment());
@@ -72,7 +72,7 @@ public class FeedbackController {
     }
 
     @GetMapping(value = "/{moduleVersionId}/export-pdf", produces = MediaType.APPLICATION_PDF_VALUE)
-    @PreAuthorize("hasAnyRole('QUALITY_MANAGEMENT', 'ACADEMIC_PROGRAM_ADVISOR', 'EXAMINATION_BOARD')")
+    @PreAuthorize("hasAnyRole('QUALITY_MANAGEMENT', 'ACADEMIC_PROGRAM_ADVISOR', 'EXAMINATION_BOARD', 'PROGRAM_COORDINATOR', 'SPECIALIZATION_AREA_COORDINATOR')")
     public ResponseEntity<Resource> exportModuleVersionPdf(@CurrentUser User user,
             @PathVariable Long moduleVersionId) {
 

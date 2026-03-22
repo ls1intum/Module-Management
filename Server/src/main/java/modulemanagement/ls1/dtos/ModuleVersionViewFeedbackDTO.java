@@ -10,15 +10,22 @@ import java.time.LocalDateTime;
 
 @Data
 public class ModuleVersionViewFeedbackDTO {
-    @NotNull private Long feedbackId;
+    @NotNull
+    private Long feedbackId;
     private String feedbackFromFirstName;
     private String feedbackFromLastName;
     private String rejectionComment;
     private UserRole feedbackRole;
+    private String requestedFromUserName;
+    private String requestedFromSpecializationName;
     private FeedbackStatus feedbackStatus;
+    private LocalDateTime createdAt;
     private LocalDateTime submissionDate;
+    private Long degreeProgramSpecializationId;
 
     private String titleFeedback;
+    private String titleDeFeedback;
+    private String bulletPointsFeedback;
     private String levelFeedback;
     private String languageFeedback;
     private String frequencyFeedback;
@@ -27,6 +34,12 @@ public class ModuleVersionViewFeedbackDTO {
     private String hoursTotalFeedback;
     private String hoursSelfStudyFeedback;
     private String hoursPresenceFeedback;
+    private String hoursLectureFeedback;
+    private String hoursExerciseFeedback;
+    private String hoursPracticalFeedback;
+    private String hoursSeminarFeedback;
+    private String firstSemesterAvailableFeedback;
+    private String successorModuleNameFeedback;
     private String examinationAchievementsFeedback;
     private String repetitionFeedback;
     private String recommendedPrerequisitesFeedback;
@@ -47,9 +60,23 @@ public class ModuleVersionViewFeedbackDTO {
         }
         dto.setRejectionComment(f.getComment());
         dto.setFeedbackRole(f.getRequiredRole());
+        if (f.getDegreeProgramSpecialization() != null) {
+            var spec = f.getDegreeProgramSpecialization();
+            dto.setRequestedFromSpecializationName(spec.getName());
+            if (spec.getResponsibleUser() != null) {
+                var resp = spec.getResponsibleUser();
+                dto.setRequestedFromUserName(resp.getFirstName() + " " + resp.getLastName());
+            }
+        }
         dto.setFeedbackStatus(f.getStatus());
+        dto.setCreatedAt(f.getCreatedAt());
         dto.setSubmissionDate(f.getSubmissionDate());
+        if (f.getDegreeProgramSpecialization() != null) {
+            dto.setDegreeProgramSpecializationId(f.getDegreeProgramSpecialization().getDegreeProgramSpecializationId());
+        }
         dto.setTitleFeedback(f.getTitleFeedback());
+        dto.setTitleDeFeedback(f.getTitleDeFeedback());
+        dto.setBulletPointsFeedback(f.getBulletPointsFeedback());
         dto.setLevelFeedback(f.getLevelFeedback());
         dto.setLanguageFeedback(f.getLanguageFeedback());
         dto.setFrequencyFeedback(f.getFrequencyFeedback());
@@ -58,6 +85,12 @@ public class ModuleVersionViewFeedbackDTO {
         dto.setHoursTotalFeedback(f.getHoursTotalFeedback());
         dto.setHoursSelfStudyFeedback(f.getHoursSelfStudyFeedback());
         dto.setHoursPresenceFeedback(f.getHoursPresenceFeedback());
+        dto.setHoursLectureFeedback(f.getHoursLectureFeedback());
+        dto.setHoursExerciseFeedback(f.getHoursExerciseFeedback());
+        dto.setHoursPracticalFeedback(f.getHoursPracticalFeedback());
+        dto.setHoursSeminarFeedback(f.getHoursSeminarFeedback());
+        dto.setFirstSemesterAvailableFeedback(f.getFirstSemesterAvailableFeedback());
+        dto.setSuccessorModuleNameFeedback(f.getSuccessorModuleNameFeedback());
         dto.setExaminationAchievementsFeedback(f.getExaminationAchievementsFeedback());
         dto.setRepetitionFeedback(f.getRepetitionFeedback());
         dto.setRecommendedPrerequisitesFeedback(f.getRecommendedPrerequisitesFeedback());

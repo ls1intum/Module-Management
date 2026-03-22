@@ -25,6 +25,12 @@ public class DegreeProgramsController {
         return ResponseEntity.ok(degreeProgramService.getAllDegreePrograms());
     }
 
+    @GetMapping("/with-specializations")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR')")
+    public ResponseEntity<List<DegreeProgramDTO>> getDegreeProgramsWithSpecializations() {
+        return ResponseEntity.ok(degreeProgramService.getAllDegreeProgramsWithSpecializations());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<DegreeProgramDTO> getDegreeProgram(@PathVariable Long id) {
         return ResponseEntity.ok(degreeProgramService.getDegreeProgram(id));
@@ -52,13 +58,15 @@ public class DegreeProgramsController {
     public ResponseEntity<DegreeProgramDTO> addSpecializationsToDegreeProgram(
             @PathVariable Long degreeProgramId,
             @Valid @RequestBody AddSpecializationsToDegreeProgramDTO dto) {
-        return ResponseEntity.ok(degreeProgramService.addSpecializationsToDegreeProgram(degreeProgramId, dto.getDegreeProgramSpecializationIds()));
+        return ResponseEntity.ok(degreeProgramService.addSpecializationsToDegreeProgram(degreeProgramId,
+                dto.getDegreeProgramSpecializationIds()));
     }
 
     @DeleteMapping("/{degreeProgramId}/degree-program-specializations/{degreeProgramSpecializationId}")
     public ResponseEntity<DegreeProgramDTO> removeSpecializationFromDegreeProgram(
             @PathVariable Long degreeProgramId,
             @PathVariable Long degreeProgramSpecializationId) {
-        return ResponseEntity.ok(degreeProgramService.removeSpecializationFromDegreeProgram(degreeProgramId, degreeProgramSpecializationId));
+        return ResponseEntity.ok(degreeProgramService.removeSpecializationFromDegreeProgram(degreeProgramId,
+                degreeProgramSpecializationId));
     }
 }

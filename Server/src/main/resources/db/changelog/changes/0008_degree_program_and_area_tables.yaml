@@ -21,7 +21,7 @@ databaseChangeLog:
                   name: responsible_user_id
                   type: UUID
                   constraints:
-                    nullable: false
+                    nullable: true
         - addForeignKeyConstraint:
             baseTableName: degree_program
             baseColumnNames: responsible_user_id
@@ -46,7 +46,7 @@ databaseChangeLog:
                   name: responsible_user_id
                   type: UUID
                   constraints:
-                    nullable: false
+                    nullable: true
         - addForeignKeyConstraint:
             baseTableName: degree_program_specialization
             baseColumnNames: responsible_user_id

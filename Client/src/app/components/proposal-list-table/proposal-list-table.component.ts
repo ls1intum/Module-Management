@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
-import { Proposal, ProposalControllerService, ProposalsCompactDTO } from '../../core/modules/openapi';
+import { ProposalControllerService, ProposalsCompactDTO } from '../../core/modules/openapi';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterModule } from '@angular/router';
 
@@ -25,7 +25,7 @@ export class ProposalListTableComponent {
   loading = signal(true);
   error = signal<string | null>(null);
   proposals = signal<ProposalsCompactDTO[]>([]);
-  proposalEnum = Proposal.StatusEnum;
+  proposalEnum = ProposalsCompactDTO.StatusEnum;
   user = this.securityStore.user;
 
   constructor() {

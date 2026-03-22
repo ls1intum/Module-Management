@@ -12,6 +12,10 @@
 export interface FeedbackDTO { 
     titleFeedback?: string;
     titleAccepted?: boolean;
+    titleDeFeedback?: string;
+    titleDeAccepted?: boolean;
+    bulletPointsFeedback?: string;
+    bulletPointsAccepted?: boolean;
     levelFeedback?: string;
     levelAccepted?: boolean;
     languageFeedback?: string;
@@ -28,6 +32,18 @@ export interface FeedbackDTO {
     hoursSelfStudyAccepted?: boolean;
     hoursPresenceFeedback?: string;
     hoursPresenceAccepted?: boolean;
+    hoursLectureFeedback?: string;
+    hoursLectureAccepted?: boolean;
+    hoursExerciseFeedback?: string;
+    hoursExerciseAccepted?: boolean;
+    hoursPracticalFeedback?: string;
+    hoursPracticalAccepted?: boolean;
+    hoursSeminarFeedback?: string;
+    hoursSeminarAccepted?: boolean;
+    firstSemesterAvailableFeedback?: string;
+    firstSemesterAvailableAccepted?: boolean;
+    successorModuleNameFeedback?: string;
+    successorModuleNameAccepted?: boolean;
     examinationAchievementsFeedback?: string;
     examinationAchievementsAccepted?: boolean;
     repetitionFeedback?: string;

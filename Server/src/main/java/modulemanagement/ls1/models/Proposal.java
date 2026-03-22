@@ -2,17 +2,12 @@ package modulemanagement.ls1.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
-import modulemanagement.ls1.dtos.ModuleVersionViewFeedbackDTO;
-import modulemanagement.ls1.enums.ModuleVersionStatus;
 import modulemanagement.ls1.enums.ProposalStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import modulemanagement.ls1.services.ProposalService;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -34,15 +29,11 @@ public class Proposal {
     private LocalDateTime creationDate;
 
     @Column(name = "status")
-    @NotNull private ProposalStatus status;
+    @NotNull
+    private ProposalStatus status;
 
     @OneToMany(mappedBy = "proposal", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ModuleVersion> moduleVersions = new ArrayList<>();
-
-    @JsonIgnore
-    public void addModuleVersion(ModuleVersion moduleVersion) {
-        moduleVersions.add(moduleVersion);
-    }
 
     @JsonIgnore
     public ModuleVersion getLatestModuleVersionWithContent() {
@@ -54,7 +45,6 @@ public class Proposal {
         return getLatestModuleVersionWithContent().getVersion();
     }
 
-
     @JsonIgnore
     public void addNewModuleVersion() {
         ModuleVersion latestMv = getLatestModuleVersionWithContent();
@@ -62,9 +52,16 @@ public class Proposal {
         newMv.setProposal(this);
         newMv.setVersion(latestMv.getVersion() + 1);
         newMv.setCreationDate(LocalDateTime.now());
-        newMv.setStatus(ModuleVersionStatus.PENDING_SUBMISSION);
+        newMv.setStatus(latestMv.getStatus());
         newMv.setBulletPoints(latestMv.getBulletPoints());
         newMv.setTitleEng(latestMv.getTitleEng());
+        newMv.setTitleDe(latestMv.getTitleDe());
+        newMv.setHoursLecture(latestMv.getHoursLecture());
+        newMv.setHoursExercise(latestMv.getHoursExercise());
+        newMv.setHoursPractical(latestMv.getHoursPractical());
+        newMv.setHoursSeminar(latestMv.getHoursSeminar());
+        newMv.setFirstSemesterAvailable(latestMv.getFirstSemesterAvailable());
+        newMv.setSuccessorModuleName(latestMv.getSuccessorModuleName());
         newMv.setLevelEng(latestMv.getLevelEng());
         newMv.setLanguageEng(latestMv.getLanguageEng());
         newMv.setFrequencyEng(latestMv.getFrequencyEng());
@@ -84,28 +81,17 @@ public class Proposal {
         newMv.setResponsiblesEng(latestMv.getResponsiblesEng());
         newMv.setLvSwsLecturerEng(latestMv.getLvSwsLecturerEng());
 
-        List<Feedback> requiredFeedbacks = new ArrayList<>();
-        ProposalService.createNewFeedbacks(newMv, requiredFeedbacks);
-        newMv.setRequiredFeedbacks(requiredFeedbacks);
-        addModuleVersion(newMv);
-        this.setStatus(ProposalStatus.PENDING_SUBMISSION);
-    }
-
-    public List<ModuleVersionViewFeedbackDTO> getPreviousModuleVersionFeedback() {
-        List<ModuleVersion> mvs = this.getModuleVersions();
-        Collections.reverse(mvs);
-        for (ModuleVersion mv : mvs) {
-            if (mv.isFeedbackGiven()) {
-                List<ModuleVersionViewFeedbackDTO> previousFeedbacks = new ArrayList<>();
-                List<Feedback> feedbacks = mv.getRequiredFeedbacks();
-                for (Feedback feedback : feedbacks) {
-                    if (feedback.isFeedbackGiven()) {
-                        previousFeedbacks.add(ModuleVersionViewFeedbackDTO.from(feedback));
-                    }
-                }
-                return previousFeedbacks;
+        if (latestMv.getDegreeProgramAssignments() != null) {
+            for (var a : latestMv.getDegreeProgramAssignments()) {
+                ModuleVersionDegreeProgramAssignment newAssig = new ModuleVersionDegreeProgramAssignment();
+                newAssig.setModuleVersion(newMv);
+                newAssig.setDegreeProgram(a.getDegreeProgram());
+                newAssig.setDegreeProgramSpecialization(a.getDegreeProgramSpecialization());
+                newMv.getDegreeProgramAssignments().add(newAssig);
             }
         }
-        return Collections.emptyList();
+        newMv.setRequiredFeedbacks(new ArrayList<>());
+        moduleVersions.add(newMv);
     }
+
 }

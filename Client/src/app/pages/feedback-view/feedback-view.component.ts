@@ -1,23 +1,47 @@
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-
 import { Component, inject, signal } from '@angular/core';
-import { FeedbackControllerService, ModuleVersionUpdateRequestDTO, FeedbackDTO, GiveFeedbackDTO, ModuleVersionControllerService } from '../../core/modules/openapi';
+import {
+  FeedbackControllerService,
+  ModuleVersionViewDTO,
+  FeedbackDTO,
+  GiveFeedbackDTO,
+  ModuleVersionControllerService,
+  ModuleVersionViewFeedbackDTO
+} from '../../core/modules/openapi';
 import { BreadcrumbLabelsService } from '../../components/breadcrumb/breadcrumb-labels.service';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DatePipe } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { TagModule } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TooltipModule } from 'primeng/tooltip';
 import { MessageModule } from 'primeng/message';
+import { FeedbackAuthorDisplayPipe } from '../../pipes/feedbackAuthorDisplay.pipe';
+import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
 
 @Component({
   selector: 'app-feedback-view',
   standalone: true,
-  imports: [FormsModule, RouterModule, ButtonModule, TextareaModule, DialogModule, ToastModule, ProgressSpinnerModule, TooltipModule, MessageModule],
+  imports: [
+    FormsModule,
+    RouterModule,
+    ButtonModule,
+    TagModule,
+    TextareaModule,
+    DialogModule,
+    ToastModule,
+    ProgressSpinnerModule,
+    TooltipModule,
+    MessageModule,
+    FeedbackAuthorDisplayPipe,
+    FeedbackStatusPipe,
+    DatePipe
+  ],
   templateUrl: './feedback-view.component.html'
 })
 export class FeedbackViewComponent {
@@ -28,7 +52,8 @@ export class FeedbackViewComponent {
   private breadcrumbLabels = inject(BreadcrumbLabelsService);
   feedbackForm: FormGroup;
   feedbackId: number | null = null;
-  moduleVersion = signal<ModuleVersionUpdateRequestDTO | null>(null);
+  moduleVersion = signal<ModuleVersionViewDTO | null>(null);
+  currentFeedback = signal<ModuleVersionViewFeedbackDTO | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
   rejectionReason: string = '';
@@ -39,7 +64,7 @@ export class FeedbackViewComponent {
   fieldStates: Record<string, { accepted: boolean | null }> = {};
   fieldFeedback: Record<string, string> = {};
 
-  getModuleVersionProperty(key: keyof ModuleVersionUpdateRequestDTO): string | undefined {
+  getModuleVersionProperty(key: keyof ModuleVersionViewDTO): string | undefined {
     const mv = this.moduleVersion();
     return mv ? mv[key]?.toString() : undefined;
   }
@@ -48,10 +73,18 @@ export class FeedbackViewComponent {
 
   moduleFields = [
     { key: 'titleEng', label: 'Title' },
+    { key: 'titleDe', label: 'Title (German)' },
+    { key: 'bulletPoints', label: 'Key Points' },
     { key: 'levelEng', label: 'Level' },
     { key: 'languageEng', label: 'Language' },
     { key: 'frequencyEng', label: 'Frequency' },
     { key: 'credits', label: 'Credits' },
+    { key: 'hoursLecture', label: 'Hours (Lecture)' },
+    { key: 'hoursExercise', label: 'Hours (Exercise)' },
+    { key: 'hoursPractical', label: 'Hours (Practical)' },
+    { key: 'hoursSeminar', label: 'Hours (Seminar)' },
+    { key: 'firstSemesterAvailable', label: 'First Semester Available' },
+    { key: 'successorModuleName', label: 'Successor Module Name' },
     { key: 'duration', label: 'Duration' },
     { key: 'hoursTotal', label: 'Total Hours' },
     { key: 'hoursSelfStudy', label: 'Self-Study Hours' },
@@ -76,6 +109,10 @@ export class FeedbackViewComponent {
     this.feedbackForm = formBulider.group({
       titleAccepted: [null],
       titleFeedback: [''],
+      titleDeAccepted: [null],
+      titleDeFeedback: [''],
+      bulletPointsAccepted: [null],
+      bulletPointsFeedback: [''],
       levelAccepted: [null],
       levelFeedback: [''],
       languageAccepted: [null],
@@ -92,6 +129,18 @@ export class FeedbackViewComponent {
       hoursSelfStudyFeedback: [''],
       hoursPresenceAccepted: [null],
       hoursPresenceFeedback: [''],
+      hoursLectureAccepted: [null],
+      hoursLectureFeedback: [''],
+      hoursExerciseAccepted: [null],
+      hoursExerciseFeedback: [''],
+      hoursPracticalAccepted: [null],
+      hoursPracticalFeedback: [''],
+      hoursSeminarAccepted: [null],
+      hoursSeminarFeedback: [''],
+      firstSemesterAvailableAccepted: [null],
+      firstSemesterAvailableFeedback: [''],
+      successorModuleNameAccepted: [null],
+      successorModuleNameFeedback: [''],
       examinationAchievementsAccepted: [null],
       examinationAchievementsFeedback: [''],
       repetitionAccepted: [null],
@@ -123,8 +172,10 @@ export class FeedbackViewComponent {
     this.loading.set(true);
     if (feedbackId) {
       this.feedbackService.getModuleVersionOfFeedback(feedbackId).subscribe({
-        next: (response: ModuleVersionUpdateRequestDTO) => {
+        next: (response: ModuleVersionViewDTO) => {
           this.moduleVersion.set(response);
+          const found = response.feedbacks?.find((f) => f.feedbackId === feedbackId) ?? null;
+          this.currentFeedback.set(found);
           this.breadcrumbLabels.feedbackLabel.set(response?.titleEng ?? null);
         },
         error: (err: HttpErrorResponse) => this.error.set(err.error),

@@ -1,0 +1,33 @@
+databaseChangeLog:
+  # Grant PROGRAM_COORDINATOR to users responsible for a degree program
+  - changeSet:
+      id: 0013a_grant_program_coordinator_role
+      author: module-management
+      changes:
+        - sql:
+            dbms: postgresql
+            sql: |
+              INSERT INTO app_user_role (user_id, role)
+              SELECT DISTINCT responsible_user_id, 'PROGRAM_COORDINATOR'
+              FROM degree_program
+              WHERE responsible_user_id IS NOT NULL
+              AND NOT EXISTS (
+                SELECT 1 FROM app_user_role r
+                WHERE r.user_id = degree_program.responsible_user_id AND r.role = 'PROGRAM_COORDINATOR'
+              )
+  # Grant SPECIALIZATION_AREA_COORDINATOR to users responsible for a specialization
+  - changeSet:
+      id: 0013b_grant_specialization_area_coordinator_role
+      author: module-management
+      changes:
+        - sql:
+            dbms: postgresql
+            sql: |
+              INSERT INTO app_user_role (user_id, role)
+              SELECT DISTINCT responsible_user_id, 'SPECIALIZATION_AREA_COORDINATOR'
+              FROM degree_program_specialization
+              WHERE responsible_user_id IS NOT NULL
+              AND NOT EXISTS (
+                SELECT 1 FROM app_user_role r
+                WHERE r.user_id = degree_program_specialization.responsible_user_id AND r.role = 'SPECIALIZATION_AREA_COORDINATOR'
+              )

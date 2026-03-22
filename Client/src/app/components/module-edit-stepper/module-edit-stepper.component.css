@@ -1,0 +1,35 @@
+.stepper-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--p-content-border-color, #dee2e6);
+  border-radius: var(--p-border-radius, 6px);
+  background: var(--p-content-background, #fff);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.step-item:hover {
+  background: var(--p-content-hover-background, #f8f9fa);
+}
+
+.step-item--active {
+  border-color: var(--p-primary-color, #60a5fa);
+  background: var(--p-content-hover-background, #f8f9fa);
+}
+
+
+.step-title {
+  flex: 1;
+  font-size: 1rem;
+}
+

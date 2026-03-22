@@ -1,18 +1,15 @@
 package modulemanagement.ls1.controllers;
 
 import modulemanagement.ls1.dtos.*;
-import modulemanagement.ls1.models.Proposal;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.services.ProposalService;
 import modulemanagement.ls1.shared.CurrentUser;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -30,34 +27,27 @@ public class ProposalController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('PROFESSOR')")
-    public ResponseEntity<Proposal> createProposal(@CurrentUser User user,
+    public ResponseEntity<ProposalViewDTO> createProposal(@CurrentUser User user,
             @Valid @RequestBody ProposalRequestDTO request) {
         log.info("createProposal invoked");
-        Proposal proposal = proposalService.createProposalFromRequest(user, request);
-        return ResponseEntity.ok(proposal);
+        ProposalViewDTO proposalView = proposalService.createProposalFromRequest(user, request);
+        return ResponseEntity.ok(proposalView);
     }
 
-    @PostMapping(value = "/submit/{proposalId}")
+    @PostMapping(value = "/request-coordinators-feedback/{proposalId}")
     @PreAuthorize("hasAnyRole('PROFESSOR')")
-    public ResponseEntity<ProposalViewDTO> submitProposal(@CurrentUser User user,
+    public ResponseEntity<ProposalViewDTO> requestCoordinatorsFeedback(@CurrentUser User user,
             @PathVariable Long proposalId) {
-        var proposalDto = proposalService.submitProposal(proposalId, user.getUserId());
+        var proposalDto = proposalService.requestCoordinatorsFeedback(proposalId, user.getUserId());
         return ResponseEntity.ok(proposalDto);
     }
 
-    @PostMapping(value = "/cancel-submission/{proposalId}")
-    public ResponseEntity<ProposalViewDTO> cancelSubmission(@CurrentUser User user,
-            @PathVariable Long proposalId) {
-        var proposalDto = proposalService.cancelSubmission(proposalId, user.getUserId());
-        return ResponseEntity.ok(proposalDto);
-    }
-
-    @PostMapping("/add-module-version")
+    @PostMapping(value = "/request-full-feedback/{proposalId}")
     @PreAuthorize("hasAnyRole('PROFESSOR')")
-    public ResponseEntity<ProposalViewDTO> addModuleVersion(@CurrentUser User user,
-            @Valid @RequestBody AddModuleVersionDTO request) {
-        ProposalViewDTO proposal = proposalService.addModuleVersion(user.getUserId(), request);
-        return ResponseEntity.ok(proposal);
+    public ResponseEntity<ProposalViewDTO> requestFullFeedback(@CurrentUser User user,
+            @PathVariable Long proposalId) {
+        var proposalDto = proposalService.requestFullFeedback(proposalId, user.getUserId());
+        return ResponseEntity.ok(proposalDto);
     }
 
     @GetMapping("/{id}/view")
@@ -74,14 +64,10 @@ public class ProposalController {
         return ResponseEntity.ok(proposals);
     }
 
-    @DeleteMapping(value = "/{proposalId}", produces = MediaType.TEXT_PLAIN_VALUE)
+    @DeleteMapping(value = "/{proposalId}")
     @PreAuthorize("hasAnyRole('PROFESSOR')")
     public ResponseEntity<String> deleteProposal(@CurrentUser User user, @PathVariable Long proposalId) {
-        try {
-            proposalService.deleteProposalById(proposalId, user.getUserId());
-            return ResponseEntity.ok("Proposal deleted successfully.");
-        } catch (ResponseStatusException e) {
-            return ResponseEntity.badRequest().body(e.getReason());
-        }
+        proposalService.deleteProposalById(proposalId, user.getUserId());
+        return ResponseEntity.ok("Proposal deleted successfully.");
     }
 }

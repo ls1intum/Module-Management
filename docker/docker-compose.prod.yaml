@@ -51,12 +51,23 @@ services:
       - module-management-network
     restart: unless-stopped
 
+  # SMTP sink + web UI for captured mail (SMTP on Docker network only; UI on localhost).
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: module-management-mailpit
+    ports:
+      - "127.0.0.1:8025:8025"
+    networks:
+      - module-management-network
+    restart: unless-stopped
+
   server:
     image: ghcr.io/ls1intum/module-management/server:${IMAGE_TAG}
     container_name: module-management-server
     depends_on:
       - postgres
       - text-embeddings-inference
+      - mailpit
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/ModuleManagement
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
@@ -70,6 +81,17 @@ services:
       - EMBEDDING_MODEL_NAME=onnx-community/embeddinggemma-300M-ONNX
       - CHAT_MODEL_SOURCE=AzureOpenAiChatModel
       - EMBEDDING_MODEL_SOURCE=OpenAiEmbeddingModel
+      # Default: Mailpit. Override POSTFIX_* in .env for a real SMTP relay.
+      - POSTFIX_HOST=${POSTFIX_HOST:-mailpit}
+      - POSTFIX_PORT=${POSTFIX_PORT:-1025}
+      - POSTFIX_USERNAME=${POSTFIX_USERNAME:-}
+      - POSTFIX_PASSWORD=${POSTFIX_PASSWORD:-}
+      - MAIL_STARTTLS_ENABLE=${MAIL_STARTTLS_ENABLE:-false}
+      - MAIL_STARTTLS_REQUIRED=${MAIL_STARTTLS_REQUIRED:-false}
+      - MAIL_ENABLED=${MAIL_ENABLED:-true}
+      # Public app URL for links in emails (no trailing slash). Override MAIL_SENDER in .env for a real From address.
+      - MAIL_SENDER=${MAIL_SENDER:-noreply@localhost}
+      - CLIENT_HOST=${CLIENT_HOST:-https://module.aet.cit.tum.de}
     volumes:
       - embeddings_cache:/app/data/cache
     networks:

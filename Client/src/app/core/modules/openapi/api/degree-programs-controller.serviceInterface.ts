@@ -63,6 +63,12 @@ export interface DegreeProgramsControllerServiceInterface {
     /**
      * 
      * 
+     */
+    getDegreeProgramsWithSpecializations(extraHttpRequestParams?: any): Observable<Array<DegreeProgramDTO>>;
+
+    /**
+     * 
+     * 
      * @param degreeProgramId 
      * @param degreeProgramSpecializationId 
      */

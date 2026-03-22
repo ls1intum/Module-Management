@@ -7,6 +7,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ModuleDegreeProgramAssignmentDTO } from './module-degree-program-assignment-dto';
 
 
 export interface ModuleVersionUpdateRequestDTO { 
@@ -17,10 +18,18 @@ export interface ModuleVersionUpdateRequestDTO {
     isComplete?: boolean;
     bulletPoints?: string;
     titleEng?: string;
+    titleDe?: string;
     levelEng?: string;
     languageEng?: ModuleVersionUpdateRequestDTO.LanguageEngEnum;
     frequencyEng?: string;
     credits?: number;
+    hoursLecture?: number;
+    hoursExercise?: number;
+    hoursPractical?: number;
+    hoursSeminar?: number;
+    firstSemesterAvailable?: string;
+    successorModuleName?: string;
+    degreeProgramAssignments?: Array<ModuleDegreeProgramAssignmentDTO>;
     duration?: string;
     hoursTotal?: number;
     hoursSelfStudy?: number;
@@ -41,14 +50,16 @@ export interface ModuleVersionUpdateRequestDTO {
     lvSwsLecturerEng?: string;
 }
 export namespace ModuleVersionUpdateRequestDTO {
-    export type StatusEnum = 'PENDING_SUBMISSION' | 'PENDING_FEEDBACK' | 'ACCEPTED' | 'FEEDBACK_GIVEN' | 'REJECTED' | 'OBSOLETE' | 'CANCELLED';
+    export type StatusEnum = 'PENDING_FIRST_SUBMISSION' | 'PENDING_COORDINATOR_FEEDBACK' | 'COORDINATOR_FEEDBACK_GIVEN' | 'PENDING_FULL_SUBMISSION' | 'PENDING_FULL_FEEDBACK' | 'ACCEPTED' | 'REQUIRES_REVIEW' | 'REJECTED' | 'CANCELLED';
     export const StatusEnum = {
-        PendingSubmission: 'PENDING_SUBMISSION' as StatusEnum,
-        PendingFeedback: 'PENDING_FEEDBACK' as StatusEnum,
+        PendingFirstSubmission: 'PENDING_FIRST_SUBMISSION' as StatusEnum,
+        PendingCoordinatorFeedback: 'PENDING_COORDINATOR_FEEDBACK' as StatusEnum,
+        CoordinatorFeedbackGiven: 'COORDINATOR_FEEDBACK_GIVEN' as StatusEnum,
+        PendingFullSubmission: 'PENDING_FULL_SUBMISSION' as StatusEnum,
+        PendingFullFeedback: 'PENDING_FULL_FEEDBACK' as StatusEnum,
         Accepted: 'ACCEPTED' as StatusEnum,
-        FeedbackGiven: 'FEEDBACK_GIVEN' as StatusEnum,
+        RequiresReview: 'REQUIRES_REVIEW' as StatusEnum,
         Rejected: 'REJECTED' as StatusEnum,
-        Obsolete: 'OBSOLETE' as StatusEnum,
         Cancelled: 'CANCELLED' as StatusEnum
     };
     export type LanguageEngEnum = 'English' | 'German';

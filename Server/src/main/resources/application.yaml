@@ -24,6 +24,19 @@ spring:
         jwt:
           jwk-set-uri: ${KEYCLOAK_URL:http://localhost:${KEYCLOAK_PORT:8081}}/realms/${KEYCLOAK_REALM:module-management}/protocol/openid-connect/certs
           issuer-uri: ${KEYCLOAK_URL:http://localhost:${KEYCLOAK_PORT:8081}}/realms/${KEYCLOAK_REALM:module-management}
+  mail:
+    host: ${POSTFIX_HOST:localhost}
+    port: ${POSTFIX_PORT:25}
+    username: ${POSTFIX_USERNAME:}
+    password: ${POSTFIX_PASSWORD:}
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          starttls:
+            enable: ${MAIL_STARTTLS_ENABLE:false}
+            required: ${MAIL_STARTTLS_REQUIRED:false}
   ai:
     openai:
       api-key: ${OPENAI_API_KEY:not-needed}
@@ -49,6 +62,9 @@ overlap-detection:
   module-info-dir: classpath:data/module-info/modules.json
   cache-dir: data/cache
 
+app:
+  client-host: ${CLIENT_HOST}
+
 logging:
   level:
     org.springframework.security: DEBUG
@@ -60,6 +76,9 @@ module-management:
     url: http://localhost:${AUTH_PORT}/auth
     realm: ${KEYCLOAK_REALM}
     client-id: ${KEYCLOAK_CLIENT_ID}
+  mail:
+    enabled: ${MAIL_ENABLED}
+    sender: ${MAIL_SENDER}
 
 springdoc:
   api-docs:

@@ -22,7 +22,7 @@ public class DegreeProgramSpecialization {
     private String name;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "responsible_user_id", nullable = false)
+    @JoinColumn(name = "responsible_user_id")
     private User responsibleUser;
 
     @ManyToMany(mappedBy = "degreeProgramSpecializations", fetch = FetchType.LAZY)

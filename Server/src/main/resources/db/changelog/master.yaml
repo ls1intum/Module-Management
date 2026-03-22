@@ -23,3 +23,21 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: changes/0008_degree_program_and_area_tables.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: changes/0009_module_version_initial_and_assignments.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: initialize/0010_seed_degree_programs.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: initialize/0011_seed_degree_program_specializations.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: changes/0012_feedback_requested_from_user.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: changes/0013_grant_program_area_responsible_role.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: changes/0014_feedback_additional_fields.yaml

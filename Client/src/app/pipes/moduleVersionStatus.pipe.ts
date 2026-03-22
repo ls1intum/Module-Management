@@ -14,16 +14,37 @@ export class ModuleVersionStatusPipe implements PipeTransform {
     severity: Tag['severity'];
   } {
     switch (status) {
-      case ModuleVersionCompactDTO.StatusEnum.PendingSubmission:
+      case ModuleVersionCompactDTO.StatusEnum.PendingFirstSubmission:
         return {
-          text: 'Pending Submission',
+          text: 'Pending first submission',
           normalColor: 'bg-gray-500',
           fadedColor: 'bg-gray-300',
           severity: 'secondary'
         };
-      case ModuleVersionCompactDTO.StatusEnum.PendingFeedback:
+      case ModuleVersionCompactDTO.StatusEnum.PendingCoordinatorFeedback:
         return {
-          text: 'Pending Feedback',
+          text: 'Pending coordinator feedback',
+          normalColor: 'bg-yellow-500',
+          fadedColor: 'bg-yellow-300',
+          severity: 'warn'
+        };
+      case ModuleVersionCompactDTO.StatusEnum.CoordinatorFeedbackGiven:
+        return {
+          text: 'Coordinator feedback given',
+          normalColor: 'bg-blue-500',
+          fadedColor: 'bg-blue-300',
+          severity: 'info'
+        };
+      case ModuleVersionCompactDTO.StatusEnum.PendingFullSubmission:
+        return {
+          text: 'Pending full submission',
+          normalColor: 'bg-gray-500',
+          fadedColor: 'bg-gray-300',
+          severity: 'secondary'
+        };
+      case ModuleVersionCompactDTO.StatusEnum.PendingFullFeedback:
+        return {
+          text: 'Pending full feedback',
           normalColor: 'bg-yellow-500',
           fadedColor: 'bg-yellow-300',
           severity: 'warn'
@@ -35,11 +56,11 @@ export class ModuleVersionStatusPipe implements PipeTransform {
           fadedColor: 'bg-green-300',
           severity: 'success'
         };
-      case ModuleVersionCompactDTO.StatusEnum.FeedbackGiven:
+      case ModuleVersionCompactDTO.StatusEnum.RequiresReview:
         return {
-          text: 'Feedback given',
-          normalColor: 'bg-blue-500',
-          fadedColor: 'bg-blue-300',
+          text: 'Requires review',
+          normalColor: 'bg-sky-500',
+          fadedColor: 'bg-sky-300',
           severity: 'info'
         };
       case ModuleVersionCompactDTO.StatusEnum.Rejected:

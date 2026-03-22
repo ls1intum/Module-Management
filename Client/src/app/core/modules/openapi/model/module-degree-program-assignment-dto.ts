@@ -9,7 +9,10 @@
  */
 
 
-export interface AddModuleVersionDTO { 
-    proposalId: number;
+export interface ModuleDegreeProgramAssignmentDTO { 
+    degreeProgramId: number;
+    degreeProgramSpecializationId: number;
+    degreeProgramName?: string;
+    degreeProgramSpecializationName?: string;
 }
 

@@ -1,7 +1,6 @@
 package modulemanagement.ls1.controllers;
 
 import modulemanagement.ls1.dtos.ModuleVersionUpdateRequestDTO;
-import modulemanagement.ls1.dtos.ModuleVersionUpdateResponseDTO;
 import modulemanagement.ls1.dtos.ModuleVersionViewDTO;
 import modulemanagement.ls1.dtos.CompletionServiceResponseDTO;
 import modulemanagement.ls1.dtos.CompletionServiceRequestDTO;
@@ -40,39 +39,30 @@ public class ModuleVersionController {
         this.llmGenerationService = llmGenerationService;
     }
 
-    @GetMapping("/{moduleVersionId}")
-    @PreAuthorize("hasAnyRole('PROFESSOR')")
-    public ResponseEntity<ModuleVersionUpdateResponseDTO> getModuleVersionUpdateDtoFromId(
-            @CurrentUser User user, @PathVariable Long moduleVersionId) {
-        ModuleVersionUpdateResponseDTO dto = moduleVersionService.getModuleVersionUpdateDtoFromId(moduleVersionId,
-                user.getUserId());
-        return ResponseEntity.ok(dto);
-    }
-
     @PutMapping("/{moduleVersionId}")
     @PreAuthorize("hasAnyRole('PROFESSOR')")
-    public ResponseEntity<ModuleVersionUpdateResponseDTO> updateModuleVersion(@CurrentUser User user,
+    public ResponseEntity<ModuleVersionViewDTO> updateModuleVersion(@CurrentUser User user,
             @PathVariable Long moduleVersionId, @Valid @RequestBody ModuleVersionUpdateRequestDTO moduleVersion) {
-        ModuleVersionUpdateResponseDTO updatedModuleVersion = moduleVersionService
+        ModuleVersionViewDTO updatedModuleVersion = moduleVersionService
                 .updateModuleVersionFromRequest(user.getUserId(), moduleVersionId, moduleVersion);
         return ResponseEntity.ok(updatedModuleVersion);
     }
 
-    @GetMapping("/view/{moduleVersionId}")
+    @GetMapping("/{moduleVersionId}")
     @PreAuthorize("hasAnyRole('PROFESSOR')")
-    public ResponseEntity<ModuleVersionViewDTO> getModuleVersionViewDto(@CurrentUser User user,
+    public ResponseEntity<ModuleVersionViewDTO> getModuleVersion(@CurrentUser User user,
             @PathVariable Long moduleVersionId) {
-        ModuleVersionViewDTO dto = moduleVersionService.getModuleVersionViewDto(moduleVersionId, user.getUserId());
+        ModuleVersionViewDTO dto = moduleVersionService.getModuleVersion(moduleVersionId, user.getUserId());
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("/{id}/previous-module-version-feedback")
+    @GetMapping("/{id}/previous-module-versions-feedback")
     @PreAuthorize("hasAnyRole('PROFESSOR')")
     public ResponseEntity<List<ModuleVersionViewFeedbackDTO>> getPreviousModuleVersionFeedback(
             @CurrentUser User user, @PathVariable Long id) {
-        List<ModuleVersionViewFeedbackDTO> lastRejectionReasons = moduleVersionService
+        List<ModuleVersionViewFeedbackDTO> previousFeedbacks = moduleVersionService
                 .getPreviousModuleVersionFeedback(user.getUserId(), id);
-        return ResponseEntity.ok(lastRejectionReasons);
+        return ResponseEntity.ok(previousFeedbacks);
     }
 
     @PostMapping("/generate/content")

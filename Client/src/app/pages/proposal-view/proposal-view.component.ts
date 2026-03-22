@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { AddModuleVersionDTO, ModuleVersion, Proposal, ProposalControllerService, ProposalViewDTO } from '../../core/modules/openapi';
+import { ModuleVersionCompactDTO, ProposalControllerService, ProposalViewDTO } from '../../core/modules/openapi';
 import { BreadcrumbLabelsService } from '../../components/breadcrumb/breadcrumb-labels.service';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -7,7 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { StatusInfoPipeline, StatusDisplayPipe } from '../../pipes/proposalStatus.pipe';
 import { ModuleVersionStatusPipe } from '../../pipes/moduleVersionStatus.pipe';
 import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
-import { FeedbackDepartmentPipe } from '../../pipes/feedbackDepartment.pipe';
+import { FeedbackAuthorDisplayPipe } from '../../pipes/feedbackAuthorDisplay.pipe';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
@@ -27,7 +27,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ToastModule,
     TooltipModule,
     FeedbackStatusPipe,
-    FeedbackDepartmentPipe,
+    FeedbackAuthorDisplayPipe,
     RouterModule,
     CommonModule,
     StatusDisplayPipe,
@@ -48,8 +48,8 @@ export class ProposalViewComponent {
   loading = signal(true);
   error = signal<string | null>(null);
   proposal = signal<ProposalViewDTO | null>(null);
-  proposalStatusEnum = Proposal.StatusEnum;
-  moduleStatusEnum = ModuleVersion.StatusEnum;
+  proposalStatusEnum = ProposalViewDTO.StatusEnum;
+  moduleStatusEnum = ModuleVersionCompactDTO.StatusEnum;
 
   constructor() {
     this.fetchProposal();
@@ -73,38 +73,10 @@ export class ProposalViewComponent {
     });
   }
 
-  submitProposal() {
-    if (this.proposal()) {
-      this.proposalService.submitProposal(this.proposal()!.proposalId!).subscribe({
-        next: (response: ProposalViewDTO) => this.proposal.set(response),
-        error: (err: HttpErrorResponse) => this.error.set(err.error)
-      });
-    }
-  }
-
-  cancelProposal() {
-    if (this.proposal()) {
-      this.proposalService.cancelSubmission(this.proposal()!.proposalId!).subscribe({
-        next: (response: ProposalViewDTO) => this.proposal.set(response),
-        error: (err: HttpErrorResponse) => this.error.set(err.error)
-      });
-    }
-  }
-
   deleteProposal() {
     if (this.proposal()) {
       this.proposalService.deleteProposal(this.proposal()!.proposalId!).subscribe({
         next: () => this.router.navigate(['/proposals']),
-        error: (err: HttpErrorResponse) => this.error.set(err.error)
-      });
-    }
-  }
-
-  addNewModuleVersion() {
-    if (this.proposal()) {
-      const addModuleVersionDto: AddModuleVersionDTO = { proposalId: this.proposal()!.proposalId! };
-      this.proposalService.addModuleVersion(addModuleVersionDto).subscribe({
-        next: (response: ProposalViewDTO) => this.proposal.set(response),
         error: (err: HttpErrorResponse) => this.error.set(err.error)
       });
     }

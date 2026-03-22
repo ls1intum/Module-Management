@@ -1,6 +1,7 @@
 package modulemanagement.ls1.repositories;
 
 import modulemanagement.ls1.models.User;
+import modulemanagement.ls1.enums.UserRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +19,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
             "OR LOWER(u.userName) LIKE LOWER(CONCAT('%', :search, '%')) " +
             "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%'))")
     Page<User> findBySearch(@Param("search") String search, Pageable pageable);
+
+    @Query("SELECT DISTINCT u FROM User u JOIN u.roles r WHERE r = :role")
+    java.util.List<User> findByRole(@Param("role") UserRole role);
 }
