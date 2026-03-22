@@ -7,26 +7,9 @@
       </div>
     </ng-template>
     <p class="text-muted-foreground mb-3">Sign in to access the Module Management application.</p>
-    <p-buttongroup>
-      <p-button
-        label="Sign in"
-        severity="contrast"
-        (onClick)="securityStore.signInWithTum()"
-        pTooltip="Sign in with TUM"
-        tooltipPosition="bottom"
-        [disabled]="securityStore.isLoading()"
-      />
-      <p-button
-        icon="pi pi-key"
-        severity="contrast"
-        [ariaLabel]="'Sign in with passkey'"
-        pTooltip="Sign in with passkey"
-        tooltipPosition="bottom"
-        [disabled]="securityStore.isLoading()"
-        [loading]="securityStore.isLoading()"
-        (onClick)="securityStore.signInWithPasskey()"
-      />
-    </p-buttongroup>
+    <div class="flex justify-center">
+      <app-sign-in />
+    </div>
     <p-divider />
     <a href="https://outline.aet.cit.tum.de/doc/application-test-users-2XneFHnMuJ" target="_blank" class="text-sm text-muted-foreground hover:underline">
       <i class="pi pi-external-link"></i>
