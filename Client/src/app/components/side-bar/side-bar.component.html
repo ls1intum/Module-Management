@@ -17,6 +17,14 @@
         [style]="{ width: '100%' }"
         styleClass="sidebar-btn justify-start"
       />
+      <p-button
+        label="Examination boards"
+        icon="pi pi-sitemap"
+        [routerLink]="['/admin/examination-boards']"
+        [severity]="isActive('/admin/examination-boards') ? 'contrast' : 'secondary'"
+        [style]="{ width: '100%' }"
+        styleClass="sidebar-btn justify-start"
+      />
     }
     @if (isProfessor()) {
       <p-button

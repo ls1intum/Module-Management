@@ -40,6 +40,10 @@
           <p class="text-sm text-muted-foreground mb-4">Manage degree programs and their areas of specialization.</p>
           <p-button label="Degree Programs" icon="pi pi-book" [routerLink]="['/admin/degree-programs']" severity="contrast" />
         </p-panel>
+        <p-panel header="Examination boards">
+          <p class="text-sm text-muted-foreground mb-4">Create examination boards, assign members, and link them to degree programs.</p>
+          <p-button label="Examination boards" icon="pi pi-sitemap" [routerLink]="['/admin/examination-boards']" severity="contrast" />
+        </p-panel>
       }
       @if (isProfessor()) {
         <p-panel header="Module Proposals">
