@@ -9,6 +9,8 @@ api/degree-program-specializations-controller.service.ts
 api/degree-program-specializations-controller.serviceInterface.ts
 api/degree-programs-controller.service.ts
 api/degree-programs-controller.serviceInterface.ts
+api/examination-board-controller.service.ts
+api/examination-board-controller.serviceInterface.ts
 api/feedback-controller.service.ts
 api/feedback-controller.serviceInterface.ts
 api/module-version-controller.service.ts
@@ -26,8 +28,11 @@ model/completion-service-request-dto.ts
 model/completion-service-response-dto.ts
 model/create-degree-program-dto.ts
 model/create-degree-program-specialization-dto.ts
+model/create-examination-board-dto.ts
 model/degree-program-dto.ts
 model/degree-program-specialization-dto.ts
+model/examination-board-dto.ts
+model/examination-board-summary-dto.ts
 model/feedback-compact-dto.ts
 model/feedback-dto.ts
 model/feedback-list-item-dto.ts
@@ -47,6 +52,7 @@ model/responsible-user-dto.ts
 model/similar-module-dto.ts
 model/update-degree-program-dto.ts
 model/update-degree-program-specialization-dto.ts
+model/update-examination-board-dto.ts
 model/update-user-role-dto.ts
 model/user-dto.ts
 model/user.ts

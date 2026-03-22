@@ -9,9 +9,8 @@
  */
 
 
-export interface UpdateDegreeProgramDTO { 
-    name?: string;
-    responsibleUserId?: string;
+export interface ExaminationBoardSummaryDTO { 
     examinationBoardId?: number;
+    name?: string;
 }
 

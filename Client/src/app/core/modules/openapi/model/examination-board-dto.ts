@@ -7,11 +7,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ResponsibleUserDTO } from './responsible-user-dto';
 
 
-export interface UpdateDegreeProgramDTO { 
-    name?: string;
-    responsibleUserId?: string;
+export interface ExaminationBoardDTO { 
     examinationBoardId?: number;
+    name?: string;
+    members?: Array<ResponsibleUserDTO>;
 }
 
