@@ -41,3 +41,6 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: changes/0014_feedback_additional_fields.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: changes/0015_examination_board.yaml

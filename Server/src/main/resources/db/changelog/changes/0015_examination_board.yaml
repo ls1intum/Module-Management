@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0015a_examination_board_tables
+      author: module-management
+      changes:
+        - createTable:
+            tableName: examination_board
+            columns:
+              - column:
+                  name: examination_board_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: VARCHAR(512)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: examination_board_user
+            columns:
+              - column:
+                  name: examination_board_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: examination_board_user
+            columnNames: examination_board_id, user_id
+            constraintName: pk_examination_board_user
+        - addForeignKeyConstraint:
+            baseTableName: examination_board_user
+            baseColumnNames: examination_board_id
+            referencedTableName: examination_board
+            referencedColumnNames: examination_board_id
+            constraintName: fk_ebu_examination_board
+        - addForeignKeyConstraint:
+            baseTableName: examination_board_user
+            baseColumnNames: user_id
+            referencedTableName: app_user
+            referencedColumnNames: user_id
+            constraintName: fk_ebu_user
+        - addColumn:
+            tableName: degree_program
+            columns:
+              - column:
+                  name: examination_board_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+        - addForeignKeyConstraint:
+            baseTableName: degree_program
+            baseColumnNames: examination_board_id
+            referencedTableName: examination_board
+            referencedColumnNames: examination_board_id
+            constraintName: fk_degree_program_examination_board
