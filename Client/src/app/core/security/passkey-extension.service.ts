@@ -36,6 +36,18 @@ export class PasskeyExtensionService {
     return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
   }
 
+  private async readJsonBody<T>(response: Response): Promise<T | undefined> {
+    const contentType = response.headers.get('content-type') ?? '';
+    if (!contentType.toLowerCase().includes('application/json')) {
+      return undefined;
+    }
+    try {
+      return (await response.json()) as T;
+    } catch {
+      return undefined;
+    }
+  }
+
   /**
    * Register a new passkey for the current user (must already be logged in).
    */
@@ -63,7 +75,7 @@ export class PasskeyExtensionService {
       throw new Error('Missing user identity in token for passkey registration.');
     }
 
-    const challengeRes = await fetch(this.getUrl('challenge'));
+    const challengeRes = await fetch(this.getUrl('challenge'), { credentials: 'include' });
     if (!challengeRes.ok) {
       throw new Error(`Failed to get WebAuthn challenge (${challengeRes.status})`);
     }
@@ -94,11 +106,13 @@ export class PasskeyExtensionService {
       credentialId: this.bufferToBase64Url(credential.rawId),
       rawId: this.bufferToBase64Url(credential.rawId),
       clientDataJSON: this.bufferToBase64Url(response.clientDataJSON),
-      attestationObject: this.bufferToBase64Url(response.attestationObject)
+      attestationObject: this.bufferToBase64Url(response.attestationObject),
+      challenge
     };
 
     const saveRes = await fetch(this.getUrl('save'), {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
@@ -120,12 +134,12 @@ export class PasskeyExtensionService {
    * and let keycloak-js initialize via check-sso.
    */
   async signInWithPasskey(): Promise<void> {
-    const optionsResponse = await fetch(this.getUrl('get-credential-id'));
-    const res = (await optionsResponse.json()) as { challenge?: string; credentialId?: string; error?: string };
+    const optionsResponse = await fetch(this.getUrl('challenge'), { credentials: 'include' });
+    const res = await this.readJsonBody<{ challenge?: string; credentialId?: string; error?: string }>(optionsResponse);
     if (!optionsResponse.ok) {
       throw new Error(res?.error || `Failed to get passkey options (${optionsResponse.status})`);
     }
-    if (!res.challenge) {
+    if (!res?.challenge) {
       throw new Error('Invalid challenge response from server');
     }
 
@@ -161,7 +175,7 @@ export class PasskeyExtensionService {
       body: JSON.stringify(payload)
     });
 
-    const authResult = (await authRes.json()) as { error?: string };
+    const authResult = await this.readJsonBody<{ error?: string }>(authRes);
     if (!authRes.ok) {
       throw new Error(authResult?.error || `Passkey authentication failed (${authRes.status})`);
     }
