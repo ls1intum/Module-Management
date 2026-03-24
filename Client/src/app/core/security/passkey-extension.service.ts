@@ -56,7 +56,7 @@ export class PasskeyExtensionService {
     const accountName = String(parsed?.['preferred_username'] ?? parsed?.['email'] ?? '');
     const displayName = String(
       parsed?.['name'] ??
-        ([parsed?.['given_name'], parsed?.['family_name']].filter(Boolean).join(' ') || accountName || 'User')
+      ([parsed?.['given_name'], parsed?.['family_name']].filter(Boolean).join(' ') || accountName || 'User')
     );
 
     if (!accountId || !accountName) {
@@ -115,9 +115,11 @@ export class PasskeyExtensionService {
   }
 
   /**
-   * Sign in with passkey only (no Keycloak UI redirect). Returns tokens from {@code POST /passkey/authenticate}.
+   * Sign in with passkey only (no Keycloak UI redirect).
+   * The extension endpoint sets the Keycloak login cookie; the SPA should then reload
+   * and let keycloak-js initialize via check-sso.
    */
-  async signInWithPasskey(): Promise<{ access_token: string; refresh_token: string }> {
+  async signInWithPasskey(): Promise<void> {
     const optionsResponse = await fetch(this.getUrl('get-credential-id'));
     const res = (await optionsResponse.json()) as { challenge?: string; credentialId?: string; error?: string };
     if (!optionsResponse.ok) {
@@ -154,17 +156,14 @@ export class PasskeyExtensionService {
 
     const authRes = await fetch(this.getUrl('authenticate'), {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
 
-    const authResult = (await authRes.json()) as { access_token?: string; refresh_token?: string; error?: string };
+    const authResult = (await authRes.json()) as { error?: string };
     if (!authRes.ok) {
       throw new Error(authResult?.error || `Passkey authentication failed (${authRes.status})`);
     }
-    if (!authResult.access_token || !authResult.refresh_token) {
-      throw new Error('Invalid token response from server');
-    }
-    return { access_token: authResult.access_token, refresh_token: authResult.refresh_token };
   }
 }
