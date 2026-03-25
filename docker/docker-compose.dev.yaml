@@ -25,7 +25,7 @@ services:
       KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
       KC_PASSKEY_CLIENT_ID: ${KEYCLOAK_CLIENT_ID:-module-management}
-      KC_ALLOWED_BROWSER_ORIGIN: ${KEYCLOAK_ALLOWED_ORIGIN:-http://localhost:4200}
+      KC_ALLOWED_BROWSER_ORIGIN: ${KC_ALLOWED_BROWSER_ORIGIN:-http://localhost:4200}
     command: start-dev --import-realm
     volumes:
       - keycloak_data:/opt/keycloak/data

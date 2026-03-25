@@ -171,9 +171,14 @@ export class PasskeyExtensionService {
     const authRes = await fetch(this.getUrl('authenticate'), {
       method: 'POST',
       credentials: 'include',
+      redirect: 'manual',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
+
+    if (authRes.type === 'opaqueredirect') {
+      return;
+    }
 
     const authResult = await this.readJsonBody<{ error?: string }>(authRes);
     if (!authRes.ok) {
