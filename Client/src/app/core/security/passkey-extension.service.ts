@@ -36,6 +36,18 @@ export class PasskeyExtensionService {
     return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
   }
 
+  private async readJsonBody<T>(response: Response): Promise<T | undefined> {
+    const contentType = response.headers.get('content-type') ?? '';
+    if (!contentType.toLowerCase().includes('application/json')) {
+      return undefined;
+    }
+    try {
+      return (await response.json()) as T;
+    } catch {
+      return undefined;
+    }
+  }
+
   /**
    * Register a new passkey for the current user (must already be logged in).
    */
@@ -56,14 +68,14 @@ export class PasskeyExtensionService {
     const accountName = String(parsed?.['preferred_username'] ?? parsed?.['email'] ?? '');
     const displayName = String(
       parsed?.['name'] ??
-        ([parsed?.['given_name'], parsed?.['family_name']].filter(Boolean).join(' ') || accountName || 'User')
+      ([parsed?.['given_name'], parsed?.['family_name']].filter(Boolean).join(' ') || accountName || 'User')
     );
 
     if (!accountId || !accountName) {
       throw new Error('Missing user identity in token for passkey registration.');
     }
 
-    const challengeRes = await fetch(this.getUrl('challenge'));
+    const challengeRes = await fetch(this.getUrl('challenge'), { credentials: 'include' });
     if (!challengeRes.ok) {
       throw new Error(`Failed to get WebAuthn challenge (${challengeRes.status})`);
     }
@@ -94,11 +106,13 @@ export class PasskeyExtensionService {
       credentialId: this.bufferToBase64Url(credential.rawId),
       rawId: this.bufferToBase64Url(credential.rawId),
       clientDataJSON: this.bufferToBase64Url(response.clientDataJSON),
-      attestationObject: this.bufferToBase64Url(response.attestationObject)
+      attestationObject: this.bufferToBase64Url(response.attestationObject),
+      challenge
     };
 
     const saveRes = await fetch(this.getUrl('save'), {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
@@ -115,15 +129,17 @@ export class PasskeyExtensionService {
   }
 
   /**
-   * Sign in with passkey only (no Keycloak UI redirect). Returns tokens from {@code POST /passkey/authenticate}.
+   * Sign in with passkey only (no Keycloak UI redirect).
+   * The extension endpoint sets the Keycloak login cookie; the SPA should then reload
+   * and let keycloak-js initialize via check-sso.
    */
-  async signInWithPasskey(): Promise<{ access_token: string; refresh_token: string }> {
-    const optionsResponse = await fetch(this.getUrl('get-credential-id'));
-    const res = (await optionsResponse.json()) as { challenge?: string; credentialId?: string; error?: string };
+  async signInWithPasskey(): Promise<void> {
+    const optionsResponse = await fetch(this.getUrl('challenge'), { credentials: 'include' });
+    const res = await this.readJsonBody<{ challenge?: string; credentialId?: string; error?: string }>(optionsResponse);
     if (!optionsResponse.ok) {
       throw new Error(res?.error || `Failed to get passkey options (${optionsResponse.status})`);
     }
-    if (!res.challenge) {
+    if (!res?.challenge) {
       throw new Error('Invalid challenge response from server');
     }
 
@@ -154,17 +170,14 @@ export class PasskeyExtensionService {
 
     const authRes = await fetch(this.getUrl('authenticate'), {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
 
-    const authResult = (await authRes.json()) as { access_token?: string; refresh_token?: string; error?: string };
+    const authResult = await this.readJsonBody<{ error?: string }>(authRes);
     if (!authRes.ok) {
       throw new Error(authResult?.error || `Passkey authentication failed (${authRes.status})`);
     }
-    if (!authResult.access_token || !authResult.refresh_token) {
-      throw new Error('Invalid token response from server');
-    }
-    return { access_token: authResult.access_token, refresh_token: authResult.refresh_token };
   }
 }

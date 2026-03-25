@@ -38,6 +38,8 @@ services:
     environment:
       - KC_BOOTSTRAP_ADMIN_USERNAME=${KEYCLOAK_ADMIN_USERNAME}
       - KC_BOOTSTRAP_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD}
+      - KC_PASSKEY_CLIENT_ID=${KEYCLOAK_CLIENT_ID:-module-management}
+      - KC_ALLOWED_BROWSER_ORIGIN=${KEYCLOAK_ALLOWED_ORIGIN:-http://localhost:4200}
       - KC_DB=postgres
       - KC_DB_URL_HOST=postgres
       - KC_DB_URL_DATABASE=keycloak

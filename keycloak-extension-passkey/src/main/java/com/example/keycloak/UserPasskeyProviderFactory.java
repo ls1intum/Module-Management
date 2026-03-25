@@ -9,6 +9,8 @@ import org.keycloak.services.resource.RealmResourceProviderFactory;
 public class UserPasskeyProviderFactory implements RealmResourceProviderFactory {
 
     public static final String ID = "passkey";
+    private String allowedBrowserOriginPattern;
+    private String clientId;
 
     @Override
     public String getId() {
@@ -17,15 +19,19 @@ public class UserPasskeyProviderFactory implements RealmResourceProviderFactory 
 
     @Override
     public RealmResourceProvider create(KeycloakSession session) {
-        return new UserPasskeyProvider(session);
+        return new UserPasskeyProvider(session, allowedBrowserOriginPattern, clientId);
     }
 
     @Override
-    public void init(Config.Scope config) {}
+    public void init(Config.Scope config) {
+        allowedBrowserOriginPattern = PasskeyConfigResolver.resolveAllowedOriginPattern(config);
+        clientId = PasskeyConfigResolver.resolveClientId(config);
+    }
 
     @Override
     public void postInit(KeycloakSessionFactory factory) {}
 
     @Override
     public void close() {}
+
 }

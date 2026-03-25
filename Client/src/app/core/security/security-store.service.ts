@@ -90,11 +90,10 @@ export class SecurityStore {
   async signInWithPasskey(): Promise<void> {
     this.isLoading.set(true);
     try {
-      const tokens = await this.passkeyExtension.signInWithPasskey();
-      this.keycloakService.applyPasskeyTokens(tokens.access_token, tokens.refresh_token);
-      await this.loadPasskeys();
-      const user = await firstValueFrom(this.userControllerService.getCurrentUser());
-      this.user.set(user);
+      await this.passkeyExtension.signInWithPasskey();
+      // Passkey authenticate sets the Keycloak login cookie; reload so init(check-sso)
+      // can bootstrap keycloak-js token state through the standard adapter flow.
+      window.location.reload();
     } catch (error) {
       this.messageService.add({ severity: 'error', summary: 'Sign-in', detail: 'Something went wrong' });
       console.error(error);
@@ -131,12 +130,12 @@ export class SecurityStore {
         keycloakCredentials
           .find((credential) => credential.type === 'webauthn-passwordless')
           ?.userCredentialMetadatas.map((metadata) => {
-            return {
-              id: metadata.credential.id,
-              name: metadata.credential.userLabel,
-              createdAt: metadata.credential.createdDate ? new Date(metadata.credential.createdDate) : undefined
-            };
-          }) ?? [];
+          return {
+            id: metadata.credential.id,
+            name: metadata.credential.userLabel,
+            createdAt: metadata.credential.createdDate ? new Date(metadata.credential.createdDate) : undefined
+          };
+        }) ?? [];
       this.passkeys.set(passkeys);
     } catch (error) {
       console.error('Error reloading passkeys:', error);
