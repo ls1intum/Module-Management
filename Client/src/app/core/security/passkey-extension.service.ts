@@ -66,10 +66,7 @@ export class PasskeyExtensionService {
     const parsed = kc.tokenParsed as Record<string, unknown> | undefined;
     const accountId = String(parsed?.['sub'] ?? parsed?.['preferred_username'] ?? '');
     const accountName = String(parsed?.['preferred_username'] ?? parsed?.['email'] ?? '');
-    const displayName = String(
-      parsed?.['name'] ??
-      ([parsed?.['given_name'], parsed?.['family_name']].filter(Boolean).join(' ') || accountName || 'User')
-    );
+    const displayName = String(parsed?.['name'] ?? ([parsed?.['given_name'], parsed?.['family_name']].filter(Boolean).join(' ') || accountName || 'User'));
 
     if (!accountId || !accountName) {
       throw new Error('Missing user identity in token for passkey registration.');
@@ -148,9 +145,7 @@ export class PasskeyExtensionService {
       userVerification: 'preferred'
     };
     if (res.credentialId) {
-      publicKey.allowCredentials = [
-        { type: 'public-key', id: this.base64UrlToUint8Array(res.credentialId) as BufferSource }
-      ];
+      publicKey.allowCredentials = [{ type: 'public-key', id: this.base64UrlToUint8Array(res.credentialId) as BufferSource }];
     }
 
     const credential = (await navigator.credentials.get({ publicKey })) as PublicKeyCredential | null;

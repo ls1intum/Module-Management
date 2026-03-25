@@ -130,12 +130,12 @@ export class SecurityStore {
         keycloakCredentials
           .find((credential) => credential.type === 'webauthn-passwordless')
           ?.userCredentialMetadatas.map((metadata) => {
-          return {
-            id: metadata.credential.id,
-            name: metadata.credential.userLabel,
-            createdAt: metadata.credential.createdDate ? new Date(metadata.credential.createdDate) : undefined
-          };
-        }) ?? [];
+            return {
+              id: metadata.credential.id,
+              name: metadata.credential.userLabel,
+              createdAt: metadata.credential.createdDate ? new Date(metadata.credential.createdDate) : undefined
+            };
+          }) ?? [];
       this.passkeys.set(passkeys);
     } catch (error) {
       console.error('Error reloading passkeys:', error);
