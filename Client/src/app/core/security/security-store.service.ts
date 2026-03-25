@@ -42,14 +42,15 @@ export class SecurityStore {
       try {
         const user = await firstValueFrom(this.userControllerService.getCurrentUser());
         this.user.set(user);
+        this.evaluatePasskeyDialogAfterTumLogin();
       } catch (error) {
         this.messageService.add({ severity: 'error', summary: 'Sign-in', detail: 'Something went wrong' });
         console.error('error fetching user details', error);
         this.user.set(undefined);
+      } finally {
+        this.isLoading.set(false);
       }
-      this.evaluatePasskeyDialogAfterTumLogin();
     }
-    this.isLoading.set(false);
   }
 
   closePasskeyDialog(dontShowAgain: boolean): void {
