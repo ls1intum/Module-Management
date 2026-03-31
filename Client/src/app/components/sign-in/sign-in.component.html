@@ -8,26 +8,40 @@
     [style]="{ 'min-width': '150px' }"
   />
 
-  <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body" [style]="{ 'min-width': userButton.el.nativeElement.offsetWidth + 'px' }" />
+  <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body"
+          [style]="{ 'min-width': userButton.el.nativeElement.offsetWidth + 'px' }"/>
 } @else {
-  <p-buttongroup>
-    <p-button
-      label="Sign in"
-      severity="contrast"
-      (onClick)="securityStore.signInWithTum()"
-      pTooltip="Sign in with TUM"
-      tooltipPosition="bottom"
-      [disabled]="securityStore.isLoading()"
-    />
-    <p-button
-      icon="pi pi-key"
-      severity="contrast"
-      [ariaLabel]="'Sign in with passkey'"
-      pTooltip="Sign in with passkey"
-      tooltipPosition="bottom"
-      [disabled]="securityStore.isLoading()"
-      [loading]="securityStore.isLoading()"
-      (onClick)="securityStore.signInWithPasskey()"
-    />
-  </p-buttongroup>
+  @if (securityStore.isLoading()) {
+    <div class="flex items-center justify-center gap-2 pb-1 text-xs text-muted-foreground">
+      <i class="pi pi-spinner pi-spin"></i>
+      <span>Loading...</span>
+    </div>
+  } @else {
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+      <p-button
+        label="Sign in with Passkey"
+        severity="contrast"
+        [ariaLabel]="'Sign in with passkey'"
+        pTooltip="Sign in with passkey"
+        tooltipPosition="bottom"
+        [disabled]="securityStore.isLoading()"
+        (onClick)="securityStore.signInWithPasskey()"
+        [style]="{ width: '220px' }"
+      />
+      <div class="flex items-center gap-3" aria-hidden="true">
+        <span class="h-px flex-1 bg-gray-400/70 dark:bg-gray-500/80"></span>
+        <span class="text-xs uppercase tracking-wide text-muted-foreground">or</span>
+        <span class="h-px flex-1 bg-gray-400/70 dark:bg-gray-500/80"></span>
+      </div>
+      <p-button
+        label="Sign in with TUM"
+        severity="contrast"
+        (onClick)="securityStore.signInWithTum()"
+        pTooltip="Sign in with TUM"
+        tooltipPosition="bottom"
+        [disabled]="securityStore.isLoading()"
+        [style]="{ width: '220px' }"
+      />
+    </div>
+  }
 }

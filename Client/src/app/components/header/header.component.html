@@ -22,7 +22,8 @@
       tooltipPosition="bottom"
       [ariaLabel]="isDarkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
     />
-
-    <app-sign-in />
+    @if (user() !== undefined) {
+      <app-sign-in />
+    }
   </div>
 </header>

@@ -127,7 +127,7 @@ final class PasskeyWebAuthnService {
         WebAuthnCredentialProvider provider = getPasswordlessCredentialProvider();
         WebAuthnCredentialModelInput credentialInput = createCredentialInput(registrationData);
         WebAuthnCredentialModel credentialModel = provider.getCredentialModelFromCredentialInput(credentialInput, user.getUsername());
-        CredentialModel storedCredentialModel = user.credentialManager().createStoredCredential(credentialModel);
+        CredentialModel storedCredentialModel = provider.createCredential(realm, user, credentialModel);
         if (storedCredentialModel == null) {
             throw new IllegalStateException("Failed to store passkey credential");
         }
@@ -167,18 +167,13 @@ final class PasskeyWebAuthnService {
     }
 
     /**
-     * Builds the registration manager used to validate attestation payloads.
-     */
-    protected WebAuthnRegistrationManager createWebAuthnRegistrationManager() {
-        return WebAuthnRegistrationManager.createNonStrictWebAuthnRegistrationManager(new ObjectConverter());
-    }
-
-    /**
      * Parses and validates registration payload data.
      */
     private RegistrationData validateRegistration(RegistrationRequest request, RegistrationParameters parameters) {
         try {
-            return createWebAuthnRegistrationManager().verify(request, parameters);
+            return WebAuthnRegistrationManager
+                    .createNonStrictWebAuthnRegistrationManager(new ObjectConverter())
+                    .verify(request, parameters);
         } catch (DataConversionException | VerificationException e) {
             throw new IllegalArgumentException("Passkey registration validation failed: " + e.getMessage(), e);
         }

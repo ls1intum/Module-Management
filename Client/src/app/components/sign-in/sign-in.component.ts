@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { ButtonGroupModule } from 'primeng/buttongroup';
 import { MenuModule } from 'primeng/menu';
 import { TooltipModule } from 'primeng/tooltip';
 import { MenuItem } from 'primeng/api';
@@ -10,7 +9,7 @@ import { SecurityStore } from '../../core/security/security-store.service';
 @Component({
   selector: 'app-sign-in',
   standalone: true,
-  imports: [RouterModule, ButtonModule, ButtonGroupModule, MenuModule, TooltipModule],
+  imports: [RouterModule, ButtonModule, MenuModule, TooltipModule],
   templateUrl: './sign-in.component.html'
 })
 export class SignInComponent {

@@ -2,7 +2,6 @@ package com.example.keycloak;
 
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.NotAuthorizedException;
 import jakarta.ws.rs.OPTIONS;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -15,7 +14,6 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.services.ErrorResponse;
-import org.keycloak.services.ErrorResponseException;
 import org.keycloak.services.cors.Cors;
 import org.keycloak.services.managers.AppAuthManager;
 import org.keycloak.services.managers.AuthenticationManager;
@@ -27,9 +25,6 @@ import java.util.regex.Pattern;
 public class UserPasskeyResource {
 
     private static final Logger logger = Logger.getLogger(UserPasskeyResource.class);
-    private static final String ERROR_SERVER_CONFIGURATION = "Server configuration error";
-    private static final String ERROR_INVALID_OR_EXPIRED_CHALLENGE = "Invalid or expired challenge";
-    private static final String ERROR_REQUEST_BODY_REQUIRED = "Request body is required";
 
     private final KeycloakSession session;
     private final Pattern allowedBrowserOrigin;
@@ -42,10 +37,7 @@ public class UserPasskeyResource {
      * The SPI-managed constructor should be used for normal runtime operation.
      */
     public UserPasskeyResource() {
-        this.session = null;
-        this.allowedBrowserOrigin = Pattern.compile("^" + PasskeyConfigResolver.resolveAllowedOriginPatternFromEnv() + "$");
-        this.clientId = PasskeyConfigResolver.resolveClientIdFromEnv();
-        this.clientSupport = new PasskeyClientSupport(this.clientId);
+        this(null, null, null);
     }
 
     /**
@@ -57,15 +49,8 @@ public class UserPasskeyResource {
      */
     public UserPasskeyResource(KeycloakSession session, String allowedOriginPattern, String clientId) {
         this.session = session;
-        String configuredPattern = PasskeyConfigResolver.firstNonBlank(
-                allowedOriginPattern,
-                PasskeyConfigResolver.resolveAllowedOriginPatternFromEnv()
-        );
-        this.allowedBrowserOrigin = Pattern.compile("^" + configuredPattern + "$");
-        this.clientId = PasskeyConfigResolver.firstNonBlank(
-                clientId,
-                PasskeyConfigResolver.resolveClientIdFromEnv()
-        );
+        this.allowedBrowserOrigin = compileAllowedOriginPattern(allowedOriginPattern);
+        this.clientId = resolveClientId(clientId);
         this.clientSupport = new PasskeyClientSupport(this.clientId);
     }
 
@@ -109,8 +94,9 @@ public class UserPasskeyResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response savePasskey(PasskeyRequest request) {
-        if (request == null) {
-            return buildErrorResponse(Response.Status.BAD_REQUEST, ERROR_REQUEST_BODY_REQUIRED);
+        Response requestValidation = validateRequestBody(request);
+        if (requestValidation != null) {
+            return requestValidation;
         }
 
         UserModel user = getUserFromBearerToken();
@@ -118,8 +104,9 @@ public class UserPasskeyResource {
             return textResponse(Response.Status.UNAUTHORIZED, "Authenticated user not found from access token");
         }
 
-        if (!challengeService().consumeChallenge(request.getChallenge())) {
-            return buildErrorResponse(Response.Status.UNAUTHORIZED, ERROR_INVALID_OR_EXPIRED_CHALLENGE);
+        Response challengeValidation = validateChallenge(challengeService(), request.getChallenge());
+        if (challengeValidation != null) {
+            return challengeValidation;
         }
 
         try {
@@ -143,8 +130,9 @@ public class UserPasskeyResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response authenticatePasskey(PasskeyRequest request) {
-        if (request == null) {
-            return buildErrorResponse(Response.Status.BAD_REQUEST, ERROR_REQUEST_BODY_REQUIRED);
+        Response requestValidation = validateRequestBody(request);
+        if (requestValidation != null) {
+            return requestValidation;
         }
 
         RealmModel realm = session().getContext().getRealm();
@@ -157,8 +145,9 @@ public class UserPasskeyResource {
             return buildErrorResponse(Response.Status.BAD_REQUEST, "credentialId or rawId is required");
         }
 
-        if (!challengeService().consumeChallenge(request.getChallenge())) {
-            return buildErrorResponse(Response.Status.UNAUTHORIZED, ERROR_INVALID_OR_EXPIRED_CHALLENGE);
+        Response challengeValidation = validateChallenge(challengeService(), request.getChallenge());
+        if (challengeValidation != null) {
+            return challengeValidation;
         }
 
         UserModel user = webAuthnService().findUserByCredentialId(realm, requestCredentialId);
@@ -175,7 +164,7 @@ public class UserPasskeyResource {
                 return buildErrorResponse(Response.Status.UNAUTHORIZED, "Invalid passkey");
             }
 
-            return withCors(browserLoginService().completeLogin(user, realm));
+            return completeBrowserFlowLogin(user, realm);
         } catch (IllegalArgumentException e) {
             return buildErrorResponse(Response.Status.BAD_REQUEST, "Invalid authentication payload: " + e.getMessage());
         } catch (IllegalStateException e) {
@@ -205,8 +194,6 @@ public class UserPasskeyResource {
                     .setUriInfo(session().getContext().getUri())
                     .setHeaders(session().getContext().getRequestHeaders())
                     .authenticate();
-        } catch (NotAuthorizedException ignored) {
-            return null;
         } catch (RuntimeException ignored) {
             return null;
         }
@@ -261,7 +248,7 @@ public class UserPasskeyResource {
      */
     private Response handleServerConfigurationError(String logMessage, IllegalStateException exception) {
         logger.error(logMessage, exception);
-        return buildErrorResponse(Response.Status.INTERNAL_SERVER_ERROR, ERROR_SERVER_CONFIGURATION);
+        return buildErrorResponse(Response.Status.INTERNAL_SERVER_ERROR, "Server configuration error");
     }
 
     /**
@@ -295,11 +282,10 @@ public class UserPasskeyResource {
      * Builds a Keycloak-style error response and applies CORS headers.
      */
     private Response buildErrorResponse(Response.Status status, String message) {
-        ErrorResponseException errorResponse = ErrorResponse.error(
+        return withCors(ErrorResponse.error(
                 PasskeyConfigResolver.firstNonBlank(message, ""),
                 status
-        );
-        return withCors(errorResponse.getResponse());
+        ).getResponse());
     }
 
     /**
@@ -334,5 +320,70 @@ public class UserPasskeyResource {
 
         cors.allowedOrigins(session(), corsClient);
         cors.add();
+    }
+
+    private static Pattern compileAllowedOriginPattern(String configuredPattern) {
+        String resolvedPattern = PasskeyConfigResolver.firstNonBlank(
+                configuredPattern,
+                PasskeyConfigResolver.resolveAllowedOriginPatternFromEnv()
+        );
+        return Pattern.compile("^" + resolvedPattern + "$");
+    }
+
+    private static String resolveClientId(String configuredClientId) {
+        return PasskeyConfigResolver.firstNonBlank(
+                configuredClientId,
+                PasskeyConfigResolver.resolveClientIdFromEnv()
+        );
+    }
+
+    private Response validateRequestBody(PasskeyRequest request) {
+        if (request == null) {
+            return buildErrorResponse(Response.Status.BAD_REQUEST, "Request body is required");
+        }
+        return null;
+    }
+
+    private Response validateChallenge(PasskeyChallengeService challengeService, String challenge) {
+        if (challengeService.consumeChallenge(challenge)) {
+            return null;
+        }
+        return buildErrorResponse(Response.Status.UNAUTHORIZED, "Invalid or expired challenge");
+    }
+
+    private Response completeBrowserFlowLogin(UserModel user, RealmModel realm) {
+        Response browserFlowResponse = browserLoginService().completeLogin(user, realm);
+        if (browserFlowResponse == null) {
+            return buildErrorResponse(Response.Status.INTERNAL_SERVER_ERROR, "Authentication flow failed");
+        }
+
+        if (!isRedirectResponse(browserFlowResponse)) {
+            return withCors(browserFlowResponse);
+        }
+
+        Response.ResponseBuilder responseBuilder = Response.noContent();
+        copySetCookieHeaders(browserFlowResponse, responseBuilder);
+        return withCors(responseBuilder.build());
+    }
+
+    private boolean isRedirectResponse(Response response) {
+        int status = response.getStatus();
+        return (status >= 300 && status < 400) || response.getLocation() != null;
+    }
+
+    private void copySetCookieHeaders(Response source, Response.ResponseBuilder target) {
+        var headers = source.getHeaders();
+        if (headers == null) {
+            return;
+        }
+
+        var setCookieHeaders = headers.get("Set-Cookie");
+        if (setCookieHeaders == null) {
+            return;
+        }
+
+        for (Object setCookieHeader : setCookieHeaders) {
+            target.header("Set-Cookie", setCookieHeader);
+        }
     }
 }

@@ -1,7 +1,6 @@
 import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformServer } from '@angular/common';
 import { KeycloakService } from './keycloak.service';
-import { PasskeyExtensionService } from './passkey-extension.service';
 import { firstValueFrom } from 'rxjs';
 import { UserControllerService, User } from '../modules/openapi';
 import { Passkey } from './keycloak-credentials.types';
@@ -14,7 +13,6 @@ function passkeyDialogDismissedStorageKey(sub: string): string {
 @Injectable({ providedIn: 'root' })
 export class SecurityStore {
   keycloakService = inject(KeycloakService);
-  passkeyExtension = inject(PasskeyExtensionService);
   userControllerService = inject(UserControllerService);
   private readonly messageService = inject(MessageService);
 
@@ -35,7 +33,7 @@ export class SecurityStore {
     }
     this.isLoading.set(true);
 
-    const isLoggedIn = await this.keycloakService.init();
+    const isLoggedIn = await this.keycloakService.initAuth();
 
     if (isLoggedIn) {
       await this.loadPasskeys();
@@ -80,7 +78,7 @@ export class SecurityStore {
   }
 
   async signInWithTum(returnUrl?: string) {
-    await this.keycloakService.loginWithTumRedirect(returnUrl);
+    await this.keycloakService.signInWithTum(returnUrl);
   }
 
   async signIn(returnUrl?: string) {
@@ -90,10 +88,10 @@ export class SecurityStore {
   async signInWithPasskey(): Promise<void> {
     this.isLoading.set(true);
     try {
-      await this.passkeyExtension.signInWithPasskey();
-      // Passkey authenticate sets the Keycloak login cookie; reload so init(check-sso)
-      // can bootstrap keycloak-js token state through the standard adapter flow.
-      window.location.reload();
+      await this.keycloakService.signInWithPasskey();
+      await this.loadPasskeys();
+      const user = await firstValueFrom(this.userControllerService.getCurrentUser());
+      this.user.set(user);
     } catch (error) {
       this.messageService.add({ severity: 'error', summary: 'Sign-in', detail: 'Something went wrong' });
       console.error(error);
@@ -110,7 +108,7 @@ export class SecurityStore {
   }
 
   async registerPasskey(_returnUrl?: string) {
-    await this.passkeyExtension.registerPasskeyInBrowser();
+    await this.keycloakService.registerPasskey();
     await this.loadPasskeys();
   }
 

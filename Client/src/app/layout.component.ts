@@ -32,10 +32,10 @@ export class LayoutComponent {
     this.securityStore.closePasskeyDialog(this.dontShowPasskeyDialogAgain);
   }
 
-  goToPasskeyRegistration(): void {
-    const skip = this.dontShowPasskeyDialogAgain;
-    this.securityStore.closePasskeyDialog(skip);
-    void this.router.navigate(['/account/passkeys']);
+  async registerPasskeyFromDialog(): Promise<void> {
+    await this.securityStore.registerPasskey();
+    this.securityStore.closePasskeyDialog(this.dontShowPasskeyDialogAgain);
+    await this.router.navigate(['/account/passkeys']);
   }
 
   dismissPasskeyDialog(): void {
