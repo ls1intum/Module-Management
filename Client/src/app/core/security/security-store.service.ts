@@ -1,6 +1,7 @@
 import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformServer } from '@angular/common';
 import { KeycloakService } from './keycloak.service';
+import { PasskeyExtensionService } from './passkey-extension.service';
 import { firstValueFrom } from 'rxjs';
 import { UserControllerService, User } from '../modules/openapi';
 import { Passkey } from './keycloak-credentials.types';
@@ -13,6 +14,7 @@ function passkeyDialogDismissedStorageKey(sub: string): string {
 @Injectable({ providedIn: 'root' })
 export class SecurityStore {
   keycloakService = inject(KeycloakService);
+  passkeyExtension = inject(PasskeyExtensionService);
   userControllerService = inject(UserControllerService);
   private readonly messageService = inject(MessageService);
 
