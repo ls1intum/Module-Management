@@ -54,16 +54,12 @@ export class KeycloakService {
     }
   }
 
-  login(returnUrl?: string) {
-    return this.keycloak.login({ redirectUri: window.location.origin + (returnUrl || ''), action: 'webauthn-register-passwordless:skip_if_exists' });
+  loginWithTumRedirect(returnUrl?: string) {
+    return this.keycloak.login({ redirectUri: window.location.origin + (returnUrl ?? '') });
   }
 
   logout() {
     return this.keycloak.logout({ redirectUri: environment.redirect });
-  }
-
-  registerPasskey(returnUrl?: string) {
-    return this.keycloak.login({ redirectUri: window.location.origin + (returnUrl || ''), action: 'webauthn-register-passwordless' });
   }
 
   getCredentials() {
