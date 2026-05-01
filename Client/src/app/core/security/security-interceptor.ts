@@ -10,7 +10,7 @@ export const securityInterceptor: HttpInterceptorFn = (req, next) => {
   return from(keycloakService.updateToken()).pipe(
     switchMap(() => {
       // add bearer token to request
-      const bearer = keycloakService.bearer;
+      const bearer = keycloakService.keycloak.token;
 
       if (!bearer) {
         return next(req);

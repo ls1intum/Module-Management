@@ -13,9 +13,7 @@
     <a class="flex gap-2 text-xl font-semibold" routerLink="/">CIT Module Management</a>
   </div>
 
-  <!-- Right Side: Theme Toggle, Sign In/Out -->
   <div class="flex items-center gap-4">
-    <!-- Theme Toggle Button -->
     <p-button
       [icon]="isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'"
       severity="contrast"
@@ -24,21 +22,8 @@
       tooltipPosition="bottom"
       [ariaLabel]="isDarkMode() ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
     />
-
-    <!-- If the user is signed in -->
     @if (user() !== undefined) {
-      <p-button
-        #userButton
-        [label]="user()?.firstName + ' ' + user()?.lastName"
-        severity="contrast"
-        [outlined]="true"
-        (onClick)="menu.toggle($event)"
-        [style]="{ 'min-width': '150px' }"
-      />
-
-      <p-menu #menu [model]="menuItems" [popup]="true" appendTo="body" [style]="{ 'min-width': userButton.el.nativeElement.offsetWidth + 'px' }" />
-    } @else {
-      <p-button label="Sign In" severity="contrast" (onClick)="signIn()" />
+      <app-sign-in />
     }
   </div>
 </header>
