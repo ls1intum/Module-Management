@@ -84,7 +84,8 @@ export class ModuleVersionStatusPipe implements PipeTransform {
           fadedColor: 'bg-sky-300',
           severity: 'info'
         };
-      case ModuleVersionCompactDTO.StatusEnum.Rejected:
+      case ModuleVersionCompactDTO.StatusEnum.RejectedAtCoordinatorsFeedback:
+      case ModuleVersionCompactDTO.StatusEnum.RejectedAtExaminationBoardFeedback:
         return {
           text: 'Rejected',
           normalColor: 'bg-red-500',

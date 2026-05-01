@@ -30,6 +30,9 @@ public enum ModuleVersionStatus {
     PENDING_QUALITY_MANAGEMENT_FEEDBACK,
     ACCEPTED,
     REQUIRES_REVIEW,
-    REJECTED,
+    /** Rejected during program/area coordinator feedback. */
+    REJECTED_AT_COORDINATORS_FEEDBACK,
+    /** Rejected during examination board feedback. */
+    REJECTED_AT_EXAMINATION_BOARD_FEEDBACK,
     CANCELLED,
 }

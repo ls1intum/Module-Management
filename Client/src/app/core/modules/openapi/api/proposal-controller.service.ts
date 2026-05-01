@@ -423,12 +423,12 @@ export class ProposalControllerService implements ProposalControllerServiceInter
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public requestFullFeedback(proposalId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProposalViewDTO>;
-    public requestFullFeedback(proposalId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProposalViewDTO>>;
-    public requestFullFeedback(proposalId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProposalViewDTO>>;
-    public requestFullFeedback(proposalId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public requestExaminationBoardFeedback(proposalId: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProposalViewDTO>;
+    public requestExaminationBoardFeedback(proposalId: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProposalViewDTO>>;
+    public requestExaminationBoardFeedback(proposalId: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProposalViewDTO>>;
+    public requestExaminationBoardFeedback(proposalId: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (proposalId === null || proposalId === undefined) {
-            throw new Error('Required parameter proposalId was null or undefined when calling requestFullFeedback.');
+            throw new Error('Required parameter proposalId was null or undefined when calling requestExaminationBoardFeedback.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -467,7 +467,7 @@ export class ProposalControllerService implements ProposalControllerServiceInter
             }
         }
 
-        let localVarPath = `/api/proposals/request-full-feedback/${this.configuration.encodeParam({name: "proposalId", value: proposalId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
+        let localVarPath = `/api/proposals/request-examination-board-feedback/${this.configuration.encodeParam({name: "proposalId", value: proposalId, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
         return this.httpClient.request<ProposalViewDTO>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,

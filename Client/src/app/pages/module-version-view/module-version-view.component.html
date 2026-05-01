@@ -236,17 +236,13 @@
       @if (currentStepIndex() === 6) {
         <p-card header="Submit for examination board feedback">
           <p class="mb-4">Request feedback from the examination boards of the chosen degree programs.</p>
-        </p-card>
-      }
-
-      @if (currentStepIndex() === 7) {
-        <p-card header="Submit for full feedback">
-          <p class="mb-4">Request feedback from quality management feedback.</p>
-          @if (moduleVersionDto.feedbacks?.length) {
-            <div class="space-y-2">
-              <p class="font-medium">Feedback status</p>
+          @if (examinationBoardMemberFeedbacksForStep6().feedbacks.length > 0) {
+            <div class="mb-4">
+              <p class="font-medium">
+                Examination board feedback status {{ examinationBoardMemberFeedbacksForStep6().fromPrevious ? '(from previous version)' : '(this version)' }}
+              </p>
               <ul class="space-y-2 list-none p-0 m-0">
-                @for (fb of moduleVersionDto.feedbacks; track fb.feedbackId) {
+                @for (fb of examinationBoardMemberFeedbacksForStep6().feedbacks; track fb.feedbackId) {
                   <li>
                     <div class="flex items-center gap-2 flex-wrap">
                       <span class="font-medium">{{ fb | feedbackAuthorDisplay }}:</span>

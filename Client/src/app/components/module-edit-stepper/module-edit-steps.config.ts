@@ -24,7 +24,7 @@ export const MODULE_EDIT_STEPS: ModuleEditStepConfig[] = [
     controlNames: [
       'titleEng',
       'titleDe',
-      // 'bulletPoints',
+      'bulletPoints',
       'credits',
       'frequencyEng',
       'hoursLecture',
@@ -33,7 +33,7 @@ export const MODULE_EDIT_STEPS: ModuleEditStepConfig[] = [
       'hoursSeminar',
       'firstSemesterAvailable',
       'successorModuleName',
-      // 'levelEng',
+      'levelEng',
       'languageEng'
     ],
     requiredControlNames: ['titleEng']
@@ -66,11 +66,6 @@ export const MODULE_EDIT_STEPS: ModuleEditStepConfig[] = [
   {
     id: 'submit-examination-board-feedback',
     title: 'Submit for examination board feedback',
-    controlNames: []
-  },
-  {
-    id: 'submit-full-feedback',
-    title: 'Submit for full feedback',
     controlNames: []
   }
 ];

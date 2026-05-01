@@ -32,6 +32,7 @@ public class ModuleVersion {
     private LocalDateTime creationDate;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     @NotNull
     private ModuleVersionStatus status;
 

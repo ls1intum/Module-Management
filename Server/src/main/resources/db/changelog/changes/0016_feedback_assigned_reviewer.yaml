@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0016_feedback_assigned_reviewer
+      author: module-management
+      changes:
+        - addColumn:
+            tableName: feedback
+            columns:
+              - column:
+                  name: assigned_reviewer_user_id
+                  type: UUID
+                  constraints:
+                    nullable: true
+                    foreignKeyName: feedback_assigned_reviewer_user_fk
+                    references: app_user(user_id)
+
+  - changeSet:
+      id: 0016_feedback_examination_board_ref
+      author: module-management
+      changes:
+        - addColumn:
+            tableName: feedback
+            columns:
+              - column:
+                  name: examination_board_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+                    foreignKeyName: feedback_examination_board_fk
+                    references: examination_board(examination_board_id)

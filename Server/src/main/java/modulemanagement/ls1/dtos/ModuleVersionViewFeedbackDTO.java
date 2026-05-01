@@ -15,9 +15,11 @@ public class ModuleVersionViewFeedbackDTO {
     private String feedbackFromFirstName;
     private String feedbackFromLastName;
     private String rejectionComment;
-    private UserRole feedbackRole;
+    private UserRole requiredRole;
     private String requestedFromUserName;
     private String requestedFromSpecializationName;
+    private Long examinationBoardId;
+    private String examinationBoardName;
     private FeedbackStatus feedbackStatus;
     private LocalDateTime createdAt;
     private LocalDateTime submissionDate;
@@ -59,21 +61,27 @@ public class ModuleVersionViewFeedbackDTO {
             dto.setFeedbackFromLastName(f.getFeedbackFrom().getLastName());
         }
         dto.setRejectionComment(f.getComment());
-        dto.setFeedbackRole(f.getRequiredRole());
+        dto.setRequiredRole(f.getRequiredRole());
+        if (f.getAssignedReviewer() != null) {
+            var ar = f.getAssignedReviewer();
+            dto.setRequestedFromUserName(ar.getFirstName() + " " + ar.getLastName());
+        }
         if (f.getDegreeProgramSpecialization() != null) {
             var spec = f.getDegreeProgramSpecialization();
             dto.setRequestedFromSpecializationName(spec.getName());
-            if (spec.getResponsibleUser() != null) {
+            dto.setDegreeProgramSpecializationId(spec.getDegreeProgramSpecializationId());
+            if (f.getAssignedReviewer() == null && spec.getResponsibleUser() != null) {
                 var resp = spec.getResponsibleUser();
                 dto.setRequestedFromUserName(resp.getFirstName() + " " + resp.getLastName());
             }
         }
+        if (f.getExaminationBoard() != null) {
+            dto.setExaminationBoardId(f.getExaminationBoard().getExaminationBoardId());
+            dto.setExaminationBoardName(f.getExaminationBoard().getName());
+        }
         dto.setFeedbackStatus(f.getStatus());
         dto.setCreatedAt(f.getCreatedAt());
         dto.setSubmissionDate(f.getSubmissionDate());
-        if (f.getDegreeProgramSpecialization() != null) {
-            dto.setDegreeProgramSpecializationId(f.getDegreeProgramSpecialization().getDegreeProgramSpecializationId());
-        }
         dto.setTitleFeedback(f.getTitleFeedback());
         dto.setTitleDeFeedback(f.getTitleDeFeedback());
         dto.setBulletPointsFeedback(f.getBulletPointsFeedback());

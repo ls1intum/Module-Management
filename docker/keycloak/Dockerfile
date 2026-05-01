@@ -1,13 +1,15 @@
 # Keycloak image with Module-Management passkey realm extension (WebAuthn /passkey/*)
 FROM maven:3.9-eclipse-temurin-21 AS extension-build
-WORKDIR /build
-COPY keycloak-extension-passkey /build/extension
 WORKDIR /build/extension
-RUN mvn -q -DskipTests package
+COPY keycloak-extension-passkey/ /build/extension/
+# Resolve built JAR to a fixed path (artifactId/version may change; mvn failure fails the stage).
+RUN --mount=type=cache,target=/root/.m2 \
+    mvn -ntp -DskipTests package \
+    && cp target/custom-endpoint-*.jar /passkey-provider.jar
 
 FROM quay.io/keycloak/keycloak:26.5 AS kc-with-provider
 COPY --from=extension-build --chown=keycloak:keycloak \
-    /build/extension/target/custom-endpoint-1.0-SNAPSHOT.jar \
+    /passkey-provider.jar \
     /opt/keycloak/providers/module-management-passkey.jar
 RUN /opt/keycloak/bin/kc.sh build
 

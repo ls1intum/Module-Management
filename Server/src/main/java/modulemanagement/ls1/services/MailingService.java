@@ -92,9 +92,8 @@ public class MailingService {
     private Set<User> getFeedbackRecipients(Feedback feedback) {
         Set<User> recipients = new LinkedHashSet<>();
 
-        if (feedback.getDegreeProgramSpecialization() != null
-                && feedback.getDegreeProgramSpecialization().getResponsibleUser() != null) {
-            recipients.add(feedback.getDegreeProgramSpecialization().getResponsibleUser());
+        if (feedback.getAssignedReviewer() != null) {
+            recipients.add(feedback.getAssignedReviewer());
             return recipients;
         }
 
@@ -108,9 +107,16 @@ public class MailingService {
     }
 
     private String buildReviewerRequestBody(Feedback feedback, String moduleTitle, User recipient) {
-        String reviewerScope = feedback.getDegreeProgramSpecialization() != null
-                ? "specialization: " + feedback.getDegreeProgramSpecialization().getName()
-                : "role: " + feedback.getRequiredRole();
+        String reviewerScope;
+        if (feedback.getExaminationBoard() != null) {
+            reviewerScope = "examination board: " + feedback.getExaminationBoard().getName();
+        } else if (feedback.getDegreeProgramSpecialization() != null) {
+            reviewerScope = "specialization: " + feedback.getDegreeProgramSpecialization().getName();
+        } else if (feedback.getAssignedReviewer() != null) {
+            reviewerScope = "assigned reviewer";
+        } else {
+            reviewerScope = "role: " + feedback.getRequiredRole();
+        }
         return "Hello " + safeName(recipient) + ",\n\n"
                 + "You have received a new review request for module proposal "
                 + "\"" + moduleTitle + "\".\n"

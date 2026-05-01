@@ -63,6 +63,6 @@ export interface ProposalControllerServiceInterface {
      * 
      * @param proposalId 
      */
-    requestFullFeedback(proposalId: number, extraHttpRequestParams?: any): Observable<ProposalViewDTO>;
+    requestExaminationBoardFeedback(proposalId: number, extraHttpRequestParams?: any): Observable<ProposalViewDTO>;
 
 }

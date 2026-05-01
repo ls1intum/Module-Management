@@ -13,6 +13,7 @@ import { User } from './user';
 export interface Feedback { 
     feedbackId?: number;
     feedbackFrom?: User;
+    assignedReviewer?: User;
     invalidated?: boolean;
     requiredRole?: Feedback.RequiredRoleEnum;
     status: Feedback.StatusEnum;

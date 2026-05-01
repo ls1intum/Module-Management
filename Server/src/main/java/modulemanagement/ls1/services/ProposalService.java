@@ -4,12 +4,14 @@ import modulemanagement.ls1.dtos.*;
 import modulemanagement.ls1.enums.*;
 import modulemanagement.ls1.models.DegreeProgram;
 import modulemanagement.ls1.models.DegreeProgramSpecialization;
+import modulemanagement.ls1.models.ExaminationBoard;
 import modulemanagement.ls1.models.Feedback;
 import modulemanagement.ls1.models.ModuleVersion;
 import modulemanagement.ls1.models.ModuleVersionDegreeProgramAssignment;
 import modulemanagement.ls1.models.Proposal;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.repositories.DegreeProgramRepository;
+import modulemanagement.ls1.repositories.ExaminationBoardRepository;
 import modulemanagement.ls1.repositories.FeedbackRepository;
 import modulemanagement.ls1.repositories.ModuleVersionRepository;
 import modulemanagement.ls1.repositories.ProposalRepository;
@@ -23,10 +25,13 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Validated
@@ -36,15 +41,18 @@ public class ProposalService {
     private final ModuleVersionRepository moduleVersionRepository;
     private final FeedbackRepository feedbackRepository;
     private final DegreeProgramRepository degreeProgramRepository;
+    private final ExaminationBoardRepository examinationBoardRepository;
     private final MailingService mailingService;
 
     public ProposalService(ProposalRepository proposalRepository, ModuleVersionRepository moduleVersionRepository,
             FeedbackRepository feedbackRepository, DegreeProgramRepository degreeProgramRepository,
+            ExaminationBoardRepository examinationBoardRepository,
             MailingService mailingService) {
         this.proposalRepository = proposalRepository;
         this.moduleVersionRepository = moduleVersionRepository;
         this.feedbackRepository = feedbackRepository;
         this.degreeProgramRepository = degreeProgramRepository;
+        this.examinationBoardRepository = examinationBoardRepository;
         this.mailingService = mailingService;
     }
 
@@ -182,10 +190,16 @@ public class ProposalService {
 
         for (ModuleVersionDegreeProgramAssignment assignment : mv.getDegreeProgramAssignments()) {
             var spec = assignment.getDegreeProgramSpecialization();
+            if (spec.getResponsibleUser() == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Specialization \"" + spec.getName() + "\" has no responsible user. "
+                                + "Assign a program or area coordinator before submitting for feedback.");
+            }
             Feedback feedback = new Feedback();
             feedback.setStatus(FeedbackStatus.PENDING_FEEDBACK);
             feedback.setCreatedAt(LocalDateTime.now());
             feedback.setDegreeProgramSpecialization(spec);
+            feedback.setAssignedReviewer(spec.getResponsibleUser());
             feedback.setRequiredRole(null);
             feedback.setModuleVersion(mv);
             requiredFeedbacks.add(feedbackRepository.save(feedback));
@@ -206,16 +220,14 @@ public class ProposalService {
     }
 
     /**
-     * Roles that receive feedback in the second submission (after coordinator
-     * feedback is accepted).
+     * Request feedback from examination board members. Only after all content steps
+     * are complete,
+     * proposal is at examination-board submission, and every coordinator feedback
+     * for current
+     * assignments is approved.
      */
-    private static final Set<UserRole> FULL_FEEDBACK_ROLES = Set.of(
-            UserRole.QUALITY_MANAGEMENT,
-            UserRole.ACADEMIC_PROGRAM_ADVISOR,
-            UserRole.EXAMINATION_BOARD);
-
     @Transactional
-    public ProposalViewDTO requestFullFeedback(Long proposalId, UUID userId) {
+    public ProposalViewDTO requestExaminationBoardFeedback(Long proposalId, UUID userId) {
         Proposal proposal = proposalRepository.findById(proposalId)
                 .orElseThrow(() -> new IllegalArgumentException("No proposal with id " + proposalId + " found"));
         if (!proposal.getCreatedBy().getUserId().equals(userId)) {
@@ -226,20 +238,20 @@ public class ProposalService {
         }
 
         ModuleVersion mv = proposal.getLatestModuleVersionWithContent();
-        if (!mv.getStatus().equals(ModuleVersionStatus.WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION)) {
+        if (!mv.getStatus().equals(ModuleVersionStatus.WAITING_FOR_EXAMINATION_BOARD_SUBMISSION)) {
             throw new IllegalStateException(
-                    "Proposal must be in PENDING_FULL_SUBMISSION (coordinator feedback accepted). It is "
-                            + mv.getStatus() + ".");
+                    "Proposal is not waiting for examination board submission. It is " + mv.getStatus() + ".");
+        }
+        if (!proposal.getStatus().equals(ProposalStatus.WAITING_FOR_EXAMINATION_BOARD_SUBMISSION)) {
+            throw new IllegalStateException(
+                    "Proposal workflow is not at examination board submission. It is " + proposal.getStatus() + ".");
         }
         if (!mv.isCompleted()) {
-            throw new IllegalStateException("All steps must be completed before submitting for full feedback.");
+            throw new IllegalStateException(
+                    "All steps must be completed before submitting for examination board feedback.");
         }
 
-        List<Feedback> requiredFeedbacks = mv.getRequiredFeedbacks() != null ? mv.getRequiredFeedbacks()
-                : new ArrayList<>();
-        List<Feedback> coordinatorFeedbacks = requiredFeedbacks.stream()
-                .filter(f -> f.getDegreeProgramSpecialization() != null && !f.isInvalidated())
-                .toList();
+        List<Feedback> coordinatorFeedbacks = currentCoordinatorFeedbacks(proposal, mv);
         if (coordinatorFeedbacks.isEmpty()) {
             throw new IllegalStateException(
                     "No coordinator feedbacks for current assignments. Submit for coordinator feedback first.");
@@ -248,31 +260,58 @@ public class ProposalService {
                 .allMatch(f -> f.getStatus() == FeedbackStatus.APPROVED);
         if (!allCoordinatorAccepted) {
             throw new IllegalStateException(
-                    "All feedback from program and area coordinators (for current assignments) must be accepted before submitting for full feedback.");
+                    "All coordinator feedbacks must be approved before submitting for examination board feedback.");
         }
 
-        // Create new feedbacks (one per role); do not reuse old ones.
-        List<Feedback> newFullFeedbackRequests = new ArrayList<>();
-        for (UserRole role : FULL_FEEDBACK_ROLES) {
-            Feedback feedback = new Feedback();
-            feedback.setStatus(FeedbackStatus.PENDING_FEEDBACK);
-            feedback.setCreatedAt(LocalDateTime.now());
-            feedback.setRequiredRole(role);
-            feedback.setDegreeProgramSpecialization(null);
-            feedback.setModuleVersion(mv);
-            Feedback saved = feedbackRepository.save(feedback);
-            requiredFeedbacks.add(saved);
-            newFullFeedbackRequests.add(saved);
+        LinkedHashSet<Long> boardIds = new LinkedHashSet<>();
+        for (ModuleVersionDegreeProgramAssignment assignment : mv.getDegreeProgramAssignments()) {
+            DegreeProgram program = degreeProgramRepository
+                    .findById(assignment.getDegreeProgram().getDegreeProgramId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                            "Degree program not found: " + assignment.getDegreeProgram().getDegreeProgramId()));
+            if (program.getExaminationBoard() == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Degree program \"" + program.getName() + "\" has no examination board assigned. "
+                                + "An administrator must link an examination board before you can continue.");
+            }
+            boardIds.add(program.getExaminationBoard().getExaminationBoardId());
         }
 
-        mv.setStatus(ModuleVersionStatus.WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION);
-        proposal.setStatus(ProposalStatus.WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION);
+        List<Feedback> newExaminationBoardFeedbacks = new ArrayList<>();
+        Set<String> seenMemberPerBoard = new java.util.HashSet<>();
+        for (Long boardId : boardIds) {
+            ExaminationBoard board = examinationBoardRepository.findByIdWithMembers(boardId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                            "Examination board not found: " + boardId));
+            if (board.getMembers() == null || board.getMembers().isEmpty()) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Examination board \"" + board.getName() + "\" has no members. Add members in administration.");
+            }
+            for (User member : board.getMembers()) {
+                String dedupeKey = boardId + ":" + member.getUserId();
+                if (!seenMemberPerBoard.add(dedupeKey)) {
+                    continue;
+                }
+                Feedback feedback = new Feedback();
+                feedback.setStatus(FeedbackStatus.PENDING_FEEDBACK);
+                feedback.setCreatedAt(LocalDateTime.now());
+                feedback.setRequiredRole(null);
+                feedback.setAssignedReviewer(member);
+                feedback.setExaminationBoard(board);
+                feedback.setDegreeProgramSpecialization(null);
+                feedback.setModuleVersion(mv);
+                newExaminationBoardFeedbacks.add(feedbackRepository.save(feedback));
+            }
+        }
+
+        mv.setStatus(ModuleVersionStatus.PENDING_EXAMINATION_BOARD_FEEDBACK);
+        proposal.setStatus(ProposalStatus.PENDING_EXAMINATION_BOARD_FEEDBACK);
         moduleVersionRepository.save(mv);
 
         proposal.addNewModuleVersion();
         proposalRepository.save(proposal);
         mailingService.sendReviewerRequestNotification(
-                newFullFeedbackRequests,
+                newExaminationBoardFeedbacks,
                 mv.getTitleEng() != null ? mv.getTitleEng() : "Untitled module");
 
         return ProposalViewDTO.from(proposal);
@@ -290,5 +329,55 @@ public class ProposalService {
                             + p.getStatus() + ".");
         }
         proposalRepository.delete(p);
+    }
+
+    /**
+     * Feedback rows are stored on the module version that was current when the
+     * request was made;
+     * after {@code addNewModuleVersion()}, the latest version may have an empty
+     * list while prior
+     * versions still hold active coordinator / examination-board rows. Aggregate
+     * for validation.
+     */
+    private static List<Feedback> nonInvalidatedFeedbacksForProposal(Proposal proposal) {
+        if (proposal.getModuleVersions() == null || proposal.getModuleVersions().isEmpty()) {
+            return List.of();
+        }
+        return proposal.getModuleVersions().stream()
+                .flatMap(m -> m.getRequiredFeedbacks() != null
+                        ? m.getRequiredFeedbacks().stream()
+                        : Stream.empty())
+                .filter(f -> f != null && !f.isInvalidated())
+                .toList();
+    }
+
+    private static Set<Long> currentAssignmentSpecializationIds(ModuleVersion latest) {
+        if (latest.getDegreeProgramAssignments() == null) {
+            return Set.of();
+        }
+        return latest.getDegreeProgramAssignments().stream()
+                .map(a -> a.getDegreeProgramSpecialization() != null
+                        ? a.getDegreeProgramSpecialization().getDegreeProgramSpecializationId()
+                        : null)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Coordinator slice for specializations currently assigned on {@code latest},
+     * any version.
+     */
+    private static List<Feedback> currentCoordinatorFeedbacks(Proposal proposal, ModuleVersion latest) {
+        Set<Long> specIds = currentAssignmentSpecializationIds(latest);
+        if (specIds.isEmpty()) {
+            return List.of();
+        }
+        return nonInvalidatedFeedbacksForProposal(proposal).stream()
+                .filter(f -> f.getDegreeProgramSpecialization() != null
+                        && specIds.contains(f.getDegreeProgramSpecialization().getDegreeProgramSpecializationId())
+                        && f.getAssignedReviewer() != null
+                        && f.getRequiredRole() == null
+                        && f.getExaminationBoard() == null)
+                .toList();
     }
 }

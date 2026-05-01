@@ -25,7 +25,8 @@ export class StatusDisplayPipe implements PipeTransform {
         return { text: 'Accepted', severity: 'success' };
       case 'REQUIRES_REVIEW':
         return { text: 'Requires Review', severity: 'info' };
-      case 'REJECTED':
+      case 'REJECTED_AT_COORDINATORS_FEEDBACK':
+      case 'REJECTED_AT_EXAMINATION_BOARD_FEEDBACK':
         return { text: 'Rejected', severity: 'danger' };
       default:
         return { text: status ?? '', severity: 'secondary' };
@@ -57,7 +58,8 @@ export class StatusInfoPipeline implements PipeTransform {
         return 'This module is approved.';
       case 'REQUIRES_REVIEW':
         return 'This module proposal requires your review. Create a new module version and update by the rejection feedback.';
-      case 'REJECTED':
+      case 'REJECTED_AT_COORDINATORS_FEEDBACK':
+      case 'REJECTED_AT_EXAMINATION_BOARD_FEEDBACK':
         return 'This proposal was rejected. Create a new module version to resubmit.';
       default:
         return status ?? '';

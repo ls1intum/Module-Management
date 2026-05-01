@@ -44,6 +44,80 @@ public class ModuleVersionStepsChangeDetector {
         return !requestAssignments.equals(mvAssignments);
     }
 
+    /**
+     * True when any module field outside step 1 (basic + assignment set) differs from the
+     * persisted version. Used to invalidate examination board feedback when curriculum/content
+     * changes without altering step 1.
+     */
+    public static boolean isPostStep1DataChanged(ModuleVersionUpdateRequestDTO request, ModuleVersion mv) {
+        if (!Objects.equals(normalize(request.getBulletPoints()), normalize(mv.getBulletPoints()))) {
+            return true;
+        }
+        if (!Objects.equals(normalize(request.getLevelEng()), normalize(mv.getLevelEng()))) {
+            return true;
+        }
+        if (!Objects.equals(normalize(request.getDuration()), normalize(mv.getDuration()))) {
+            return true;
+        }
+        if (!Objects.equals(request.getHoursTotal(), mv.getHoursTotal())) {
+            return true;
+        }
+        if (!Objects.equals(request.getHoursSelfStudy(), mv.getHoursSelfStudy())) {
+            return true;
+        }
+        if (!Objects.equals(request.getHoursPresence(), mv.getHoursPresence())) {
+            return true;
+        }
+        if (!Objects.equals(normalize(request.getExaminationAchievementsEng()),
+                normalize(mv.getExaminationAchievementsEng()))) {
+            return true;
+        }
+        if (!Objects.equals(normalize(request.getExaminationAchievementsPromptEng()),
+                normalize(mv.getExaminationAchievementsPromptEng()))) {
+            return true;
+        }
+        if (!Objects.equals(normalize(request.getRepetitionEng()), normalize(mv.getRepetitionEng()))) {
+            return true;
+        }
+        if (!Objects.equals(normalize(request.getRecommendedPrerequisitesEng()),
+                normalize(mv.getRecommendedPrerequisitesEng()))) {
+            return true;
+        }
+        if (!Objects.equals(normalize(request.getContentEng()), normalize(mv.getContentEng()))) {
+            return true;
+        }
+        if (!Objects.equals(normalize(request.getContentPromptEng()), normalize(mv.getContentPromptEng()))) {
+            return true;
+        }
+        if (!Objects.equals(normalize(request.getLearningOutcomesEng()), normalize(mv.getLearningOutcomesEng()))) {
+            return true;
+        }
+        if (!Objects.equals(normalize(request.getLearningOutcomesPromptEng()),
+                normalize(mv.getLearningOutcomesPromptEng()))) {
+            return true;
+        }
+        if (!Objects.equals(normalize(request.getTeachingMethodsEng()), normalize(mv.getTeachingMethodsEng()))) {
+            return true;
+        }
+        if (!Objects.equals(normalize(request.getTeachingMethodsPromptEng()),
+                normalize(mv.getTeachingMethodsPromptEng()))) {
+            return true;
+        }
+        if (!Objects.equals(normalize(request.getMediaEng()), normalize(mv.getMediaEng()))) {
+            return true;
+        }
+        if (!Objects.equals(normalize(request.getLiteratureEng()), normalize(mv.getLiteratureEng()))) {
+            return true;
+        }
+        if (!Objects.equals(normalize(request.getResponsiblesEng()), normalize(mv.getResponsiblesEng()))) {
+            return true;
+        }
+        if (!Objects.equals(normalize(request.getLvSwsLecturerEng()), normalize(mv.getLvSwsLecturerEng()))) {
+            return true;
+        }
+        return false;
+    }
+
     private static String normalize(String s) {
         if (s == null)
             return null;
