@@ -18,6 +18,8 @@ public class DegreeProgramDTO {
 
     private List<DegreeProgramSpecializationDTO> degreeProgramSpecializations;
 
+    private ExaminationBoardSummaryDTO examinationBoard;
+
     public static DegreeProgramDTO fromDegreeProgram(DegreeProgram program) {
         DegreeProgramDTO dto = new DegreeProgramDTO();
         dto.setDegreeProgramId(program.getDegreeProgramId());
@@ -25,6 +27,7 @@ public class DegreeProgramDTO {
         if (program.getResponsibleUser() != null) {
             dto.setResponsibleUser(ResponsibleUserDTO.fromUser(program.getResponsibleUser()));
         }
+        dto.setExaminationBoard(ExaminationBoardSummaryDTO.fromEntity(program.getExaminationBoard()));
         if (program.getDegreeProgramSpecializations() != null) {
             dto.setDegreeProgramSpecializations(program.getDegreeProgramSpecializations().stream()
                     .map(DegreeProgramSpecializationDTO::fromEntity).collect(Collectors.toList()));

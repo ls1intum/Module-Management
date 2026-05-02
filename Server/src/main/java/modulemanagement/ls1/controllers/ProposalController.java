@@ -42,11 +42,11 @@ public class ProposalController {
         return ResponseEntity.ok(proposalDto);
     }
 
-    @PostMapping(value = "/request-full-feedback/{proposalId}")
+    @PostMapping(value = "/request-examination-board-feedback/{proposalId}")
     @PreAuthorize("hasAnyRole('PROFESSOR')")
-    public ResponseEntity<ProposalViewDTO> requestFullFeedback(@CurrentUser User user,
+    public ResponseEntity<ProposalViewDTO> requestExaminationBoardFeedback(@CurrentUser User user,
             @PathVariable Long proposalId) {
-        var proposalDto = proposalService.requestFullFeedback(proposalId, user.getUserId());
+        var proposalDto = proposalService.requestExaminationBoardFeedback(proposalId, user.getUserId());
         return ResponseEntity.ok(proposalDto);
     }
 

@@ -15,11 +15,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 @Service
 @Validated
@@ -75,15 +73,9 @@ public class FeedbackService {
     }
 
     public List<FeedbackListItemDto> getAllFeedbacksForUser(User user) {
-        List<Feedback> roleBased = user.getRoles() != null && !user.getRoles().isEmpty()
-                ? feedbackRepository.findByRequiredRoleInAndStatusAndInvalidatedFalse(user.getRoles(), FeedbackStatus.PENDING_FEEDBACK)
-                : Collections.emptyList();
-        List<Feedback> bySpecialization = feedbackRepository
-                .findByDegreeProgramSpecialization_ResponsibleUser_UserIdAndStatusAndInvalidatedFalse(user.getUserId(),
-                        FeedbackStatus.PENDING_FEEDBACK);
-        return Stream.of(roleBased.stream(), bySpecialization.stream())
-                .flatMap(s -> s)
-                .distinct()
+        List<Feedback> assignedToUser = feedbackRepository.findByAssignedReviewer_UserIdAndStatusAndInvalidatedFalse(
+                user.getUserId(), FeedbackStatus.PENDING_FEEDBACK);
+        return assignedToUser.stream()
                 .sorted(Comparator.comparing(Feedback::getFeedbackId))
                 .map(FeedbackListItemDto::fromFeedback)
                 .toList();
@@ -92,10 +84,8 @@ public class FeedbackService {
     private boolean canUserRespondToFeedback(Feedback feedback, User user) {
         if (user == null)
             return false;
-        if (feedback.getDegreeProgramSpecialization() != null
-                && feedback.getDegreeProgramSpecialization().getResponsibleUser() != null) {
-            return Objects.equals(user.getUserId(),
-                    feedback.getDegreeProgramSpecialization().getResponsibleUser().getUserId());
+        if (feedback.getAssignedReviewer() != null) {
+            return Objects.equals(user.getUserId(), feedback.getAssignedReviewer().getUserId());
         }
         return user.getRoles() != null && feedback.getRequiredRole() != null
                 && user.getRoles().contains(feedback.getRequiredRole());

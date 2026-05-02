@@ -220,7 +220,7 @@
             }
             <div class="mt-2"><input pInputText formControlName="successorModuleName" placeholder="Title of the successor module" class="w-full" /></div>
           </div>
-          <!-- <div>
+          <div>
             <label class="text-xl">Level</label>
             @if (moduleVersionId && hasFeedback('levelFeedback')) {
               @for (feedback of feedbacks(); track feedback.feedbackId) {
@@ -241,11 +241,11 @@
                   { value: 'Master', label: 'Master' },
                   { value: 'Bachelor/Master', label: 'Bachelor/Master' }
                 ]"
-                [required]="false"
+                [required]="true"
                 formControlName="levelEng"
               ></app-toggle-button-group>
             </div>
-          </div> -->
+          </div>
 
           <!-- <div>
             <label class="text-xl">Language</label>
@@ -765,41 +765,45 @@
         <div class="space-y-6">
           @if (isCreateMode()) {
             <p-message severity="info" variant="outlined">
-              Complete all steps and get coordinator feedback accepted first. Then you can submit for full feedback (quality management, program advisor, examination board).
+              Complete all steps and get coordinator feedback accepted first. You will then submit for examination board feedback.
             </p-message>
           } @else {
-            <p class="text-lg mb-4">
-              Submit for full feedback from quality management, academic program advisor, and examination board. This requires all steps to be completed and all program/area
-              coordinator feedback to be accepted.
-            </p>
-            <!-- @if (coordinatorFeedbacksForCurrentAssignments().length > 0 && !allCoordinatorFeedbacksAccepted()) {
-              <p-message severity="warn" variant="outlined">
-                All coordinator feedback must be accepted before you can submit for full feedback. Complete the first submission step and wait for approvals.
-              </p-message>
-            }
-            @if (currentVersionFeedbacks().length > 0) {
+            <p class="text-lg mb-4">Submit for feedback from the examination boards of the degree programs you selected. All the previous steps needs to be completed first.</p>
+            @if (examinationBoardMemberFeedbacksForStep6().feedbacks.length > 0) {
               <div class="mb-4">
-                <label class="text-xl block mb-2">Feedback status</label>
+                <label class="text-xl block mb-2">
+                  Examination board feedback status {{ examinationBoardMemberFeedbacksForStep6().fromPrevious ? '(from previous version)' : '(this version)' }}
+                </label>
                 <ul class="space-y-2 list-none p-0 m-0">
-                  @for (fb of currentVersionFeedbacks(); track fb.feedbackId) {
-                    <li class="flex items-center gap-2 flex-wrap">
-                      <span class="font-medium">{{ fb | feedbackAuthorDisplay }}:</span>
-                      <p-tag
-                        [value]="(fb.feedbackStatus ?? 'PENDING_FEEDBACK' | feedbackStatus).text"
-                        [severity]="(fb.feedbackStatus ?? 'PENDING_FEEDBACK' | feedbackStatus).severity"
-                      />
+                  @for (fb of examinationBoardMemberFeedbacksForStep6().feedbacks; track fb.feedbackId) {
+                    <li>
+                      <div class="flex items-center gap-2 flex-wrap">
+                        <span class="font-medium">{{ fb | feedbackAuthorDisplay }}:</span>
+                        <p-tag
+                          [value]="(fb.feedbackStatus ?? 'PENDING_FEEDBACK' | feedbackStatus).text"
+                          [severity]="(fb.feedbackStatus ?? 'PENDING_FEEDBACK' | feedbackStatus).severity"
+                        />
+                      </div>
+                      @if (fb.feedbackStatus === 'REJECTED' && fb.rejectionComment) {
+                        <feedback-message
+                          [authorDisplay]="fb | feedbackAuthorDisplay"
+                          [authorUserName]="fb.requestedFromUserName ?? null"
+                          [feedbackText]="fb.rejectionComment"
+                          styleClass="mt-2"
+                        />
+                      }
                     </li>
                   }
                 </ul>
               </div>
-            } -->
-            @if (canRequestFullFeedback()) {
+            }
+            @if (canRequestExaminationBoardFeedback()) {
               <p-button
                 type="button"
                 severity="success"
-                label="Submit for full feedback"
+                label="Submit for examination board feedback"
                 icon="pi pi-send"
-                (onClick)="requestFullFeedback()"
+                (onClick)="requestExaminationBoardFeedback()"
                 [loading]="loading()"
                 [disabled]="loading()"
               ></p-button>
@@ -817,12 +821,12 @@
           @if (isCreateMode()) {
             <p-button
               type="button"
-              type="submit"
               severity="contrast"
               label="Create proposal &amp; continue"
               icon="pi pi-arrow-right"
               [loading]="loading()"
               [disabled]="loading() || !proposalForm.get('titleEng')?.value?.trim()"
+              (onClick)="onSubmit()"
             ></p-button>
           }
           @if (!isCreateMode() && currentStepIndex() < MODULE_EDIT_STEPS.length - 1) {
@@ -830,15 +834,11 @@
           }
           @if (!isCreateMode()) {
             <p-button type="submit" severity="contrast" [disabled]="loading()">
-              {{ loading() ? 'Saving...' : 'Update proposal' }}
+              {{ 'Update proposal' }}
             </p-button>
           }
         </div>
       </div>
-
-      @if (error()) {
-        <p-message severity="error" icon="pi pi-exclamation-circle">{{ error() }}</p-message>
-      }
     </form>
   </div>
 </div>

@@ -1,11 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Feedback } from '../core/modules/openapi';
 
-/** Feedback with optional name/area (ModuleVersionViewFeedbackDTO) or role-only (Feedback). */
+/** ModuleVersionViewFeedbackDTO, Feedback, or similar with optional display fields. */
 type FeedbackAuthorInput = {
   requestedFromUserName?: string | null;
   requestedFromSpecializationName?: string | null;
-  feedbackRole?: Feedback.RequiredRoleEnum | null;
+  examinationBoardName?: string | null;
   requiredRole?: Feedback.RequiredRoleEnum | null;
 };
 
@@ -19,14 +19,30 @@ const ROLE_LABELS: Record<string, string> = {
   PROFESSOR: 'Professor'
 };
 
+/**
+ * Same pattern for both flows: {@code Label: scope — reviewer name} (scope only when no name).
+ * Examination board uses label "Examination board"; coordinators use "Coordinator".
+ */
 @Pipe({ name: 'feedbackAuthorDisplay', standalone: true })
 export class FeedbackAuthorDisplayPipe implements PipeTransform {
   transform(fb: FeedbackAuthorInput | null | undefined): string {
     if (!fb) return '';
-    const name = fb.requestedFromUserName;
-    const role = fb.feedbackRole ?? fb.requiredRole;
-    const area = fb.requestedFromSpecializationName ?? (role ? ROLE_LABELS[role] ?? role : null);
-    const combined = name && [name, area && `(${area})`].filter(Boolean).join(' ');
-    return combined ?? ROLE_LABELS[role ?? ''] ?? role ?? '-';
+    const name = (fb.requestedFromUserName ?? '').trim();
+    const role = fb.requiredRole;
+
+    const hasBoard = fb.examinationBoardName != null && fb.examinationBoardName.trim() !== '';
+    if (hasBoard) {
+      const board = `Examination board: ${fb.examinationBoardName!.trim()}`;
+      return name ? `${board} — ${name}` : board;
+    }
+
+    const scope =
+      (fb.requestedFromSpecializationName ?? '').trim() ||
+      (role ? ROLE_LABELS[role] ?? String(role) : '');
+    if (scope) {
+      const head = `Coordinator: ${scope}`;
+      return name ? `${head} — ${name}` : head;
+    }
+    return name || (ROLE_LABELS[role ?? ''] ?? role) || '-';
   }
 }

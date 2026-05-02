@@ -15,8 +15,14 @@ import { DegreeProgramsControllerService } from '../../core/modules/openapi/api/
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import {
+  filterCoordinatorFeedbacksForAssignments,
+  filterExaminationBoardMemberFeedbacks
+} from '../module-edit-stepper/coordinator-feedback.util';
 import { MODULE_EDIT_STEPS, StepperStatus } from '../module-edit-stepper/module-edit-steps.config';
+import { coordinatorFeedbackStepStatus, examinationBoardFeedbackStepStatus } from '../module-edit-stepper/module-version-stepper-status.util';
 import { BreadcrumbLabelsService } from '../breadcrumb/breadcrumb-labels.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   template: ''
@@ -29,13 +35,13 @@ export abstract class ProposalBaseComponent {
   protected proposalService = inject(ProposalControllerService);
   protected degreeProgramsService = inject(DegreeProgramsControllerService);
   protected breadcrumbLabels = inject(BreadcrumbLabelsService);
+  private readonly messageService = inject(MessageService);
 
   readonly MODULE_EDIT_STEPS = MODULE_EDIT_STEPS;
 
   proposalForm: FormGroup;
   loading = signal(false);
   loadingPrograms = signal(true);
-  error = signal<string | null>(null);
   moduleVersionDto = signal<ModuleVersionViewDTO | null>(null);
   moduleVersionId: number | null = null;
   feedbacks = signal<ModuleVersionViewFeedbackDTO[] | undefined>([]);
@@ -49,11 +55,23 @@ export abstract class ProposalBaseComponent {
   /** Updated on form valueChanges so stepCompleted computed re-runs when user types. */
   private formValueVersion = signal(0);
 
+  /**
+   * Per-step stepper state. Coordinator and examination-board steps use only
+   * `moduleVersionStatus()` (server workflow enum; aligned with proposal status on the server).
+   * Other steps depend on the form and/or assignments.
+   */
   stepsStatuses = computed(() => {
     this.formValueVersion();
     const form = this.proposalForm;
     const assignmentsList = this.assignments();
+    const mvStatus = this.moduleVersionStatus();
     return MODULE_EDIT_STEPS.map((step) => {
+      if (step.id === 'submit-coordinator-feedback') {
+        return coordinatorFeedbackStepStatus(mvStatus);
+      }
+      if (step.id === 'submit-examination-board-feedback') {
+        return examinationBoardFeedbackStepStatus(mvStatus);
+      }
       if (step.id === 'basic') {
         const allFieldsFilled = step.controlNames.every((name) => this.controlHasValue(form.get(name)));
         const hasCompleteAssignment = assignmentsList.some((a) => a.degreeProgramId != null && a.degreeProgramSpecializationId != null);
@@ -62,21 +80,6 @@ export abstract class ProposalBaseComponent {
         } else {
           return StepperStatus.Default;
         }
-      }
-      if (step.id === 'submit-coordinator-feedback') {
-        const feedbacks = this.coordinatorFeedbacksForStep1().feedbacks;
-        if (feedbacks.length === 0) return StepperStatus.Default;
-        const pending = ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.PendingFeedback;
-        const approved = ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.Approved;
-        const rejected = ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.Rejected;
-        if (feedbacks.some((fb) => fb.feedbackStatus === rejected)) return StepperStatus.Rejected;
-        if (feedbacks.some((fb) => (fb.feedbackStatus ?? pending) === pending)) return StepperStatus.Pending;
-        if (feedbacks.every((fb) => fb.feedbackStatus === approved)) return StepperStatus.Completed;
-        return StepperStatus.FeedbackGiven;
-      }
-
-      if (step.id === 'submit-full-feedback') {
-        return StepperStatus.Default;
       }
       return step.controlNames.every((name) => this.controlHasValue(form.get(name))) ? StepperStatus.Completed : StepperStatus.Default;
     });
@@ -102,39 +105,42 @@ export abstract class ProposalBaseComponent {
   /** Can submit for feedback (never submitted yet). */
   canRequestCoordinatorsFeedback = computed(() => {
     const status = this.moduleVersionStatus();
-    return status === 'PENDING_FIRST_SUBMISSION' && this.isFirstStepComplete();
+    return status === 'WAITING_FOR_COORDINATORS_SUBMISSION' && this.isFirstStepComplete();
   });
 
-  /** Can submit for full feedback (second submission): PENDING_FULL_SUBMISSION, all steps done, all coordinator feedback accepted. */
-  canRequestFullFeedback = computed(() => {
-    return (
-      this.moduleVersionStatus() === 'PENDING_FULL_SUBMISSION' &&
-      this.stepsStatuses()
-        .slice(0, 6)
-        .every((s) => s === StepperStatus.Completed)
-    );
+  /** Steps 0–5 complete; workflow status (server-driven) implies coordinators are done. */
+  canRequestExaminationBoardFeedback = computed(() => {
+    const statuses = this.stepsStatuses();
+    const throughContentSteps = statuses.slice(0, 6);
+    return this.moduleVersionStatus() === 'WAITING_FOR_EXAMINATION_BOARD_SUBMISSION' && throughContentSteps.every((s) => s === StepperStatus.Completed);
   });
 
-  /** Coordinator feedbacks for this version (for current assignments). From moduleVersionDto().feedbacks. */
-  coordinatorFeedbacksForCurrentAssignmentsFromDto = computed(() => {
-    const dto = this.moduleVersionDto();
-    const feedbacks = (dto as ModuleVersionViewDTO)?.feedbacks ?? [];
-    const coordinator = feedbacks.filter((f) => f.feedbackRole == null);
-    const specIds = new Set((dto as ModuleVersionViewDTO)?.degreeProgramAssignments?.map((a) => a.degreeProgramSpecializationId).filter((id): id is number => id != null) ?? []);
-    if (specIds.size === 0) return coordinator;
-    return coordinator.filter((f) => f.degreeProgramSpecializationId != null && specIds.has(f.degreeProgramSpecializationId));
-  });
-
-  /** Coordinator feedbacks to show in step 1: current version if any, otherwise previous version (feedbacks() from API). */
+  /**
+   * Coordinator feedback for step 1: current module version DTO if any rows match; otherwise
+   * {@code feedbacks()} from the previous-version API (latest draft may not list rows yet).
+   */
   coordinatorFeedbacksForStep1 = computed(() => {
-    const fromDto = this.coordinatorFeedbacksForCurrentAssignmentsFromDto();
-    if (fromDto.length > 0) return { feedbacks: fromDto, fromPrevious: false };
-    const prev = this.feedbacks() ?? [];
-    const coordinator = prev.filter((f) => f.feedbackRole == null);
     const dto = this.moduleVersionDto() as ModuleVersionViewDTO | null;
-    const specIds = new Set(dto?.degreeProgramAssignments?.map((a) => a.degreeProgramSpecializationId).filter((id): id is number => id != null) ?? []);
-    const filtered = specIds.size === 0 ? coordinator : coordinator.filter((f) => f.degreeProgramSpecializationId != null && specIds.has(f.degreeProgramSpecializationId));
-    return { feedbacks: filtered, fromPrevious: true };
+    const fromDto = filterCoordinatorFeedbacksForAssignments(dto?.feedbacks ?? [], dto);
+    if (fromDto.length > 0) {
+      return { feedbacks: fromDto, fromPrevious: false };
+    }
+    const fromPrev = filterCoordinatorFeedbacksForAssignments(this.feedbacks() ?? [], dto);
+    return { feedbacks: fromPrev, fromPrevious: true };
+  });
+
+  /**
+   * Examination-board member feedback for step 6: current DTO if listed there; else
+   * {@code feedbacks()} from previous-version API (same pattern as coordinator step 1).
+   */
+  examinationBoardMemberFeedbacksForStep6 = computed(() => {
+    const dto = this.moduleVersionDto() as ModuleVersionViewDTO | null;
+    const fromDto = filterExaminationBoardMemberFeedbacks(dto?.feedbacks ?? []);
+    if (fromDto.length > 0) {
+      return { feedbacks: fromDto, fromPrevious: false };
+    }
+    const fromPrev = filterExaminationBoardMemberFeedbacks(this.feedbacks() ?? []);
+    return { feedbacks: fromPrev, fromPrevious: true };
   });
 
   showPrompt: { [key: string]: boolean } = {
@@ -244,8 +250,76 @@ export abstract class ProposalBaseComponent {
     return program?.degreeProgramSpecializations ?? [];
   }
 
+  /** Shows a PrimeNG toast (global {@code p-toast} in {@code AppComponent}). */
+  protected showErrorAsToast(err: unknown, fallbackMessage?: string): void {
+    const detail = this.resolveErrorMessage(err, fallbackMessage);
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail,
+      life: 8000
+    });
+  }
+
+  private resolveErrorMessage(err: unknown, fallbackMessage?: string): string {
+    if (err instanceof HttpErrorResponse) {
+      const fromBody = this.messageFromHttpBody(err.error);
+      if (fromBody) return fromBody;
+      if (err.status === 0) {
+        return fallbackMessage ?? 'Network error. Check your connection.';
+      }
+      return fallbackMessage ?? err.message ?? `Request failed (${err.status}).`;
+    }
+    const direct = this.messageFromHttpBody(err);
+    if (direct) return direct;
+    return fallbackMessage ?? 'Something went wrong.';
+  }
+
+  private messageFromHttpBody(body: unknown): string | null {
+    if (body == null || body === '') return null;
+    if (typeof body === 'string') {
+      const t = body.trim();
+      return t.length > 0 ? t : null;
+    }
+    if (typeof body === 'object' && body !== null) {
+      const o = body as Record<string, unknown>;
+      for (const key of ['message', 'error', 'detail', 'title']) {
+        const v = o[key];
+        if (typeof v === 'string' && v.trim()) return v.trim();
+      }
+    }
+    return null;
+  }
+
   onProgramChange(rowIndex: number) {
     this.setAssignmentSpecialization(rowIndex, null);
+  }
+
+  requestExaminationBoardFeedback(): void {
+    const dto = this.moduleVersionDto();
+    const proposalId = dto && 'proposalId' in dto ? (dto as ModuleVersionViewDTO).proposalId : null;
+    if (proposalId == null) return;
+    this.loading.set(true);
+    this.proposalService.requestExaminationBoardFeedback(proposalId).subscribe({
+      next: (response: ProposalViewDTO) => {
+        this.moduleVersionDto.set(response);
+        const newId = response?.latestModuleVersion?.moduleVersionId;
+        if (newId != null && newId !== this.moduleVersionId) {
+          this.moduleVersionService.getPreviousModuleVersionFeedback(newId).subscribe({
+            next: (feedbacks) => this.feedbacks.set([...feedbacks]),
+            error: (err: HttpErrorResponse) => this.showErrorAsToast(err)
+          });
+          this.moduleVersionId = newId;
+          this.breadcrumbLabels.versionLabel.set(response?.latestVersion != null ? `Version ${response.latestVersion}` : null);
+          this.router.navigate(['/proposals', proposalId, 'version', newId, 'edit'], { replaceUrl: true });
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        this.showErrorAsToast(err, 'Failed to submit for examination board feedback');
+        this.loading.set(false);
+      },
+      complete: () => this.loading.set(false)
+    });
   }
 
   requestCoordinatorsFeedback(): void {
@@ -253,7 +327,6 @@ export abstract class ProposalBaseComponent {
     const proposalId = dto && 'proposalId' in dto ? (dto as ModuleVersionViewDTO).proposalId : null;
     if (proposalId == null) return;
     this.loading.set(true);
-    this.error.set(null);
     this.proposalService.requestCoordinatorsFeedback(proposalId).subscribe({
       next: (response: ProposalViewDTO) => {
         this.moduleVersionDto.set(response);
@@ -262,7 +335,7 @@ export abstract class ProposalBaseComponent {
         if (newId != null && newId !== this.moduleVersionId) {
           this.moduleVersionService.getPreviousModuleVersionFeedback(newId).subscribe({
             next: (feedbacks) => this.feedbacks.set([...feedbacks]),
-            error: (err: HttpErrorResponse) => this.error.set(err.error)
+            error: (err: HttpErrorResponse) => this.showErrorAsToast(err)
           });
 
           this.moduleVersionId = newId;
@@ -271,38 +344,7 @@ export abstract class ProposalBaseComponent {
         }
       },
       error: (err: HttpErrorResponse) => {
-        this.error.set(err.error?.message ?? err.error ?? 'Failed to submit');
-        this.loading.set(false);
-      },
-      complete: () => this.loading.set(false)
-    });
-  }
-
-  requestFullFeedback(): void {
-    const dto = this.moduleVersionDto();
-    const proposalId = dto && 'proposalId' in dto ? (dto as ModuleVersionViewDTO).proposalId : null;
-    if (proposalId == null) return;
-    this.loading.set(true);
-    this.error.set(null);
-    this.proposalService.requestFullFeedback(proposalId).subscribe({
-      next: (response: ProposalViewDTO) => {
-        this.moduleVersionDto.set(response);
-        // When backend created a new version (immutable versioning), switch to editing the new version
-        const newId = response?.latestModuleVersion?.moduleVersionId;
-        if (newId != null && newId !== this.moduleVersionId) {
-          // Refresh feedbacks so the next step reflects statuses from the freezed version.
-          this.moduleVersionService.getPreviousModuleVersionFeedback(newId).subscribe({
-            next: (feedbacks) => this.feedbacks.set([...feedbacks]),
-            error: (err: HttpErrorResponse) => this.error.set(err.error)
-          });
-
-          this.moduleVersionId = newId;
-          this.breadcrumbLabels.versionLabel.set(response?.latestVersion != null ? `Version ${response.latestVersion}` : null);
-          this.router.navigate(['/proposals', proposalId, 'version', newId, 'edit'], { replaceUrl: true });
-        }
-      },
-      error: (err: HttpErrorResponse) => {
-        this.error.set(err.error?.message ?? err.error ?? 'Failed to submit for full feedback');
+        this.showErrorAsToast(err, 'Failed to submit');
         this.loading.set(false);
       },
       complete: () => this.loading.set(false)
@@ -329,7 +371,7 @@ export abstract class ProposalBaseComponent {
       next: (response: CompletionServiceResponseDTO) => {
         this.proposalForm.patchValue({ contentEng: response.responseData });
       },
-      error: (err: HttpErrorResponse) => console.log(err.error),
+      error: (err: HttpErrorResponse) => this.showErrorAsToast(err, 'Failed to generate content'),
       complete: () => this.loading.set(false)
     });
   }
@@ -341,7 +383,7 @@ export abstract class ProposalBaseComponent {
       next: (response: CompletionServiceResponseDTO) => {
         this.proposalForm.patchValue({ examinationAchievementsEng: response.responseData });
       },
-      error: (err: HttpErrorResponse) => console.log(err.error),
+      error: (err: HttpErrorResponse) => this.showErrorAsToast(err, 'Failed to generate examination achievements'),
       complete: () => this.loading.set(false)
     });
   }
@@ -353,7 +395,7 @@ export abstract class ProposalBaseComponent {
       next: (response: CompletionServiceResponseDTO) => {
         this.proposalForm.patchValue({ learningOutcomesEng: response.responseData });
       },
-      error: (err: HttpErrorResponse) => console.log(err.error),
+      error: (err: HttpErrorResponse) => this.showErrorAsToast(err, 'Failed to generate learning outcomes'),
       complete: () => this.loading.set(false)
     });
   }
@@ -365,7 +407,7 @@ export abstract class ProposalBaseComponent {
       next: (response: CompletionServiceResponseDTO) => {
         this.proposalForm.patchValue({ teachingMethodsEng: response.responseData });
       },
-      error: (err: HttpErrorResponse) => console.log(err.error),
+      error: (err: HttpErrorResponse) => this.showErrorAsToast(err, 'Failed to generate teaching methods'),
       complete: () => this.loading.set(false)
     });
   }

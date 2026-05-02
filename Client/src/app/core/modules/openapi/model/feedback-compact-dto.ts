@@ -13,6 +13,7 @@ export interface FeedbackCompactDTO {
     feedbackId?: number;
     requestedFromUserName?: string;
     requestedFromSpecializationName?: string;
+    examinationBoardName?: string;
     requiredRole?: FeedbackCompactDTO.RequiredRoleEnum;
     status?: FeedbackCompactDTO.StatusEnum;
     invalidated?: boolean;

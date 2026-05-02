@@ -29,6 +29,7 @@ public class Proposal {
     private LocalDateTime creationDate;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     @NotNull
     private ProposalStatus status;
 
@@ -53,6 +54,7 @@ public class Proposal {
         newMv.setVersion(latestMv.getVersion() + 1);
         newMv.setCreationDate(LocalDateTime.now());
         newMv.setStatus(latestMv.getStatus());
+        newMv.setModuleId(latestMv.getModuleId());
         newMv.setBulletPoints(latestMv.getBulletPoints());
         newMv.setTitleEng(latestMv.getTitleEng());
         newMv.setTitleDe(latestMv.getTitleDe());
@@ -71,11 +73,15 @@ public class Proposal {
         newMv.setHoursSelfStudy(latestMv.getHoursSelfStudy());
         newMv.setHoursPresence(latestMv.getHoursPresence());
         newMv.setExaminationAchievementsEng(latestMv.getExaminationAchievementsEng());
+        newMv.setExaminationAchievementsPromptEng(latestMv.getExaminationAchievementsPromptEng());
         newMv.setRepetitionEng(latestMv.getRepetitionEng());
         newMv.setRecommendedPrerequisitesEng(latestMv.getRecommendedPrerequisitesEng());
         newMv.setContentEng(latestMv.getContentEng());
+        newMv.setContentPromptEng(latestMv.getContentPromptEng());
         newMv.setLearningOutcomesEng(latestMv.getLearningOutcomesEng());
+        newMv.setLearningOutcomesPromptEng(latestMv.getLearningOutcomesPromptEng());
         newMv.setTeachingMethodsEng(latestMv.getTeachingMethodsEng());
+        newMv.setTeachingMethodsPromptEng(latestMv.getTeachingMethodsPromptEng());
         newMv.setMediaEng(latestMv.getMediaEng());
         newMv.setLiteratureEng(latestMv.getLiteratureEng());
         newMv.setResponsiblesEng(latestMv.getResponsiblesEng());

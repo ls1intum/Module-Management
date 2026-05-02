@@ -50,12 +50,11 @@ export class ProposalCreateComponent extends ProposalBaseComponent {
   }
 
   override async onSubmit(): Promise<void> {
-    if (!this.proposalForm.valid) return;
 
     const rawAssignments = this.assignments().filter((a) => a.degreeProgramId != null && a.degreeProgramSpecializationId != null);
     const programIds = rawAssignments.map((a) => a.degreeProgramId!);
     if (new Set(programIds).size !== programIds.length) {
-      this.error.set('Each degree program can only be assigned once.');
+      this.showErrorAsToast('Each degree program can only be assigned once.');
       return;
     }
     const degreeProgramAssignments: ModuleDegreeProgramAssignmentDTO[] = rawAssignments.map((a) => ({
@@ -68,7 +67,6 @@ export class ProposalCreateComponent extends ProposalBaseComponent {
       degreeProgramAssignments
     };
     this.loading.set(true);
-    this.error.set(null);
     try {
       const res = await firstValueFrom(this.proposalService.createProposal(body));
       const proposalId = res.proposalId;
@@ -76,10 +74,10 @@ export class ProposalCreateComponent extends ProposalBaseComponent {
       if (proposalId != null && moduleVersionId != null) {
         await this.router.navigate(['/proposals', proposalId, 'version', moduleVersionId, 'edit'], { queryParams: { created: true } });
       } else {
-        this.error.set('Unexpected response from server.');
+        this.showErrorAsToast('Unexpected response from server.');
       }
     } catch (err: unknown) {
-      this.error.set(err instanceof HttpErrorResponse ? (err.error ?? err.message) : 'Failed to create proposal.');
+      this.showErrorAsToast(err, 'Failed to create proposal.');
     } finally {
       this.loading.set(false);
     }

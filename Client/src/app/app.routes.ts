@@ -17,6 +17,8 @@ import { UsersPageComponent } from './pages/admin/users/users-page.component';
 import { AllDegreeProgramsPageComponent } from './pages/admin/degree-programs/all-degree-programs-page.component';
 import { DegreeProgramDetailsPageComponent } from './pages/admin/degree-programs/degree-program-details-page.component';
 import { AllSpecializationsPageComponent } from './pages/admin/degree-program-specializations/all-specializations-page.component';
+import { ExaminationBoardDetailPageComponent } from './pages/admin/examination-boards/examination-board-detail-page.component';
+import { ExaminationBoardsPageComponent } from './pages/admin/examination-boards/examination-boards-page.component';
 export const routes: Routes = [
   { path: '', component: IndexComponent },
   {
@@ -55,6 +57,8 @@ export const routes: Routes = [
     canActivate: [AuthGuard, AdminGuard],
     children: [
       { path: 'users', component: UsersPageComponent },
+      { path: 'examination-boards/:id', component: ExaminationBoardDetailPageComponent },
+      { path: 'examination-boards', component: ExaminationBoardsPageComponent },
       { path: 'degree-programs/specializations', component: AllSpecializationsPageComponent },
       { path: 'degree-programs/:id', component: DegreeProgramDetailsPageComponent },
       { path: 'degree-programs', component: AllDegreeProgramsPageComponent },

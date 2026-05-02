@@ -9,6 +9,7 @@
  */
 import { DegreeProgramSpecializationDTO } from './degree-program-specialization-dto';
 import { ResponsibleUserDTO } from './responsible-user-dto';
+import { ExaminationBoardSummaryDTO } from './examination-board-summary-dto';
 
 
 export interface DegreeProgramDTO { 
@@ -16,5 +17,6 @@ export interface DegreeProgramDTO {
     name: string;
     responsibleUser: ResponsibleUserDTO;
     degreeProgramSpecializations?: Array<DegreeProgramSpecializationDTO>;
+    examinationBoard?: ExaminationBoardSummaryDTO;
 }
 

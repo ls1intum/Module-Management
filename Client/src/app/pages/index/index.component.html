@@ -6,8 +6,10 @@
         <span class="text-xl font-semibold">Sign in required</span>
       </div>
     </ng-template>
-    <p class="text-muted-foreground mb-6">Log in to access the Module Management application.</p>
-    <p-button label="Sign In" icon="pi pi-sign-in" severity="contrast" (onClick)="securityStore.signIn()" />
+    <p class="text-muted-foreground mb-3">Sign in to access the Module Management application.</p>
+    <div class="flex justify-center">
+      <app-sign-in />
+    </div>
     <p-divider />
     <a href="https://outline.aet.cit.tum.de/doc/application-test-users-2XneFHnMuJ" target="_blank" class="text-sm text-muted-foreground hover:underline">
       <i class="pi pi-external-link"></i>
@@ -37,6 +39,10 @@
         <p-panel header="Degree Programs">
           <p class="text-sm text-muted-foreground mb-4">Manage degree programs and their areas of specialization.</p>
           <p-button label="Degree Programs" icon="pi pi-book" [routerLink]="['/admin/degree-programs']" severity="contrast" />
+        </p-panel>
+        <p-panel header="Examination boards">
+          <p class="text-sm text-muted-foreground mb-4">Create examination boards, assign members, and link them to degree programs.</p>
+          <p-button label="Examination boards" icon="pi pi-sitemap" [routerLink]="['/admin/examination-boards']" severity="contrast" />
         </p-panel>
       }
       @if (isProfessor()) {

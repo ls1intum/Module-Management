@@ -75,11 +75,14 @@ public class ModuleVersionService {
         }
 
         boolean step1Changed = ModuleVersionStepsChangeDetector.isStep1DataChanged(request, mv);
+        boolean postStep1Changed = ModuleVersionStepsChangeDetector.isPostStep1DataChanged(request, mv);
 
         applyUpdateRequest(mv, request);
 
         if (step1Changed) {
             invalidateActiveFeedbacksAndResetStatuses(mv);
+        } else if (postStep1Changed) {
+            invalidateExaminationBoardFeedbacksAndRewindExamPhase(mv);
         }
 
         mv = moduleVersionRepository.save(mv);
@@ -100,8 +103,38 @@ public class ModuleVersionService {
         }
         feedbackRepository.saveAll(activeFeedbacks);
 
-        proposal.setStatus(ProposalStatus.PENDING_FIRST_SUBMISSION);
-        mv.setStatus(ModuleVersionStatus.PENDING_FIRST_SUBMISSION);
+        proposal.setStatus(ProposalStatus.WAITING_FOR_COORDINATORS_SUBMISSION);
+        mv.setStatus(ModuleVersionStatus.WAITING_FOR_COORDINATORS_SUBMISSION);
+        proposalRepository.save(proposal);
+    }
+
+    /**
+     * When curriculum/content (steps after step 1) changes, prior examination board member
+     * feedback is no longer valid. Invalidate only those rows and return the workflow to
+     * examination-board submission; coordinator feedback is left unchanged.
+     */
+    private void invalidateExaminationBoardFeedbacksAndRewindExamPhase(ModuleVersion latestDraft) {
+        Proposal proposal = latestDraft.getProposal();
+        List<Feedback> activeFeedbacks = feedbackRepository
+                .findByModuleVersion_Proposal_ProposalIdAndInvalidatedFalse(proposal.getProposalId());
+        if (activeFeedbacks == null || activeFeedbacks.isEmpty()) {
+            return;
+        }
+        List<Feedback> examinationBoardMemberFeedbacks = activeFeedbacks.stream()
+                .filter(f -> f.getExaminationBoard() != null
+                        && f.getAssignedReviewer() != null
+                        && f.getRequiredRole() == null
+                        && f.getDegreeProgramSpecialization() == null)
+                .toList();
+        if (examinationBoardMemberFeedbacks.isEmpty()) {
+            return;
+        }
+        for (Feedback f : examinationBoardMemberFeedbacks) {
+            f.setInvalidated(true);
+        }
+        feedbackRepository.saveAll(examinationBoardMemberFeedbacks);
+        proposal.setStatus(ProposalStatus.WAITING_FOR_EXAMINATION_BOARD_SUBMISSION);
+        latestDraft.setStatus(ModuleVersionStatus.WAITING_FOR_EXAMINATION_BOARD_SUBMISSION);
         proposalRepository.save(proposal);
     }
 
@@ -191,21 +224,22 @@ public class ModuleVersionService {
                 .filter(f -> f != null && !f.isInvalidated())
                 .toList();
         List<Feedback> coordinatorFeedbacks = nonInvalidatedFeedbacks.stream()
-                .filter(f -> f.getDegreeProgramSpecialization() != null)
+                .filter(f -> f.getDegreeProgramSpecialization() != null
+                        && f.getAssignedReviewer() != null
+                        && f.getRequiredRole() == null
+                        && f.getExaminationBoard() == null)
                 .toList();
-        List<Feedback> roleBased = nonInvalidatedFeedbacks.stream()
-                .filter(f -> f.getRequiredRole() != null)
+        List<Feedback> examBoardAssigned = nonInvalidatedFeedbacks.stream()
+                .filter(f -> f.getExaminationBoard() != null
+                        && f.getAssignedReviewer() != null
+                        && f.getRequiredRole() == null
+                        && f.getDegreeProgramSpecialization() == null)
                 .toList();
-
-        if (coordinatorFeedbacks.isEmpty() && roleBased.isEmpty()) {
+        if (coordinatorFeedbacks.isEmpty() && examBoardAssigned.isEmpty()) {
             return;
         }
 
-        if (!roleBased.isEmpty()) {
-            applyFullFeedbackRoleStatus(roleBased, mv, p);
-        } else {
-            applyCoordinatorFeedbackStatus(coordinatorFeedbacks, mv, p);
-        }
+        applyCoordinatorAndExaminationBoardStatus(coordinatorFeedbacks, examBoardAssigned, mv, p);
 
         syncWorkflowStatusToLatestModuleVersion(p, mv);
         proposalRepository.save(p);
@@ -213,67 +247,68 @@ public class ModuleVersionService {
     }
 
     /**
-     * Coordinator phase only (no role-based feedbacks on this module version yet).
-     * 1) At least one rejected → REJECTED
-     * 2) Else at least one pending → PENDING_COORDINATOR_FEEDBACK
-     * 3) Else all accepted → PENDING_FULL_SUBMISSION
-     * 4) Else → COORDINATOR_FEEDBACK_GIVEN (e.g. all FEEDBACK_GIVEN, no approval/rejection)
+     * Derives proposal/module version status from coordinator and examination-board
+     * feedback rows on <strong>this</strong> module version. When both slices are
+     * non-empty, coordinator outcomes take precedence until every coordinator feedback
+     * is {@link FeedbackStatus#APPROVED}, then examination-board rules apply.
      */
-    private void applyCoordinatorFeedbackStatus(List<Feedback> coordinatorFeedbacks, ModuleVersion mv, Proposal p) {
-        boolean hasRejected = coordinatorFeedbacks.stream()
-                .anyMatch(f -> f.getStatus() == FeedbackStatus.REJECTED);
-        if (hasRejected) {
-            mv.setStatus(ModuleVersionStatus.REJECTED);
-            p.setStatus(ProposalStatus.REJECTED);
-            return;
-        }
-        boolean hasPending = coordinatorFeedbacks.stream()
-                .anyMatch(f -> f.getStatus() == FeedbackStatus.PENDING_FEEDBACK);
-        if (hasPending) {
-            mv.setStatus(ModuleVersionStatus.PENDING_COORDINATOR_FEEDBACK);
-            p.setStatus(ProposalStatus.PENDING_COORDINATOR_FEEDBACK);
-            return;
-        }
-        boolean allApproved = coordinatorFeedbacks.stream()
-                .allMatch(f -> f.getStatus() == FeedbackStatus.APPROVED);
-        if (allApproved) {
-            mv.setStatus(ModuleVersionStatus.PENDING_FULL_SUBMISSION);
-            p.setStatus(ProposalStatus.PENDING_FULL_SUBMISSION);
-            return;
-        }
-        mv.setStatus(ModuleVersionStatus.COORDINATOR_FEEDBACK_GIVEN);
-        p.setStatus(ProposalStatus.COORDINATOR_FEEDBACK_GIVEN);
-    }
+    private void applyCoordinatorAndExaminationBoardStatus(List<Feedback> coordinatorFeedbacks,
+            List<Feedback> examBoardAssigned, ModuleVersion mv, Proposal p) {
+        boolean hasCoordinator = !coordinatorFeedbacks.isEmpty();
+        boolean hasExam = !examBoardAssigned.isEmpty();
 
-    /**
-     * Second submission: QM / advisor / examination board feedbacks.
-     */
-    private void applyFullFeedbackRoleStatus(List<Feedback> roleBased, ModuleVersion mv, Proposal p) {
-        boolean hasRejected = roleBased.stream()
-                .anyMatch(f -> f.getStatus() == FeedbackStatus.REJECTED);
-        if (hasRejected) {
-            mv.setStatus(ModuleVersionStatus.REJECTED);
-            p.setStatus(ProposalStatus.REJECTED);
+        if (hasCoordinator && coordinatorFeedbacks.stream()
+                .anyMatch(f -> f.getStatus() == FeedbackStatus.REJECTED)) {
+            mv.setStatus(ModuleVersionStatus.REJECTED_AT_COORDINATORS_FEEDBACK);
+            p.setStatus(ProposalStatus.REJECTED_AT_COORDINATORS_FEEDBACK);
+            return;
+        }
+        if (hasExam && examBoardAssigned.stream()
+                .anyMatch(f -> f.getStatus() == FeedbackStatus.REJECTED)) {
+            mv.setStatus(ModuleVersionStatus.REJECTED_AT_EXAMINATION_BOARD_FEEDBACK);
+            p.setStatus(ProposalStatus.REJECTED_AT_EXAMINATION_BOARD_FEEDBACK);
             return;
         }
 
-        boolean hasPending = roleBased.stream()
-                .anyMatch(f -> f.getStatus() == FeedbackStatus.PENDING_FEEDBACK);
-        if (hasPending) {
-            mv.setStatus(ModuleVersionStatus.PENDING_FULL_FEEDBACK);
-            p.setStatus(ProposalStatus.PENDING_FULL_FEEDBACK);
-            return;
+        if (hasCoordinator) {
+            boolean coordinatorHasPending = coordinatorFeedbacks.stream()
+                    .anyMatch(f -> f.getStatus() == FeedbackStatus.PENDING_FEEDBACK);
+            if (coordinatorHasPending) {
+                mv.setStatus(ModuleVersionStatus.PENDING_COORDINATORS_FEEDBACK);
+                p.setStatus(ProposalStatus.PENDING_COORDINATORS_FEEDBACK);
+                return;
+            }
+            boolean allCoordinatorsApproved = coordinatorFeedbacks.stream()
+                    .allMatch(f -> f.getStatus() == FeedbackStatus.APPROVED);
+            if (!allCoordinatorsApproved) {
+                mv.setStatus(ModuleVersionStatus.COORDINATORS_FEEDBACK_GIVEN);
+                p.setStatus(ProposalStatus.COORDINATORS_FEEDBACK_GIVEN);
+                return;
+            }
         }
-        boolean allApproved = roleBased.stream()
-                .allMatch(f -> f.getStatus() == FeedbackStatus.APPROVED);
-        if (allApproved) {
-            mv.setStatus(ModuleVersionStatus.ACCEPTED);
-            p.setStatus(ProposalStatus.ACCEPTED);
+
+        if (hasExam) {
+            boolean examHasPending = examBoardAssigned.stream()
+                    .anyMatch(f -> f.getStatus() == FeedbackStatus.PENDING_FEEDBACK);
+            if (examHasPending) {
+                mv.setStatus(ModuleVersionStatus.PENDING_EXAMINATION_BOARD_FEEDBACK);
+                p.setStatus(ProposalStatus.PENDING_EXAMINATION_BOARD_FEEDBACK);
+                return;
+            }
+            boolean allExamApproved = examBoardAssigned.stream()
+                    .allMatch(f -> f.getStatus() == FeedbackStatus.APPROVED);
+            if (allExamApproved) {
+                mv.setStatus(ModuleVersionStatus.ACCEPTED);
+                p.setStatus(ProposalStatus.ACCEPTED);
+                return;
+            }
+            mv.setStatus(ModuleVersionStatus.EXAMINATION_BOARD_FEEDBACK_GIVEN);
+            p.setStatus(ProposalStatus.EXAMINATION_BOARD_FEEDBACK_GIVEN);
             return;
         }
 
-        mv.setStatus(ModuleVersionStatus.REQUIRES_REVIEW);
-        p.setStatus(ProposalStatus.REQUIRES_REVIEW);
+        mv.setStatus(ModuleVersionStatus.WAITING_FOR_EXAMINATION_BOARD_SUBMISSION);
+        p.setStatus(ProposalStatus.WAITING_FOR_EXAMINATION_BOARD_SUBMISSION);
     }
 
     /**

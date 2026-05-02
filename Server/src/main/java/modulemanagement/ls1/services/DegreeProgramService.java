@@ -5,6 +5,7 @@ import modulemanagement.ls1.models.DegreeProgramSpecialization;
 import modulemanagement.ls1.models.DegreeProgram;
 import modulemanagement.ls1.repositories.DegreeProgramRepository;
 import modulemanagement.ls1.repositories.DegreeProgramSpecializationRepository;
+import modulemanagement.ls1.repositories.ExaminationBoardRepository;
 import modulemanagement.ls1.repositories.UserRepository;
 import modulemanagement.ls1.shared.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -19,16 +20,19 @@ public class DegreeProgramService {
     private final DegreeProgramRepository degreeProgramRepository;
     private final DegreeProgramSpecializationRepository degreeProgramSpecializationRepository;
     private final UserRepository userRepository;
-    private final ResponsibleUserRoleService responsibleUserRoleService;
+    private final ExaminationBoardRepository examinationBoardRepository;
+    private final UserRolesSyncService userRolesSyncService;
 
     public DegreeProgramService(DegreeProgramRepository degreeProgramRepository,
             DegreeProgramSpecializationRepository degreeProgramSpecializationRepository,
             UserRepository userRepository,
-            ResponsibleUserRoleService responsibleUserRoleService) {
+            ExaminationBoardRepository examinationBoardRepository,
+            UserRolesSyncService userRolesSyncService) {
         this.degreeProgramRepository = degreeProgramRepository;
         this.degreeProgramSpecializationRepository = degreeProgramSpecializationRepository;
         this.userRepository = userRepository;
-        this.responsibleUserRoleService = responsibleUserRoleService;
+        this.examinationBoardRepository = examinationBoardRepository;
+        this.userRolesSyncService = userRolesSyncService;
     }
 
     public List<DegreeProgramDTO> getAllDegreePrograms() {
@@ -54,7 +58,7 @@ public class DegreeProgramService {
         program.setName(dto.getName());
         program.setResponsibleUser(userRepository.getReferenceById(dto.getResponsibleUserId()));
         program = degreeProgramRepository.save(program);
-        responsibleUserRoleService.ensureProgramCoordinatorRole(dto.getResponsibleUserId());
+        userRolesSyncService.ensureProgramCoordinatorRole(dto.getResponsibleUserId());
         program = degreeProgramRepository.findWithSpecializationsByDegreeProgramId(program.getDegreeProgramId())
                 .orElse(program);
         return DegreeProgramDTO.fromDegreeProgram(program);
@@ -69,15 +73,21 @@ public class DegreeProgramService {
             UUID previousUserId = program.getResponsibleUser() != null ? program.getResponsibleUser().getUserId()
                     : null;
             program.setResponsibleUser(userRepository.getReferenceById(dto.getResponsibleUserId()));
-            program = degreeProgramRepository.save(program);
-            responsibleUserRoleService.ensureProgramCoordinatorRole(dto.getResponsibleUserId());
+            userRolesSyncService.ensureProgramCoordinatorRole(dto.getResponsibleUserId());
             if (previousUserId != null && !previousUserId.equals(dto.getResponsibleUserId()))
-                responsibleUserRoleService.removeProgramCoordinatorRoleIfNotResponsible(previousUserId);
-        } else {
-            program = degreeProgramRepository.save(program);
+                userRolesSyncService.removeProgramCoordinatorRoleIfNotResponsible(previousUserId);
         }
+        Long examinationBoardId = dto.getExaminationBoardId();
+        if (examinationBoardId != null) {
+            program.setExaminationBoard(examinationBoardRepository.getReferenceById(examinationBoardId));
+        } else {
+            program.setExaminationBoard(null);
+
+        }
+        program = degreeProgramRepository.save(program);
         program = degreeProgramRepository.findWithSpecializationsByDegreeProgramId(id).orElse(program);
         return DegreeProgramDTO.fromDegreeProgram(program);
+
     }
 
     public void deleteDegreeProgram(Long id) {
@@ -88,7 +98,7 @@ public class DegreeProgramService {
         UUID responsibleUserId = program.getResponsibleUser() != null ? program.getResponsibleUser().getUserId() : null;
         degreeProgramRepository.deleteById(id);
         if (responsibleUserId != null)
-            responsibleUserRoleService.removeProgramCoordinatorRoleIfNotResponsible(responsibleUserId);
+            userRolesSyncService.removeProgramCoordinatorRoleIfNotResponsible(responsibleUserId);
     }
 
     public DegreeProgramDTO addSpecializationsToDegreeProgram(Long degreeProgramId,

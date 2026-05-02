@@ -19,6 +19,20 @@
           styleClass="w-full"
         />
       </div>
+      <div class="sm:col-span-2">
+        <label class="block text-sm font-medium mb-1">Examination board</label>
+        <p-select
+          [options]="examinationBoardOptions()"
+          [ngModel]="programExaminationBoardId()"
+          (ngModelChange)="programExaminationBoardId.set($event)"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Select examination board"
+          [showClear]="true"
+          appendTo="body"
+          [style]="{ width: '100%', minWidth: '16rem' }"
+        />
+      </div>
     </div>
     <p-button label="Save program details" icon="pi pi-check" (onClick)="saveProgramDetails()" [loading]="savingProgram()" />
   </div>

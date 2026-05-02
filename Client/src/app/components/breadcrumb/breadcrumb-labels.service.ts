@@ -5,6 +5,8 @@ import { Injectable, signal } from '@angular/core';
 export class BreadcrumbLabelsService {
   /** Degree program details page: program name. */
   readonly degreeProgramName = signal<string | null>(null);
+  /** Examination board detail page: board name. */
+  readonly examinationBoardName = signal<string | null>(null);
   /** Proposal/view segment: module title (e.g. from latestModuleVersion.titleEng). */
   readonly proposalTitle = signal<string | null>(null);
   /** Version segment: e.g. "Version 2" from moduleVersion.version. */

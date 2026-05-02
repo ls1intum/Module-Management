@@ -24,17 +24,31 @@ public class Feedback {
     @JoinColumn(name = "feedback_from")
     private User feedbackFrom;
 
+    /**
+     * User who must respond to this feedback (coordinator, examination board member, etc.).
+     */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "assigned_reviewer_user_id")
+    private User assignedReviewer;
+
     @Column(name = "invalidated")
     private boolean invalidated;
 
     /**
-     * When set, this feedback is for whoever is currently responsible for this
-     * specialization (position-based).
+     * When set, identifies the specialization context (e.g. display for program / area coordinator).
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "degree_program_specialization_id")
     @JsonIgnore
     private DegreeProgramSpecialization degreeProgramSpecialization;
+
+    /**
+     * When set, identifies the examination board context for display (examination board feedback).
+     */
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "examination_board_id")
+    @JsonIgnore
+    private ExaminationBoard examinationBoard;
 
     @Column(name = "comment")
     private String Comment;

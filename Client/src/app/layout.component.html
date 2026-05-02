@@ -9,4 +9,37 @@
       </div>
     </div>
   </div>
+
+  <p-dialog
+    header="Sign in faster with a passkey"
+    [visible]="securityStore.passkeyDialogVisible()"
+    (visibleChange)="onPasskeyDialogVisibleChange($event)"
+    (onShow)="dontShowPasskeyDialogAgain = false"
+    [modal]="true"
+    [dismissableMask]="true"
+    [style]="{ width: 'min(32rem, 100vw)' }"
+    [draggable]="false"
+    [resizable]="false"
+  >
+    <div class="flex flex-col gap-4 text-sm leading-relaxed text-muted-foreground">
+      <p>
+        You can add a
+        <strong class="text-foreground">passkey</strong>
+        to sign in next time without leaving this app—using your device PIN, fingerprint, or security key.
+      </p>
+      <ul class="list-disc pl-5 space-y-1">
+        <li>Quicker sign-in for day-to-day work</li>
+        <li>Phishing-resistant authentication</li>
+        <li>Your passkey stays on your device; you can remove it anytime in Account → Passkeys</li>
+      </ul>
+      <div class="flex items-center gap-2 pt-2">
+        <p-checkbox inputId="passkey-promo-skip" [(ngModel)]="dontShowPasskeyDialogAgain" [binary]="true" />
+        <label for="passkey-promo-skip" class="cursor-pointer">Don’t show this again</label>
+      </div>
+    </div>
+    <ng-template pTemplate="footer">
+      <p-button label="Not now" severity="secondary" (onClick)="dismissPasskeyDialog()" />
+      <p-button label="Register a passkey" icon="pi pi-key" (onClick)="goToPasskeyRegistration()" severity="contrast" />
+    </ng-template>
+  </p-dialog>
 </div>

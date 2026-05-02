@@ -29,4 +29,8 @@ public class DegreeProgram {
     @JoinTable(name = "degree_program_specialization_assignment", joinColumns = @JoinColumn(name = "degree_program_id"), inverseJoinColumns = @JoinColumn(name = "degree_program_specialization_id"))
     private List<DegreeProgramSpecialization> degreeProgramSpecializations = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "examination_board_id")
+    private ExaminationBoard examinationBoard;
+
 }

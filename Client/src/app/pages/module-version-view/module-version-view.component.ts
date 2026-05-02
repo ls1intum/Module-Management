@@ -5,6 +5,10 @@ import { RouterModule, ActivatedRoute } from '@angular/router';
 import { ModuleVersionControllerService, ModuleVersionViewDTO, ModuleVersionViewFeedbackDTO } from '../../core/modules/openapi';
 import { BreadcrumbLabelsService } from '../../components/breadcrumb/breadcrumb-labels.service';
 import { ModuleEditStepperComponent } from '../../components/module-edit-stepper/module-edit-stepper.component';
+import {
+  filterCoordinatorFeedbacksForAssignments,
+  filterExaminationBoardMemberFeedbacks
+} from '../../components/module-edit-stepper/coordinator-feedback.util';
 import { MODULE_EDIT_STEPS, StepperStatus } from '../../components/module-edit-stepper/module-edit-steps.config';
 import { FeedbackAuthorDisplayPipe } from '../../pipes/feedbackAuthorDisplay.pipe';
 import { FeedbackStatusPipe } from '../../pipes/feedbackStatus.pipe';
@@ -16,6 +20,10 @@ import { MessageModule } from 'primeng/message';
 import { CardModule } from 'primeng/card';
 import { FeedbackMessageComponent } from '../../components/feedback-message/feedback-message.component';
 import { PanelModule } from 'primeng/panel';
+import {
+  coordinatorFeedbackStepStatus,
+  examinationBoardFeedbackStepStatus
+} from '../../components/module-edit-stepper/module-version-stepper-status.util';
 
 export interface ModuleField {
   key: keyof ModuleVersionViewDTO;
@@ -61,29 +69,32 @@ export class ModuleVersionViewComponent {
   readonly MODULE_EDIT_STEPS = MODULE_EDIT_STEPS;
   currentStepIndex = signal(0);
 
-  /** Coordinator feedbacks for this version (for current assignments). From moduleVersionDto().feedbacks. */
-  coordinatorFeedbacksForCurrentAssignments = computed(() => {
-    const dto = this.moduleVersionDto();
-    const feedbacks = dto?.feedbacks ?? [];
-    const coordinator = feedbacks.filter((f) => f.feedbackRole == null);
-    const specIds = new Set(dto?.degreeProgramAssignments?.map((a) => a.degreeProgramSpecializationId).filter((id): id is number => id != null) ?? []);
-    if (specIds.size === 0) return coordinator;
-    return coordinator.filter((f) => f.degreeProgramSpecializationId != null && specIds.has(f.degreeProgramSpecializationId));
-  });
-
   /** Previous module version feedback (all non-invalidated for proposal). Fetched when loading; used when current version has no feedbacks yet. */
   previousVersionFeedbacks = signal<ModuleVersionViewFeedbackDTO[]>([]);
 
-  /** Coordinator feedbacks to show in step 1: current version if any, otherwise previous version feedback (so latest MV still shows status). */
+  /**
+   * Coordinator feedback for step 1: current module version DTO if any rows match; otherwise
+   * {@code previousVersionFeedbacks} (latest view may not embed coordinator rows yet).
+   */
   coordinatorFeedbacksForStep1 = computed(() => {
-    const fromCurrent = this.coordinatorFeedbacksForCurrentAssignments();
-    if (fromCurrent.length > 0) return { feedbacks: fromCurrent, fromPrevious: false };
-    const prev = this.previousVersionFeedbacks();
-    const coordinator = prev.filter((f) => f.feedbackRole == null);
     const dto = this.moduleVersionDto();
-    const specIds = new Set(dto?.degreeProgramAssignments?.map((a) => a.degreeProgramSpecializationId).filter((id): id is number => id != null) ?? []);
-    const filtered = specIds.size === 0 ? coordinator : coordinator.filter((f) => f.degreeProgramSpecializationId != null && specIds.has(f.degreeProgramSpecializationId));
-    return { feedbacks: filtered, fromPrevious: true };
+    const fromCurrent = filterCoordinatorFeedbacksForAssignments(dto?.feedbacks ?? [], dto);
+    if (fromCurrent.length > 0) {
+      return { feedbacks: fromCurrent, fromPrevious: false };
+    }
+    const fromPrev = filterCoordinatorFeedbacksForAssignments(this.previousVersionFeedbacks(), dto);
+    return { feedbacks: fromPrev, fromPrevious: true };
+  });
+
+  /** Examination-board member feedback for step 6 (current DTO vs previous-version list). */
+  examinationBoardMemberFeedbacksForStep6 = computed(() => {
+    const dto = this.moduleVersionDto();
+    const fromDto = filterExaminationBoardMemberFeedbacks(dto?.feedbacks ?? []);
+    if (fromDto.length > 0) {
+      return { feedbacks: fromDto, fromPrevious: false };
+    }
+    const fromPrev = filterExaminationBoardMemberFeedbacks(this.previousVersionFeedbacks());
+    return { feedbacks: fromPrev, fromPrevious: true };
   });
 
   moduleFields: ModuleField[] = [
@@ -130,25 +141,19 @@ export class ModuleVersionViewComponent {
     { key: 'lvSwsLecturerEng', label: 'Lecturer', section: 'content', isLongText: true, feedbackKey: 'lvSwsLecturerFeedback' }
   ];
 
+  /** Read-only stepper: feedback steps follow {@link ModuleVersionViewDTO.status} only; other steps from DTO field presence. */
   stepStatuses = computed(() => {
     const dto = this.moduleVersionDto();
     if (!dto) return MODULE_EDIT_STEPS.map(() => StepperStatus.Default);
 
+    const workflowStatus = dto.status;
     return MODULE_EDIT_STEPS.map((step, index) => {
-      if (step.id === 'feedbacks') return StepperStatus.Default;
       if (step.id === 'submit-coordinator-feedback') {
-        const feedbacks = this.coordinatorFeedbacksForStep1().feedbacks;
-        if (feedbacks.length === 0) return StepperStatus.Default;
-        const pending = ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.PendingFeedback;
-        const approved = ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.Approved;
-        const rejected = ModuleVersionViewFeedbackDTO.FeedbackStatusEnum.Rejected;
-        if (feedbacks.some((fb) => fb.feedbackStatus === rejected)) return StepperStatus.Rejected;
-        if (feedbacks.some((fb) => (fb.feedbackStatus ?? pending) === pending)) return StepperStatus.Pending;
-        if (feedbacks.every((fb) => fb.feedbackStatus === approved)) return StepperStatus.Completed;
-        return StepperStatus.FeedbackGiven;
+        return coordinatorFeedbackStepStatus(workflowStatus);
       }
-
-      if (step.id === 'submit-full-feedback') return StepperStatus.Default;
+      if (step.id === 'submit-examination-board-feedback') {
+        return examinationBoardFeedbackStepStatus(workflowStatus);
+      }
 
       const keys = MODULE_EDIT_STEPS[index].controlNames as (keyof ModuleVersionViewDTO)[];
       if (!keys?.length) return StepperStatus.Default;

@@ -14,37 +14,58 @@ export class ModuleVersionStatusPipe implements PipeTransform {
     severity: Tag['severity'];
   } {
     switch (status) {
-      case ModuleVersionCompactDTO.StatusEnum.PendingFirstSubmission:
+      case ModuleVersionCompactDTO.StatusEnum.WaitingForCoordinatorsSubmission:
         return {
-          text: 'Pending first submission',
+          text: 'Waiting for coordinator submission',
           normalColor: 'bg-gray-500',
           fadedColor: 'bg-gray-300',
           severity: 'secondary'
         };
-      case ModuleVersionCompactDTO.StatusEnum.PendingCoordinatorFeedback:
+      case ModuleVersionCompactDTO.StatusEnum.PendingCoordinatorsFeedback:
         return {
-          text: 'Pending coordinator feedback',
+          text: 'Pending coordinators feedback',
           normalColor: 'bg-yellow-500',
           fadedColor: 'bg-yellow-300',
           severity: 'warn'
         };
-      case ModuleVersionCompactDTO.StatusEnum.CoordinatorFeedbackGiven:
+      case ModuleVersionCompactDTO.StatusEnum.CoordinatorsFeedbackGiven:
         return {
-          text: 'Coordinator feedback given',
+          text: 'Coordinators feedback given',
           normalColor: 'bg-blue-500',
           fadedColor: 'bg-blue-300',
           severity: 'info'
         };
-      case ModuleVersionCompactDTO.StatusEnum.PendingFullSubmission:
+      case ModuleVersionCompactDTO.StatusEnum.WaitingForExaminationBoardSubmission:
         return {
-          text: 'Pending full submission',
+          text: 'Waiting for examination board submission',
           normalColor: 'bg-gray-500',
           fadedColor: 'bg-gray-300',
           severity: 'secondary'
         };
-      case ModuleVersionCompactDTO.StatusEnum.PendingFullFeedback:
+      case ModuleVersionCompactDTO.StatusEnum.PendingExaminationBoardFeedback:
         return {
-          text: 'Pending full feedback',
+          text: 'Pending examination board feedback',
+          normalColor: 'bg-yellow-500',
+          fadedColor: 'bg-yellow-300',
+          severity: 'warn'
+        };
+      case ModuleVersionCompactDTO.StatusEnum.ExaminationBoardFeedbackGiven:
+        return {
+          text: 'Examination board feedback given',
+          normalColor: 'bg-blue-500',
+          fadedColor: 'bg-blue-300',
+          severity: 'info'
+        };
+      case ModuleVersionCompactDTO.StatusEnum.WaitingForQualityManagementSubmission:
+        return {
+          text: 'Waiting for quality management submission',
+          normalColor: 'bg-gray-500',
+          fadedColor: 'bg-gray-300',
+          severity: 'secondary'
+        };
+      case ModuleVersionCompactDTO.StatusEnum.PendingQualityManagementFeedback:
+        return {
+          text: 'Pending quality management feedback',
           normalColor: 'bg-yellow-500',
           fadedColor: 'bg-yellow-300',
           severity: 'warn'
@@ -63,7 +84,8 @@ export class ModuleVersionStatusPipe implements PipeTransform {
           fadedColor: 'bg-sky-300',
           severity: 'info'
         };
-      case ModuleVersionCompactDTO.StatusEnum.Rejected:
+      case ModuleVersionCompactDTO.StatusEnum.RejectedAtCoordinatorsFeedback:
+      case ModuleVersionCompactDTO.StatusEnum.RejectedAtExaminationBoardFeedback:
         return {
           text: 'Rejected',
           normalColor: 'bg-red-500',

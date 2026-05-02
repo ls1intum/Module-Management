@@ -72,7 +72,7 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
         this.breadcrumbLabels.proposalTitle.set(response?.titleEng ?? null);
         this.breadcrumbLabels.versionLabel.set(version != null ? `Version ${version}` : null);
       },
-      error: (err: HttpErrorResponse) => this.error.set(err.error),
+      error: (err: HttpErrorResponse) => this.showErrorAsToast(err),
       complete: () => {
         this.moduleLoading = false;
         this.loading.set(this.moduleLoading && this.feedbackLoading);
@@ -84,7 +84,7 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
     this.feedbackLoading = true;
     this.moduleVersionService.getPreviousModuleVersionFeedback(previousModuleVersionId).subscribe({
       next: (response: Array<ModuleVersionViewFeedbackDTO>) => this.feedbacks.set([...response]),
-      error: (err: HttpErrorResponse) => this.error.set(err.error),
+      error: (err: HttpErrorResponse) => this.showErrorAsToast(err),
       complete: () => {
         this.feedbackLoading = false;
         this.loading.set(this.moduleLoading && this.feedbackLoading);
@@ -95,7 +95,6 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
   override onSubmit(): void {
     if (this.moduleVersionId == null) return;
     this.loading.set(true);
-    this.error.set(null);
     const rawAssignments = this.assignments().filter((a) => a.degreeProgramId != null && a.degreeProgramSpecializationId != null);
     const degreeProgramAssignments: ModuleDegreeProgramAssignmentDTO[] = rawAssignments.map((a) => ({
       degreeProgramId: a.degreeProgramId!,
@@ -112,7 +111,7 @@ export class ModuleVersionEditComponent extends ProposalBaseComponent {
         // Step-1 changes can invalidate previous feedbacks; refresh so the UI reflects it.
         this.fetchPreviousModuleVersionFeedback(this.moduleVersionId);
       },
-      error: (err: HttpErrorResponse) => this.error.set(err.error),
+      error: (err: HttpErrorResponse) => this.showErrorAsToast(err, 'Failed to update proposal'),
       complete: () => this.loading.set(false)
     });
   }

@@ -12,5 +12,6 @@
 export interface UpdateDegreeProgramDTO { 
     name?: string;
     responsibleUserId?: string;
+    examinationBoardId?: number;
 }
 

@@ -17,16 +17,20 @@ export interface ProposalsCompactDTO {
     latestTitle?: string;
 }
 export namespace ProposalsCompactDTO {
-    export type StatusEnum = 'PENDING_FIRST_SUBMISSION' | 'PENDING_COORDINATOR_FEEDBACK' | 'COORDINATOR_FEEDBACK_GIVEN' | 'PENDING_FULL_SUBMISSION' | 'PENDING_FULL_FEEDBACK' | 'ACCEPTED' | 'REQUIRES_REVIEW' | 'REJECTED' | 'CANCELLED';
+    export type StatusEnum = 'WAITING_FOR_COORDINATORS_SUBMISSION' | 'PENDING_COORDINATORS_FEEDBACK' | 'COORDINATORS_FEEDBACK_GIVEN' | 'WAITING_FOR_EXAMINATION_BOARD_SUBMISSION' | 'PENDING_EXAMINATION_BOARD_FEEDBACK' | 'EXAMINATION_BOARD_FEEDBACK_GIVEN' | 'WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION' | 'PENDING_QUALITY_MANAGEMENT_FEEDBACK' | 'ACCEPTED' | 'REQUIRES_REVIEW' | 'REJECTED_AT_COORDINATORS_FEEDBACK' | 'REJECTED_AT_EXAMINATION_BOARD_FEEDBACK' | 'CANCELLED';
     export const StatusEnum = {
-        PendingFirstSubmission: 'PENDING_FIRST_SUBMISSION' as StatusEnum,
-        PendingCoordinatorFeedback: 'PENDING_COORDINATOR_FEEDBACK' as StatusEnum,
-        CoordinatorFeedbackGiven: 'COORDINATOR_FEEDBACK_GIVEN' as StatusEnum,
-        PendingFullSubmission: 'PENDING_FULL_SUBMISSION' as StatusEnum,
-        PendingFullFeedback: 'PENDING_FULL_FEEDBACK' as StatusEnum,
+        WaitingForCoordinatorsSubmission: 'WAITING_FOR_COORDINATORS_SUBMISSION' as StatusEnum,
+        PendingCoordinatorsFeedback: 'PENDING_COORDINATORS_FEEDBACK' as StatusEnum,
+        CoordinatorsFeedbackGiven: 'COORDINATORS_FEEDBACK_GIVEN' as StatusEnum,
+        WaitingForExaminationBoardSubmission: 'WAITING_FOR_EXAMINATION_BOARD_SUBMISSION' as StatusEnum,
+        PendingExaminationBoardFeedback: 'PENDING_EXAMINATION_BOARD_FEEDBACK' as StatusEnum,
+        ExaminationBoardFeedbackGiven: 'EXAMINATION_BOARD_FEEDBACK_GIVEN' as StatusEnum,
+        WaitingForQualityManagementSubmission: 'WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION' as StatusEnum,
+        PendingQualityManagementFeedback: 'PENDING_QUALITY_MANAGEMENT_FEEDBACK' as StatusEnum,
         Accepted: 'ACCEPTED' as StatusEnum,
         RequiresReview: 'REQUIRES_REVIEW' as StatusEnum,
-        Rejected: 'REJECTED' as StatusEnum,
+        RejectedAtCoordinatorsFeedback: 'REJECTED_AT_COORDINATORS_FEEDBACK' as StatusEnum,
+        RejectedAtExaminationBoardFeedback: 'REJECTED_AT_EXAMINATION_BOARD_FEEDBACK' as StatusEnum,
         Cancelled: 'CANCELLED' as StatusEnum
     };
 }
