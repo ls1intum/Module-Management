@@ -8,7 +8,6 @@ import modulemanagement.ls1.dtos.SimilarModuleDTO;
 import modulemanagement.ls1.enums.FeedbackStatus;
 import modulemanagement.ls1.enums.ModuleVersionStatus;
 import modulemanagement.ls1.enums.ProposalStatus;
-import modulemanagement.ls1.enums.UserRole;
 import modulemanagement.ls1.models.DegreeProgram;
 import modulemanagement.ls1.models.DegreeProgramSpecialization;
 import modulemanagement.ls1.models.Feedback;
@@ -22,6 +21,7 @@ import modulemanagement.ls1.repositories.ModuleVersionRepository;
 import modulemanagement.ls1.repositories.ProposalRepository;
 import modulemanagement.ls1.shared.PdfCreator;
 import modulemanagement.ls1.shared.ResourceNotFoundException;
+import modulemanagement.ls1.shared.ReviewerRoles;
 import modulemanagement.ls1.shared.ModuleVersionStepsChangeDetector;
 import org.springframework.core.io.Resource;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -109,8 +109,10 @@ public class ModuleVersionService {
     }
 
     /**
-     * When curriculum/content (steps after step 1) changes, prior examination board member
-     * feedback is no longer valid. Invalidate only those rows and return the workflow to
+     * When curriculum/content (steps after step 1) changes, prior examination board
+     * member
+     * feedback is no longer valid. Invalidate only those rows and return the
+     * workflow to
      * examination-board submission; coordinator feedback is left unchanged.
      */
     private void invalidateExaminationBoardFeedbacksAndRewindExamPhase(ModuleVersion latestDraft) {
@@ -249,7 +251,8 @@ public class ModuleVersionService {
     /**
      * Derives proposal/module version status from coordinator and examination-board
      * feedback rows on <strong>this</strong> module version. When both slices are
-     * non-empty, coordinator outcomes take precedence until every coordinator feedback
+     * non-empty, coordinator outcomes take precedence until every coordinator
+     * feedback
      * is {@link FeedbackStatus#APPROVED}, then examination-board rules apply.
      */
     private void applyCoordinatorAndExaminationBoardStatus(List<Feedback> coordinatorFeedbacks,
@@ -381,8 +384,6 @@ public class ModuleVersionService {
             return true;
         }
 
-        return user.getRoles() != null && (user.getRoles().contains(UserRole.QUALITY_MANAGEMENT)
-                || user.getRoles().contains(UserRole.EXAMINATION_BOARD)
-                || user.getRoles().contains(UserRole.ACADEMIC_PROGRAM_ADVISOR));
+        return ReviewerRoles.userHasAnyReviewerRole(user.getRoles());
     }
 }

@@ -1,0 +1,75 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0017-reviewer-pre-submission-guideline
+      author: module-management
+      changes:
+        - createTable:
+            tableName: reviewer_pre_submission_guideline
+            columns:
+              - column:
+                  name: guideline_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: reviewer_role
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: content
+                  type: CLOB
+                  constraints:
+                    nullable: false
+              - column:
+                  name: good_example
+                  type: CLOB
+              - column:
+                  name: bad_example
+                  type: CLOB
+              - column:
+                  name: related_module_field_key
+                  type: VARCHAR(128)
+              - column:
+                  name: sort_order
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: author_user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: reviewer_pre_submission_guideline
+            baseColumnNames: author_user_id
+            referencedTableName: app_user
+            referencedColumnNames: user_id
+            constraintName: reviewer_pre_sub_guideline_author_fk
+        - createIndex:
+            indexName: idx_reviewer_pre_sub_guideline_author
+            tableName: reviewer_pre_submission_guideline
+            columns:
+              - column:
+                  name: author_user_id

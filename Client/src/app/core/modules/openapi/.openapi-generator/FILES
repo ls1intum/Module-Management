@@ -17,6 +17,8 @@ api/module-version-controller.service.ts
 api/module-version-controller.serviceInterface.ts
 api/proposal-controller.service.ts
 api/proposal-controller.serviceInterface.ts
+api/reviewer-pre-submission-guideline-controller.service.ts
+api/reviewer-pre-submission-guideline-controller.serviceInterface.ts
 api/user-controller.service.ts
 api/user-controller.serviceInterface.ts
 configuration.ts
@@ -49,6 +51,8 @@ model/proposal-request-dto.ts
 model/proposal-view-dto.ts
 model/proposals-compact-dto.ts
 model/responsible-user-dto.ts
+model/reviewer-pre-submission-guideline-dto.ts
+model/reviewer-pre-submission-guideline-write-dto.ts
 model/similar-module-dto.ts
 model/update-degree-program-dto.ts
 model/update-degree-program-specialization-dto.ts

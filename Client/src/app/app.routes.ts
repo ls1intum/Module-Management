@@ -19,6 +19,7 @@ import { DegreeProgramDetailsPageComponent } from './pages/admin/degree-programs
 import { AllSpecializationsPageComponent } from './pages/admin/degree-program-specializations/all-specializations-page.component';
 import { ExaminationBoardDetailPageComponent } from './pages/admin/examination-boards/examination-board-detail-page.component';
 import { ExaminationBoardsPageComponent } from './pages/admin/examination-boards/examination-boards-page.component';
+import { ReviewerPreSubmissionGuidelinesPageComponent } from './pages/reviewer-pre-submission-guidelines/reviewer-pre-submission-guidelines-page.component';
 export const routes: Routes = [
   { path: '', component: IndexComponent },
   {
@@ -38,6 +39,7 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: '', component: ApprovalStaffHomePageComponent },
+      { path: 'pre-submission-guidelines', component: ReviewerPreSubmissionGuidelinesPageComponent },
       { path: 'view/:id', component: FeedbackViewComponent },
       { path: 'view/:id/overlap/:versionId', component: SimilarModulesPage }
     ]

@@ -147,6 +147,14 @@ export class BreadcrumbComponent {
       return items;
     }
 
+    if (segments[1] === 'pre-submission-guidelines') {
+      items.push({
+        label: 'Pre-submission guidelines',
+        routerLink: ['/feedbacks/pre-submission-guidelines']
+      });
+      return items;
+    }
+
     if (segments[1] === 'view' && segments[2]) {
       const label = (this.breadcrumbLabels.feedbackLabel() ?? '').trim() || `Feedback ${segments[2]}`;
       items.push({ label, routerLink: ['/feedbacks/view', segments[2]] });

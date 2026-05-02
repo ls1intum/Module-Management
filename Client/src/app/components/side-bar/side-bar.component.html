@@ -49,7 +49,15 @@
         label="Pending Feedbacks"
         icon="pi pi-list"
         [routerLink]="['/feedbacks']"
-        [severity]="isActive('/feedbacks') && !isActive('/feedbacks/view') ? 'contrast' : 'secondary'"
+        [severity]="isActive('/feedbacks') && !isActive('/feedbacks/view') && !isActive('/feedbacks/pre-submission-guidelines') ? 'contrast' : 'secondary'"
+        [style]="{ width: '100%' }"
+        styleClass="sidebar-btn justify-start"
+      />
+      <p-button
+        label="Pre-submission guidelines"
+        icon="pi pi-book"
+        [routerLink]="['/feedbacks/pre-submission-guidelines']"
+        [severity]="isActive('/feedbacks/pre-submission-guidelines') ? 'contrast' : 'secondary'"
         [style]="{ width: '100%' }"
         styleClass="sidebar-btn justify-start"
       />

@@ -23,6 +23,8 @@ export * from './proposal-request-dto';
 export * from './proposal-view-dto';
 export * from './proposals-compact-dto';
 export * from './responsible-user-dto';
+export * from './reviewer-pre-submission-guideline-dto';
+export * from './reviewer-pre-submission-guideline-write-dto';
 export * from './similar-module-dto';
 export * from './update-degree-program-dto';
 export * from './update-degree-program-specialization-dto';

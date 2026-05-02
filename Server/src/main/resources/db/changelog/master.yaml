@@ -47,3 +47,6 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: changes/0016_feedback_assigned_reviewer.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: changes/0017_reviewer_pre_submission_guideline.yaml

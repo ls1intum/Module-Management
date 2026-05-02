@@ -12,6 +12,7 @@ import modulemanagement.ls1.shared.LLMPromptUtil;
 import modulemanagement.ls1.services.ModuleVersionService;
 import jakarta.validation.Valid;
 import modulemanagement.ls1.shared.CurrentUser;
+import modulemanagement.ls1.shared.ReviewerRoles;
 import modulemanagement.ls1.shared.TimeLogUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,7 +107,7 @@ public class ModuleVersionController {
     }
 
     @PostMapping("/overlap-detection/check-similarity/{moduleVersionId}")
-    @PreAuthorize("hasAnyRole('PROFESSOR', 'QUALITY_MANAGEMENT', 'ACADEMIC_PROGRAM_ADVISOR', 'EXAMINATION_BOARD')")
+    @PreAuthorize(ReviewerRoles.HAS_PROFESSOR_OR_ANY_REVIEWER_ROLE)
     public ResponseEntity<List<SimilarModuleDTO>> checkSimilarity(@CurrentUser User user,
             @PathVariable Long moduleVersionId) {
         long start = System.nanoTime();
