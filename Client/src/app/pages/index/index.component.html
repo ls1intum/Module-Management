@@ -56,16 +56,10 @@
       }
       @if (isReviewer()) {
         <p-panel header="Pending Feedbacks">
-          <p class="text-sm text-muted-foreground mb-4">Review and submit feedback on proposals, and manage your own AI pre-submission guidelines.</p>
+          <p class="text-sm text-muted-foreground mb-4">Review and submit feedback on proposals, and manage your own AI pre-submission review guidelines.</p>
           <div class="flex flex-col gap-2">
             <p-button label="Pending Feedbacks" icon="pi pi-list" [routerLink]="['/feedbacks']" severity="contrast" />
-            <p-button
-              label="Pre-submission guidelines"
-              icon="pi pi-book"
-              [routerLink]="['/feedbacks/pre-submission-guidelines']"
-              [outlined]="true"
-              severity="contrast"
-            />
+            <p-button label="AI review guidelines" icon="pi pi-book" [routerLink]="['/feedbacks/pre-submission-guidelines']" [outlined]="true" severity="contrast" />
           </div>
         </p-panel>
       }

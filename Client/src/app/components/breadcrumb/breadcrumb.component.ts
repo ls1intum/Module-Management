@@ -52,8 +52,7 @@ export class BreadcrumbComponent {
       items.push({ label: 'Examination boards', routerLink: ['/admin/examination-boards'] });
       if (segments.length > 2 && segments[2] && segments[2] !== 'specializations') {
         const boardId = segments[2];
-        const label =
-          (this.breadcrumbLabels.examinationBoardName() ?? '').trim() || `Board ${boardId}`;
+        const label = (this.breadcrumbLabels.examinationBoardName() ?? '').trim() || `Board ${boardId}`;
         items.push({
           label,
           routerLink: ['/admin/examination-boards', boardId]
@@ -149,7 +148,7 @@ export class BreadcrumbComponent {
 
     if (segments[1] === 'pre-submission-guidelines') {
       items.push({
-        label: 'Pre-submission guidelines',
+        label: 'AI review guidelines',
         routerLink: ['/feedbacks/pre-submission-guidelines']
       });
       return items;
