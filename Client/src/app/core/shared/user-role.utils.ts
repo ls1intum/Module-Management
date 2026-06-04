@@ -20,3 +20,7 @@ export function isProfessorRole(roles: User.RolesEnum[] | undefined | null): boo
 export function isReviewerRole(roles: User.RolesEnum[] | undefined | null): boolean {
   return Array.isArray(roles) && roles.some((r) => (REVIEWER_ROLES as readonly string[]).includes(r));
 }
+
+export function isAiReviewGuidelineManagerRole(roles: User.RolesEnum[] | undefined | null): boolean {
+  return Array.isArray(roles) && roles.includes(User.RolesEnum.AiReviewGuidelineManager);
+}

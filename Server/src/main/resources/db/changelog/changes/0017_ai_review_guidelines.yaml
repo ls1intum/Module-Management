@@ -1,0 +1,75 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0017a_ai_review_guideline_table
+      author: module-management
+      changes:
+        - createTable:
+            tableName: ai_review_guideline
+            columns:
+              - column:
+                  name: guideline_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: section
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(256)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: instruction
+                  type: CLOB
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sort_order
+                  type: INT
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_by
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: UUID
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: ai_review_guideline
+            baseColumnNames: created_by
+            referencedTableName: app_user
+            referencedColumnNames: user_id
+            constraintName: fk_ai_review_guideline_created_by
+        - addForeignKeyConstraint:
+            baseTableName: ai_review_guideline
+            baseColumnNames: updated_by
+            referencedTableName: app_user
+            referencedColumnNames: user_id
+            constraintName: fk_ai_review_guideline_updated_by
+        - createIndex:
+            tableName: ai_review_guideline
+            indexName: idx_ai_review_guideline_section_sort
+            columns:
+              - column:
+                  name: section
+              - column:
+                  name: sort_order

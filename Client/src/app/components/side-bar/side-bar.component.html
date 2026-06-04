@@ -44,6 +44,16 @@
         styleClass="sidebar-btn justify-start"
       />
     }
+    @if (isAiReviewGuidelineManager()) {
+      <p-button
+        label="AI review guidelines"
+        icon="pi pi-sparkles"
+        [routerLink]="['/ai-review-guidelines']"
+        [severity]="isActive('/ai-review-guidelines') ? 'contrast' : 'secondary'"
+        [style]="{ width: '100%' }"
+        styleClass="sidebar-btn justify-start"
+      />
+    }
     @if (isReviewer()) {
       <p-button
         label="Pending Feedbacks"

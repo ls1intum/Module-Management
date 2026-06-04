@@ -1,6 +1,8 @@
 export * from './add-specializations-to-degree-program-dto';
+export * from './ai-review-guideline-dto';
 export * from './completion-service-request-dto';
 export * from './completion-service-response-dto';
+export * from './create-ai-review-guideline-dto';
 export * from './create-degree-program-dto';
 export * from './create-degree-program-specialization-dto';
 export * from './create-examination-board-dto';
@@ -24,6 +26,7 @@ export * from './proposal-view-dto';
 export * from './proposals-compact-dto';
 export * from './responsible-user-dto';
 export * from './similar-module-dto';
+export * from './update-ai-review-guideline-dto';
 export * from './update-degree-program-dto';
 export * from './update-degree-program-specialization-dto';
 export * from './update-examination-board-dto';

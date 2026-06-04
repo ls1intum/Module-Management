@@ -4,6 +4,8 @@ README.md
 api.module.ts
 api/admin-user-controller.service.ts
 api/admin-user-controller.serviceInterface.ts
+api/ai-review-guideline-controller.service.ts
+api/ai-review-guideline-controller.serviceInterface.ts
 api/api.ts
 api/degree-program-specializations-controller.service.ts
 api/degree-program-specializations-controller.serviceInterface.ts
@@ -24,8 +26,10 @@ encoder.ts
 git_push.sh
 index.ts
 model/add-specializations-to-degree-program-dto.ts
+model/ai-review-guideline-dto.ts
 model/completion-service-request-dto.ts
 model/completion-service-response-dto.ts
+model/create-ai-review-guideline-dto.ts
 model/create-degree-program-dto.ts
 model/create-degree-program-specialization-dto.ts
 model/create-examination-board-dto.ts
@@ -50,6 +54,7 @@ model/proposal-view-dto.ts
 model/proposals-compact-dto.ts
 model/responsible-user-dto.ts
 model/similar-module-dto.ts
+model/update-ai-review-guideline-dto.ts
 model/update-degree-program-dto.ts
 model/update-degree-program-specialization-dto.ts
 model/update-examination-board-dto.ts

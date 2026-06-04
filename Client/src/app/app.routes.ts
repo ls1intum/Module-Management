@@ -19,6 +19,8 @@ import { DegreeProgramDetailsPageComponent } from './pages/admin/degree-programs
 import { AllSpecializationsPageComponent } from './pages/admin/degree-program-specializations/all-specializations-page.component';
 import { ExaminationBoardDetailPageComponent } from './pages/admin/examination-boards/examination-board-detail-page.component';
 import { ExaminationBoardsPageComponent } from './pages/admin/examination-boards/examination-boards-page.component';
+import { AiReviewGuidelinesPageComponent } from './pages/ai-review-guidelines/ai-review-guidelines-page.component';
+import { AiReviewGuidelineManagerGuard } from './core/security/ai-review-guideline-manager.guard';
 export const routes: Routes = [
   { path: '', component: IndexComponent },
   {
@@ -51,6 +53,11 @@ export const routes: Routes = [
       { path: 'passkeys', component: AccountPasskeysComponent },
       { path: '', redirectTo: 'information', pathMatch: 'full' }
     ]
+  },
+  {
+    path: 'ai-review-guidelines',
+    component: AiReviewGuidelinesPageComponent,
+    canActivate: [AuthGuard, AiReviewGuidelineManagerGuard]
   },
   {
     path: 'admin',

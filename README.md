@@ -70,7 +70,21 @@ Make sure you have the following installed:
 - Docker and Docker Compose
 - Node.js v20.19+ and npm
 - Angular CLI
-- Java JDK 21
+- Java JDK 21 (the server build uses Gradle’s Java 21 toolchain; JDK 25 alone is not enough)
+
+#### Java 21 on macOS (Homebrew)
+
+If `./gradlew bootRun` fails with “Cannot find a Java installation … matching languageVersion=21”, install JDK 21:
+
+```bash
+brew install openjdk@21
+```
+
+The `Server/gradle.properties` file registers the Homebrew JDK 21 path for Gradle. If you installed JDK 21 elsewhere, update `org.gradle.java.installations.paths` in that file, or run:
+
+```bash
+export JAVA_HOME="/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
+```
 
 ### Environment Configuration
 
@@ -96,7 +110,7 @@ Ports are configured in your `.env` file.
 
 #### 2. Start the Spring Boot Server
 
-From the `Server` directory:
+From the repository root, start the server from the `Server` directory (if your shell is already in `Server`, skip `cd Server`):
 
 ```bash
 cd Server
