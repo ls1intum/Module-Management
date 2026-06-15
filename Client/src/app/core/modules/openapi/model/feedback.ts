@@ -73,8 +73,8 @@ export interface Feedback {
     responsiblesAccepted?: boolean;
     lvSwsLecturerFeedback?: string;
     lvSwsLecturerAccepted?: boolean;
-    feedbackGiven?: boolean;
     allFeedbackPositive?: boolean;
+    feedbackGiven?: boolean;
     comment?: string;
 }
 export namespace Feedback {

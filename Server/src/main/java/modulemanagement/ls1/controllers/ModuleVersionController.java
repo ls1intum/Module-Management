@@ -5,9 +5,11 @@ import modulemanagement.ls1.dtos.ModuleVersionViewDTO;
 import modulemanagement.ls1.dtos.CompletionServiceResponseDTO;
 import modulemanagement.ls1.dtos.CompletionServiceRequestDTO;
 import modulemanagement.ls1.dtos.ModuleVersionViewFeedbackDTO;
+import modulemanagement.ls1.dtos.ProposalAiReviewDTO;
 import modulemanagement.ls1.dtos.SimilarModuleDTO;
 import modulemanagement.ls1.models.User;
 import modulemanagement.ls1.services.LLMGenerationService;
+import modulemanagement.ls1.services.ProposalAiReviewService;
 import modulemanagement.ls1.shared.LLMPromptUtil;
 import modulemanagement.ls1.services.ModuleVersionService;
 import jakarta.validation.Valid;
@@ -32,11 +34,14 @@ public class ModuleVersionController {
 
     private final ModuleVersionService moduleVersionService;
     private final LLMGenerationService llmGenerationService;
+    private final ProposalAiReviewService proposalAiReviewService;
 
     public ModuleVersionController(ModuleVersionService moduleVersionService,
-            LLMGenerationService llmGenerationService) {
+            LLMGenerationService llmGenerationService,
+            ProposalAiReviewService proposalAiReviewService) {
         this.moduleVersionService = moduleVersionService;
         this.llmGenerationService = llmGenerationService;
+        this.proposalAiReviewService = proposalAiReviewService;
     }
 
     @PutMapping("/{moduleVersionId}")
@@ -103,6 +108,18 @@ public class ModuleVersionController {
         String prompt = LLMPromptUtil.buildPrompt("teaching-methods", moduleInfoRequestDTO);
         String response = llmGenerationService.generate(prompt, "teaching-methods");
         return ResponseEntity.ok(new CompletionServiceResponseDTO(response));
+    }
+
+    @GetMapping("/{moduleVersionId}/ai-review")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'QUALITY_MANAGEMENT', 'ACADEMIC_PROGRAM_ADVISOR', 'EXAMINATION_BOARD', 'PROGRAM_COORDINATOR', 'SPECIALIZATION_AREA_COORDINATOR')")
+    public ResponseEntity<ProposalAiReviewDTO> getProposalAiReview(
+            @CurrentUser User user,
+            @PathVariable Long moduleVersionId,
+            @RequestParam(defaultValue = "false") boolean regenerate) {
+        if (regenerate) {
+            log.info("Regenerating AI review for module version {}", moduleVersionId);
+        }
+        return ResponseEntity.ok(proposalAiReviewService.getOrGenerateReview(moduleVersionId, user, regenerate));
     }
 
     @PostMapping("/overlap-detection/check-similarity/{moduleVersionId}")

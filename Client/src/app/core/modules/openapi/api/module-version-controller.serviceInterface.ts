@@ -16,6 +16,7 @@ import { CompletionServiceResponseDTO } from '../model/models';
 import { ModuleVersionUpdateRequestDTO } from '../model/models';
 import { ModuleVersionViewDTO } from '../model/models';
 import { ModuleVersionViewFeedbackDTO } from '../model/models';
+import { ProposalAiReviewDTO } from '../model/models';
 import { SimilarModuleDTO } from '../model/models';
 
 
@@ -82,6 +83,14 @@ export interface ModuleVersionControllerServiceInterface {
      * @param id 
      */
     getPreviousModuleVersionFeedback(id: number, extraHttpRequestParams?: any): Observable<Array<ModuleVersionViewFeedbackDTO>>;
+
+    /**
+     * 
+     * 
+     * @param moduleVersionId 
+     * @param regenerate 
+     */
+    getProposalAiReview(moduleVersionId: number, regenerate?: boolean, extraHttpRequestParams?: any): Observable<ProposalAiReviewDTO>;
 
     /**
      * 

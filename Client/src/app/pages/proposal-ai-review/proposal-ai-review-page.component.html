@@ -1,0 +1,97 @@
+<h1 class="text-2xl mb-2 flex flex-wrap items-center gap-2">
+  <i class="pi pi-sparkles text-primary"></i>
+  AI-assisted review
+  @if (review(); as r) {
+    @if (issueCounts().critical > 0) {
+      <p-tag [value]="issueCounts().critical + ' critical'" severity="danger" />
+    }
+    @if (issueCounts().attention > 0) {
+      <p-tag [value]="issueCounts().attention + ' attention'" severity="warn" />
+    }
+  }
+</h1>
+<p class="text-muted-foreground mb-6">{{ introText }}</p>
+
+@if (loading()) {
+  <div class="flex items-center gap-3 py-12 text-muted-foreground">
+    <p-progress-spinner strokeWidth="4" styleClass="w-10 h-10" ariaLabel="Loading review" />
+    <span>{{ loadingMessage() }}</span>
+  </div>
+} @else if (error()) {
+  <p-message severity="error" class="mb-4">
+    <div class="flex flex-col gap-3">
+      <p class="m-0">{{ error() }}</p>
+      <p-button label="Try again" icon="pi pi-refresh" severity="contrast" (onClick)="regenerate()" />
+    </div>
+  </p-message>
+} @else if (review(); as r) {
+  <div class="flex flex-wrap items-center gap-3 mb-6">
+    <p-button label="Regenerate review" icon="pi pi-refresh" severity="contrast" outlined (onClick)="regenerate()" [disabled]="loading()" />
+    <p-selectButton
+      [options]="filterOptions"
+      [ngModel]="issueFilter()"
+      (ngModelChange)="issueFilter.set($event)"
+      optionLabel="label"
+      optionValue="value"
+    />
+  </div>
+
+  @if (r.guidelinesConfigured === false) {
+    <p-message severity="warn" styleClass="w-full mb-6">
+      <div class="flex flex-row">
+        <i class="pi pi-exclamation-triangle mt-1" style="font-size: 1.2rem"></i>
+        <div class="ml-3">
+          <p class="font-bold m-0">No review guidelines configured</p>
+          <p class="m-0">This review is based on generic academic standards only. Ask an AI review guideline manager to configure guidelines for more targeted feedback.</p>
+        </div>
+      </div>
+    </p-message>
+  }
+
+  <p-message severity="secondary" styleClass="w-full mb-6">
+    <div>
+      <p class="font-semibold m-0 mb-1">Overall summary</p>
+      <p class="m-0 whitespace-pre-line">{{ r.summary }}</p>
+      @if (r.generatedAt) {
+        <p class="text-xs text-muted-foreground mt-2 m-0">Generated {{ r.generatedAt | date: 'yyyy-MM-dd HH:mm' }}</p>
+      }
+    </div>
+  </p-message>
+
+  @if (displayedSections().length === 0) {
+    <p-message severity="success">
+      <div class="flex flex-row">
+        <i class="pi pi-check-circle mt-1" style="font-size: 1.2rem"></i>
+        <div class="ml-3">
+          <p class="font-bold m-0">No issues in this filter</p>
+          <p class="m-0">Switch to “All sections” to see OK items, or regenerate after updating the proposal.</p>
+        </div>
+      </div>
+    </p-message>
+  } @else {
+    <div class="space-y-2">
+      <p-accordion [multiple]="true">
+        @for (section of displayedSections(); track section.section; let i = $index) {
+          <p-accordion-panel [value]="i">
+            <p-accordion-header>
+              <div class="flex flex-wrap items-center gap-2 w-full pr-2">
+                <span class="font-medium">{{ sectionLabel(section) }}</span>
+                <p-tag [value]="severityLabel(section.severity)" [severity]="severityTag(section.severity)" />
+              </div>
+            </p-accordion-header>
+            <p-accordion-content>
+              @if (section.findings) {
+                <p class="text-sm font-medium m-0 mb-1">Findings</p>
+                <p class="text-sm m-0 mb-3 whitespace-pre-line">{{ section.findings }}</p>
+              }
+              @if (section.suggestions) {
+                <p class="text-sm font-medium m-0 mb-1">Suggestions</p>
+                <p class="text-sm m-0 whitespace-pre-line">{{ section.suggestions }}</p>
+              }
+            </p-accordion-content>
+          </p-accordion-panel>
+        }
+      </p-accordion>
+    </div>
+  }
+}

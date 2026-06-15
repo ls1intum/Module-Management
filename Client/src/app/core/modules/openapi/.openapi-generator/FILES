@@ -49,6 +49,8 @@ model/module-version-update-request-dto.ts
 model/module-version-view-dto.ts
 model/module-version-view-feedback-dto.ts
 model/page-response-dto-user-dto.ts
+model/proposal-ai-review-dto.ts
+model/proposal-ai-review-section-dto.ts
 model/proposal-request-dto.ts
 model/proposal-view-dto.ts
 model/proposals-compact-dto.ts

@@ -1,0 +1,104 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0018a_proposal_ai_review_tables
+      author: module-management
+      changes:
+        - createTable:
+            tableName: proposal_ai_review
+            columns:
+              - column:
+                  name: review_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: module_version_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: summary
+                  type: CLOB
+                  constraints:
+                    nullable: true
+              - column:
+                  name: guidelines_configured
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: generated_by
+                  type: UUID
+                  constraints:
+                    nullable: true
+              - column:
+                  name: generated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: proposal_ai_review
+            columnNames: module_version_id
+            constraintName: uq_proposal_ai_review_module_version
+        - addForeignKeyConstraint:
+            baseTableName: proposal_ai_review
+            baseColumnNames: module_version_id
+            referencedTableName: module_version
+            referencedColumnNames: module_version_id
+            constraintName: fk_proposal_ai_review_module_version
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: proposal_ai_review
+            baseColumnNames: generated_by
+            referencedTableName: app_user
+            referencedColumnNames: user_id
+            constraintName: fk_proposal_ai_review_generated_by
+        - createTable:
+            tableName: proposal_ai_review_section
+            columns:
+              - column:
+                  name: section_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: review_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: section
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: severity
+                  type: VARCHAR(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: findings
+                  type: CLOB
+                  constraints:
+                    nullable: true
+              - column:
+                  name: suggestions
+                  type: CLOB
+                  constraints:
+                    nullable: true
+              - column:
+                  name: sort_order
+                  type: INT
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: proposal_ai_review_section
+            baseColumnNames: review_id
+            referencedTableName: proposal_ai_review
+            referencedColumnNames: review_id
+            constraintName: fk_proposal_ai_review_section_review
+            onDelete: CASCADE

@@ -21,6 +21,8 @@ export * from './module-version-update-request-dto';
 export * from './module-version-view-dto';
 export * from './module-version-view-feedback-dto';
 export * from './page-response-dto-user-dto';
+export * from './proposal-ai-review-dto';
+export * from './proposal-ai-review-section-dto';
 export * from './proposal-request-dto';
 export * from './proposal-view-dto';
 export * from './proposals-compact-dto';

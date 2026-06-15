@@ -22,7 +22,8 @@
         <p-button label="Export PDF" severity="contrast" (onClick)="pdfExport()" />
         <div class="flex gap-2">
           @if (proposalId) {
-            <p-button label="Check Overlaps" severity="contrast" outlined [routerLink]="['/proposals', proposalId, 'version', moduleVersionId, 'overlap']" />
+            <p-button label="AI Review" icon="pi pi-sparkles" severity="contrast" outlined [routerLink]="['/proposals', proposalId, 'version', moduleVersionDto.moduleVersionId, 'ai-review']" />
+            <p-button label="Check Overlaps" severity="contrast" outlined [routerLink]="['/proposals', proposalId, 'version', moduleVersionDto.moduleVersionId, 'overlap']" />
           }
           @if (isLatestVersion() && proposalId) {
             <p-button label="Edit Module Version" severity="contrast" [routerLink]="['/proposals', proposalId, 'version', moduleVersionId, 'edit']" />

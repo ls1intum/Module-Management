@@ -50,3 +50,6 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: changes/0017_ai_review_guidelines.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: changes/0018_proposal_ai_review.yaml

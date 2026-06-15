@@ -15,4 +15,7 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
 
     /** All feedbacks for a proposal that are not invalidated (for display on view/edit). */
     List<Feedback> findByModuleVersion_Proposal_ProposalIdAndInvalidatedFalse(Long proposalId);
+
+    boolean existsByModuleVersion_Proposal_ProposalIdAndInvalidatedFalseAndAssignedReviewer_UserId(
+            Long proposalId, UUID userId);
 }

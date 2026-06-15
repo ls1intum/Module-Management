@@ -27,13 +27,15 @@ export class BreadcrumbComponent {
 
   showBreadcrumb = computed(() => {
     const u = this.url();
-    return u.startsWith('/proposals') || u.startsWith('/feedbacks') || u.startsWith('/admin');
+    return u.startsWith('/proposals') || u.startsWith('/feedbacks') || u.startsWith('/admin')
+        || u.startsWith('/ai-review-guidelines');
   });
 
   private buildItems(url: string): MenuItem[] {
     if (url.startsWith('/proposals')) return this.buildProposalItems(url);
     if (url.startsWith('/feedbacks')) return this.buildFeedbackItems(url);
     if (url.startsWith('/admin')) return this.buildAdminItems(url);
+    if (url.startsWith('/ai-review-guidelines')) return this.buildAiReviewGuidelinesItems();
     return [];
   }
 
@@ -132,6 +134,13 @@ export class BreadcrumbComponent {
         });
         return items;
       }
+      if (segments[4] === 'ai-review') {
+        items.push({
+          label: 'AI Review',
+          routerLink: ['/proposals', proposalId, 'version', versionId, 'ai-review']
+        });
+        return items;
+      }
     }
 
     return items;
@@ -159,6 +168,17 @@ export class BreadcrumbComponent {
       });
     }
 
+    if (segments[3] === 'ai-review' && segments[4]) {
+      items.push({
+        label: 'AI Review',
+        routerLink: ['/feedbacks/view', segments[2], 'ai-review', segments[4]]
+      });
+    }
+
     return items;
+  }
+
+  private buildAiReviewGuidelinesItems(): MenuItem[] {
+    return [{ label: 'AI Review Guidelines', routerLink: ['/ai-review-guidelines'] }];
   }
 }
