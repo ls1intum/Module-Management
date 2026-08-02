@@ -24,6 +24,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class ModuleDataCacheService {
 
+    static final int CACHE_FORMAT_VERSION = 2;
+
     private final ResourceLoader resourceLoader;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -82,12 +84,16 @@ public class ModuleDataCacheService {
         return result.toString();
     }
 
-    public DMatrixRMaj loadCache(String dataHash) {
+    /**
+     * Loads a cache only when catalog hash, model id, and ordered module ids all match.
+     * Returns {@code null} when the cache is missing or incompatible.
+     */
+    public EmbeddingCachePayload loadCache(
+            String dataHash,
+            List<String> expectedModuleIds,
+            String expectedModelId) {
         try {
-            Path cachePath = Paths.get(cacheDir);
-            if (!cachePath.isAbsolute()) {
-                cachePath = cachePath.toAbsolutePath();
-            }
+            Path cachePath = resolveCachePath();
             log.info("Loading cache from: {}", cachePath);
 
             if (!Files.exists(cachePath)) {
@@ -105,19 +111,36 @@ public class ModuleDataCacheService {
                 return null;
             }
 
-            // Read metadata
             Map<String, Object> metadata = objectMapper.readValue(
                     metadataFile.toFile(),
                     new TypeReference<Map<String, Object>>() {
                     });
 
-            String cachedHash = (String) metadata.get("data_hash");
+            Integer formatVersion = asInteger(metadata.get("cache_format_version"));
+            if (formatVersion == null || formatVersion != CACHE_FORMAT_VERSION) {
+                log.info("Cache invalidated: unsupported or missing format version ({})", formatVersion);
+                return null;
+            }
+
+            String cachedHash = Objects.toString(metadata.get("data_hash"), null);
             if (!dataHash.equals(cachedHash)) {
                 log.info("Cache invalidated: data hash changed");
                 return null;
             }
 
-            // Load embeddings from JSON file (2D double array)
+            String cachedModelId = Objects.toString(metadata.get("model_id"), null);
+            if (expectedModelId == null || !expectedModelId.equals(cachedModelId)) {
+                log.info("Cache invalidated: embedding model changed (cached={}, expected={})",
+                        cachedModelId, expectedModelId);
+                return null;
+            }
+
+            List<String> cachedModuleIds = asStringList(metadata.get("module_ids"));
+            if (cachedModuleIds == null || !cachedModuleIds.equals(expectedModuleIds)) {
+                log.info("Cache invalidated: module id list does not match current catalog order");
+                return null;
+            }
+
             log.info("Loading embeddings from cache file");
             double[][] embeddingsArray = objectMapper.readValue(
                     embeddingsFile.toFile(),
@@ -130,46 +153,114 @@ public class ModuleDataCacheService {
 
             DMatrixRMaj matrix = new DMatrixRMaj(embeddingsArray);
 
+            if (matrix.numRows != expectedModuleIds.size()) {
+                log.warn("Cache invalidated: matrix rows ({}) != module ids ({})",
+                        matrix.numRows, expectedModuleIds.size());
+                return null;
+            }
+
+            Integer cachedDimension = asInteger(metadata.get("embedding_dimension"));
+            if (cachedDimension != null && cachedDimension != matrix.numCols) {
+                log.warn("Cache invalidated: metadata dimension ({}) != matrix columns ({})",
+                        cachedDimension, matrix.numCols);
+                return null;
+            }
+
             log.info("Successfully loaded {} x {} embeddings from cache",
                     matrix.numRows, matrix.numCols);
-            return matrix;
+            return new EmbeddingCachePayload(
+                    matrix,
+                    List.copyOf(cachedModuleIds),
+                    cachedModelId,
+                    matrix.numCols);
         } catch (Exception e) {
             log.error("Error loading cache", e);
             return null;
         }
     }
 
-    public void saveCache(String dataHash, int numModules, DMatrixRMaj embeddings) {
+    public void saveCache(
+            String dataHash,
+            List<String> moduleIds,
+            String modelId,
+            DMatrixRMaj embeddings) {
         try {
-            Path cachePath = Paths.get(cacheDir);
-            if (!cachePath.isAbsolute()) {
-                cachePath = cachePath.toAbsolutePath();
+            if (embeddings == null || embeddings.numRows == 0) {
+                log.warn("No embeddings to save");
+                return;
             }
+            if (moduleIds == null || moduleIds.size() != embeddings.numRows) {
+                throw new IllegalArgumentException(String.format(
+                        "Cannot save cache: module id count (%s) != embedding rows (%d)",
+                        moduleIds == null ? "null" : moduleIds.size(),
+                        embeddings.numRows));
+            }
+            if (modelId == null || modelId.isBlank()) {
+                throw new IllegalArgumentException("Cannot save cache without an embedding model id");
+            }
+
+            Path cachePath = resolveCachePath();
             Files.createDirectories(cachePath);
 
-            // Save metadata
-            Map<String, Object> metadata = new HashMap<>();
+            Map<String, Object> metadata = new LinkedHashMap<>();
+            metadata.put("cache_format_version", CACHE_FORMAT_VERSION);
             metadata.put("data_hash", dataHash);
-            metadata.put("num_modules", numModules);
+            metadata.put("model_id", modelId);
+            metadata.put("embedding_dimension", embeddings.numCols);
+            metadata.put("num_modules", moduleIds.size());
+            metadata.put("module_ids", moduleIds);
             metadata.put("timestamp", new Date().toString());
 
             Path metadataFile = cachePath.resolve("metadata.json");
             objectMapper.writerWithDefaultPrettyPrinter()
                     .writeValue(metadataFile.toFile(), metadata);
 
-            if (embeddings != null && embeddings.numRows > 0) {
-                double[][] embeddingsArray = embeddings.get2DData();
+            double[][] embeddingsArray = embeddings.get2DData();
+            Path embeddingsFile = cachePath.resolve("embeddings.json");
+            objectMapper.writerWithDefaultPrettyPrinter()
+                    .writeValue(embeddingsFile.toFile(), embeddingsArray);
 
-                Path embeddingsFile = cachePath.resolve("embeddings.json");
-                objectMapper.writerWithDefaultPrettyPrinter()
-                        .writeValue(embeddingsFile.toFile(), embeddingsArray);
-
-                log.info("Saved {} x {} embeddings to cache", embeddings.numRows, embeddings.numCols);
-            } else {
-                log.warn("No embeddings to save");
-            }
+            log.info("Saved {} x {} embeddings to cache (model={})",
+                    embeddings.numRows, embeddings.numCols, modelId);
         } catch (Exception e) {
             log.error("Error saving cache", e);
+            throw new IllegalStateException("Failed to save embedding cache", e);
         }
+    }
+
+    private Path resolveCachePath() {
+        Path cachePath = Paths.get(cacheDir);
+        if (!cachePath.isAbsolute()) {
+            cachePath = cachePath.toAbsolutePath();
+        }
+        return cachePath;
+    }
+
+    private static Integer asInteger(Object value) {
+        if (value instanceof Number number) {
+            return number.intValue();
+        }
+        if (value instanceof String text && !text.isBlank()) {
+            try {
+                return Integer.parseInt(text);
+            } catch (NumberFormatException ignored) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    private static List<String> asStringList(Object value) {
+        if (!(value instanceof List<?> list)) {
+            return null;
+        }
+        List<String> result = new ArrayList<>(list.size());
+        for (Object item : list) {
+            if (item == null) {
+                return null;
+            }
+            result.add(item.toString());
+        }
+        return result;
     }
 }

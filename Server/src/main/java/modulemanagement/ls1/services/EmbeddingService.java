@@ -26,22 +26,43 @@ public class EmbeddingService {
         return MatrixUtil.floatArrayToMatrix(output);
     }
 
+    /**
+     * Embeds every text in order. Any batch failure aborts the whole call so
+     * callers never receive a matrix whose rows no longer align with the input.
+     */
     public DMatrixRMaj generateEmbeddings(List<String> texts) {
-        List<float[]> allEmbeddings = new ArrayList<>();
+        List<float[]> allEmbeddings = new ArrayList<>(texts.size());
 
         for (int i = 0; i < texts.size(); i += BATCH_SIZE) {
             int end = Math.min(i + BATCH_SIZE, texts.size());
             List<String> batch = texts.subList(i, end);
 
+            final EmbeddingResponse response;
             try {
-                EmbeddingResponse response = embeddingModel.embedForResponse(batch);
-                response.getResults().forEach(e -> allEmbeddings.add(e.getOutput()));
-                log.info("Generated embeddings for batch {}-{}", i + 1, end);
-            } catch (Exception e) {
-                log.warn("Failed to generate embeddings for batch {}-{}: {}",
-                        i + 1, end, e.getMessage());
+                response = embeddingModel.embedForResponse(batch);
+            } catch (RuntimeException e) {
+                throw new IllegalStateException(String.format(
+                        "Failed to generate embeddings for batch %d-%d; aborting cache build",
+                        i + 1, end), e);
             }
 
+            List<float[]> batchEmbeddings = response.getResults().stream()
+                    .map(e -> e.getOutput())
+                    .toList();
+
+            if (batchEmbeddings.size() != batch.size()) {
+                throw new IllegalStateException(String.format(
+                        "Embedding batch %d-%d returned %d vectors for %d texts",
+                        i + 1, end, batchEmbeddings.size(), batch.size()));
+            }
+
+            allEmbeddings.addAll(batchEmbeddings);
+            log.info("Generated embeddings for batch {}-{}", i + 1, end);
+        }
+
+        if (allEmbeddings.size() != texts.size()) {
+            throw new IllegalStateException(String.format(
+                    "Expected %d embeddings but produced %d", texts.size(), allEmbeddings.size()));
         }
 
         return MatrixUtil.floatArraysToMatrix(allEmbeddings);
