@@ -45,7 +45,7 @@ databaseChangeLog:
 
               INSERT INTO proposal (proposal_id, created_by, creation_date, status)
               VALUES
-              (1, '7bb1edd9-02c5-411c-a1e2-9aed33808437', NOW(), 'WAITING_FOR_COORDINATORS_SUBMISSION'),
+              (1, '7bb1edd9-02c5-411c-a1e2-9aed33808437', NOW(), 'PENDING_COORDINATORS_FEEDBACK'),
               (2, '7bb1edd9-02c5-411c-a1e2-9aed33808437', NOW(), 'WAITING_FOR_COORDINATORS_SUBMISSION'),
               (3, 'a0442163-c9c0-4542-9b61-3f154091c7ad', NOW(), 'WAITING_FOR_COORDINATORS_SUBMISSION');
 
@@ -61,18 +61,18 @@ databaseChangeLog:
                 title_eng, title_de, level_eng, language_eng, frequency_eng,
                 credits, duration, hours_total, hours_self_study, hours_presence,
                 hours_lecture, hours_exercise, hours_practical, hours_seminar,
-                first_semester_available,
+                first_semester_available, successor_module_name,
                 content_eng, learning_outcomes_eng, teaching_methods_eng,
                 examination_achievements_eng, recommended_prerequisites_eng,
                 media_eng, literature_eng, responsibles_eng, lv_sws_lecturer_eng,
                 repetition_eng, bullet_points, proposal_id
               ) VALUES (
-                1, 1, 'CIT4310999', NOW(), 'WAITING_FOR_COORDINATORS_SUBMISSION',
+                1, 1, 'CIT4310999', NOW(), 'PENDING_COORDINATORS_FEEDBACK',
                 'Advanced Database Systems',
                 'Fortgeschrittene Datenbanksysteme',
                 'Master',
                 'English',
-                'Winter and Summer semester',
+                'Winter/Summer semester',
                 6,
                 '1 semester',
                 180,
@@ -83,6 +83,7 @@ databaseChangeLog:
                 0,
                 0,
                 'WS/SS',
+                'None',
                 E'1. Query processing and optimization: relational algebra review, cost-based optimization, indexing strategies, join algorithms, and execution plans.\n\n2. Transaction management and concurrency: ACID properties, isolation levels, two-phase locking, MVCC, and recovery after failure.\n\n3. Distributed and modern data stores: replication, partitioning, consensus basics, and comparison of relational vs. document-oriented systems.',
                 E'After successful completion of the module, students are able to:\n- analyze query execution plans and propose concrete optimization measures for relational workloads\n- design transaction boundaries and choose appropriate isolation levels for given consistency requirements\n- evaluate trade-offs between normalization, indexing, and denormalization in application schemas\n- explain replication and partitioning concepts in distributed database systems',
                 'Lectures introduce concepts and worked examples. Exercises apply techniques to realistic schemas and query workloads. A small implementation assignment reinforces indexing and transaction design. Optional office hours support exam preparation.',
@@ -155,5 +156,45 @@ databaseChangeLog:
               INSERT INTO module_version_degree_program_assignment (module_version_id, degree_program_id, degree_program_specialization_id)
               VALUES (1, 4, 2);
 
+              -- Freeze v1 with coordinator feedback and create the editable successor (v2)
+              -- so the proposal overview seed demonstrates previous module versions.
+              INSERT INTO feedback (
+                module_version_id, feedback_status, invalidated, submission_date,
+                degree_program_specialization_id, assigned_reviewer_user_id, required_role
+              )
+              SELECT
+                1, 'PENDING_FEEDBACK', false, NOW(),
+                2, ds.responsible_user_id, NULL
+              FROM degree_program_specialization ds
+              WHERE ds.degree_program_specialization_id = 2;
+
+              INSERT INTO module_version (
+                module_version_id, version, module_id, creation_date, status,
+                title_eng, title_de, level_eng, language_eng, frequency_eng,
+                credits, duration, hours_total, hours_self_study, hours_presence,
+                hours_lecture, hours_exercise, hours_practical, hours_seminar,
+                first_semester_available, successor_module_name,
+                content_eng, learning_outcomes_eng, teaching_methods_eng,
+                examination_achievements_eng, recommended_prerequisites_eng,
+                media_eng, literature_eng, responsibles_eng, lv_sws_lecturer_eng,
+                repetition_eng, bullet_points, proposal_id
+              )
+              SELECT
+                4, 2, module_id, NOW(), 'PENDING_COORDINATORS_FEEDBACK',
+                title_eng, title_de, level_eng, language_eng, frequency_eng,
+                credits, duration, hours_total, hours_self_study, hours_presence,
+                hours_lecture, hours_exercise, hours_practical, hours_seminar,
+                first_semester_available, successor_module_name,
+                content_eng, learning_outcomes_eng, teaching_methods_eng,
+                examination_achievements_eng, recommended_prerequisites_eng,
+                media_eng, literature_eng, responsibles_eng, lv_sws_lecturer_eng,
+                repetition_eng, bullet_points, proposal_id
+              FROM module_version
+              WHERE module_version_id = 1;
+
+              INSERT INTO module_version_degree_program_assignment (module_version_id, degree_program_id, degree_program_specialization_id)
+              VALUES (4, 4, 2);
+
               SELECT setval('proposal_proposal_id_seq', (SELECT COALESCE(MAX(proposal_id), 1) FROM proposal));
               SELECT setval('module_version_module_version_id_seq', (SELECT COALESCE(MAX(module_version_id), 1) FROM module_version));
+              SELECT setval('feedback_feedback_id_seq', (SELECT COALESCE(MAX(feedback_id), 1) FROM feedback));
