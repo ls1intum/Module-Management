@@ -12,6 +12,7 @@ The Module Management System streamlines the process of creating, reviewing, and
 - **Structured Feedback Process**: Reviewers can provide granular feedback on specific sections.
 - **Version Management**: Support for creating new module versions based on feedback while maintaining version history.
 - **AI-Assisted Description Generation**: Help professors create standardized module descriptions.
+- **AI Proposal Review**: Generate an LLM-based review of a proposal against configurable guidelines, shared across all roles with one stored result per module version.
 - **Module Overlap Detection**: Identify potential overlaps between proposed modules and existing curriculum.
 - **PDF Export**: Export module information for offline use.
 
@@ -45,6 +46,16 @@ The Module Management System streamlines the process of creating, reviewing, and
    - Provide specific feedback for each field
    - Approve, request changes, or reject proposals
 
+### AI Proposal Review
+
+The AI review feature generates a structured LLM review of a module version, section by section (title, content, learning outcomes, etc.), with a severity rating (`OK`, `ATTENTION`, `CRITICAL`), findings, and suggestions per section.
+
+- **Guidelines**: Users with the `AI_REVIEW_GUIDELINE_MANAGER` role (assignable by an admin) maintain a single shared list of review guidelines under "AI Review Guidelines". Each guideline targets either the whole proposal (`General`) or a specific section. Guidelines are injected into the LLM prompt; if none are configured, the review falls back to generic academic standards and the UI shows a hint.
+- **Access**: The proposal owner can always generate a review. Quality management, examination board, and academic program advisors can review any proposal; program/specialization coordinators only proposals they are assigned to as reviewers.
+- **Persistence**: One stored review per module version, shared by professors and reviewers. Opening the AI review page returns it instantly, or generates one automatically on first visit. "Regenerate review" forces a fresh LLM run via `?regenerate=true`.
+- **Where to find it**: "AI review" buttons on the proposal page (current and previous versions), the module version view, the edit page, and the feedback view navigate to the dedicated AI review page.
+- **Configuration**: Uses the same chat model configured for the other AI features (see "Using a Local LLM"). HTTP client timeouts for long LLM calls are configured in `Server/src/main/resources/application.yaml` under `spring.http.clients`.
+
 ## System Architecture
 
 The system implements a modular client-server architecture with three primary components:
@@ -70,7 +81,21 @@ Make sure you have the following installed:
 - Docker and Docker Compose
 - Node.js v20.19+ and npm
 - Angular CLI
-- Java JDK 21
+- Java JDK 21 (the server build uses Gradle’s Java 21 toolchain; JDK 25 alone is not enough)
+
+#### Java 21 on macOS (Homebrew)
+
+If `./gradlew bootRun` fails with “Cannot find a Java installation … matching languageVersion=21”, install JDK 21:
+
+```bash
+brew install openjdk@21
+```
+
+The `Server/gradle.properties` file registers the Homebrew JDK 21 path for Gradle. If you installed JDK 21 elsewhere, update `org.gradle.java.installations.paths` in that file, or run:
+
+```bash
+export JAVA_HOME="/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
+```
 
 ### Environment Configuration
 
@@ -96,7 +121,7 @@ Ports are configured in your `.env` file.
 
 #### 2. Start the Spring Boot Server
 
-From the `Server` directory:
+From the repository root, start the server from the `Server` directory (if your shell is already in `Server`, skip `cd Server`):
 
 ```bash
 cd Server

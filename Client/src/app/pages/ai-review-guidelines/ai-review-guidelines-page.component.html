@@ -1,0 +1,96 @@
+<h2 class="text-2xl mb-4">AI review guidelines</h2>
+<p class="text-muted-foreground mb-6">
+  Maintain the shared rules used when the system generates automated LLM reviews of module proposals. Guidelines are scoped to
+  proposal sections so the model can apply only relevant criteria per field.
+</p>
+
+<div class="flex flex-wrap justify-between items-center gap-3 mb-3">
+  <h3 class="text-lg font-medium m-0">All guidelines</h3>
+  <p-button label="Add guideline" icon="pi pi-plus" (onClick)="openCreateDialog()" [disabled]="loading()" severity="contrast" />
+</div>
+
+@if (!loading()) {
+  <p-table [value]="guidelines()" [tableStyle]="{ 'min-width': '48rem' }" sortField="section" sortMode="single">
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="section">Section <p-sortIcon field="section" /></th>
+        <th>Title</th>
+        <th style="width: 6rem">Order</th>
+        <th>Last updated by</th>
+        <th style="width: 10rem">Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-g>
+      <tr>
+        <td>{{ getSectionLabel(g.section) }}</td>
+        <td>
+          <span class="font-medium">{{ g.title }}</span>
+          <p class="text-sm text-muted-foreground m-0 mt-1 line-clamp-2">{{ g.instruction }}</p>
+        </td>
+        <td>{{ g.sortOrder }}</td>
+        <td class="text-sm text-muted-foreground">
+          {{ g.updatedByDisplayName || g.createdByDisplayName || '—' }}
+        </td>
+        <td>
+          <p-button icon="pi pi-pencil" pTooltip="Edit" (onClick)="openEditDialog(g)" [rounded]="true" [text]="true" severity="secondary" class="mr-1" />
+          <p-button icon="pi pi-trash" pTooltip="Delete" (onClick)="deleteGuideline(g)" [rounded]="true" [text]="true" severity="danger" />
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5" class="text-muted-foreground py-6">No guidelines yet. Add rules for reviewers and the LLM to follow.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+} @else {
+  <p class="text-muted-foreground">Loading…</p>
+}
+
+<p-dialog
+  [header]="dialogTitle()"
+  [visible]="dialogVisible()"
+  (visibleChange)="onDialogVisibleChange($event)"
+  [modal]="true"
+  [style]="{ width: 'min(36rem, 96vw)' }"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <div class="flex flex-col gap-4 py-2">
+    <div>
+      <label class="text-sm font-medium block mb-1">Proposal section</label>
+      <p-select
+        [options]="sectionOptions"
+        [(ngModel)]="formSection"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Select section"
+        appendTo="body"
+        [style]="{ width: '100%' }"
+      />
+    </div>
+    <div>
+      <label class="text-sm font-medium block mb-1">Title</label>
+      <input pInputText [(ngModel)]="formTitle" class="w-full" placeholder="Short label for this rule" maxlength="256" />
+    </div>
+    <div>
+      <label class="text-sm font-medium block mb-1">Instructions for the LLM</label>
+      <textarea
+        pTextarea
+        [(ngModel)]="formInstruction"
+        class="w-full"
+        rows="8"
+        placeholder="Describe what the automated review should check for this section…"
+      ></textarea>
+    </div>
+    <div>
+      <label class="text-sm font-medium block mb-1">Sort order</label>
+      <p-inputNumber [(ngModel)]="formSortOrder" [min]="0" [showButtons]="true" />
+      <p class="text-xs text-muted-foreground mt-1 m-0">Lower numbers appear first within the same section.</p>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" severity="secondary" (onClick)="closeDialog()" />
+    <p-button label="Save" icon="pi pi-check" (onClick)="saveGuideline()" [loading]="saving()" />
+  </ng-template>
+</p-dialog>

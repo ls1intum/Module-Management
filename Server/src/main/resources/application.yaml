@@ -37,6 +37,11 @@ spring:
           starttls:
             enable: ${MAIL_STARTTLS_ENABLE:false}
             required: ${MAIL_STARTTLS_REQUIRED:false}
+  # Generous timeouts for LLM calls (full proposal AI reviews can take >1 minute on local models).
+  http:
+    clients:
+      connect-timeout: 30s
+      read-timeout: 5m
   ai:
     openai:
       api-key: ${OPENAI_API_KEY:not-needed}

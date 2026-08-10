@@ -5,7 +5,7 @@ import { DividerModule } from 'primeng/divider';
 import { PanelModule } from 'primeng/panel';
 import { SecurityStore } from '../../core/security/security-store.service';
 import { SignInComponent } from '../../components/sign-in/sign-in.component';
-import { isAdminRole, isProfessorRole, isReviewerRole } from '../../core/shared/user-role.utils';
+import { isAdminRole, isAiReviewGuidelineManagerRole, isProfessorRole, isReviewerRole } from '../../core/shared/user-role.utils';
 
 @Component({
   selector: 'index-component',
@@ -20,4 +20,5 @@ export class IndexComponent {
   isAdmin = (): boolean => isAdminRole(this.user()?.roles);
   isProfessor = (): boolean => isProfessorRole(this.user()?.roles);
   isReviewer = (): boolean => isReviewerRole(this.user()?.roles);
+  isAiReviewGuidelineManager = (): boolean => isAiReviewGuidelineManagerRole(this.user()?.roles);
 }

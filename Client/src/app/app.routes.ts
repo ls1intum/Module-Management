@@ -10,6 +10,7 @@ import { AuthGuard } from './core/security/auth.guard';
 import { AdminGuard } from './core/security/admin.guard';
 import { ModuleVersionViewComponent } from './pages/module-version-view/module-version-view.component';
 import { SimilarModulesPage } from './pages/similar-modules/similar-modules.component';
+import { ProposalAiReviewPageComponent } from './pages/proposal-ai-review/proposal-ai-review-page.component';
 import { AccountLayoutComponent } from './pages/account-management/account-layout/account-layout.component';
 import { AccountInformationComponent } from './pages/account-management/account-information/account-information.component';
 import { AccountPasskeysComponent } from './pages/account-management/passkeys/account-passkeys.component';
@@ -19,6 +20,8 @@ import { DegreeProgramDetailsPageComponent } from './pages/admin/degree-programs
 import { AllSpecializationsPageComponent } from './pages/admin/degree-program-specializations/all-specializations-page.component';
 import { ExaminationBoardDetailPageComponent } from './pages/admin/examination-boards/examination-board-detail-page.component';
 import { ExaminationBoardsPageComponent } from './pages/admin/examination-boards/examination-boards-page.component';
+import { AiReviewGuidelinesPageComponent } from './pages/ai-review-guidelines/ai-review-guidelines-page.component';
+import { AiReviewGuidelineManagerGuard } from './core/security/ai-review-guideline-manager.guard';
 export const routes: Routes = [
   { path: '', component: IndexComponent },
   {
@@ -30,7 +33,8 @@ export const routes: Routes = [
       { path: ':id', component: ProposalViewComponent },
       { path: ':id/version/:versionId', component: ModuleVersionViewComponent },
       { path: ':id/version/:versionId/edit', component: ModuleVersionEditComponent },
-      { path: ':id/version/:versionId/overlap', component: SimilarModulesPage }
+      { path: ':id/version/:versionId/overlap', component: SimilarModulesPage },
+      { path: ':id/version/:versionId/ai-review', component: ProposalAiReviewPageComponent }
     ]
   },
   {
@@ -39,7 +43,8 @@ export const routes: Routes = [
     children: [
       { path: '', component: ApprovalStaffHomePageComponent },
       { path: 'view/:id', component: FeedbackViewComponent },
-      { path: 'view/:id/overlap/:versionId', component: SimilarModulesPage }
+      { path: 'view/:id/overlap/:versionId', component: SimilarModulesPage },
+      { path: 'view/:id/ai-review/:versionId', component: ProposalAiReviewPageComponent }
     ]
   },
   {
@@ -51,6 +56,11 @@ export const routes: Routes = [
       { path: 'passkeys', component: AccountPasskeysComponent },
       { path: '', redirectTo: 'information', pathMatch: 'full' }
     ]
+  },
+  {
+    path: 'ai-review-guidelines',
+    component: AiReviewGuidelinesPageComponent,
+    canActivate: [AuthGuard, AiReviewGuidelineManagerGuard]
   },
   {
     path: 'admin',

@@ -13,7 +13,7 @@ export interface UpdateUserRoleDTO {
     roles: Array<UpdateUserRoleDTO.RolesEnum>;
 }
 export namespace UpdateUserRoleDTO {
-    export type RolesEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR' | 'PROGRAM_COORDINATOR' | 'SPECIALIZATION_AREA_COORDINATOR';
+    export type RolesEnum = 'ADMIN' | 'QUALITY_MANAGEMENT' | 'ACADEMIC_PROGRAM_ADVISOR' | 'EXAMINATION_BOARD' | 'PROFESSOR' | 'PROGRAM_COORDINATOR' | 'SPECIALIZATION_AREA_COORDINATOR' | 'AI_REVIEW_GUIDELINE_MANAGER';
     export const RolesEnum = {
         Admin: 'ADMIN' as RolesEnum,
         QualityManagement: 'QUALITY_MANAGEMENT' as RolesEnum,
@@ -21,7 +21,8 @@ export namespace UpdateUserRoleDTO {
         ExaminationBoard: 'EXAMINATION_BOARD' as RolesEnum,
         Professor: 'PROFESSOR' as RolesEnum,
         ProgramCoordinator: 'PROGRAM_COORDINATOR' as RolesEnum,
-        SpecializationAreaCoordinator: 'SPECIALIZATION_AREA_COORDINATOR' as RolesEnum
+        SpecializationAreaCoordinator: 'SPECIALIZATION_AREA_COORDINATOR' as RolesEnum,
+        AiReviewGuidelineManager: 'AI_REVIEW_GUIDELINE_MANAGER' as RolesEnum
     };
 }
 

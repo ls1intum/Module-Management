@@ -1,6 +1,9 @@
 export * from './admin-user-controller.service';
 import { AdminUserControllerService } from './admin-user-controller.service';
 export * from './admin-user-controller.serviceInterface';
+export * from './ai-review-guideline-controller.service';
+import { AiReviewGuidelineControllerService } from './ai-review-guideline-controller.service';
+export * from './ai-review-guideline-controller.serviceInterface';
 export * from './degree-program-specializations-controller.service';
 import { DegreeProgramSpecializationsControllerService } from './degree-program-specializations-controller.service';
 export * from './degree-program-specializations-controller.serviceInterface';
@@ -22,4 +25,4 @@ export * from './proposal-controller.serviceInterface';
 export * from './user-controller.service';
 import { UserControllerService } from './user-controller.service';
 export * from './user-controller.serviceInterface';
-export const APIS = [AdminUserControllerService, DegreeProgramSpecializationsControllerService, DegreeProgramsControllerService, ExaminationBoardControllerService, FeedbackControllerService, ModuleVersionControllerService, ProposalControllerService, UserControllerService];
+export const APIS = [AdminUserControllerService, AiReviewGuidelineControllerService, DegreeProgramSpecializationsControllerService, DegreeProgramsControllerService, ExaminationBoardControllerService, FeedbackControllerService, ModuleVersionControllerService, ProposalControllerService, UserControllerService];

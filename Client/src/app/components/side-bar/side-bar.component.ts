@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
-import { isAdminRole, isProfessorRole, isReviewerRole } from '../../core/shared/user-role.utils';
+import { isAdminRole, isAiReviewGuidelineManagerRole, isProfessorRole, isReviewerRole } from '../../core/shared/user-role.utils';
 import { SecurityStore } from '../../core/security/security-store.service';
 import { SidebarService } from './sidebar.service';
 
@@ -28,6 +28,7 @@ export class SideBarComponent {
   isAdmin = (): boolean => isAdminRole(this.user()?.roles);
   isProfessor = (): boolean => isProfessorRole(this.user()?.roles);
   isReviewer = (): boolean => isReviewerRole(this.user()?.roles);
+  isAiReviewGuidelineManager = (): boolean => isAiReviewGuidelineManagerRole(this.user()?.roles);
 
   isActive(path: string): boolean {
     return this.router.url.startsWith(path);

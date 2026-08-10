@@ -54,6 +54,12 @@
           </div>
         </p-panel>
       }
+      @if (isAiReviewGuidelineManager()) {
+        <p-panel header="AI review guidelines">
+          <p class="text-sm text-muted-foreground mb-4">Maintain shared rules for automated LLM proposal reviews.</p>
+          <p-button label="Manage guidelines" icon="pi pi-sparkles" [routerLink]="['/ai-review-guidelines']" severity="contrast" />
+        </p-panel>
+      }
       @if (isReviewer()) {
         <p-panel header="Pending Feedbacks">
           <p class="text-sm text-muted-foreground mb-4">Review and submit feedback on proposals.</p>

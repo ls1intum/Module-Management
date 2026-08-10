@@ -14,6 +14,24 @@
       </div>
     </p-message>
 
+    @if (moduleVersionId && moduleVersionDto()?.proposalId; as proposalId) {
+      <div class="flex flex-wrap gap-2 mb-4">
+        <p-button
+          label="AI Review"
+          icon="pi pi-sparkles"
+          severity="contrast"
+          outlined
+          [routerLink]="['/proposals', proposalId, 'version', moduleVersionId, 'ai-review']"
+        />
+        <p-button
+          label="Check Overlaps"
+          severity="contrast"
+          outlined
+          [routerLink]="['/proposals', proposalId, 'version', moduleVersionId, 'overlap']"
+        />
+      </div>
+    }
+
     <form [formGroup]="proposalForm" (ngSubmit)="onSubmit()" class="space-y-6">
       @if (currentStepIndex() === 0) {
         <div class="space-y-6">
