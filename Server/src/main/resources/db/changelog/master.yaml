@@ -53,3 +53,6 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: changes/0018_proposal_ai_review.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: initialize/0020_seed_ai_review_test_data.yaml

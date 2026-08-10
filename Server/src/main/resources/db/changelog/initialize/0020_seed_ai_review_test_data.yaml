@@ -1,0 +1,159 @@
+databaseChangeLog:
+  # Demo data for AI review testing: guidelines + one strong, one weak, and one inconsistent module proposal.
+  - changeSet:
+      id: 0020a-seed-ai-review-guidelines-and-proposals
+      author: module-management
+      changes:
+        - sql:
+            sql: |
+              INSERT INTO app_user_role (user_id, role)
+              VALUES ('f47ac10b-58cc-4372-a567-0e02b2c3d479', 'AI_REVIEW_GUIDELINE_MANAGER')
+              ON CONFLICT (user_id, role) DO NOTHING;
+
+              INSERT INTO ai_review_guideline (section, title, instruction, sort_order, created_by, updated_by, created_at, updated_at)
+              VALUES
+              ('GENERAL', 'Academic tone',
+               'Use formal academic English. Avoid marketing language and vague superlatives.',
+               0, 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', NOW(), NOW()),
+              ('GENERAL', 'Handbook alignment',
+               'Content should match TUM module handbook expectations: clear scope, workload, assessment, and prerequisites.',
+               1, 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', NOW(), NOW()),
+              ('TITLE_ENG', 'Descriptive title',
+               'The English title must name the subject area and indicate the academic level. Reject titles like "Intro to X" without a clear topic.',
+               0, 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', NOW(), NOW()),
+              ('CONTENT', 'Thematic structure',
+               'Describe at least three clearly separated thematic blocks with 2-4 sentences each.',
+               0, 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', NOW(), NOW()),
+              ('CONTENT', 'Avoid filler',
+               'Flag content that only states that students will "learn about" a topic without naming concrete concepts, methods, or tools.',
+               1, 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', NOW(), NOW()),
+              ('LEARNING_OUTCOMES', 'Measurable outcomes',
+               'Learning outcomes must use measurable verbs (e.g. analyze, design, implement, evaluate) and state what students can do after the module.',
+               0, 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', NOW(), NOW()),
+              ('CREDITS', 'ECTS value',
+               'Master modules must specify ECTS credits. Typical values are 3, 6, or 9 ECTS.',
+               0, 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', NOW(), NOW()),
+              ('HOURS_TOTAL', 'Workload consistency',
+               'Total workload should align with ECTS (approximately 30 hours per ECTS). Flag large mismatches between credits and stated hours.',
+               0, 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', NOW(), NOW()),
+              ('EXAMINATION_ACHIEVEMENTS', 'Assessment clarity',
+               'State examination type (written exam, project, oral exam), duration or scope, and pass criteria.',
+               0, 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', NOW(), NOW()),
+              ('DEGREE_PROGRAM_ASSIGNMENTS', 'Program assignment',
+               'At least one degree program and area of specialization must be assigned for MSc modules.',
+               0, 'f47ac10b-58cc-4372-a567-0e02b2c3d479', 'f47ac10b-58cc-4372-a567-0e02b2c3d479', NOW(), NOW());
+
+              INSERT INTO proposal (proposal_id, created_by, creation_date, status)
+              VALUES
+              (1, '7bb1edd9-02c5-411c-a1e2-9aed33808437', NOW(), 'WAITING_FOR_COORDINATORS_SUBMISSION'),
+              (2, '7bb1edd9-02c5-411c-a1e2-9aed33808437', NOW(), 'WAITING_FOR_COORDINATORS_SUBMISSION'),
+              (3, 'a0442163-c9c0-4542-9b61-3f154091c7ad', NOW(), 'WAITING_FOR_COORDINATORS_SUBMISSION');
+
+  - changeSet:
+      id: 0020b-seed-ai-review-good-module
+      author: module-management
+      changes:
+        - sql:
+            splitStatements: false
+            sql: |
+              INSERT INTO module_version (
+                module_version_id, version, module_id, creation_date, status,
+                title_eng, title_de, level_eng, language_eng, frequency_eng,
+                credits, duration, hours_total, hours_self_study, hours_presence,
+                hours_lecture, hours_exercise, hours_practical, hours_seminar,
+                first_semester_available,
+                content_eng, learning_outcomes_eng, teaching_methods_eng,
+                examination_achievements_eng, recommended_prerequisites_eng,
+                media_eng, literature_eng, responsibles_eng, lv_sws_lecturer_eng,
+                repetition_eng, bullet_points, proposal_id
+              ) VALUES (
+                1, 1, 'CIT4310999', NOW(), 'WAITING_FOR_COORDINATORS_SUBMISSION',
+                'Advanced Database Systems',
+                'Fortgeschrittene Datenbanksysteme',
+                'Master',
+                'English',
+                'Winter and Summer semester',
+                6,
+                '1 semester',
+                180,
+                120,
+                60,
+                4,
+                4,
+                0,
+                0,
+                'WS/SS',
+                E'1. Query processing and optimization: relational algebra review, cost-based optimization, indexing strategies, join algorithms, and execution plans.\n\n2. Transaction management and concurrency: ACID properties, isolation levels, two-phase locking, MVCC, and recovery after failure.\n\n3. Distributed and modern data stores: replication, partitioning, consensus basics, and comparison of relational vs. document-oriented systems.',
+                E'After successful completion of the module, students are able to:\n- analyze query execution plans and propose concrete optimization measures for relational workloads\n- design transaction boundaries and choose appropriate isolation levels for given consistency requirements\n- evaluate trade-offs between normalization, indexing, and denormalization in application schemas\n- explain replication and partitioning concepts in distributed database systems',
+                'Lectures introduce concepts and worked examples. Exercises apply techniques to realistic schemas and query workloads. A small implementation assignment reinforces indexing and transaction design. Optional office hours support exam preparation.',
+                'Written examination (90 minutes, graded). A passed project assignment on query optimization is required for admission to the exam. Grading: 70% written exam, 30% project assignment.',
+                'Undergraduate-level databases (relational model, SQL, basic normalization) and algorithms and data structures.',
+                'Slides, recorded lecture videos, PostgreSQL lab environment, course forum.',
+                E'- A. Silberschatz, H. Korth, S. Sudarshan: Database System Concepts, latest edition.\n- Course exercise sheets and sample exam published on the course page.',
+                'Prof. Dr. Maria Schulz (module responsible), Dr. Jonas Klein (exercise lead)',
+                '2 SWS lecture, 2 SWS exercise',
+                'Once per semester',
+                'Strong example module for AI review testing (complete and consistent).',
+                1
+              );
+
+  - changeSet:
+      id: 0020c-seed-ai-review-bad-module
+      author: module-management
+      changes:
+        - sql:
+            sql: |
+              INSERT INTO module_version (
+                module_version_id, version, module_id, creation_date, status,
+                title_eng, content_eng, proposal_id
+              ) VALUES (
+                2, 1, 'CIT4310888', NOW(), 'WAITING_FOR_COORDINATORS_SUBMISSION',
+                'Intro to Stuff',
+                'Students learn things about computers and technology. The module covers various topics that are useful for later studies.',
+                2
+              );
+
+  - changeSet:
+      id: 0020d-seed-ai-review-inconsistent-module
+      author: module-management
+      changes:
+        - sql:
+            splitStatements: false
+            sql: |
+              INSERT INTO module_version (
+                module_version_id, version, module_id, creation_date, status,
+                title_eng, level_eng, language_eng, frequency_eng,
+                credits, duration, hours_total, hours_self_study, hours_presence,
+                hours_lecture, hours_exercise,
+                content_eng, learning_outcomes_eng, examination_achievements_eng,
+                proposal_id
+              ) VALUES (
+                3, 1, 'CIT4310777', NOW(), 'WAITING_FOR_COORDINATORS_SUBMISSION',
+                'Distributed Systems',
+                'Master',
+                'English',
+                'Winter semester',
+                6,
+                '1 semester',
+                45,
+                30,
+                15,
+                2,
+                1,
+                'Overview of distributed systems. Students learn about communication, fault tolerance, and cloud platforms. Some labs may use containers.',
+                'Students understand distributed systems and know important concepts.',
+                'Written exam at the end.',
+                3
+              );
+
+  - changeSet:
+      id: 0020e-seed-ai-review-assignments-and-sequences
+      author: module-management
+      changes:
+        - sql:
+            sql: |
+              INSERT INTO module_version_degree_program_assignment (module_version_id, degree_program_id, degree_program_specialization_id)
+              VALUES (1, 4, 2);
+
+              SELECT setval('proposal_proposal_id_seq', (SELECT COALESCE(MAX(proposal_id), 1) FROM proposal));
+              SELECT setval('module_version_module_version_id_seq', (SELECT COALESCE(MAX(module_version_id), 1) FROM module_version));
