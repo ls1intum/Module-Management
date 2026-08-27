@@ -16,13 +16,9 @@ export function coordinatorFeedbackStepStatus(status: Status | undefined): Stepp
       return StepperStatus.Pending;
     case 'COORDINATORS_FEEDBACK_GIVEN':
       return StepperStatus.FeedbackGiven;
-    case 'REQUIRES_REVIEW':
-      return StepperStatus.FeedbackGiven;
     case 'WAITING_FOR_EXAMINATION_BOARD_SUBMISSION':
     case 'PENDING_EXAMINATION_BOARD_FEEDBACK':
     case 'EXAMINATION_BOARD_FEEDBACK_GIVEN':
-    case 'WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION':
-    case 'PENDING_QUALITY_MANAGEMENT_FEEDBACK':
     case 'ACCEPTED':
       return StepperStatus.Completed;
     case 'REJECTED_AT_COORDINATORS_FEEDBACK':
@@ -46,7 +42,6 @@ export function examinationBoardFeedbackStepStatus(status: Status | undefined): 
     case 'WAITING_FOR_COORDINATORS_SUBMISSION':
     case 'PENDING_COORDINATORS_FEEDBACK':
     case 'COORDINATORS_FEEDBACK_GIVEN':
-    case 'REQUIRES_REVIEW':
       return StepperStatus.Default;
     case 'WAITING_FOR_EXAMINATION_BOARD_SUBMISSION':
       return StepperStatus.Default;
@@ -54,8 +49,6 @@ export function examinationBoardFeedbackStepStatus(status: Status | undefined): 
       return StepperStatus.Pending;
     case 'EXAMINATION_BOARD_FEEDBACK_GIVEN':
       return StepperStatus.FeedbackGiven;
-    case 'WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION':
-    case 'PENDING_QUALITY_MANAGEMENT_FEEDBACK':
     case 'ACCEPTED':
       return StepperStatus.Completed;
     case 'REJECTED_AT_EXAMINATION_BOARD_FEEDBACK':

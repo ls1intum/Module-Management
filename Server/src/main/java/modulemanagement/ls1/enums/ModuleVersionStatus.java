@@ -21,15 +21,8 @@ public enum ModuleVersionStatus {
     PENDING_EXAMINATION_BOARD_FEEDBACK,
     /** Examination board responses in; not all approved. */
     EXAMINATION_BOARD_FEEDBACK_GIVEN,
-    /**
-     * All examination board feedbacks approved; not yet submitted for quality
-     * management feedback.
-     */
-    WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION,
-    /** Submitted for quality management feedback. */
-    PENDING_QUALITY_MANAGEMENT_FEEDBACK,
+    /** All examination board feedbacks approved. */
     ACCEPTED,
-    REQUIRES_REVIEW,
     /** Rejected during program/area coordinator feedback. */
     REJECTED_AT_COORDINATORS_FEEDBACK,
     /** Rejected during examination board feedback. */
