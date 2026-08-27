@@ -56,33 +56,12 @@ export class ModuleVersionStatusPipe implements PipeTransform {
           fadedColor: 'bg-blue-300',
           severity: 'info'
         };
-      case ModuleVersionCompactDTO.StatusEnum.WaitingForQualityManagementSubmission:
-        return {
-          text: 'Waiting for quality management submission',
-          normalColor: 'bg-gray-500',
-          fadedColor: 'bg-gray-300',
-          severity: 'secondary'
-        };
-      case ModuleVersionCompactDTO.StatusEnum.PendingQualityManagementFeedback:
-        return {
-          text: 'Pending quality management feedback',
-          normalColor: 'bg-yellow-500',
-          fadedColor: 'bg-yellow-300',
-          severity: 'warn'
-        };
       case ModuleVersionCompactDTO.StatusEnum.Accepted:
         return {
           text: 'Accepted',
           normalColor: 'bg-green-500',
           fadedColor: 'bg-green-300',
           severity: 'success'
-        };
-      case ModuleVersionCompactDTO.StatusEnum.RequiresReview:
-        return {
-          text: 'Requires review',
-          normalColor: 'bg-sky-500',
-          fadedColor: 'bg-sky-300',
-          severity: 'info'
         };
       case ModuleVersionCompactDTO.StatusEnum.RejectedAtCoordinatorsFeedback:
       case ModuleVersionCompactDTO.StatusEnum.RejectedAtExaminationBoardFeedback:

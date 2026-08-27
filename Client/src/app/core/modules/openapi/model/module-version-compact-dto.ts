@@ -19,7 +19,7 @@ export interface ModuleVersionCompactDTO {
     feedbackList?: Array<FeedbackCompactDTO>;
 }
 export namespace ModuleVersionCompactDTO {
-    export type StatusEnum = 'WAITING_FOR_COORDINATORS_SUBMISSION' | 'PENDING_COORDINATORS_FEEDBACK' | 'COORDINATORS_FEEDBACK_GIVEN' | 'WAITING_FOR_EXAMINATION_BOARD_SUBMISSION' | 'PENDING_EXAMINATION_BOARD_FEEDBACK' | 'EXAMINATION_BOARD_FEEDBACK_GIVEN' | 'WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION' | 'PENDING_QUALITY_MANAGEMENT_FEEDBACK' | 'ACCEPTED' | 'REQUIRES_REVIEW' | 'REJECTED_AT_COORDINATORS_FEEDBACK' | 'REJECTED_AT_EXAMINATION_BOARD_FEEDBACK' | 'CANCELLED';
+    export type StatusEnum = 'WAITING_FOR_COORDINATORS_SUBMISSION' | 'PENDING_COORDINATORS_FEEDBACK' | 'COORDINATORS_FEEDBACK_GIVEN' | 'WAITING_FOR_EXAMINATION_BOARD_SUBMISSION' | 'PENDING_EXAMINATION_BOARD_FEEDBACK' | 'EXAMINATION_BOARD_FEEDBACK_GIVEN' | 'ACCEPTED' | 'REJECTED_AT_COORDINATORS_FEEDBACK' | 'REJECTED_AT_EXAMINATION_BOARD_FEEDBACK' | 'CANCELLED';
     export const StatusEnum = {
         WaitingForCoordinatorsSubmission: 'WAITING_FOR_COORDINATORS_SUBMISSION' as StatusEnum,
         PendingCoordinatorsFeedback: 'PENDING_COORDINATORS_FEEDBACK' as StatusEnum,
@@ -27,10 +27,7 @@ export namespace ModuleVersionCompactDTO {
         WaitingForExaminationBoardSubmission: 'WAITING_FOR_EXAMINATION_BOARD_SUBMISSION' as StatusEnum,
         PendingExaminationBoardFeedback: 'PENDING_EXAMINATION_BOARD_FEEDBACK' as StatusEnum,
         ExaminationBoardFeedbackGiven: 'EXAMINATION_BOARD_FEEDBACK_GIVEN' as StatusEnum,
-        WaitingForQualityManagementSubmission: 'WAITING_FOR_QUALITY_MANAGEMENT_SUBMISSION' as StatusEnum,
-        PendingQualityManagementFeedback: 'PENDING_QUALITY_MANAGEMENT_FEEDBACK' as StatusEnum,
         Accepted: 'ACCEPTED' as StatusEnum,
-        RequiresReview: 'REQUIRES_REVIEW' as StatusEnum,
         RejectedAtCoordinatorsFeedback: 'REJECTED_AT_COORDINATORS_FEEDBACK' as StatusEnum,
         RejectedAtExaminationBoardFeedback: 'REJECTED_AT_EXAMINATION_BOARD_FEEDBACK' as StatusEnum,
         Cancelled: 'CANCELLED' as StatusEnum

@@ -39,4 +39,25 @@ export class SimilarModulesPage {
       complete: () => this.isLoading.set(false)
     });
   }
+
+  /** Prefer module content; fall back to other catalog fields when content is empty. */
+  protected displayContent(module: SimilarModuleDTO): string {
+    const candidates = [
+      module.contentEng,
+      module.learningOutcomesEng,
+      module.examinationAchievementsEng,
+      module.teachingMethodsEng,
+      module.literatureEng
+    ];
+    const raw = candidates.find((value) => !!value && value.trim().length > 0) ?? '';
+    const cleaned = raw
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<[^>]+>/g, '')
+      .replace(/\s+\n/g, '\n')
+      .trim();
+    if (cleaned.length <= 520) {
+      return cleaned;
+    }
+    return `${cleaned.slice(0, 520).trimEnd()}…`;
+  }
 }
