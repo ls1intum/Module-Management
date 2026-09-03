@@ -6,7 +6,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-FROM nginx:1.29.4
+FROM nginx:1.31.5
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
